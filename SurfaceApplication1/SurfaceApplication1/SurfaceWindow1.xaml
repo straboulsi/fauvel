@@ -1,0 +1,46 @@
+﻿<s:SurfaceWindow
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:s="http://schemas.microsoft.com/surface/2008"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:ed="http://schemas.microsoft.com/expression/2010/drawing" mc:Ignorable="d" x:Class="SurfaceApplication1.SurfaceWindow1"
+    Title="SurfaceApplication1" Width="1920" Height="1080"
+    >
+	<Canvas x:Name="mother">
+        <Canvas x:Name="toolbar" Height="100" Width="1920" Margin="0" Background="Gray" Canvas.Top="980" d:LayoutOverrides="Width">
+            <Button x:Name="prev" Height="84" Canvas.Left="790" Width="100" Canvas.Top="8" VerticalAlignment="Top" TouchDown="prev_Click" Click="prev_Click">
+				<ed:BlockArrow Fill="#FFF4F4F5" Height="50" Orientation="Left" Stroke="Black" Width="60"/>
+			</Button>
+            <Button x:Name="next" Height="84" Canvas.Left="1110" Width="100" Canvas.Top="8" TouchDown="next_Click" Click="next_Click">
+				<ed:BlockArrow Fill="#FFF4F4F5" Height="50" Orientation="Right" Stroke="Black" Width="60"/>
+			</Button>
+			<Button Content="Zoom" Height="84" Canvas.Left="510" Width="100" Canvas.Top="8" VerticalAlignment="Top" FontSize="26.667"/>
+			<Button Content="Trans" Height="84" Canvas.Left="1410" Width="100" Canvas.Top="8" FontSize="26.667"/>
+			<TextBox x:Name="pageNumberText" Height="84" Canvas.Left="900" TextWrapping="Wrap" Text="88" Canvas.Top="8" Width="80" FontSize="53.333" TextAlignment="Center" Background="#FFCCCCCC"/>
+			<TextBlock Height="84" Canvas.Left="980" TextWrapping="Wrap" Text="/" Canvas.Top="8" Width="50" FontSize="53.333" TextAlignment="Center"/>
+            <TextBlock x:Name="maxPageText" Height="84" Canvas.Left="1030" TextWrapping="Wrap" Text="88" Canvas.Top="11" Width="80" FontSize="53.333" TextAlignment="Center"/>
+		</Canvas>
+		<TabControl x:Name="tabBar" SelectionChanged="tabBar_SelectionChanged" Height="980" Width="1920" VerticalContentAlignment="Center" VerticalAlignment="Center" HorizontalAlignment="Center" TabStripPlacement="Bottom">
+            <TabControl.Resources>
+                <DataTemplate x:Key="TabHeader" DataType="TabItem">
+                    <DockPanel>
+                        <Button x:Name="btnDelete" DockPanel.Dock="Right" Height="30" Width="30" Margin="5,0,0,0" Padding="0" Click="btnDelete_Click">
+                            <TextBlock Height="20" Text="x" Width="20" TextAlignment="Center" FontSize="12"/>
+                        </Button>
+                        <TextBlock Text="{Binding RelativeSource={RelativeSource AncestorType={x:Type TabItem}}, Path=Header}" />
+                    </DockPanel>
+                </DataTemplate>
+                <DataTemplate x:Key="TabBody" DataType="TabItem">
+                </DataTemplate>
+                <Style TargetType="TextBox">
+                    <Setter Property="VerticalAlignment" Value="Stretch"></Setter>
+                    <Setter Property="HorizontalAlignment" Value="Stretch"></Setter>
+                    <Setter Property="AcceptsReturn" Value="True"></Setter>
+                    <Setter Property="TextWrapping" Value="WrapWithOverflow"></Setter>
+                    <Setter Property="MaxLines" Value="5000"></Setter>
+                    <Setter Property="ScrollViewer.VerticalScrollBarVisibility" Value="Auto"></Setter>
+                    <Setter Property="ScrollViewer.HorizontalScrollBarVisibility" Value="Auto"></Setter>
+                </Style>
+            </TabControl.Resources>
+		</TabControl>
+	</Canvas>
+</s:SurfaceWindow>
