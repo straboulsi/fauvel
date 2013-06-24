@@ -82,9 +82,9 @@ public class TextReader {
 						dataType = 0;
 					}
 					
-					else if(thisLine.startsWith("#")){
+					else if(thisLine.startsWith("#"))
 						p.print(thisLine+"\n");
-					}
+					
 					
 
 					// First (ONLY) line of miniature
@@ -306,7 +306,7 @@ public class TextReader {
 		musicGenres.add(new Music("Alleluia", "Al"));
 		musicGenres.add(new Music("Antienne", "An"));
 		musicGenres.add(new Music("Ballade/Chanson", "Vi")); // Is actually a Virelai
-		musicGenres.add(new Music("Ballade", "Ba")); // Requires space after "Ballade" bc of "Ballade/Chanson"
+		musicGenres.add(new Music("Ballade", "Ba"));
 		musicGenres.add(new Music("Chanson", "Chs"));
 		musicGenres.add(new Music("Chant", "Chn"));
 		musicGenres.add(new Music("Composition", "Com"));
@@ -369,9 +369,9 @@ public class TextReader {
 		numOfMotets = 0;
 		pageLineNum = 1;
 
-		for(Music m : musicGenres){
+		for(Music m : musicGenres)
 			m.numOnPage = 0;
-		}
+		
 	}
 
 	/**
