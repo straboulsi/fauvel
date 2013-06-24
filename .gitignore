@@ -1,1 +1,10 @@
 SurfaceApplication1/SurfaceApplication1/pages/
+.DS_Store
+.DS_Store?
+*.class
+._*
+.Spotlight-V100
+.Trashes
+Icon?
+ehthumbs.db
+Thumbs.db
