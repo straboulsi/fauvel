@@ -131,16 +131,47 @@
     <None Include="SurfaceApplication1_TemporaryKey.pfx" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="pages\11.jpg" />
-    <Resource Include="pages\12.jpg" />
-    <Resource Include="pages\13.jpg" />
-    <Resource Include="pages\14.jpg" />
-    <Resource Include="pages\15.jpg" />
-    <Resource Include="pages\16.jpg" />
-    <Resource Include="pages\17.jpg" />
-    <Resource Include="pages\18.jpg" />
-    <Resource Include="pages\19.jpg" />
-    <Resource Include="pages\20.jpg" />
+    <Resource Include="pages\11.jpg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="pages\12.jpg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="pages\13.jpg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="pages\14.jpg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="pages\15.jpg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="pages\16.jpg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="pages\17.jpg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="pages\18.jpg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="pages\19.jpg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="pages\20.jpg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="pages\0.jpg" />
+    <Resource Include="pages\1.jpg" />
+    <Resource Include="pages\10.jpg" />
+    <Resource Include="pages\2.jpg" />
+    <Resource Include="pages\3.jpg" />
+    <Resource Include="pages\4.jpg" />
+    <Resource Include="pages\5.jpg" />
+    <Resource Include="pages\6.jpg" />
+    <Resource Include="pages\7.jpg" />
+    <Resource Include="pages\8.jpg" />
+    <Resource Include="pages\9.jpg" />
     <Content Include="Resources\icon.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>

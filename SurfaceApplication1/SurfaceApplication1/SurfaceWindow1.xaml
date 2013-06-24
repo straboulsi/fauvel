@@ -18,7 +18,8 @@
 			<TextBox x:Name="pageNumberText" Height="84" Canvas.Left="900" TextWrapping="Wrap" Text="88" Canvas.Top="8" Width="80" FontSize="53.333" TextAlignment="Center" Background="#FFCCCCCC"/>
 			<TextBlock Height="84" Canvas.Left="980" TextWrapping="Wrap" Text="/" Canvas.Top="8" Width="50" FontSize="53.333" TextAlignment="Center"/>
             <TextBlock x:Name="maxPageText" Height="84" Canvas.Left="1030" TextWrapping="Wrap" Text="88" Canvas.Top="11" Width="80" FontSize="53.333" TextAlignment="Center"/>
-		</Canvas>
+            <s:SurfaceSlider  Minimum="0" Maximum="100" Width="400" Canvas.Left="60" Canvas.Top="40" TickFrequency="1" IsSnapToTickEnabled="True" PreviewTouchMove="SliderManipulationStarted" PreviewTouchDown="SliderManipulationStarted" PreviewTouchUp="SliderManipulationCompleted"></s:SurfaceSlider>
+        </Canvas>
 		<TabControl x:Name="tabBar" SelectionChanged="tabBar_SelectionChanged" Height="980" Width="1920" VerticalContentAlignment="Center" VerticalAlignment="Center" HorizontalAlignment="Center" TabStripPlacement="Bottom">
             <TabControl.Resources>
                 <DataTemplate x:Key="TabHeader" DataType="TabItem">
@@ -42,5 +43,25 @@
                 </Style>
             </TabControl.Resources>
 		</TabControl>
+        <Canvas x:Name="SliderDisplay1" Width="100" Height="100" HorizontalAlignment="Center">
+            <Image x:Name="SliderImage1" Source="\pages\11.jpg" Width="100" Stretch="UniformToFill"/>
+            <TextBlock x:Name="SliderText1" HorizontalAlignment="Center" Canvas.Top="-50" Text=" "/>
+        </Canvas>
+        <Canvas x:Name="SliderDisplay2" Width="100" Height="100" HorizontalAlignment="Center">
+            <Image x:Name="SliderImage2" Source="\pages\11.jpg" Width="100" Stretch="UniformToFill"/>
+            <TextBlock x:Name="SliderText2" HorizontalAlignment="Center" Canvas.Top="-50" Text=" "/>
+        </Canvas>
+        <Canvas x:Name="SliderDisplay3" Width="100" Height="100" HorizontalAlignment="Center">
+            <Image x:Name="SliderImage3" Source="\pages\11.jpg" Width="100" Stretch="UniformToFill"/>
+            <TextBlock x:Name="SliderText3" HorizontalAlignment="Center" Canvas.Top="-70" Text=" "/>
+        </Canvas>
+        <Canvas x:Name="SliderDisplay4" Width="100" Height="100" HorizontalAlignment="Center">
+            <Image x:Name="SliderImage4" Source="\pages\11.jpg" Width="100" Stretch="UniformToFill"/>
+            <TextBlock x:Name="SliderText4" HorizontalAlignment="Center" Canvas.Top="-50" Text=" "/>
+        </Canvas>
+        <Canvas x:Name="SliderDisplay5" Width="100" Height="100" HorizontalAlignment="Center">
+            <Image x:Name="SliderImage5" Source="\pages\11.jpg" Width="100" Stretch="UniformToFill"/>
+            <TextBlock x:Name="SliderText5" HorizontalAlignment="Center" Canvas.Top="-50" Text=" "/>
+        </Canvas>
 	</Canvas>
 </s:SurfaceWindow>

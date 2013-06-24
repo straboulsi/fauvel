@@ -1,68 +1,22 @@
-C:\Users\Brendan Chou\documents\visual studio 2010\Projects\SurfaceApplication1\SurfaceApplication1\bin\Debug\Resources\icon.png
-C:\Users\Brendan Chou\documents\visual studio 2010\Projects\SurfaceApplication1\SurfaceApplication1\bin\Debug\SurfaceApplication1.xml
-C:\Users\Brendan Chou\documents\visual studio 2010\Projects\SurfaceApplication1\SurfaceApplication1\bin\Debug\SurfaceApplication1.exe.manifest
-C:\Users\Brendan Chou\documents\visual studio 2010\Projects\SurfaceApplication1\SurfaceApplication1\bin\Debug\SurfaceApplication1.application
-C:\Users\Brendan Chou\documents\visual studio 2010\Projects\SurfaceApplication1\SurfaceApplication1\bin\Debug\SurfaceApplication1.exe
-C:\Users\Brendan Chou\documents\visual studio 2010\Projects\SurfaceApplication1\SurfaceApplication1\bin\Debug\SurfaceApplication1.pdb
-C:\Users\Brendan Chou\documents\visual studio 2010\Projects\SurfaceApplication1\SurfaceApplication1\bin\Debug\Microsoft.Expression.Drawing.dll
-C:\Users\Brendan Chou\documents\visual studio 2010\Projects\SurfaceApplication1\SurfaceApplication1\bin\Debug\Microsoft.Expression.Drawing.xml
-C:\Users\Brendan Chou\documents\visual studio 2010\Projects\SurfaceApplication1\SurfaceApplication1\obj\Debug\SurfaceWindow1.baml
-C:\Users\Brendan Chou\documents\visual studio 2010\Projects\SurfaceApplication1\SurfaceApplication1\obj\Debug\App.baml
-C:\Users\Brendan Chou\documents\visual studio 2010\Projects\SurfaceApplication1\SurfaceApplication1\obj\Debug\SurfaceWindow1.g.cs
-C:\Users\Brendan Chou\documents\visual studio 2010\Projects\SurfaceApplication1\SurfaceApplication1\obj\Debug\App.g.cs
-C:\Users\Brendan Chou\documents\visual studio 2010\Projects\SurfaceApplication1\SurfaceApplication1\obj\Debug\SurfaceApplication1_Content.g.cs
-C:\Users\Brendan Chou\documents\visual studio 2010\Projects\SurfaceApplication1\SurfaceApplication1\obj\Debug\SurfaceApplication1_MarkupCompile.cache
-C:\Users\Brendan Chou\documents\visual studio 2010\Projects\SurfaceApplication1\SurfaceApplication1\obj\Debug\SurfaceApplication1.g.resources
-C:\Users\Brendan Chou\documents\visual studio 2010\Projects\SurfaceApplication1\SurfaceApplication1\obj\Debug\SurfaceApplication1.Properties.Resources.resources
-C:\Users\Brendan Chou\documents\visual studio 2010\Projects\SurfaceApplication1\SurfaceApplication1\obj\Debug\SurfaceApplication1.csproj.GenerateResource.Cache
-C:\Users\Brendan Chou\documents\visual studio 2010\Projects\SurfaceApplication1\SurfaceApplication1\obj\Debug\SurfaceApplication1.exe.manifest
-C:\Users\Brendan Chou\documents\visual studio 2010\Projects\SurfaceApplication1\SurfaceApplication1\obj\Debug\SurfaceApplication1.application
-C:\Users\Brendan Chou\documents\visual studio 2010\Projects\SurfaceApplication1\SurfaceApplication1\obj\Debug\SurfaceApplication1.exe
-C:\Users\Brendan Chou\documents\visual studio 2010\Projects\SurfaceApplication1\SurfaceApplication1\obj\Debug\SurfaceApplication1.pdb
-C:\Users\Brendan Chou\documents\visual studio 2010\Projects\SurfaceApplication1\SurfaceApplication1\obj\Debug\SurfaceApplication1.csprojResolveAssemblyReference.cache
-C:\Users\Brendan Chou\Copy\SurfaceApplication1\SurfaceApplication1\obj\Debug\SurfaceApplication1.exe
-C:\Users\Brendan Chou\Copy\SurfaceApplication1\SurfaceApplication1\obj\Debug\SurfaceApplication1.pdb
-C:\Users\Brendan Chou\Copy\SurfaceApplication1\SurfaceApplication1\bin\Debug\Resources\icon.png
-C:\Users\Brendan Chou\Copy\SurfaceApplication1\SurfaceApplication1\bin\Debug\SurfaceApplication1.xml
-C:\Users\Brendan Chou\Copy\SurfaceApplication1\SurfaceApplication1\bin\Debug\SurfaceApplication1.exe.manifest
-C:\Users\Brendan Chou\Copy\SurfaceApplication1\SurfaceApplication1\bin\Debug\SurfaceApplication1.application
-C:\Users\Brendan Chou\Copy\SurfaceApplication1\SurfaceApplication1\bin\Debug\SurfaceApplication1.exe
-C:\Users\Brendan Chou\Copy\SurfaceApplication1\SurfaceApplication1\bin\Debug\SurfaceApplication1.pdb
-C:\Users\Brendan Chou\Copy\SurfaceApplication1\SurfaceApplication1\bin\Debug\Microsoft.Expression.Drawing.dll
-C:\Users\Brendan Chou\Copy\SurfaceApplication1\SurfaceApplication1\bin\Debug\Microsoft.Expression.Drawing.xml
-C:\Users\Brendan Chou\Copy\SurfaceApplication1\SurfaceApplication1\obj\Debug\SurfaceApplication1.csprojResolveAssemblyReference.cache
-C:\Users\Brendan Chou\Copy\SurfaceApplication1\SurfaceApplication1\obj\Debug\SurfaceWindow1.baml
-C:\Users\Brendan Chou\Copy\SurfaceApplication1\SurfaceApplication1\obj\Debug\App.baml
-C:\Users\Brendan Chou\Copy\SurfaceApplication1\SurfaceApplication1\obj\Debug\SurfaceWindow1.g.cs
-C:\Users\Brendan Chou\Copy\SurfaceApplication1\SurfaceApplication1\obj\Debug\App.g.cs
-C:\Users\Brendan Chou\Copy\SurfaceApplication1\SurfaceApplication1\obj\Debug\SurfaceApplication1_Content.g.cs
-C:\Users\Brendan Chou\Copy\SurfaceApplication1\SurfaceApplication1\obj\Debug\SurfaceApplication1_MarkupCompile.cache
-C:\Users\Brendan Chou\Copy\SurfaceApplication1\SurfaceApplication1\obj\Debug\SurfaceApplication1.g.resources
-C:\Users\Brendan Chou\Copy\SurfaceApplication1\SurfaceApplication1\obj\Debug\SurfaceApplication1.Properties.Resources.resources
-C:\Users\Brendan Chou\Copy\SurfaceApplication1\SurfaceApplication1\obj\Debug\SurfaceApplication1.csproj.GenerateResource.Cache
-C:\Users\Brendan Chou\Copy\SurfaceApplication1\SurfaceApplication1\obj\Debug\SurfaceApplication1.exe.manifest
-C:\Users\Brendan Chou\Copy\SurfaceApplication1\SurfaceApplication1\obj\Debug\SurfaceApplication1.application
-C:\Users\Brendan Chou\DigitalFauvel\GitCloneOne\SurfaceApplication1\SurfaceApplication1\obj\Debug\SurfaceApplication1.exe
-C:\Users\Brendan Chou\DigitalFauvel\GitCloneOne\SurfaceApplication1\SurfaceApplication1\obj\Debug\SurfaceApplication1.pdb
-C:\Users\soundlab\Documents\DigitalFauvel\GitCloneOne\SurfaceApplication1\SurfaceApplication1\obj\Debug\SurfaceApplication1.exe
-C:\Users\soundlab\Documents\DigitalFauvel\GitCloneOne\SurfaceApplication1\SurfaceApplication1\obj\Debug\SurfaceApplication1.pdb
-C:\Users\soundlab\Documents\DigitalFauvel\GitCloneOne\SurfaceApplication1\SurfaceApplication1\bin\Debug\Resources\icon.png
-C:\Users\soundlab\Documents\DigitalFauvel\GitCloneOne\SurfaceApplication1\SurfaceApplication1\bin\Debug\SurfaceApplication1.xml
-C:\Users\soundlab\Documents\DigitalFauvel\GitCloneOne\SurfaceApplication1\SurfaceApplication1\bin\Debug\SurfaceApplication1.exe.manifest
-C:\Users\soundlab\Documents\DigitalFauvel\GitCloneOne\SurfaceApplication1\SurfaceApplication1\bin\Debug\SurfaceApplication1.application
-C:\Users\soundlab\Documents\DigitalFauvel\GitCloneOne\SurfaceApplication1\SurfaceApplication1\bin\Debug\SurfaceApplication1.exe
-C:\Users\soundlab\Documents\DigitalFauvel\GitCloneOne\SurfaceApplication1\SurfaceApplication1\bin\Debug\SurfaceApplication1.pdb
-C:\Users\soundlab\Documents\DigitalFauvel\GitCloneOne\SurfaceApplication1\SurfaceApplication1\bin\Debug\Microsoft.Expression.Drawing.xml
-C:\Users\soundlab\Documents\DigitalFauvel\GitCloneOne\SurfaceApplication1\SurfaceApplication1\obj\Debug\ResolveAssemblyReference.cache
-C:\Users\soundlab\Documents\DigitalFauvel\GitCloneOne\SurfaceApplication1\SurfaceApplication1\obj\Debug\SurfaceWindow1.baml
-C:\Users\soundlab\Documents\DigitalFauvel\GitCloneOne\SurfaceApplication1\SurfaceApplication1\obj\Debug\App.baml
-C:\Users\soundlab\Documents\DigitalFauvel\GitCloneOne\SurfaceApplication1\SurfaceApplication1\obj\Debug\SurfaceWindow1.g.cs
-C:\Users\soundlab\Documents\DigitalFauvel\GitCloneOne\SurfaceApplication1\SurfaceApplication1\obj\Debug\App.g.cs
-C:\Users\soundlab\Documents\DigitalFauvel\GitCloneOne\SurfaceApplication1\SurfaceApplication1\obj\Debug\SurfaceApplication1_Content.g.cs
-C:\Users\soundlab\Documents\DigitalFauvel\GitCloneOne\SurfaceApplication1\SurfaceApplication1\obj\Debug\SurfaceApplication1_MarkupCompile.cache
-C:\Users\soundlab\Documents\DigitalFauvel\GitCloneOne\SurfaceApplication1\SurfaceApplication1\obj\Debug\SurfaceApplication1.g.resources
-C:\Users\soundlab\Documents\DigitalFauvel\GitCloneOne\SurfaceApplication1\SurfaceApplication1\obj\Debug\SurfaceApplication1.Properties.Resources.resources
-C:\Users\soundlab\Documents\DigitalFauvel\GitCloneOne\SurfaceApplication1\SurfaceApplication1\obj\Debug\GenerateResource.read.1.tlog
-C:\Users\soundlab\Documents\DigitalFauvel\GitCloneOne\SurfaceApplication1\SurfaceApplication1\obj\Debug\GenerateResource.write.1.tlog
-C:\Users\soundlab\Documents\DigitalFauvel\GitCloneOne\SurfaceApplication1\SurfaceApplication1\obj\Debug\SurfaceApplication1.exe.manifest
-C:\Users\soundlab\Documents\DigitalFauvel\GitCloneOne\SurfaceApplication1\SurfaceApplication1\obj\Debug\SurfaceApplication1.application
+C:\Users\soundlab\Documents\DigitalFauvel\GitCloneClean\SurfaceApplication1\SurfaceApplication1\bin\Debug\Resources\icon.png
+C:\Users\soundlab\Documents\DigitalFauvel\GitCloneClean\SurfaceApplication1\SurfaceApplication1\bin\Debug\SurfaceApplication1.xml
+C:\Users\soundlab\Documents\DigitalFauvel\GitCloneClean\SurfaceApplication1\SurfaceApplication1\bin\Debug\SurfaceApplication1.exe.manifest
+C:\Users\soundlab\Documents\DigitalFauvel\GitCloneClean\SurfaceApplication1\SurfaceApplication1\bin\Debug\SurfaceApplication1.application
+C:\Users\soundlab\Documents\DigitalFauvel\GitCloneClean\SurfaceApplication1\SurfaceApplication1\bin\Debug\SurfaceApplication1.exe
+C:\Users\soundlab\Documents\DigitalFauvel\GitCloneClean\SurfaceApplication1\SurfaceApplication1\bin\Debug\SurfaceApplication1.pdb
+C:\Users\soundlab\Documents\DigitalFauvel\GitCloneClean\SurfaceApplication1\SurfaceApplication1\bin\Debug\Microsoft.Expression.Drawing.xml
+C:\Users\soundlab\Documents\DigitalFauvel\GitCloneClean\SurfaceApplication1\SurfaceApplication1\obj\Debug\ResolveAssemblyReference.cache
+C:\Users\soundlab\Documents\DigitalFauvel\GitCloneClean\SurfaceApplication1\SurfaceApplication1\obj\Debug\SurfaceWindow1.baml
+C:\Users\soundlab\Documents\DigitalFauvel\GitCloneClean\SurfaceApplication1\SurfaceApplication1\obj\Debug\App.baml
+C:\Users\soundlab\Documents\DigitalFauvel\GitCloneClean\SurfaceApplication1\SurfaceApplication1\obj\Debug\SurfaceWindow1.g.cs
+C:\Users\soundlab\Documents\DigitalFauvel\GitCloneClean\SurfaceApplication1\SurfaceApplication1\obj\Debug\App.g.cs
+C:\Users\soundlab\Documents\DigitalFauvel\GitCloneClean\SurfaceApplication1\SurfaceApplication1\obj\Debug\SurfaceApplication1_Content.g.cs
+C:\Users\soundlab\Documents\DigitalFauvel\GitCloneClean\SurfaceApplication1\SurfaceApplication1\obj\Debug\SurfaceApplication1_MarkupCompile.cache
+C:\Users\soundlab\Documents\DigitalFauvel\GitCloneClean\SurfaceApplication1\SurfaceApplication1\obj\Debug\SurfaceApplication1.g.resources
+C:\Users\soundlab\Documents\DigitalFauvel\GitCloneClean\SurfaceApplication1\SurfaceApplication1\obj\Debug\SurfaceApplication1.Properties.Resources.resources
+C:\Users\soundlab\Documents\DigitalFauvel\GitCloneClean\SurfaceApplication1\SurfaceApplication1\obj\Debug\GenerateResource.read.1.tlog
+C:\Users\soundlab\Documents\DigitalFauvel\GitCloneClean\SurfaceApplication1\SurfaceApplication1\obj\Debug\GenerateResource.write.1.tlog
+C:\Users\soundlab\Documents\DigitalFauvel\GitCloneClean\SurfaceApplication1\SurfaceApplication1\obj\Debug\SurfaceApplication1.exe.manifest
+C:\Users\soundlab\Documents\DigitalFauvel\GitCloneClean\SurfaceApplication1\SurfaceApplication1\obj\Debug\SurfaceApplication1.application
+C:\Users\soundlab\Documents\DigitalFauvel\GitCloneClean\SurfaceApplication1\SurfaceApplication1\obj\Debug\SurfaceApplication1.exe
+C:\Users\soundlab\Documents\DigitalFauvel\GitCloneClean\SurfaceApplication1\SurfaceApplication1\obj\Debug\SurfaceApplication1.pdb

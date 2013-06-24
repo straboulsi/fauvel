@@ -17,6 +17,7 @@ using Microsoft.Surface.Presentation.Controls;
 using SSC = Microsoft.Surface.Presentation.Controls;
 using Microsoft.Surface.Presentation.Input;
 using System.Collections;
+using System.Windows.Media.Animation;
 
 namespace SurfaceApplication1
 {
@@ -303,6 +304,59 @@ namespace SurfaceApplication1
                 tabBar.Items.Remove(tabBar.Items[tabNumber]);
                 tabArray.Remove(tabArray[tabNumber]);
             }
+        }
+
+        private void SliderManipulationStarted(object sender, TouchEventArgs e)
+        {
+            int height = 850;
+            SurfaceSlider slider = (SurfaceSlider)sender;
+            double val = slider.Value;
+            int onVal = (int)Math.Round(val);
+            SliderDisplay1.Width = 60;
+            SliderDisplay2.Width = 80;
+            SliderDisplay3.Width = 100;
+            SliderDisplay4.Width = 80;
+            SliderDisplay5.Width = 60;
+            SliderImage1.Width = SliderDisplay1.Width;
+            SliderImage2.Width = SliderDisplay2.Width;
+            SliderImage3.Width = SliderDisplay3.Width;
+            SliderImage4.Width = SliderDisplay4.Width;
+            SliderImage5.Width = SliderDisplay5.Width;
+
+            //SliderImage3.Source = getPageImage(onVal.ToString());
+
+            SliderText3.Text = (onVal).ToString();
+            SliderText3.FontSize = 50;
+            SliderText3.Foreground = Brushes.Black;
+            SliderText3.Margin = new Thickness(SliderDisplay3.Width / 2 - SliderText3.ActualWidth / 2, -20, 0, 0);
+            double middle = slider.Width * onVal / slider.Maximum;
+            SliderDisplay1.Margin = new Thickness(middle - 160, height, 0, 0);
+            SliderDisplay2.Margin = new Thickness(middle - 90, height, 0, 0);
+            SliderDisplay3.Margin = new Thickness(middle, height, 0, 0);
+            SliderDisplay4.Margin = new Thickness(middle + 110, height, 0, 0);
+            SliderDisplay5.Margin = new Thickness(middle + 200, height, 0, 0);
+            DoubleAnimation anim = new DoubleAnimation();
+            anim.Duration = new Duration(TimeSpan.FromSeconds(.05));
+            anim.From = 1;
+            anim.To = 1;
+            SliderDisplay1.BeginAnimation(OpacityProperty, anim);
+            SliderDisplay2.BeginAnimation(OpacityProperty, anim);
+            SliderDisplay3.BeginAnimation(OpacityProperty, anim);
+            SliderDisplay4.BeginAnimation(OpacityProperty, anim);
+            SliderDisplay5.BeginAnimation(OpacityProperty, anim);
+        }
+
+        private void SliderManipulationCompleted(object sender, TouchEventArgs e)
+        {
+            DoubleAnimation anim = new DoubleAnimation();
+            anim.Duration = new Duration(TimeSpan.FromSeconds(.5));
+            anim.From = 1;
+            anim.To = 0;
+            SliderDisplay1.BeginAnimation(OpacityProperty, anim);
+            SliderDisplay2.BeginAnimation(OpacityProperty, anim);
+            SliderDisplay3.BeginAnimation(OpacityProperty, anim);
+            SliderDisplay4.BeginAnimation(OpacityProperty, anim);
+            SliderDisplay5.BeginAnimation(OpacityProperty, anim);
         }
     }
 }
