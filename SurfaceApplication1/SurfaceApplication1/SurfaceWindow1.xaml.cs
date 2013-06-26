@@ -28,13 +28,16 @@ namespace SurfaceApplication1
     /// </summary>
     public partial class SurfaceWindow1 : SurfaceWindow
     {
-        int maxPageWidth = 5461;
-        int maxPageHeight = 7700;
+        int maxPageWidth = 5250;
+        int maxPageHeight = 7350;
         int minPageWidth = 680;
         int minPageHeight = 930;
         int tabNumber = 0;
-        int minPage = 1;
+        int minPage = 0;
         int maxPage = 88;
+        bool wantBigR = false;
+        bool wantBigV = false;
+        int scatterBuffer = 3000;
         List<Tab> tabArray = new List<Tab>();
         BackgroundWorker changeVersoImageBackground = new BackgroundWorker();
         BackgroundWorker changeRectoImageBackground = new BackgroundWorker();
@@ -46,23 +49,38 @@ namespace SurfaceApplication1
         {
             InitializeComponent();
 
+            changeVersoImageBackground.WorkerSupportsCancellation = true;
+            changeRectoImageBackground.WorkerSupportsCancellation = true;
+
             changeVersoImageBackground.DoWork += (s, e) =>
             {
+                e.Result = null;
                 int pn = 2 * tabArray[tabNumber].pageNumber + 10;
                 BitmapImage image = new BitmapImage();
                 image.BeginInit();
-                image.CacheOption = BitmapCacheOption.None;
-                image.UriSource = new Uri("pack://application:,,,/pages/" + pn.ToString() + ".jpg", UriKind.Absolute);
-                image.CacheOption = BitmapCacheOption.OnLoad;
+                if(!wantBigV)
+                    image.DecodePixelWidth = minPageWidth;
+                image.CacheOption = BitmapCacheOption.OnDemand;
+                if (changeVersoImageBackground.CancellationPending) return;
+                image.UriSource = new Uri("pages/" + pn.ToString() + ".jpg", UriKind.Relative);
+                if (changeVersoImageBackground.CancellationPending) return;
                 image.EndInit();
                 image.Freeze();
                 e.Result = image;
             };
             changeVersoImageBackground.RunWorkerCompleted += (s, e) =>
             {
-                BitmapImage bitmapImage = e.Result as BitmapImage;
-                tabArray[tabNumber]._verso.Source = bitmapImage;
-                changeVersoImageBackground.Dispose();
+                if (e.Result != null)
+                {
+                    BitmapImage bitmapImage = e.Result as BitmapImage;
+                    tabArray[tabNumber]._verso.Source = bitmapImage;
+                    changeVersoImageBackground.Dispose();
+                }
+                else
+                {
+                    changeVersoImageBackground.Dispose();
+                    changeVersoImageBackground.RunWorkerAsync();
+                }
             };
 
             changeRectoImageBackground.DoWork += (s, e) =>
@@ -70,20 +88,36 @@ namespace SurfaceApplication1
                 int pn = 2 * tabArray[tabNumber].pageNumber + 11;
                 BitmapImage image = new BitmapImage();
                 image.BeginInit();
-                image.CacheOption = BitmapCacheOption.None;
-                image.UriSource = new Uri("pack://application:,,,/pages/" + pn.ToString() + ".jpg", UriKind.Absolute);
-                image.CacheOption = BitmapCacheOption.OnLoad;
+                if (!wantBigR)
+                    image.DecodePixelWidth = minPageWidth;
+                image.CacheOption = BitmapCacheOption.OnDemand;
+                if (changeRectoImageBackground.CancellationPending) return;
+                image.UriSource = new Uri("pages/" + pn.ToString() + ".jpg", UriKind.Relative);
+                if (changeRectoImageBackground.CancellationPending) return;
                 image.EndInit();
                 image.Freeze();
                 e.Result = image;
             };
             changeRectoImageBackground.RunWorkerCompleted += (s, e) =>
             {
-                BitmapImage bitmapImage = e.Result as BitmapImage;
-                tabArray[tabNumber]._recto.Source = bitmapImage;
-                changeRectoImageBackground.Dispose();
+                if (e.Result != null)
+                {
+                    BitmapImage bitmapImage = e.Result as BitmapImage;
+                    tabArray[tabNumber]._recto.Source = bitmapImage;
+                    changeRectoImageBackground.Dispose();
+                }
+                else
+                {
+                    changeRectoImageBackground.Dispose();
+                    changeRectoImageBackground.RunWorkerAsync();
+                }
             };
 
+            // slider actions
+            pageSlider.AddHandler(UIElement.ManipulationDeltaEvent, new EventHandler<ManipulationDeltaEventArgs>(slider_ManipulationDelta), true);
+            pageSlider.AddHandler(UIElement.ManipulationCompletedEvent, new EventHandler<ManipulationCompletedEventArgs>(slider_ManipulationCompleted), true);
+
+            //other initialization
             maxPageText.Text = maxPage.ToString();
             TabItem newTabButton = new TabItem();
             newTabButton.Header = "+";
@@ -163,25 +197,32 @@ namespace SurfaceApplication1
 
         private void prev_Click(object sender, RoutedEventArgs e)
         {
-            tabArray[tabNumber].pageNumber--;
-            if (tabArray[tabNumber].pageNumber < minPage)
-                tabArray[tabNumber].pageNumber = minPage;
-            loadPage();
+            goToPage(tabArray[tabNumber].pageNumber - 1);
         }
 
 
         private void next_Click(object sender, RoutedEventArgs e)
         {
-            tabArray[tabNumber].pageNumber++;
+            goToPage(tabArray[tabNumber].pageNumber + 1);
+        }
+
+        private void goToPage(int page)
+        {
+            tabArray[tabNumber].pageNumber = page;
             if (tabArray[tabNumber].pageNumber > maxPage)
                 tabArray[tabNumber].pageNumber = maxPage;
+            if (tabArray[tabNumber].pageNumber < minPage)
+                tabArray[tabNumber].pageNumber = minPage;
             loadPage();
         }
 
-
         private void loadPage()
         {
-            
+            tabArray[tabNumber]._vSVI.Width = minPageWidth;
+            tabArray[tabNumber]._vSVI.Height = minPageHeight;
+            tabArray[tabNumber]._rSVI.Width = minPageWidth;
+            tabArray[tabNumber]._rSVI.Height = minPageHeight;
+
             int pageNumber = tabArray[tabNumber].pageNumber;
             int versoNum = 2 * pageNumber + 10;
             int rectoNum = 2 * pageNumber + 11;
@@ -189,20 +230,19 @@ namespace SurfaceApplication1
             Image verso = tabArray[tabNumber]._verso;
             Image recto = tabArray[tabNumber]._recto;
 
-            changeVersoImageBackground.WorkerSupportsCancellation = true;
-            changeRectoImageBackground.WorkerSupportsCancellation = true;
+            if (!changeVersoImageBackground.CancellationPending)
+                changeVersoImageBackground.CancelAsync();
+            if (!changeRectoImageBackground.CancellationPending)
+                changeRectoImageBackground.CancelAsync();
 
-            while (changeVersoImageBackground.IsBusy || changeRectoImageBackground.IsBusy)
-            { 
-                if(!changeVersoImageBackground.CancellationPending)
-                    changeVersoImageBackground.CancelAsync();
-                if (!changeRectoImageBackground.CancellationPending)
-                    changeRectoImageBackground.CancelAsync();
-            }
+            wantBigR = false;
+            wantBigV = false;
 
-            changeVersoImageBackground.RunWorkerAsync();
+            if(!changeVersoImageBackground.IsBusy)
+                changeVersoImageBackground.RunWorkerAsync();
 
-            changeRectoImageBackground.RunWorkerAsync();
+            if (!changeRectoImageBackground.IsBusy)
+                changeRectoImageBackground.RunWorkerAsync();
 
             pageNumberText.Text = pageNumber.ToString();
             tabArray[tabNumber]._tab.Header = (pageNumber-1).ToString() + "v / " + pageNumber.ToString() + "r";
@@ -223,6 +263,7 @@ namespace SurfaceApplication1
 
         private TabItem createTab(int page)
         {
+            int buffer = scatterBuffer;
             int count = tabArray.Count;
             TabItem tab = new TabItem();
             tab.Header = string.Format("0v / 1r");
@@ -233,6 +274,8 @@ namespace SurfaceApplication1
             Button delBtn = new Button();
 
             Canvas can = new Canvas();
+            Canvas c_v = new Canvas();
+            Canvas c_r = new Canvas();
             Canvas c_s = new Canvas();
             Image verso = new Image();
             Image recto = new Image();
@@ -249,21 +292,34 @@ namespace SurfaceApplication1
             c_s.HorizontalAlignment = System.Windows.HorizontalAlignment.Right;
             c_s.Width = 560;
             c_s.ClipToBounds = true;
+            c_v.Width = minPageWidth;
+            c_v.Height = minPageHeight;
+            c_r.Width = minPageWidth;
+            c_r.Height = minPageHeight;
+            c_r.Margin = new Thickness(minPageWidth, 0, 0, 0);
+            c_v.ClipToBounds = true;
+            c_r.ClipToBounds = true;
             
-            vScatterView.Width = minPageWidth;
-            vScatterView.Height = minPageHeight;
-            vScatterView.HorizontalContentAlignment = System.Windows.HorizontalAlignment.Stretch;
-            vScatterView.VerticalContentAlignment = System.Windows.VerticalAlignment.Stretch;
+            vScatterView.Width = minPageWidth + 2 * buffer;
+            vScatterView.Height = minPageHeight + 2 * buffer;
+            vScatterView.Margin = new Thickness(-buffer, -buffer, 0, 0);
+            rScatterView.Margin = new Thickness(-buffer, -buffer, 0, 0);
             vScatterView.Background = Brushes.Maroon;
-            
-            rScatterView.Width = minPageWidth;
-            rScatterView.Height = minPageHeight;
-            rScatterView.HorizontalContentAlignment = System.Windows.HorizontalAlignment.Stretch;
-            rScatterView.VerticalContentAlignment = System.Windows.VerticalAlignment.Stretch;
+            rScatterView.Width = minPageWidth + 2 * buffer;
+            rScatterView.Height = minPageHeight + 2 * buffer;
             rScatterView.Background = Brushes.Navy;
 
             SSC.ScatterViewItem vScatterItem = new SSC.ScatterViewItem();
             SSC.ScatterViewItem rScatterItem = new SSC.ScatterViewItem();
+            vScatterItem.IsManipulationEnabled = true;
+            rScatterItem.IsManipulationEnabled = true;
+            vScatterItem.SizeChanged += new SizeChangedEventHandler(scatter_SizeChanged);
+            rScatterItem.SizeChanged += new SizeChangedEventHandler(scatter_SizeChanged);
+            vScatterItem.AddHandler(UIElement.ManipulationDeltaEvent, new EventHandler<ManipulationDeltaEventArgs>(scatter_ManipulationDelta), true);
+            rScatterItem.AddHandler(UIElement.ManipulationDeltaEvent, new EventHandler<ManipulationDeltaEventArgs>(scatter_ManipulationDelta), true);
+            vScatterItem.AddHandler(UIElement.ManipulationCompletedEvent, new EventHandler<ManipulationCompletedEventArgs>(scatter_ManipulationCompleted), true);
+            rScatterItem.AddHandler(UIElement.ManipulationCompletedEvent, new EventHandler<ManipulationCompletedEventArgs>(scatter_ManipulationCompleted), true);
+
             vScatterItem.Width = minPageWidth;
             vScatterItem.Height = minPageHeight;
             rScatterItem.Width = minPageWidth;
@@ -283,8 +339,12 @@ namespace SurfaceApplication1
             rScatterItem.CanRotate = false;
             rScatterItem.CanScale = true;
             vScatterItem.HorizontalContentAlignment = System.Windows.HorizontalAlignment.Stretch;
-            vScatterItem.Center = new Point(minPageWidth / 2, minPageHeight / 2);
-            rScatterItem.Center = new Point(minPageWidth / 2, minPageHeight / 2);
+            vScatterItem.Center = new Point(buffer + minPageWidth / 2, buffer + minPageHeight / 2);
+            rScatterItem.Center = new Point(buffer + minPageWidth / 2, buffer + minPageHeight / 2);
+
+            vScatterItem.SizeChanged += new SizeChangedEventHandler (makeVersoImageLarge);
+            rScatterItem.SizeChanged += new SizeChangedEventHandler (makeRectoImageLarge);
+
 
             Canvas vCanvas = new Canvas();
             Canvas rCanvas = new Canvas();
@@ -301,13 +361,10 @@ namespace SurfaceApplication1
             vScatterItem.Content = verso;
             rScatterItem.Content = recto;
 
+            c_v.Children.Add(vScatterView);
+            c_r.Children.Add(rScatterView);
             vScatterView.Items.Add(vScatterItem);
             rScatterView.Items.Add(rScatterItem);
-
-            BitmapCache mybitmapCache = new BitmapCache(1);
-            mybitmapCache.SnapsToDevicePixels = true;
-            verso.CacheMode = mybitmapCache;
-            recto.CacheMode = mybitmapCache;
 
             verso.HorizontalAlignment = System.Windows.HorizontalAlignment.Left;
             verso.VerticalAlignment = System.Windows.VerticalAlignment.Top;
@@ -316,8 +373,8 @@ namespace SurfaceApplication1
 
             tabArray.Insert(count, new Tab(1, tab, verso, recto, can, vScatterItem, rScatterItem, c_s, delBtn));
             
-            can.Children.Add(vScatterView);
-            can.Children.Add(rScatterView);
+            can.Children.Add(c_v);
+            can.Children.Add(c_r);
             can.Children.Add(c_s);
             tab.Content = can;
             tabBar.Items.Insert(tabArray.Count - 1, tab);
@@ -363,6 +420,8 @@ namespace SurfaceApplication1
                 
             }
             tabArray[tabNumber]._delButton.Visibility = System.Windows.Visibility.Visible;
+
+            loadPage();
         }
 
         private void btnDelete_Click(object sender, RoutedEventArgs e)
@@ -375,7 +434,7 @@ namespace SurfaceApplication1
             }
         }
 
-        private void SliderManipulationStarted(object sender, TouchEventArgs e)
+        private void slider_ManipulationDelta(object sender, ManipulationDeltaEventArgs e)
         {
             int height = 850;
             SurfaceSlider slider = (SurfaceSlider)sender;
@@ -398,7 +457,7 @@ namespace SurfaceApplication1
             SliderText3.FontSize = 50;
             SliderText3.Foreground = Brushes.Black;
             SliderText3.Margin = new Thickness(SliderDisplay3.Width / 2 - SliderText3.ActualWidth / 2, -20, 0, 0);
-            double middle = 700 + (slider.Width - 30) * onVal / slider.Maximum;
+            double middle = 1210 + (slider.Width - 30) * onVal / slider.Maximum;
             //SliderDisplay1.Margin = new Thickness(middle - 160, height, 0, 0);
             //SliderDisplay2.Margin = new Thickness(middle - 90, height, 0, 0);
             SliderDisplay3.Margin = new Thickness(middle, height, 0, 0);
@@ -415,7 +474,7 @@ namespace SurfaceApplication1
             //SliderDisplay5.BeginAnimation(OpacityProperty, anim);
         }
 
-        private void SliderManipulationCompleted(object sender, TouchEventArgs e)
+        private void slider_ManipulationCompleted(object sender, ManipulationCompletedEventArgs e)
         {
             DoubleAnimation anim = new DoubleAnimation();
             anim.Duration = new Duration(TimeSpan.FromSeconds(.5));
@@ -427,8 +486,7 @@ namespace SurfaceApplication1
             //SliderDisplay4.BeginAnimation(OpacityProperty, anim);
             //SliderDisplay5.BeginAnimation(OpacityProperty, anim);
             SurfaceSlider slider = (SurfaceSlider)sender;
-            tabArray[tabNumber].pageNumber = (int)Math.Round(slider.Value);
-            loadPage();
+            goToPage((int)Math.Round(slider.Value));
         }
 
         private void Button_Click(object sender, RoutedEventArgs e)
@@ -436,6 +494,78 @@ namespace SurfaceApplication1
             changeVersoImageBackground.RunWorkerAsync();
         }
 
+        private void makeVersoImageLarge(object sender, SizeChangedEventArgs e)
+        {
+            if (!wantBigV)
+            {
+                ScatterViewItem item = (ScatterViewItem)sender;
+                if (item.ActualWidth > minPageWidth)
+                {
+                    if (!changeVersoImageBackground.CancellationPending)
+                        changeVersoImageBackground.CancelAsync();
+                    wantBigV = true;
+                    if(!changeVersoImageBackground.IsBusy)
+                        changeVersoImageBackground.RunWorkerAsync();
+                }
+            }
+        }
+
+        private void makeRectoImageLarge(object sender, SizeChangedEventArgs e)
+        {
+            if (!wantBigR)
+            {
+                ScatterViewItem item = (ScatterViewItem)sender;
+                if (item.ActualWidth > minPageWidth)
+                {
+                    if (!changeRectoImageBackground.CancellationPending)
+                        changeRectoImageBackground.CancelAsync();
+                    wantBigR = true;
+                    if (!changeRectoImageBackground.IsBusy)
+                        changeRectoImageBackground.RunWorkerAsync();
+                }
+            }
+        }
+
+
+        private void scatter_SizeChanged(object sender, SizeChangedEventArgs e)
+        {
+            limitScatter((ScatterViewItem)sender);
+        }
+        private void scatter_ManipulationDelta(object sender, ManipulationDeltaEventArgs e)
+        {
+            limitScatter((ScatterViewItem)sender);
+        }
+        private void scatter_ManipulationCompleted(object sender, ManipulationCompletedEventArgs e)
+        {
+            limitScatter((ScatterViewItem)sender);
+        }
+
+        private void limitScatter(ScatterViewItem i)
+        {
+            double x,y,w,h;
+            x = i.Center.X;
+            y = i.Center.Y;
+            w = i.ActualWidth / 2;
+            h = i.ActualHeight / 2;
+            if (x > scatterBuffer + w)
+                i.Center = new Point(scatterBuffer + w, y);
+            if (x < scatterBuffer + minPageWidth - w)
+                i.Center = new Point(scatterBuffer + minPageWidth - w, y);
+
+            x = i.Center.X;
+            y = i.Center.Y;
+            w = i.ActualWidth / 2;
+            h = i.ActualHeight / 2;
+            if (y > scatterBuffer + h)
+                i.Center = new Point(x, scatterBuffer + h);
+            if (y < scatterBuffer + minPageHeight - h)
+                i.Center = new Point(x, scatterBuffer + minPageHeight - h);
+        }
+
+        private void pageSliderFlicked(object sender, SSC.Primitives.FlickEventArgs e)
+        {
+            e.Handled = true;
+        }
 
     }
 }

@@ -8,6 +8,27 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
+[assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("pages/11.jpg")]
+[assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("pages/12.jpg")]
+[assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("pages/13.jpg")]
+[assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("pages/14.jpg")]
+[assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("pages/15.jpg")]
+[assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("pages/16.jpg")]
+[assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("pages/17.jpg")]
+[assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("pages/18.jpg")]
+[assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("pages/19.jpg")]
+[assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("pages/20.jpg")]
+[assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("pages/0.jpg")]
+[assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("pages/1.jpg")]
+[assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("pages/10.jpg")]
+[assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("pages/2.jpg")]
+[assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("pages/3.jpg")]
+[assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("pages/4.jpg")]
+[assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("pages/5.jpg")]
+[assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("pages/6.jpg")]
+[assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("pages/7.jpg")]
+[assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("pages/8.jpg")]
+[assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("pages/9.jpg")]
 [assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("resources/icon.png")]
 [assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("surfaceapplication1.xml")]
 

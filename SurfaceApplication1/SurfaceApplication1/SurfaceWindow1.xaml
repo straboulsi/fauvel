@@ -4,6 +4,8 @@
     xmlns:s="http://schemas.microsoft.com/surface/2008"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:ed="http://schemas.microsoft.com/expression/2010/drawing" mc:Ignorable="d" x:Class="SurfaceApplication1.SurfaceWindow1"
     Title="SurfaceApplication1" Width="1920" Height="1080"
+    WindowStyle="None" ResizeMode="NoResize"
+    WindowStartupLocation="CenterScreen" WindowState="Maximized"
     >
 	<Canvas x:Name="mother">
         <Canvas x:Name="toolbar" Height="100" Width="1920" Margin="0" Background="Gray" Canvas.Top="980" d:LayoutOverrides="Width">
@@ -18,7 +20,7 @@
 			<TextBox x:Name="pageNumberText" Height="38" Canvas.Left="900" TextWrapping="Wrap" Text="58" Canvas.Top="8" Width="80" FontSize="30" TextAlignment="Center" Background="#FFCCCCCC"/>
 			<TextBlock Height="38" Canvas.Left="980" TextWrapping="Wrap" Text="/" Canvas.Top="8" Width="50" FontSize="30" TextAlignment="Center"/>
             <TextBlock x:Name="maxPageText" Height="38" Canvas.Left="1030" TextWrapping="Wrap" Text="58" Canvas.Top="11" Width="80" FontSize="30" TextAlignment="Center"/>
-            <s:SurfaceSlider  Minimum="0" Maximum="100" Width="430" Canvas.Left="745" Canvas.Top="40" TickFrequency="1" IsSnapToTickEnabled="True" PreviewTouchMove="SliderManipulationStarted" PreviewTouchDown="SliderManipulationStarted" PreviewTouchUp="SliderManipulationCompleted"></s:SurfaceSlider>
+            <s:SurfaceSlider x:Name="pageSlider" Minimum="0" Maximum="100" Width="430" Canvas.Left="745" Canvas.Top="40" TickFrequency="1" IsSnapToTickEnabled="True" s:SurfaceThumb.PreviewFlicked="pageSliderFlicked"></s:SurfaceSlider>
         </Canvas>
 		<TabControl x:Name="tabBar" SelectionChanged="tabBar_SelectionChanged" Height="980" Width="1920" VerticalContentAlignment="Center" VerticalAlignment="Center" HorizontalAlignment="Center" TabStripPlacement="Bottom">
             <TabControl.Resources>
@@ -63,6 +65,5 @@
             <Image x:Name="SliderImage5" Source="\pages\11.jpg" Width="100" Stretch="UniformToFill"/>
             <TextBlock x:Name="SliderText5" HorizontalAlignment="Center" Canvas.Top="-50" Text=" "/>
         </Canvas> -->
-        <TextBlock x:Name="loadText" FontSize="50" Width="920" Height="280" TextAlignment="Center" Canvas.Left="500" Canvas.Top="500" Text="...loading..."/>
 	</Canvas>
 </s:SurfaceWindow>
