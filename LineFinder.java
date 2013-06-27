@@ -272,7 +272,7 @@ public class LineFinder extends JFrame implements MouseListener, ActionListener,
 							+ "lrx=\"" + newObject.bottomRight.x + "\"\n" 
 							+ "lry=\"" + newObject.bottomRight.y + "\">\n" + "</zone>\n");
 				}
-				else if {
+				else {
 					b.write("<zone\n" + "xml:id=\"" + newObject.name + "\"\n");
 					b.write("ulx=\"" + newObject.topLeft.x + "\"\n" 
 							+ "uly=\"" + newObject.topLeft.y + "\"\n" 
