@@ -26,7 +26,7 @@ public class LineFinder extends JFrame implements MouseListener, ActionListener,
 	private int x1, y1, width, height;
 	Graphics2D g2d;
 	Scanner in;
-	File format = new File("format.txt");
+	File format = new File("layout.txt");
 	PrintWriter p;
 	FileWriter f;
 	BufferedWriter b;
@@ -80,7 +80,7 @@ public class LineFinder extends JFrame implements MouseListener, ActionListener,
 		System.out.println("Please start by opening a folio image from File.");
 		
 		p = new PrintWriter(format);
-		p.print("<xml>\n<text>\n<body>\n");
+		p.print("<xml>\n<facsimile>\n");
 		p.close();
 	}
 
@@ -142,9 +142,9 @@ public class LineFinder extends JFrame implements MouseListener, ActionListener,
 				String side = in.next();
 				if ((side.equals("r")) || (side.equals("v"))) {
 					try {
-						f = new FileWriter("format.txt", true);
+						f = new FileWriter("layout.txt", true);
 						b = new BufferedWriter(f);
-						b.write("<pb facs=\"#" + number + side + "\" />\n");
+						b.write("<surface xml:id=\">" + number + side + "\">\n");
 					} catch (IOException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
