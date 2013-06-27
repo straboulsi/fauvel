@@ -35,9 +35,6 @@ public class LineFinder extends JFrame implements MouseListener, ActionListener,
 	BufferedImage smallimg;
 	TableOfContents table = new TableOfContents();
 	int foNum;
-	int imNum = 1;
-	int textNum = 1; // uhhhhhHHHH????????
-	int muNum = 1; // what to do about several types???
 	String side;
 
 	public LineFinder() throws IOException {
@@ -140,14 +137,11 @@ public class LineFinder extends JFrame implements MouseListener, ActionListener,
 			// TODO Auto-generated method stub
 			if(JFileChooser.APPROVE_OPTION == fileChooser.showOpenDialog(frame)) {
 				System.out.println("folio/page number: (Enter as \"3 r\", \"21 v\", etc)");
-				int number = in.nextInt();
-				String side = in.next();
-				System.out.println("On "+String.valueOf(number)+side+", you should find the following objects:");
-				System.out.println(table.contents(number, side));
-
-				System.out.println("folio: ");
 				foNum = in.nextInt();
 				side = in.next();
+				System.out.println("On "+String.valueOf(number)+side+", you should find the following objects:");
+				System.out.println(table.contents(number, side));
+				
 				if ((side.equals("r")) || (side.equals("v"))) {
 					try {
 						f = new FileWriter("layout.txt", true);
