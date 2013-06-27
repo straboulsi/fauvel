@@ -118,8 +118,8 @@ public class LineFinder extends JFrame implements MouseListener, ActionListener,
 			g2d = smallimg.createGraphics();
 			g2d.setColor(Color.white);
 			g2d.drawRect(x1, y1a, width, height);
-			
-		
+
+
 
 			frame.validate();
 			frame.repaint();
@@ -144,7 +144,7 @@ public class LineFinder extends JFrame implements MouseListener, ActionListener,
 				String side = in.next();
 				System.out.println("On "+String.valueOf(number)+side+", you should find the following objects:");
 				System.out.println(table.contents(number, side));
-				
+
 				System.out.println("folio: ");
 				foNum = in.nextInt();
 				side = in.next();
@@ -235,7 +235,7 @@ public class LineFinder extends JFrame implements MouseListener, ActionListener,
 			if (newObject != null)
 				System.out.println("You have already specified a type for this object.");
 			else {
-				System.out.println("text object ID:\n");
+				System.out.println("text object ID:");
 				String tName = in.next();
 				newObject = new ManuscriptObject(tName, "text");
 			}
@@ -244,7 +244,7 @@ public class LineFinder extends JFrame implements MouseListener, ActionListener,
 			if (newObject != null)
 				System.out.println("You have already specified a type for this object.");
 			else {
-				System.out.println("music object ID:\n");
+				System.out.println("music object ID:");
 				String mName = in.next();
 				newObject = new ManuscriptObject(mName, "music");
 			}
@@ -253,43 +253,43 @@ public class LineFinder extends JFrame implements MouseListener, ActionListener,
 			if (newObject != null)
 				System.out.println("You have already specified a type for this object.");
 			else {
-				System.out.println("image object ID:\n");
+				System.out.println("image object ID:");
 				String iName = in.next();
 				newObject = new ManuscriptObject(iName, "image");
 			}
 		}
 		else if(arg0.getSource().equals(saveObject)){
-			//			System.out.println("add this object? enter \"y\" if yes and anything else if no");
-			//			if (in.next().equals("y")) {
-			objects.add(newObject);
-			try {
-				f = new FileWriter("layout.txt", true);
-				b = new BufferedWriter(f);
-				if (newObject.type.equals("text")) { // script????
-					b.write("<zone\n" + "xml:id=\"" + newObject.name + "\"\n");
-					b.write("ulx=\"" + newObject.topLeft.x + "\"\n" 
-							+ "uly=\"" + newObject.topLeft.y + "\"\n" 
-							+ "lrx=\"" + newObject.bottomRight.x + "\"\n" 
-							+ "lry=\"" + newObject.bottomRight.y + "\">\n" + "</zone>\n");
+			System.out.println("add this object? enter \"y\" if yes and anything else if no");
+			if (in.next().equals("y")) {
+				objects.add(newObject);
+				try {
+					f = new FileWriter("layout.txt", true);
+					b = new BufferedWriter(f);
+					if (newObject.type.equals("text")) { // script????
+						b.write("<zone\n" + "xml:id=\"" + newObject.name + "\"\n");
+						b.write("ulx=\"" + newObject.topLeft.x + "\"\n" 
+								+ "uly=\"" + newObject.topLeft.y + "\"\n" 
+								+ "lrx=\"" + newObject.bottomRight.x + "\"\n" 
+								+ "lry=\"" + newObject.bottomRight.y + "\">\n" + "</zone>\n");
+					}
+					else {
+						b.write("<zone\n" + "xml:id=\"" + newObject.name + "\"\n");
+						b.write("ulx=\"" + newObject.topLeft.x + "\"\n" 
+								+ "uly=\"" + newObject.topLeft.y + "\"\n" 
+								+ "lrx=\"" + newObject.bottomRight.x + "\"\n" 
+								+ "lry=\"" + newObject.bottomRight.y + "\">\n" + "</zone>\n");
+					}
+					b.close();
+					f.close();
 				}
-				else {
-					b.write("<zone\n" + "xml:id=\"" + newObject.name + "\"\n");
-					b.write("ulx=\"" + newObject.topLeft.x + "\"\n" 
-							+ "uly=\"" + newObject.topLeft.y + "\"\n" 
-							+ "lrx=\"" + newObject.bottomRight.x + "\"\n" 
-							+ "lry=\"" + newObject.bottomRight.y + "\">\n" + "</zone>\n");
+				catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
 				}
-				b.close();
-				f.close();
+				System.out.println(newObject.name + " added");
 			}
-			catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			System.out.println(newObject.name + " added");
-			//			}
-			//		else
-			//			System.out.println(newObject.name + " not added");
+			else
+				System.out.println(newObject.name + " not added");
 			left = !left;
 			g2d.dispose();
 			newObject = null;
