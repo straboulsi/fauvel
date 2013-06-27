@@ -83,7 +83,7 @@ public class LineFinder extends JFrame implements MouseListener, ActionListener,
 		frame.setVisible(true);
 
 		System.out.println("Please start by opening a folio image from File.");
-		
+
 		p = new PrintWriter(format);
 		p.print("<xml>\n<facsimile>\n");
 		p.close();
@@ -114,11 +114,11 @@ public class LineFinder extends JFrame implements MouseListener, ActionListener,
 			g2d = smallimg.createGraphics();
 			g2d.setColor(Color.white);
 			g2d.drawRect(x1, y1, width, height);
-			
-//			Rectangle rect = new Rectangle(x1, y1, width, height);
-//			frame.add(rect);
-		
-		
+
+			//			Rectangle rect = new Rectangle(x1, y1, width, height);
+			//			frame.add(rect);
+
+
 			System.out.println("I just drew a rectangle!");
 			frame.validate();
 			frame.repaint();
@@ -128,8 +128,8 @@ public class LineFinder extends JFrame implements MouseListener, ActionListener,
 			myPicPanel.add(myPicLabel);
 			myPicPanel.repaint();
 			myPicPanel.revalidate();
-			
-			
+
+
 		}	
 	}
 
@@ -221,7 +221,7 @@ public class LineFinder extends JFrame implements MouseListener, ActionListener,
 	@Override
 	public void mouseReleased(MouseEvent e) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
@@ -254,47 +254,47 @@ public class LineFinder extends JFrame implements MouseListener, ActionListener,
 			}
 		}
 		else if(arg0.getSource().equals(saveObject)){
-			System.out.println("add this object? enter \"y\" if yes and anything else if no");
-			if (in.next().equals("y")) {
-				objects.add(newObject);
-				try {
-					f = new FileWriter("layout.txt", true);
-					b = new BufferedWriter(f);
-					if (newObject.type.equals("image")) {
-						b.write("<zone\n" + "xml:id=\"" + foNum + side + "Im" + imNum + "\"\n");
-						b.write("ulx=\"" + newObject.topLeft.x + "\"\n" 
-								+ "uly=\"" + newObject.topLeft.y + "\"\n" 
-								+ "lrx=\"" + newObject.bottomRight.x + "\"\n" 
-								+ "lry=\"" + newObject.bottomRight.y + "\">\n" + "</zone>\n");
-						imNum++;
-					}
-					else if (newObject.type.equals("text")) { // script? what now? shmeh
-						b.write("<zone\n" + "xml:id=\"" + "Te_" + textNum + "\"\n"); // gotta do something about this
-						b.write("ulx=\"" + newObject.topLeft.x + "\"\n" 
-								+ "uly=\"" + newObject.topLeft.y + "\"\n" 
-								+ "lrx=\"" + newObject.bottomRight.x + "\"\n" 
-								+ "lry=\"" + newObject.bottomRight.y + "\">\n" + "</zone>\n");
-						// increment the numbers that keep track of the lines of text
-					}
-					else if (newObject.type.equals("music")) { // for now just motets, figure out other stuff later
-						b.write("<zone\n" + "xml:id=\"" + foNum + side + "Mo" + muNum + "\"\n");
-						b.write("ulx=\"" + newObject.topLeft.x + "\"\n" 
-								+ "uly=\"" + newObject.topLeft.y + "\"\n" 
-								+ "lrx=\"" + newObject.bottomRight.x + "\"\n" 
-								+ "lry=\"" + newObject.bottomRight.y + "\">\n" + "</zone>\n");
-						muNum++;
-					}
-					b.close();
-					f.close();
+			//			System.out.println("add this object? enter \"y\" if yes and anything else if no");
+			//			if (in.next().equals("y")) {
+			objects.add(newObject);
+			try {
+				f = new FileWriter("layout.txt", true);
+				b = new BufferedWriter(f);
+				if (newObject.type.equals("image")) {
+					b.write("<zone\n" + "xml:id=\"" + foNum + side + "Im" + imNum + "\"\n");
+					b.write("ulx=\"" + newObject.topLeft.x + "\"\n" 
+							+ "uly=\"" + newObject.topLeft.y + "\"\n" 
+							+ "lrx=\"" + newObject.bottomRight.x + "\"\n" 
+							+ "lry=\"" + newObject.bottomRight.y + "\">\n" + "</zone>\n");
+					imNum++;
 				}
-				catch (IOException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
+				else if (newObject.type.equals("text")) { // script? what now? shmeh
+					b.write("<zone\n" + "xml:id=\"" + "Te_" + textNum + "\"\n"); // gotta do something about this
+					b.write("ulx=\"" + newObject.topLeft.x + "\"\n" 
+							+ "uly=\"" + newObject.topLeft.y + "\"\n" 
+							+ "lrx=\"" + newObject.bottomRight.x + "\"\n" 
+							+ "lry=\"" + newObject.bottomRight.y + "\">\n" + "</zone>\n");
+					// increment the numbers that keep track of the lines of text
 				}
-				System.out.println(newObject.name + " added");
+				else if (newObject.type.equals("music")) { // for now just motets, figure out other stuff later
+					b.write("<zone\n" + "xml:id=\"" + foNum + side + "Mo" + muNum + "\"\n");
+					b.write("ulx=\"" + newObject.topLeft.x + "\"\n" 
+							+ "uly=\"" + newObject.topLeft.y + "\"\n" 
+							+ "lrx=\"" + newObject.bottomRight.x + "\"\n" 
+							+ "lry=\"" + newObject.bottomRight.y + "\">\n" + "</zone>\n");
+					muNum++;
+				}
+				b.close();
+				f.close();
 			}
-			else
-				System.out.println(newObject.name + " not added");
+			catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			System.out.println(newObject.name + " added");
+			//			}
+			//		else
+			//			System.out.println(newObject.name + " not added");
 			left = !left;
 			g2d.dispose();
 			newObject = null;
