@@ -91,7 +91,7 @@ public class LineFinder extends JFrame implements MouseListener, ActionListener,
 
 
 	@Override
-	public void mouseClicked(MouseEvent e) {
+	public void mouseClicked(MouseEvent e) { // need to scale recorded coordinates BACK
 		if (left) {
 			if (newObject == null) {
 				System.out.println("Please click type first.");
@@ -156,7 +156,7 @@ public class LineFinder extends JFrame implements MouseListener, ActionListener,
 						e.printStackTrace();
 					}
 					File file = fileChooser.getSelectedFile();
-					try {
+					try { // original file will be w: 5250 and h: 7350. scale how much?
 						img = ImageIO.read(file);
 						smallimg = createResizedCopy(img, 683, 954, false);
 						myPic = new ImageIcon(smallimg);
