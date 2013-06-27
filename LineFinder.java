@@ -79,7 +79,7 @@ public class LineFinder extends JFrame implements MouseListener, ActionListener,
 		buttons.add(saveObject);
 		buttons.add(done);
 		frame.add(buttons, BorderLayout.SOUTH);
-		frame.setSize(683, 954);
+		frame.setSize(500, 775);
 		frame.setVisible(true);
 
 		System.out.println("Please start by opening a folio image from File.");
@@ -97,26 +97,23 @@ public class LineFinder extends JFrame implements MouseListener, ActionListener,
 				System.out.println("Please click type first.");
 			}
 			else {
-				newObject.topLeft = new Coordinate(e.getX(), e.getY());
+				newObject.topLeft = new Coordinate(e.getX(), e.getY()-frameOffset);
 				System.out.println(newObject.topLeft);
 				left = !left;
 			}
 		}
 		else {
-			newObject.bottomRight = new Coordinate(e.getX(), e.getY());
+			newObject.bottomRight = new Coordinate(e.getX(), e.getY()-frameOffset);
 			System.out.println(newObject.bottomRight);
 
 			x1 = newObject.topLeft.x;
 			y1 = newObject.topLeft.y;
-			y1a = y1 - frameOffset;
 			width = newObject.bottomRight.x - x1;
 			height = newObject.bottomRight.y - y1;
 
 			g2d = smallimg.createGraphics();
 			g2d.setColor(Color.white);
-			g2d.drawRect(x1, y1a, width, height);
-
-
+			g2d.drawRect(x1, y1, width, height);
 
 			frame.validate();
 			frame.repaint();
@@ -158,7 +155,7 @@ public class LineFinder extends JFrame implements MouseListener, ActionListener,
 					File file = fileChooser.getSelectedFile();
 					try { // original file will be w: 5250 and h: 7350. scale how much?
 						img = ImageIO.read(file);
-						smallimg = createResizedCopy(img, 683, 954, false);
+						smallimg = createResizedCopy(img, 500, 700, false);
 						myPic = new ImageIcon(smallimg);
 						myPicLabel = new JLabel("", myPic, JLabel.CENTER);
 						myPicPanel.add(myPicLabel);
