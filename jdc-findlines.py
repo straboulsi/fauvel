@@ -48,6 +48,7 @@ def get_box_val_xy(x1, x2, y1, y2, im):
 def line_in_range(ymin, line_height, fudge):
 	boxes = [get_box_val(k+ymin, k+ymin+line_height) for k in range(fudge)]
 	best_box = max(boxes)
+	print best_box
 	best_y = boxes.index(best_box) + ymin
 	return (best_y, best_box)
 
@@ -81,7 +82,7 @@ def find_lines(inpath, leftx, lefty, rightx, righty, save_file=False, show_file=
 	pix = im.load()
 	xsize = rightx - leftx # im.size[0]
 	ysize = righty - lefty # im.size[1]
-
+	
 	line_height = 13
 	fudge = 10
 	start_y = lefty # 0
@@ -90,12 +91,14 @@ def find_lines(inpath, leftx, lefty, rightx, righty, save_file=False, show_file=
 		new_box = line_in_range(start_y, line_height, fudge)
 		start_y = new_box[0] + line_height
 
+		print 'is this problem: ' + str(get_box_val(new_box[0], new_box[0] + line_height))
 		if get_box_val(new_box[0], new_box[0] + line_height) == 0:
 			break
-		boxes.append(new_box[0])
+		print 'is this happening ever -_- ugh'
+		boxes.append(new_box[0]) # we never get to append so boxes is left empty
 
 	box_vals = [get_box_val(y, y+line_height) for y in boxes]
-	med = np.median(box_vals)
+	med = np.median(box_vals) # box_vals is empty so this is making an error
 
 	filtered_boxes = filter(
 		lambda y: get_box_val(y,y+line_height) > med/2.0
@@ -197,6 +200,7 @@ if __name__ == '__main__':
 	# Preprocess
 	bin_img_path = dir_bin_folios + filename
 	preprocess_thresh(orig_loc, bin_img_path)
+
 	# Find lines
 	boxes = find_lines(bin_img_path, x1, y1, x2, y2)
 	bin_im = ImageOps.invert(ImageOps.grayscale(Image.open(bin_img_path)))
