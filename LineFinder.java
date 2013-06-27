@@ -24,6 +24,7 @@ public class LineFinder extends JFrame implements MouseListener, ActionListener,
 	private ManuscriptObject newObject;
 	private ArrayList<ManuscriptObject> objects = new ArrayList<ManuscriptObject>();
 	private int x1, y1, width, height;
+	private int y1a, frameOffset; // Accounts for the pixels that make up the top of the frame
 	Graphics2D g2d;
 	Scanner in;
 	File format = new File("format.txt");
@@ -32,6 +33,8 @@ public class LineFinder extends JFrame implements MouseListener, ActionListener,
 	BufferedWriter b;
 	BufferedImage img;
 	BufferedImage smallimg;
+	TableOfContents table = new TableOfContents();
+	
 
 	public LineFinder() throws IOException {
 		frame = new JFrame("Object Recorder");
@@ -49,6 +52,7 @@ public class LineFinder extends JFrame implements MouseListener, ActionListener,
 		fileChooser = new JFileChooser();
 		in = new Scanner(System.in);
 		myPicPanel = new JPanel();
+		frameOffset = 50;
 
 		frame.setLayout(new BorderLayout());
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -103,18 +107,18 @@ public class LineFinder extends JFrame implements MouseListener, ActionListener,
 
 			x1 = newObject.topLeft.x;
 			y1 = newObject.topLeft.y;
+			y1a = y1 - frameOffset;
 			width = newObject.bottomRight.x - x1;
 			height = newObject.bottomRight.y - y1;
 
 			g2d = smallimg.createGraphics();
 			g2d.setColor(Color.white);
-			g2d.drawRect(x1, y1, width, height);
+			g2d.drawRect(x1, y1a, width, height);
 			
 //			Rectangle rect = new Rectangle(x1, y1, width, height);
-//			frame.add(rect);
 		
 		
-			System.out.println("I just drew a rectangle!");
+//			System.out.println("I just drew a rectangle!");
 			frame.validate();
 			frame.repaint();
 
@@ -123,9 +127,7 @@ public class LineFinder extends JFrame implements MouseListener, ActionListener,
 			myPicPanel.add(myPicLabel);
 			myPicPanel.repaint();
 			myPicPanel.revalidate();
-			
-		
-			
+				
 			
 		}	
 	}
@@ -137,9 +139,12 @@ public class LineFinder extends JFrame implements MouseListener, ActionListener,
 		public void actionPerformed(ActionEvent arg0) {
 			// TODO Auto-generated method stub
 			if(JFileChooser.APPROVE_OPTION == fileChooser.showOpenDialog(frame)) {
-				System.out.println("folio: ");
+				System.out.println("folio/page number: (Enter as \"3 r\", \"21 v\", etc)");
 				int number = in.nextInt();
 				String side = in.next();
+				System.out.println("On "+String.valueOf(number)+side+", you should find the following objects:");
+				System.out.println(table.contents(number, side));
+				
 				if ((side.equals("r")) || (side.equals("v"))) {
 					try {
 						f = new FileWriter("format.txt", true);
