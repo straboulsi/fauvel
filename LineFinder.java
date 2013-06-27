@@ -139,8 +139,8 @@ public class LineFinder extends JFrame implements MouseListener, ActionListener,
 				System.out.println("folio/page number: (Enter as \"3 r\", \"21 v\", etc)");
 				foNum = in.nextInt();
 				side = in.next();
-				System.out.println("On "+String.valueOf(number)+side+", you should find the following objects:");
-				System.out.println(table.contents(number, side));
+				System.out.println("On "+foNum+side+", you should find the following objects:");
+				System.out.println(table.contents(foNum, side));
 				
 				if ((side.equals("r")) || (side.equals("v"))) {
 					try {
@@ -305,8 +305,6 @@ public class LineFinder extends JFrame implements MouseListener, ActionListener,
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
-				imNum = 1;
-				muNum = 1;
 				frame.remove(myPicPanel);
 				frame.validate();
 				frame.repaint();
