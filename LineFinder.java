@@ -230,7 +230,7 @@ public class LineFinder extends JFrame implements MouseListener, ActionListener,
 			if (newObject != null)
 				System.out.println("You have already specified a type for this object.");
 			else {
-				System.out.println("name of text object:");
+				System.out.println("text object ID:\n");
 				String tName = in.next();
 				newObject = new ManuscriptObject(tName, "text");
 			}
@@ -239,7 +239,7 @@ public class LineFinder extends JFrame implements MouseListener, ActionListener,
 			if (newObject != null)
 				System.out.println("You have already specified a type for this object.");
 			else {
-				System.out.println("name of music object:");
+				System.out.println("music object ID:\n");
 				String mName = in.next();
 				newObject = new ManuscriptObject(mName, "music");
 			}
@@ -248,7 +248,7 @@ public class LineFinder extends JFrame implements MouseListener, ActionListener,
 			if (newObject != null)
 				System.out.println("You have already specified a type for this object.");
 			else {
-				System.out.println("name of image object:");
+				System.out.println("image object ID:\n");
 				String iName = in.next();
 				newObject = new ManuscriptObject(iName, "image");
 			}
@@ -260,29 +260,19 @@ public class LineFinder extends JFrame implements MouseListener, ActionListener,
 			try {
 				f = new FileWriter("layout.txt", true);
 				b = new BufferedWriter(f);
-				if (newObject.type.equals("image")) {
-					b.write("<zone\n" + "xml:id=\"" + foNum + side + "Im" + imNum + "\"\n");
+				if (newObject.type.equals("text")) { // script????
+					b.write("<zone\n" + "xml:id=\"" + newObject.name + "\"\n");
 					b.write("ulx=\"" + newObject.topLeft.x + "\"\n" 
 							+ "uly=\"" + newObject.topLeft.y + "\"\n" 
 							+ "lrx=\"" + newObject.bottomRight.x + "\"\n" 
 							+ "lry=\"" + newObject.bottomRight.y + "\">\n" + "</zone>\n");
-					imNum++;
 				}
-				else if (newObject.type.equals("text")) { // script? what now? shmeh
-					b.write("<zone\n" + "xml:id=\"" + "Te_" + textNum + "\"\n"); // gotta do something about this
+				else if {
+					b.write("<zone\n" + "xml:id=\"" + newObject.name + "\"\n");
 					b.write("ulx=\"" + newObject.topLeft.x + "\"\n" 
 							+ "uly=\"" + newObject.topLeft.y + "\"\n" 
 							+ "lrx=\"" + newObject.bottomRight.x + "\"\n" 
 							+ "lry=\"" + newObject.bottomRight.y + "\">\n" + "</zone>\n");
-					// increment the numbers that keep track of the lines of text
-				}
-				else if (newObject.type.equals("music")) { // for now just motets, figure out other stuff later
-					b.write("<zone\n" + "xml:id=\"" + foNum + side + "Mo" + muNum + "\"\n");
-					b.write("ulx=\"" + newObject.topLeft.x + "\"\n" 
-							+ "uly=\"" + newObject.topLeft.y + "\"\n" 
-							+ "lrx=\"" + newObject.bottomRight.x + "\"\n" 
-							+ "lry=\"" + newObject.bottomRight.y + "\">\n" + "</zone>\n");
-					muNum++;
 				}
 				b.close();
 				f.close();
