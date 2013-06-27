@@ -51,14 +51,6 @@ def line_in_range(ymin, line_height, fudge):
 	best_y = boxes.index(best_box) + ymin
 	return (best_y, best_box)
 
-# Guesses where a word might be. Fudge factor limits its search field.
-def word_in_range(im, xstart=0, width=7, fudge=10):
-	height = im.size[1]
-	boxes = [get_box_val_xy(x, x+width, 0, height, im) for x in range(xstart, xstart+fudge)]
-	best = max(boxes)
-	best_x = boxes.index(best) + xstart
-	return best_x
-
 def weighted_box_val(y1, y2):
 	# Returns a weighted value for a box, favoring middle pixels.
 	if y2 > ysize:
@@ -76,75 +68,6 @@ def preprocess_thresh(infile, outfile):
 	im = misc.imread(infile, True)	
 	im = (im > im.mean())
 	misc.imsave(outfile, im)
-
-# Guesses average character width.
-def get_char_width(text, im):
-	val_per_col = [get_box_val_xy(x,x+1,0,im.size[1], im) for x in range(im.size[0])]
-
-	thresh = im.size[1] * 255 * 0.1
-	nonzeros = filter(lambda x: x > thresh, val_per_col)
-	num_chars = sum([len(w) for w in text])
-
-	return len(nonzeros) / num_chars
-	#return 7  # if you want to fudge it :)
-
-# Guesses gap between 1st and 2nd char.
-def get_first_gap(im, char_width, start=20, fudge=10, min_gap=4):
-	first_end = start + (char_width * 2)
-	# Search for up to fudge pixels for best box.
-	# 'best' = lowest value between first_end and second_start.
-
-	first_density = get_box_val_xy(start, first_end,
-									0, im.size[1], im) / float(char_width*2)
-	avg_boxes = [get_box_val_xy(first_end, first_end+x, 
-							0, im.size[1], im) / float(x) for x in range(min_gap,fudge)]
-
-	starts = [first_end + x for x in range(min_gap,fudge)]
-	min_index = np.argmin(avg_boxes)
-	# Optional visualizing, for debugging
-	#draw.line((starts[min_index], 0, starts[min_index], im.size[1]), fill=100)
-	#draw.rectangle((first_end, 0, starts[min_index], im.size[1]), fill=100)
-
-	return starts[min_index]
-
-# expects overall column im + boxes
-def get_start(im, boxes):
-	nonzero_starts = []
-	
-	for i in range(len(boxes)):
-		line = im.crop(boxes[i])
-		thresh = int(255 * line.size[1] * 0.2)
-		for j in range(line.size[0]):
-			col_val = get_box_val_xy(j, j+1, 0, line.size[1], line)
-			#print col_val
-			if col_val > thresh:
-				if j != 0:
-					nonzero_starts.append(j)
-				break
- # 	print nonzero_starts
-	# print np.mean(nonzero_starts)			
-	return int(np.mean(nonzero_starts))
-	#return int(np.median(nonzero_starts))
-
-# Finds start for 1 line.
-def get_start_for_line(im):
-	
-	thresh = 0.2 # Required % of pixels that must be black before stopping.
-	# Best thresh value is dependent on type of preprocessing.
-
-	for i in range(im.size[0]):
-		col_val = get_box_val_xy(i, i+1, 0, im.size[1], im)
-		if col_val > im.size[1] * 255 * thresh:
-			return i
-	return 0
-
-# Rough heuristic for evaluating how good a box is. Can play around with this.
-def evaluate_boxes(boxes, im):
-	box_vals = [get_box_val_xy(x1, x2, y1, y2, im) for (x1, y1, x2, y2) in boxes]
-	# I ended up not using box_avgs, but it might be useful.
-	box_avgs = [get_box_val_xy(x1, x2, y1, y2, im) / float(
-		(x2-x1) * (y2-y1)) for (x1, y1, x2, y2) in boxes]
-	return np.sum(box_vals)
 
 # Finds the lines! Wooo.
 def find_lines(inpath, leftx, lefty, rightx, righty, save_file=False, show_file=False):
@@ -262,7 +185,7 @@ if __name__ == '__main__':
 	# Load column image
 	b = raw_input().split(' ')
 	filestem = b[0]
-	filename = filestem + '.png'
+	filename = filestem + '.jpg'
 	orig_loc = dir_folios + filename
 	orig_im = ImageOps.invert(ImageOps.grayscale(Image.open(orig_loc)))
 
