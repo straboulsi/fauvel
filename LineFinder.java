@@ -27,14 +27,18 @@ public class LineFinder extends JFrame implements MouseListener, ActionListener,
 	private int y1a, frameOffset; // Accounts for the pixels that make up the top of the frame
 	Graphics2D g2d;
 	Scanner in;
-	File format = new File("format.txt");
+	File format = new File("layout.txt");
 	PrintWriter p;
 	FileWriter f;
 	BufferedWriter b;
 	BufferedImage img;
 	BufferedImage smallimg;
 	TableOfContents table = new TableOfContents();
-	
+	int foNum;
+	int imNum = 1;
+	int textNum = 1; // uhhhhhHHHH????????
+	int muNum = 1; // what to do about several types???
+	String side;
 
 	public LineFinder() throws IOException {
 		frame = new JFrame("Object Recorder");
@@ -82,9 +86,9 @@ public class LineFinder extends JFrame implements MouseListener, ActionListener,
 		frame.setVisible(true);
 
 		System.out.println("Please start by opening a folio image from File.");
-		
+
 		p = new PrintWriter(format);
-		p.print("<xml>\n<text>\n<body>\n");
+		p.print("<xml>\n<facsimile>\n");
 		p.close();
 	}
 
@@ -115,10 +119,8 @@ public class LineFinder extends JFrame implements MouseListener, ActionListener,
 			g2d.setColor(Color.white);
 			g2d.drawRect(x1, y1a, width, height);
 			
-//			Rectangle rect = new Rectangle(x1, y1, width, height);
 		
-		
-//			System.out.println("I just drew a rectangle!");
+
 			frame.validate();
 			frame.repaint();
 
@@ -127,8 +129,6 @@ public class LineFinder extends JFrame implements MouseListener, ActionListener,
 			myPicPanel.add(myPicLabel);
 			myPicPanel.repaint();
 			myPicPanel.revalidate();
-				
-			
 		}	
 	}
 
@@ -145,11 +145,18 @@ public class LineFinder extends JFrame implements MouseListener, ActionListener,
 				System.out.println("On "+String.valueOf(number)+side+", you should find the following objects:");
 				System.out.println(table.contents(number, side));
 				
+				System.out.println("folio: ");
+				foNum = in.nextInt();
+				side = in.next();
 				if ((side.equals("r")) || (side.equals("v"))) {
 					try {
-						f = new FileWriter("format.txt", true);
+						f = new FileWriter("layout.txt", true);
 						b = new BufferedWriter(f);
-						b.write("<pb facs=\"#" + number + side + "\" />\n");
+						b.write("<surface xml:id=\"" + foNum + side + "\">\n");
+						b.write("<zone\n" + "xml:id=\"" + foNum + side + "_p\"\n");
+						b.write("ulx=\"0\"\n" + "uly=\"0\"\n" + "lrx=\"???\"\n" + "lry=\"???\">\n");
+						b.write("<graphic url=\"???\" />\n");
+						b.write("</zone>\n");
 					} catch (IOException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
@@ -219,7 +226,7 @@ public class LineFinder extends JFrame implements MouseListener, ActionListener,
 	@Override
 	public void mouseReleased(MouseEvent e) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
@@ -228,7 +235,7 @@ public class LineFinder extends JFrame implements MouseListener, ActionListener,
 			if (newObject != null)
 				System.out.println("You have already specified a type for this object.");
 			else {
-				System.out.println("name of text object:");
+				System.out.println("text object ID:\n");
 				String tName = in.next();
 				newObject = new ManuscriptObject(tName, "text");
 			}
@@ -237,7 +244,7 @@ public class LineFinder extends JFrame implements MouseListener, ActionListener,
 			if (newObject != null)
 				System.out.println("You have already specified a type for this object.");
 			else {
-				System.out.println("name of music object:");
+				System.out.println("music object ID:\n");
 				String mName = in.next();
 				newObject = new ManuscriptObject(mName, "music");
 			}
@@ -246,19 +253,43 @@ public class LineFinder extends JFrame implements MouseListener, ActionListener,
 			if (newObject != null)
 				System.out.println("You have already specified a type for this object.");
 			else {
-				System.out.println("name of image object:");
+				System.out.println("image object ID:\n");
 				String iName = in.next();
 				newObject = new ManuscriptObject(iName, "image");
 			}
 		}
 		else if(arg0.getSource().equals(saveObject)){
-			System.out.println("add this object? enter \"y\" if yes and anything else if no");
-			if (in.next().equals("y")) {
-				objects.add(newObject);
-				System.out.println(newObject.name + " added");
+			//			System.out.println("add this object? enter \"y\" if yes and anything else if no");
+			//			if (in.next().equals("y")) {
+			objects.add(newObject);
+			try {
+				f = new FileWriter("layout.txt", true);
+				b = new BufferedWriter(f);
+				if (newObject.type.equals("text")) { // script????
+					b.write("<zone\n" + "xml:id=\"" + newObject.name + "\"\n");
+					b.write("ulx=\"" + newObject.topLeft.x + "\"\n" 
+							+ "uly=\"" + newObject.topLeft.y + "\"\n" 
+							+ "lrx=\"" + newObject.bottomRight.x + "\"\n" 
+							+ "lry=\"" + newObject.bottomRight.y + "\">\n" + "</zone>\n");
+				}
+				else if {
+					b.write("<zone\n" + "xml:id=\"" + newObject.name + "\"\n");
+					b.write("ulx=\"" + newObject.topLeft.x + "\"\n" 
+							+ "uly=\"" + newObject.topLeft.y + "\"\n" 
+							+ "lrx=\"" + newObject.bottomRight.x + "\"\n" 
+							+ "lry=\"" + newObject.bottomRight.y + "\">\n" + "</zone>\n");
+				}
+				b.close();
+				f.close();
 			}
-			else
-				System.out.println(newObject.name + " not added");
+			catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			System.out.println(newObject.name + " added");
+			//			}
+			//		else
+			//			System.out.println(newObject.name + " not added");
 			left = !left;
 			g2d.dispose();
 			newObject = null;
@@ -269,6 +300,19 @@ public class LineFinder extends JFrame implements MouseListener, ActionListener,
 				for (ManuscriptObject mo : objects) {
 					System.out.println(mo);
 				}
+				try {
+					f = new FileWriter("layout.txt", true);
+					b = new BufferedWriter(f);
+					b.write("</surface>\n");
+					b.close();
+					f.close();
+				}
+				catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				imNum = 1;
+				muNum = 1;
 				frame.remove(myPicPanel);
 				frame.validate();
 				frame.repaint();
