@@ -32,6 +32,11 @@ public class LineFinder extends JFrame implements MouseListener, ActionListener,
 	BufferedWriter b;
 	BufferedImage img;
 	BufferedImage smallimg;
+	int foNum;
+	int imNum = 1;
+	int textNum = 1; // uhhhhhHHHH????????
+	int muNum = 1; // what to do about several types???
+	String side;
 
 	public LineFinder() throws IOException {
 		frame = new JFrame("Object Recorder");
@@ -124,8 +129,6 @@ public class LineFinder extends JFrame implements MouseListener, ActionListener,
 			myPicPanel.repaint();
 			myPicPanel.revalidate();
 			
-		
-			
 			
 		}	
 	}
@@ -138,13 +141,17 @@ public class LineFinder extends JFrame implements MouseListener, ActionListener,
 			// TODO Auto-generated method stub
 			if(JFileChooser.APPROVE_OPTION == fileChooser.showOpenDialog(frame)) {
 				System.out.println("folio: ");
-				int number = in.nextInt();
-				String side = in.next();
+				foNum = in.nextInt();
+				side = in.next();
 				if ((side.equals("r")) || (side.equals("v"))) {
 					try {
 						f = new FileWriter("layout.txt", true);
 						b = new BufferedWriter(f);
-						b.write("<surface xml:id=\">" + number + side + "\">\n");
+						b.write("<surface xml:id=\"" + foNum + side + "\">\n");
+						b.write("<zone\n" + "xml:id=\"" + foNum + side + "_p\"\n");
+						b.write("ulx=\"0\"\n" + "uly=\"0\"\n" + "lrx=\"???\"\n" + "lry=\"???\">\n");
+						b.write("<graphic url=\"???\" />\n");
+						b.write("</zone>\n");
 					} catch (IOException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
@@ -250,6 +257,40 @@ public class LineFinder extends JFrame implements MouseListener, ActionListener,
 			System.out.println("add this object? enter \"y\" if yes and anything else if no");
 			if (in.next().equals("y")) {
 				objects.add(newObject);
+				try {
+					f = new FileWriter("layout.txt", true);
+					b = new BufferedWriter(f);
+					if (newObject.type.equals("image")) {
+						b.write("<zone\n" + "xml:id=\"" + foNum + side + "Im" + imNum + "\"\n");
+						b.write("ulx=\"" + newObject.topLeft.x + "\"\n" 
+								+ "uly=\"" + newObject.topLeft.y + "\"\n" 
+								+ "lrx=\"" + newObject.bottomRight.x + "\"\n" 
+								+ "lry=\"" + newObject.bottomRight.y + "\">\n" + "</zone>\n");
+						imNum++;
+					}
+					else if (newObject.type.equals("text")) { // script? what now? shmeh
+						b.write("<zone\n" + "xml:id=\"" + "Te_" + textNum + "\"\n"); // gotta do something about this
+						b.write("ulx=\"" + newObject.topLeft.x + "\"\n" 
+								+ "uly=\"" + newObject.topLeft.y + "\"\n" 
+								+ "lrx=\"" + newObject.bottomRight.x + "\"\n" 
+								+ "lry=\"" + newObject.bottomRight.y + "\">\n" + "</zone>\n");
+						// increment the numbers that keep track of the lines of text
+					}
+					else if (newObject.type.equals("music")) { // for now just motets, figure out other stuff later
+						b.write("<zone\n" + "xml:id=\"" + foNum + side + "Mo" + muNum + "\"\n");
+						b.write("ulx=\"" + newObject.topLeft.x + "\"\n" 
+								+ "uly=\"" + newObject.topLeft.y + "\"\n" 
+								+ "lrx=\"" + newObject.bottomRight.x + "\"\n" 
+								+ "lry=\"" + newObject.bottomRight.y + "\">\n" + "</zone>\n");
+						muNum++;
+					}
+					b.close();
+					f.close();
+				}
+				catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 				System.out.println(newObject.name + " added");
 			}
 			else
@@ -264,6 +305,19 @@ public class LineFinder extends JFrame implements MouseListener, ActionListener,
 				for (ManuscriptObject mo : objects) {
 					System.out.println(mo);
 				}
+				try {
+					f = new FileWriter("layout.txt", true);
+					b = new BufferedWriter(f);
+					b.write("</surface>\n");
+					b.close();
+					f.close();
+				}
+				catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				imNum = 1;
+				muNum = 1;
 				frame.remove(myPicPanel);
 				frame.validate();
 				frame.repaint();
