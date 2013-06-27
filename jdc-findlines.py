@@ -15,6 +15,8 @@ import os, string, operator, math, codecs, sys
 
 #I know it's a bit janky, but this is how the folder layout is defined.
 #Clone from git and it should work.
+dir_folios = 'folios/'
+dir_bin_folios = dir_folios + 'bin/'
 dir_columns = 'columns/'
 dir_bin_columns = dir_columns + 'bin/'
 dir_line_imgs = 'lines/'
@@ -260,11 +262,11 @@ if __name__ == '__main__':
 	# Load column image
 	filestem = sys.argv[1]
 	filename = filestem + '.png'
-	orig_loc = dir_columns + filename
+	orig_loc = dir_folios + filename
 	orig_im = ImageOps.invert(ImageOps.grayscale(Image.open(orig_loc)))
 
 	# Preprocess
-	bin_img_path = dir_bin_columns + filename
+	bin_img_path = dir_bin_folios + filename
 	preprocess_thresh(orig_loc, bin_img_path)
 	# Find lines
 	boxes = find_lines(bin_img_path, int(sys.argv[2]), int(sys.argv[3]), int(sys.argv[4]), int(sys.argv[5]))
