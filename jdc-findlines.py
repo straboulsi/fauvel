@@ -24,23 +24,23 @@ dir_word_imgs = 'words/'
 
 #Helper methods for doing math on pictures
 def get_row_value(y):
-	return math.fsum([pix[x,y] for x in range(xsize)])
+	return math.fsum([pix[x,y] for x in range(leftx, rightx)])
 def get_col_value(x):
-	return math.fsum([pix[x,y] for y in range(ysize)])
+	return math.fsum([pix[x,y] for y in range(lefty, righty)])
 
 def get_box_val(y1, y2):	
-	if y2 > ysize:
-		y2 = ysize
+	if y2 > righty:
+		y2 = righty
 	row_sums = [get_row_value(y) for y in range(y1, y2)]
 	box_val = math.fsum(row_sums)
 	return box_val
 
 def get_box_val_xy(x1, x2, y1, y2, im):
 	pixels = im.load()
-	if y2 > im.size[1]:
-		y2 = im.size[1]
-	if x2 > im.size[0]:
-		x2 = im.size[0]
+	if y2 > righty:
+		y2 = righty
+	if x2 > rightx:
+		x2 = rightx
 	k = sum([pixels[x,y] for x in range(x1, x2) for y in range(y1, y2)])
 	return k
 
@@ -50,14 +50,6 @@ def line_in_range(ymin, line_height, fudge):
 	best_box = max(boxes)
 	best_y = boxes.index(best_box) + ymin
 	return (best_y, best_box)
-
-# Guesses where a word might be. Fudge factor limits its search field.
-def word_in_range(im, xstart=0, width=7, fudge=10):
-	height = im.size[1]
-	boxes = [get_box_val_xy(x, x+width, 0, height, im) for x in range(xstart, xstart+fudge)]
-	best = max(boxes)
-	best_x = boxes.index(best) + xstart
-	return best_x
 
 def weighted_box_val(y1, y2):
 	# Returns a weighted value for a box, favoring middle pixels.
@@ -77,75 +69,6 @@ def preprocess_thresh(infile, outfile):
 	im = (im > im.mean())
 	misc.imsave(outfile, im)
 
-# Guesses average character width.
-def get_char_width(text, im):
-	val_per_col = [get_box_val_xy(x,x+1,0,im.size[1], im) for x in range(im.size[0])]
-
-	thresh = im.size[1] * 255 * 0.1
-	nonzeros = filter(lambda x: x > thresh, val_per_col)
-	num_chars = sum([len(w) for w in text])
-
-	return len(nonzeros) / num_chars
-	#return 7  # if you want to fudge it :)
-
-# Guesses gap between 1st and 2nd char.
-def get_first_gap(im, char_width, start=20, fudge=10, min_gap=4):
-	first_end = start + (char_width * 2)
-	# Search for up to fudge pixels for best box.
-	# 'best' = lowest value between first_end and second_start.
-
-	first_density = get_box_val_xy(start, first_end,
-									0, im.size[1], im) / float(char_width*2)
-	avg_boxes = [get_box_val_xy(first_end, first_end+x, 
-							0, im.size[1], im) / float(x) for x in range(min_gap,fudge)]
-
-	starts = [first_end + x for x in range(min_gap,fudge)]
-	min_index = np.argmin(avg_boxes)
-	# Optional visualizing, for debugging
-	#draw.line((starts[min_index], 0, starts[min_index], im.size[1]), fill=100)
-	#draw.rectangle((first_end, 0, starts[min_index], im.size[1]), fill=100)
-
-	return starts[min_index]
-
-# expects overall column im + boxes
-def get_start(im, boxes):
-	nonzero_starts = []
-	
-	for i in range(len(boxes)):
-		line = im.crop(boxes[i])
-		thresh = int(255 * line.size[1] * 0.2)
-		for j in range(line.size[0]):
-			col_val = get_box_val_xy(j, j+1, 0, line.size[1], line)
-			#print col_val
-			if col_val > thresh:
-				if j != 0:
-					nonzero_starts.append(j)
-				break
- # 	print nonzero_starts
-	# print np.mean(nonzero_starts)			
-	return int(np.mean(nonzero_starts))
-	#return int(np.median(nonzero_starts))
-
-# Finds start for 1 line.
-def get_start_for_line(im):
-	
-	thresh = 0.2 # Required % of pixels that must be black before stopping.
-	# Best thresh value is dependent on type of preprocessing.
-
-	for i in range(im.size[0]):
-		col_val = get_box_val_xy(i, i+1, 0, im.size[1], im)
-		if col_val > im.size[1] * 255 * thresh:
-			return i
-	return 0
-
-# Rough heuristic for evaluating how good a box is. Can play around with this.
-def evaluate_boxes(boxes, im):
-	box_vals = [get_box_val_xy(x1, x2, y1, y2, im) for (x1, y1, x2, y2) in boxes]
-	# I ended up not using box_avgs, but it might be useful.
-	box_avgs = [get_box_val_xy(x1, x2, y1, y2, im) / float(
-		(x2-x1) * (y2-y1)) for (x1, y1, x2, y2) in boxes]
-	return np.sum(box_vals)
-
 # Finds the lines! Wooo.
 def find_lines(inpath, leftx, lefty, rightx, righty, save_file=False, show_file=False):
 	# These shouldn't really be global; it could be cleaned up.
@@ -158,7 +81,7 @@ def find_lines(inpath, leftx, lefty, rightx, righty, save_file=False, show_file=
 	pix = im.load()
 	xsize = rightx - leftx # im.size[0]
 	ysize = righty - lefty # im.size[1]
-
+	
 	line_height = 13
 	fudge = 10
 	start_y = lefty # 0
@@ -167,12 +90,14 @@ def find_lines(inpath, leftx, lefty, rightx, righty, save_file=False, show_file=
 		new_box = line_in_range(start_y, line_height, fudge)
 		start_y = new_box[0] + line_height
 
+		# print 'is this problem: ' + str(get_box_val(new_box[0], new_box[0] + line_height))
 		if get_box_val(new_box[0], new_box[0] + line_height) == 0:
 			break
-		boxes.append(new_box[0])
+		# print 'is this happening ever -_- ugh'
+		boxes.append(new_box[0]) # we never get to append so boxes is left empty
 
 	box_vals = [get_box_val(y, y+line_height) for y in boxes]
-	med = np.median(box_vals)
+	med = np.median(box_vals) # box_vals is empty so this is making an error
 
 	filtered_boxes = filter(
 		lambda y: get_box_val(y,y+line_height) > med/2.0
@@ -181,7 +106,7 @@ def find_lines(inpath, leftx, lefty, rightx, righty, save_file=False, show_file=
 
 	# left, upper, right, and lower
 	# final_boxes = [(0, y, xsize, y+line_height) for y in filtered_boxes]
-	final_boxes = [(leftx, lefty + y, leftx + xsize, lefty + y+line_height) for y in filtered_boxes]
+	final_boxes = [(leftx, y, rightx, y+line_height) for y in filtered_boxes]
 	return final_boxes
 
 # Performs particle condensation (see report)
@@ -257,25 +182,30 @@ def overlay_boxes(boxes, img_name, save_path='', excludes=[], words=None):
 if __name__ == '__main__':
 	global xsize
 	global ysize
+	global rightx
+	global righty
+	global leftx
+	global lefty
 	global pix
 
 	# Load column image
 	b = raw_input().split(' ')
 	filestem = b[0]
-	filename = filestem + '.png'
+	filename = filestem + '.jpg'
 	orig_loc = dir_folios + filename
 	orig_im = ImageOps.invert(ImageOps.grayscale(Image.open(orig_loc)))
 
-	x1 = int(b[1])
-	y1 = int(b[2])
-	x2 = int(b[3])
-	y2 = int(b[4])
+	leftx = int(b[1])
+	lefty = int(b[2])
+	rightx = int(b[3])
+	righty = int(b[4])
 
 	# Preprocess
 	bin_img_path = dir_bin_folios + filename
 	preprocess_thresh(orig_loc, bin_img_path)
+
 	# Find lines
-	boxes = find_lines(bin_img_path, x1, y1, x2, y2)
+	boxes = find_lines(bin_img_path, leftx, lefty, rightx, righty)
 	bin_im = ImageOps.invert(ImageOps.grayscale(Image.open(bin_img_path)))
 
 	overlay_boxes(boxes, orig_loc, save_path=dir_line_imgs + filename)

@@ -10,7 +10,7 @@ public class Coordinate {
 	}
 	
 	public String toString(){
-		return x + " " + y;
+		return (int) (10.5*x) + " " + (int) (10.5*y);
 	}
 
 }

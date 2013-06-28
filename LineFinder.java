@@ -35,9 +35,6 @@ public class LineFinder extends JFrame implements MouseListener, ActionListener,
 	BufferedImage smallimg;
 	TableOfContents table = new TableOfContents();
 	int foNum;
-	int imNum = 1;
-	int textNum = 1; // uhhhhhHHHH????????
-	int muNum = 1; // what to do about several types???
 	String side;
 
 	public LineFinder() throws IOException {
@@ -82,7 +79,7 @@ public class LineFinder extends JFrame implements MouseListener, ActionListener,
 		buttons.add(saveObject);
 		buttons.add(done);
 		frame.add(buttons, BorderLayout.SOUTH);
-		frame.setSize(683, 954);
+		frame.setSize(500, 775);
 		frame.setVisible(true);
 
 		System.out.println("Please start by opening a folio image from File.");
@@ -94,32 +91,29 @@ public class LineFinder extends JFrame implements MouseListener, ActionListener,
 
 
 	@Override
-	public void mouseClicked(MouseEvent e) {
+	public void mouseClicked(MouseEvent e) { // need to scale recorded coordinates BACK
 		if (left) {
 			if (newObject == null) {
 				System.out.println("Please click type first.");
 			}
 			else {
-				newObject.topLeft = new Coordinate(e.getX(), e.getY());
+				newObject.topLeft = new Coordinate(e.getX(), e.getY()-frameOffset);
 				System.out.println(newObject.topLeft);
 				left = !left;
 			}
 		}
 		else {
-			newObject.bottomRight = new Coordinate(e.getX(), e.getY());
+			newObject.bottomRight = new Coordinate(e.getX(), e.getY()-frameOffset);
 			System.out.println(newObject.bottomRight);
 
 			x1 = newObject.topLeft.x;
 			y1 = newObject.topLeft.y;
-			y1a = y1 - frameOffset;
 			width = newObject.bottomRight.x - x1;
 			height = newObject.bottomRight.y - y1;
 
 			g2d = smallimg.createGraphics();
 			g2d.setColor(Color.white);
-			g2d.drawRect(x1, y1a, width, height);
-
-
+			g2d.drawRect(x1, y1, width, height);
 
 			frame.validate();
 			frame.repaint();
@@ -140,14 +134,11 @@ public class LineFinder extends JFrame implements MouseListener, ActionListener,
 			// TODO Auto-generated method stub
 			if(JFileChooser.APPROVE_OPTION == fileChooser.showOpenDialog(frame)) {
 				System.out.println("folio/page number: (Enter as \"3 r\", \"21 v\", etc)");
-				int number = in.nextInt();
-				String side = in.next();
-				System.out.println("On "+String.valueOf(number)+side+", you should find the following objects:");
-				System.out.println(table.contents(number, side));
-
-				System.out.println("folio: ");
 				foNum = in.nextInt();
 				side = in.next();
+				System.out.println("On "+foNum+side+", you should find the following objects:");
+				System.out.println(table.contents(foNum, side));
+				
 				if ((side.equals("r")) || (side.equals("v"))) {
 					try {
 						f = new FileWriter("layout.txt", true);
@@ -162,9 +153,9 @@ public class LineFinder extends JFrame implements MouseListener, ActionListener,
 						e.printStackTrace();
 					}
 					File file = fileChooser.getSelectedFile();
-					try {
+					try { // original file will be w: 5250 and h: 7350. scale how much?
 						img = ImageIO.read(file);
-						smallimg = createResizedCopy(img, 683, 954, false);
+						smallimg = createResizedCopy(img, 500, 700, false);
 						myPic = new ImageIcon(smallimg);
 						myPicLabel = new JLabel("", myPic, JLabel.CENTER);
 						myPicPanel.add(myPicLabel);
@@ -311,8 +302,6 @@ public class LineFinder extends JFrame implements MouseListener, ActionListener,
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
-				imNum = 1;
-				muNum = 1;
 				frame.remove(myPicPanel);
 				frame.validate();
 				frame.repaint();
