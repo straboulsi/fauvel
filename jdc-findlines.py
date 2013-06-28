@@ -24,23 +24,23 @@ dir_word_imgs = 'words/'
 
 #Helper methods for doing math on pictures
 def get_row_value(y):
-	return math.fsum([pix[x,y] for x in range(xsize)])
+	return math.fsum([pix[x,y] for x in range(leftx, rightx)])
 def get_col_value(x):
-	return math.fsum([pix[x,y] for y in range(ysize)])
+	return math.fsum([pix[x,y] for y in range(lefty, righty)])
 
 def get_box_val(y1, y2):	
-	if y2 > ysize:
-		y2 = ysize
+	if y2 > righty:
+		y2 = righty
 	row_sums = [get_row_value(y) for y in range(y1, y2)]
 	box_val = math.fsum(row_sums)
 	return box_val
 
 def get_box_val_xy(x1, x2, y1, y2, im):
 	pixels = im.load()
-	if y2 > im.size[1]:
-		y2 = im.size[1]
-	if x2 > im.size[0]:
-		x2 = im.size[0]
+	if y2 > righty:
+		y2 = righty
+	if x2 > rightx:
+		x2 = rightx
 	k = sum([pixels[x,y] for x in range(x1, x2) for y in range(y1, y2)])
 	return k
 
@@ -48,7 +48,6 @@ def get_box_val_xy(x1, x2, y1, y2, im):
 def line_in_range(ymin, line_height, fudge):
 	boxes = [get_box_val(k+ymin, k+ymin+line_height) for k in range(fudge)]
 	best_box = max(boxes)
-	print best_box
 	best_y = boxes.index(best_box) + ymin
 	return (best_y, best_box)
 
@@ -91,10 +90,10 @@ def find_lines(inpath, leftx, lefty, rightx, righty, save_file=False, show_file=
 		new_box = line_in_range(start_y, line_height, fudge)
 		start_y = new_box[0] + line_height
 
-		print 'is this problem: ' + str(get_box_val(new_box[0], new_box[0] + line_height))
+		# print 'is this problem: ' + str(get_box_val(new_box[0], new_box[0] + line_height))
 		if get_box_val(new_box[0], new_box[0] + line_height) == 0:
 			break
-		print 'is this happening ever -_- ugh'
+		# print 'is this happening ever -_- ugh'
 		boxes.append(new_box[0]) # we never get to append so boxes is left empty
 
 	box_vals = [get_box_val(y, y+line_height) for y in boxes]
@@ -107,7 +106,7 @@ def find_lines(inpath, leftx, lefty, rightx, righty, save_file=False, show_file=
 
 	# left, upper, right, and lower
 	# final_boxes = [(0, y, xsize, y+line_height) for y in filtered_boxes]
-	final_boxes = [(leftx, lefty + y, leftx + xsize, lefty + y+line_height) for y in filtered_boxes]
+	final_boxes = [(leftx, y, rightx, y+line_height) for y in filtered_boxes]
 	return final_boxes
 
 # Performs particle condensation (see report)
@@ -183,6 +182,10 @@ def overlay_boxes(boxes, img_name, save_path='', excludes=[], words=None):
 if __name__ == '__main__':
 	global xsize
 	global ysize
+	global rightx
+	global righty
+	global leftx
+	global lefty
 	global pix
 
 	# Load column image
@@ -192,17 +195,17 @@ if __name__ == '__main__':
 	orig_loc = dir_folios + filename
 	orig_im = ImageOps.invert(ImageOps.grayscale(Image.open(orig_loc)))
 
-	x1 = int(b[1])
-	y1 = int(b[2])
-	x2 = int(b[3])
-	y2 = int(b[4])
+	leftx = int(b[1])
+	lefty = int(b[2])
+	rightx = int(b[3])
+	righty = int(b[4])
 
 	# Preprocess
 	bin_img_path = dir_bin_folios + filename
 	preprocess_thresh(orig_loc, bin_img_path)
 
 	# Find lines
-	boxes = find_lines(bin_img_path, x1, y1, x2, y2)
+	boxes = find_lines(bin_img_path, leftx, lefty, rightx, righty)
 	bin_im = ImageOps.invert(ImageOps.grayscale(Image.open(bin_img_path)))
 
 	overlay_boxes(boxes, orig_loc, save_path=dir_line_imgs + filename)
