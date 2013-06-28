@@ -28,19 +28,17 @@ namespace SurfaceApplication1
     /// </summary>
     public partial class SurfaceWindow1 : SurfaceWindow
     {
-        int maxPageWidth = 5250;
-        int maxPageHeight = 7350;
-        int minPageWidth = 680;
-        int minPageHeight = 930;
-        int tabNumber = 0;
-        int minPage = 0;
-        int maxPage = 88;
-        bool wantBigR = false;
-        bool wantBigV = false;
+        public static int maxPageWidth = 5250;
+        public static int maxPageHeight = 7350;
+        public static int minPageWidth = 664;
+        public static int minPageHeight = 930;
+        public static int tabNumber = 0;
+        public static int minPage = 0;
+        public static int maxPage = 88;
+        public static Image slideImage1, slideImage2;
         int scatterBuffer = 3000;
         List<Tab> tabArray = new List<Tab>();
-        BackgroundWorker changeVersoImageBackground = new BackgroundWorker();
-        BackgroundWorker changeRectoImageBackground = new BackgroundWorker();
+        Workers workers = new Workers();
 
         /// <summary>
         /// Default constructor.
@@ -49,73 +47,11 @@ namespace SurfaceApplication1
         {
             InitializeComponent();
 
-            changeVersoImageBackground.WorkerSupportsCancellation = true;
-            changeRectoImageBackground.WorkerSupportsCancellation = true;
-
-            changeVersoImageBackground.DoWork += (s, e) =>
-            {
-                e.Result = null;
-                int pn = 2 * tabArray[tabNumber].pageNumber + 10;
-                BitmapImage image = new BitmapImage();
-                image.BeginInit();
-                if(!wantBigV)
-                    image.DecodePixelWidth = minPageWidth;
-                image.CacheOption = BitmapCacheOption.OnDemand;
-                if (changeVersoImageBackground.CancellationPending) return;
-                image.UriSource = new Uri("pages/" + pn.ToString() + ".jpg", UriKind.Relative);
-                if (changeVersoImageBackground.CancellationPending) return;
-                image.EndInit();
-                image.Freeze();
-                e.Result = image;
-            };
-            changeVersoImageBackground.RunWorkerCompleted += (s, e) =>
-            {
-                if (e.Result != null)
-                {
-                    BitmapImage bitmapImage = e.Result as BitmapImage;
-                    tabArray[tabNumber]._verso.Source = bitmapImage;
-                    changeVersoImageBackground.Dispose();
-                }
-                else
-                {
-                    changeVersoImageBackground.Dispose();
-                    changeVersoImageBackground.RunWorkerAsync();
-                }
-            };
-
-            changeRectoImageBackground.DoWork += (s, e) =>
-            {
-                int pn = 2 * tabArray[tabNumber].pageNumber + 11;
-                BitmapImage image = new BitmapImage();
-                image.BeginInit();
-                if (!wantBigR)
-                    image.DecodePixelWidth = minPageWidth;
-                image.CacheOption = BitmapCacheOption.OnDemand;
-                if (changeRectoImageBackground.CancellationPending) return;
-                image.UriSource = new Uri("pages/" + pn.ToString() + ".jpg", UriKind.Relative);
-                if (changeRectoImageBackground.CancellationPending) return;
-                image.EndInit();
-                image.Freeze();
-                e.Result = image;
-            };
-            changeRectoImageBackground.RunWorkerCompleted += (s, e) =>
-            {
-                if (e.Result != null)
-                {
-                    BitmapImage bitmapImage = e.Result as BitmapImage;
-                    tabArray[tabNumber]._recto.Source = bitmapImage;
-                    changeRectoImageBackground.Dispose();
-                }
-                else
-                {
-                    changeRectoImageBackground.Dispose();
-                    changeRectoImageBackground.RunWorkerAsync();
-                }
-            };
-
             // slider actions
             pageSlider.AddHandler(UIElement.ManipulationDeltaEvent, new EventHandler<ManipulationDeltaEventArgs>(slider_ManipulationDelta), true);
             pageSlider.AddHandler(UIElement.ManipulationCompletedEvent, new EventHandler<ManipulationCompletedEventArgs>(slider_ManipulationCompleted), true);
+            slideImage1 = SliderImage1;
+            slideImage2 = SliderImage2;
 
             //other initialization
             maxPageText.Text = maxPage.ToString();
@@ -230,36 +166,23 @@ namespace SurfaceApplication1
             Image verso = tabArray[tabNumber]._verso;
             Image recto = tabArray[tabNumber]._recto;
 
-            if (!changeVersoImageBackground.CancellationPending)
-                changeVersoImageBackground.CancelAsync();
-            if (!changeRectoImageBackground.CancellationPending)
-                changeRectoImageBackground.CancelAsync();
+            if (!workers.versoImageChange.CancellationPending)
+                workers.versoImageChange.CancelAsync();
+            if (!workers.rectoImageChange.CancellationPending)
+                workers.rectoImageChange.CancelAsync();
 
-            wantBigR = false;
-            wantBigV = false;
+            if (!workers.versoImageChange.IsBusy)
+                workers.updateVersoImage(currentTab(), false);
 
-            if(!changeVersoImageBackground.IsBusy)
-                changeVersoImageBackground.RunWorkerAsync();
-
-            if (!changeRectoImageBackground.IsBusy)
-                changeRectoImageBackground.RunWorkerAsync();
+            if (!workers.rectoImageChange.IsBusy)
+                workers.updateRectoImage(currentTab(), false);
 
             pageNumberText.Text = pageNumber.ToString();
             tabArray[tabNumber]._tab.Header = (pageNumber-1).ToString() + "v / " + pageNumber.ToString() + "r";
+
+            pageSlider.Value = currentTab().pageNumber;
             
         }
-
-
-        private BitmapImage getPageImage(String str)
-        {
-            BitmapImage src = new BitmapImage();
-            src.BeginInit();
-            src.CacheOption = BitmapCacheOption.None;
-            src.UriSource = new Uri("pack://application:,,,/pages/" + str + ".jpg", UriKind.Absolute);
-            src.EndInit();
-            return src;
-        }
-
 
         private TabItem createTab(int page)
         {
@@ -345,7 +268,6 @@ namespace SurfaceApplication1
             vScatterItem.SizeChanged += new SizeChangedEventHandler (makeVersoImageLarge);
             rScatterItem.SizeChanged += new SizeChangedEventHandler (makeRectoImageLarge);
 
-
             Canvas vCanvas = new Canvas();
             Canvas rCanvas = new Canvas();
             Viewbox vVB = new Viewbox();
@@ -356,7 +278,6 @@ namespace SurfaceApplication1
             vCanvas.ClipToBounds = true;
             vCanvas.Children.Add(vVB);
             vVB.Stretch = Stretch.UniformToFill;
-            //vVB.Child = verso;
 
             vScatterItem.Content = verso;
             rScatterItem.Content = recto;
@@ -378,7 +299,7 @@ namespace SurfaceApplication1
             can.Children.Add(c_s);
             tab.Content = can;
             tabBar.Items.Insert(tabArray.Count - 1, tab);
-            tabBar.SelectedItem = tab;
+            tabBar.SelectedIndex = tabArray.Count - 1;
 
             int pageNumber = tabArray[tabNumber].pageNumber;
             int versoNum = 2 * pageNumber + 10;
@@ -393,7 +314,7 @@ namespace SurfaceApplication1
             recto.Source = src;
 
             pageNumberText.Text = pageNumber.ToString();
-            tabArray[tabNumber]._tab.Header = (pageNumber - 1).ToString() + "v / " + pageNumber.ToString() + "r";
+            currentTab()._tab.Header = (pageNumber - 1).ToString() + "v / " + pageNumber.ToString() + "r";
 
             return tab;
         }
@@ -440,93 +361,68 @@ namespace SurfaceApplication1
             SurfaceSlider slider = (SurfaceSlider)sender;
             double val = slider.Value;
             int onVal = (int)Math.Round(val);
-            //SliderDisplay1.Width = 60;
-            //SliderDisplay2.Width = 80;
-            SliderDisplay3.Width = 100;
-            //SliderDisplay4.Width = 80;
-            //SliderDisplay5.Width = 60;
-            //SliderImage1.Width = SliderDisplay1.Width;
-            //SliderImage2.Width = SliderDisplay2.Width;
-            SliderImage3.Width = SliderDisplay3.Width;
-            //SliderImage4.Width = SliderDisplay4.Width;
-            //SliderImage5.Width = SliderDisplay5.Width;
+            SliderText.Text = (onVal).ToString();
 
-            //SliderImage3.Source = getPageImage(onVal.ToString());
+            SliderText.Margin = new Thickness(SliderDisplay.Width / 2 - SliderText.ActualWidth / 2, -20, 0, 0);
+            double middle = 1160 + (slider.Width - 30) * onVal / slider.Maximum;
+            SliderDisplay.Margin = new Thickness(middle, height, 0, 0);
+            SliderDisplay.Opacity = 1;
 
-            SliderText3.Text = (onVal).ToString();
-            SliderText3.FontSize = 50;
-            SliderText3.Foreground = Brushes.Black;
-            SliderText3.Margin = new Thickness(SliderDisplay3.Width / 2 - SliderText3.ActualWidth / 2, -20, 0, 0);
-            double middle = 1210 + (slider.Width - 30) * onVal / slider.Maximum;
-            //SliderDisplay1.Margin = new Thickness(middle - 160, height, 0, 0);
-            //SliderDisplay2.Margin = new Thickness(middle - 90, height, 0, 0);
-            SliderDisplay3.Margin = new Thickness(middle, height, 0, 0);
-            //SliderDisplay4.Margin = new Thickness(middle + 110, height, 0, 0);
-            //SliderDisplay5.Margin = new Thickness(middle + 200, height, 0, 0);
-            DoubleAnimation anim = new DoubleAnimation();
-            anim.Duration = new Duration(TimeSpan.FromSeconds(.05));
-            anim.From = 1;
-            anim.To = 1;
-            //SliderDisplay1.BeginAnimation(OpacityProperty, anim);
-            //SliderDisplay2.BeginAnimation(OpacityProperty, anim);
-            SliderDisplay3.BeginAnimation(OpacityProperty, anim);
-            //SliderDisplay4.BeginAnimation(OpacityProperty, anim);
-            //SliderDisplay5.BeginAnimation(OpacityProperty, anim);
+            if (!workers.slideImageChange.CancellationPending)
+                workers.slideImageChange.CancelAsync();
+            if (!workers.slideImageChange.IsBusy)
+                workers.updateSlideImage(onVal);
         }
 
+        /*
+         * Called when the slider is released. Goes to the page and hides the slider display
+         */
         private void slider_ManipulationCompleted(object sender, ManipulationCompletedEventArgs e)
         {
-            DoubleAnimation anim = new DoubleAnimation();
-            anim.Duration = new Duration(TimeSpan.FromSeconds(.5));
-            anim.From = 1;
-            anim.To = 0;
-            //SliderDisplay1.BeginAnimation(OpacityProperty, anim);
-            //SliderDisplay2.BeginAnimation(OpacityProperty, anim);
-            SliderDisplay3.BeginAnimation(OpacityProperty, anim);
-            //SliderDisplay4.BeginAnimation(OpacityProperty, anim);
-            //SliderDisplay5.BeginAnimation(OpacityProperty, anim);
+            SliderDisplay.Opacity = 0;
             SurfaceSlider slider = (SurfaceSlider)sender;
             goToPage((int)Math.Round(slider.Value));
         }
 
-        private void Button_Click(object sender, RoutedEventArgs e)
-        {
-            changeVersoImageBackground.RunWorkerAsync();
-        }
-
+        /*
+         * Make the verso page load a high-res image if the user zooms.
+         */
         private void makeVersoImageLarge(object sender, SizeChangedEventArgs e)
         {
-            if (!wantBigV)
+            if (!workers.bigV)
             {
                 ScatterViewItem item = (ScatterViewItem)sender;
                 if (item.ActualWidth > minPageWidth)
                 {
-                    if (!changeVersoImageBackground.CancellationPending)
-                        changeVersoImageBackground.CancelAsync();
-                    wantBigV = true;
-                    if(!changeVersoImageBackground.IsBusy)
-                        changeVersoImageBackground.RunWorkerAsync();
+                    if (!workers.versoImageChange.CancellationPending)
+                        workers.versoImageChange.CancelAsync();
+                    if (!workers.rectoImageChange.IsBusy)
+                        workers.updateVersoImage(currentTab(), true);
                 }
             }
         }
 
+        /*
+         * Make the recto page load a high-res image if the user zooms.
+         */
         private void makeRectoImageLarge(object sender, SizeChangedEventArgs e)
         {
-            if (!wantBigR)
+            if (!workers.bigR)
             {
                 ScatterViewItem item = (ScatterViewItem)sender;
                 if (item.ActualWidth > minPageWidth)
                 {
-                    if (!changeRectoImageBackground.CancellationPending)
-                        changeRectoImageBackground.CancelAsync();
-                    wantBigR = true;
-                    if (!changeRectoImageBackground.IsBusy)
-                        changeRectoImageBackground.RunWorkerAsync();
+                    if (!workers.rectoImageChange.CancellationPending)
+                        workers.rectoImageChange.CancelAsync();
+                    if (!workers.rectoImageChange.IsBusy)
+                        workers.updateRectoImage(currentTab(), true);
                 }
             }
         }
 
-
+        /*
+         * These methods are called when the pages are manipulated. They call limitScatter.
+         */
         private void scatter_SizeChanged(object sender, SizeChangedEventArgs e)
         {
             limitScatter((ScatterViewItem)sender);
@@ -540,6 +436,9 @@ namespace SurfaceApplication1
             limitScatter((ScatterViewItem)sender);
         }
 
+        /*
+         * Prevents the page images from showing the background of their bounding boxes.
+         */
         private void limitScatter(ScatterViewItem i)
         {
             double x,y,w,h;
@@ -562,6 +461,9 @@ namespace SurfaceApplication1
                 i.Center = new Point(x, scatterBuffer + minPageHeight - h);
         }
 
+        /*
+         * Prevents the page slider from having intertia.
+         */
         private void pageSliderFlicked(object sender, SSC.Primitives.FlickEventArgs e)
         {
             e.Handled = true;
