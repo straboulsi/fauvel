@@ -37,10 +37,30 @@ namespace Fauvel1
 
             /// Issue: We currently have a limit of approx 300 lines displayed in console
             /// That's why we need to reset!
-            Class1.go(1000,1500);
-
+            ///Class1.go(10,12);
+            ///Class1.go("1rIm2"); 
+            ///Class1.go("1rMo2_t"); 
+            ///Class1.go("Fo1v"); /// Works if you add closing </pb> tag
+            ///Class1.go("Te_0035-0048");
+            
+            Class1.filterByVoice(2);
             // Add handlers for window availability events
             AddWindowAvailabilityHandlers();
+
+
+        }
+
+
+
+        private void Canvas_TouchDown(object sender, TouchEventArgs e)
+        {
+            Console.Write("got a touch!");
+            Point touchPosition = e.TouchDevice.GetPosition(this);
+            SurfaceTextBox newBox = Class1.go(10, 12);
+            Canvas.SetLeft(newBox, touchPosition.X);
+            Canvas.SetTop(newBox, touchPosition.Y);
+
+            e.Handled = true;
         }
 
         /// <summary>

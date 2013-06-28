@@ -4,7 +4,9 @@
     xmlns:s="http://schemas.microsoft.com/surface/2008"
     Title="Fauvel1"
     >
-  <Grid>
-
-  </Grid>
+    <Canvas TouchDown="Canvas_TouchDown">
+        <!--<Label> Class1.go(10,12);
+        </Label>
+        -->
+    </Canvas>
 </s:SurfaceWindow>
