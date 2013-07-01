@@ -25,7 +25,6 @@ namespace Fauvel1
         public static String getPoetry(int firstLine, int lastLine)
         {
 
-            SurfaceTextBox stb = new SurfaceTextBox();
             String toDisplay = "";
             try
             {
@@ -43,12 +42,7 @@ namespace Fauvel1
                     ///Console.Write(foundNode.InnerText+"\r\n");
                 }
 
-               
-                stb.Text = toDisplay;
-                
-                
-                
-               ///Console.Read();
+
             }
             catch (Exception e)
             {
@@ -59,6 +53,38 @@ namespace Fauvel1
             return toDisplay;
         }
 
+
+        public static String getEnglish(int start, int end)
+        {
+            String toDisplay = "";
+
+            try
+            {
+                XmlDocument xml = new XmlDocument();
+                xml.Load("EnglishXML.xml");
+
+                XmlNode foundNode;
+
+                for (int i = start; i <= end; i++)
+                {
+
+                    foundNode = xml.DocumentElement.SelectSingleNode("//lg/l[@n='" + i + "']");
+                    toDisplay += foundNode.InnerText + "\r\n";
+                    Console.Write(foundNode.InnerText+"\r\n");
+                }
+
+
+
+                ///Console.Read();
+            }
+            catch (Exception e)
+            {
+                Console.Write(e.StackTrace);
+                Console.Read();
+            }
+
+            return toDisplay;
+        }
 
 
         /// <summary>

@@ -146,5 +146,16 @@ namespace Fauvel1
             stb.IsReadOnly = true;
 
         }
+
+        private void Fetch_English(object sender, RoutedEventArgs e)
+        {
+            int sLine = Convert.ToInt32(startLine.Text);
+            int eLine = Convert.ToInt32(endLine.Text);
+            String sSelectedText = Class1.getEnglish(sLine,eLine);
+            stb.Text = sSelectedText;
+            stb.Opacity = 100;
+            stb.IsReadOnly = true;
+
+        }
     }
 }
