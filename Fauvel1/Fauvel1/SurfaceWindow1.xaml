@@ -4,7 +4,67 @@
     xmlns:s="http://schemas.microsoft.com/surface/2008"
     Title="Fauvel1"
     >
-  <Grid>
+    <Canvas TouchDown="Canvas_TouchDown">
+        <TextBox 
+            x:Name="stb" 
+            Canvas.Top="50" 
+            Canvas.Left="550" 
+            Height="600"
+            Width="300"
+            Opacity="0"
+            VerticalScrollBarVisibility="Visible"
+            HorizontalScrollBarVisibility="Visible"
+            
+            >
+            
+        </TextBox>
 
-  </Grid>
+        <TextBox
+            x:Name="startLine"
+            Canvas.Top="150"
+            Canvas.Left="150"
+            Width="70"
+           >
+            Start:
+        </TextBox>
+        
+        <TextBox
+            x:Name="endLine"
+            Canvas.Top="150"
+            Canvas.Left="350"
+            Width="70"
+           >
+            
+           End:
+        </TextBox>
+
+        <TextBox
+            x:Name="poetrySec"
+            Canvas.Top="150"
+            Canvas.Left="1000"
+            Width="200"
+           >
+
+           Enter ID: i.e. Te_0035-0048
+        </TextBox>
+
+        <Button 
+            Click="Button_Click2" 
+            Canvas.Left="1000" 
+            Canvas.Top="200"
+            >
+            Get by ID!
+        </Button>
+
+        <Button 
+            Click="Button_Click" 
+            Canvas.Left="150" 
+            Canvas.Top="200"
+            >
+            Get Poetry by line!
+        </Button>
+    </Canvas>
+
 </s:SurfaceWindow>
+
+

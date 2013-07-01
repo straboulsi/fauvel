@@ -6,6 +6,11 @@ using System.Xml;
 using System.Xml.Schema;
 using System.Xml.XPath;
 using System.IO;
+using Microsoft.Surface;
+using Microsoft.Surface.Presentation;
+using Microsoft.Surface.Presentation.Controls;
+using Microsoft.Surface.Presentation.Input;
+
 
 namespace Fauvel1
 {
@@ -17,83 +22,129 @@ namespace Fauvel1
         /// The overlay is then flexible and does not limit to translating entire sections of poetry
         /// <param name="firstLine">First line of target poetry section</param>
         /// <param name="lastLine">Last line of target poetry section</param>
-        public static void go(int firstLine, int lastLine)
+        public static String getPoetry(int firstLine, int lastLine)
         {
+
+            SurfaceTextBox stb = new SurfaceTextBox();
+            String toDisplay = "";
             try
             {
                 XmlDocument xml = new XmlDocument();
                 xml.Load("XMLFinalContentFile.xml");
 
 
-
-                
-                /*
-                Note: These validation handlers are meant to be used with lots of schemas in the heading
-                ValidationEventHandler eventHandler = new ValidationEventHandler(ValidationEventHandler);
-               
-                xml.Validate(eventHandler);
-              
-                XmlElement elem = xml.GetElementById("Te_0035-0048");
-                if (elem != null)
-                {
-                    Console.Write(elem.InnerText);
-                }
-                 * */
-
-
-
+                XmlNode foundNode;
                 
                 for (int i = firstLine; i <= lastLine; i++)
                 {
 
-                    ///XmlNode foundNode = xml.DocumentElement.SelectSingleNode("//lg"); /// THIS WORKS!
-                    ///XmlNode foundNode = xml.DocumentElement.SelectSingleNode("//lg[@xml:id='Te_0035-0048']"); /// This doesn't
-                    XmlNode foundNode = xml.DocumentElement.SelectSingleNode("//lg/l[@n='"+i+"']");
-                
-                    Console.Write(foundNode.InnerText+"\r\n");
-
+                    foundNode = xml.DocumentElement.SelectSingleNode("//lg/l[@n='"+i+"']");
+                    toDisplay += foundNode.InnerText + "\r\n";
+                    ///Console.Write(foundNode.InnerText+"\r\n");
                 }
+
+               
+                stb.Text = toDisplay;
                 
-
-                /*
-                /// The following works to output all poetry in Fauvel
-                ///XmlNodeList nodeList = xml.DocumentElement.SelectNodes("//lg");
-            
-                /// This line does not work though:
-                /// XmlNodeList nodeList = xml.DocumentElement.SelectNodes("//lg[@xml:id='Te_0035-0048']");
-                /// But if you change "xml:id" to "class" in .xml...
-                ///XmlNodeList nodeList = xml.DocumentElement.SelectNodes("//lg[@class='Te_0035-0048']");
-          
-                foreach (XmlNode poetry in nodeList)
-                {
-                    Console.Write(poetry.InnerText);
-                }
-                */
-
-
-                Console.Write("\r\nI'm done!");
-                Console.Read();
+                
+                
+               ///Console.Read();
             }
             catch (Exception e)
             {
                 Console.Write(e.StackTrace);
                 Console.Read();
             }
+
+            return toDisplay;
         }
 
-        static void ValidationEventHandler(object sender, ValidationEventArgs e)
+
+
+        /// <summary>
+        /// This method searches for an id value for images, music, and poetry sections
+        /// <figure id="1rIm2"> Searching for image
+        /// <p id="1rMo2"> Searching for music
+        /// <lg> searching by Te_xxxx-xxxx
+        /// </summary>
+        /// <param name="str">The value of the id</param>
+        public static String go(String str)
         {
-            switch (e.Severity)
+            ///Console.Write("Input: "+ str+"\r\n");
+            try
             {
-                case XmlSeverityType.Error:
-                    Console.WriteLine("Error: {0}", e.Message);
-                    break;
-                case XmlSeverityType.Warning:
-                    Console.WriteLine("Warning {0}", e.Message);
-                    break;
+                XmlDocument xml = new XmlDocument();
+                xml.Load("XMLFinalContentFile.xml");
+                XmlNode foundNode;
+
+                if (str.Contains("Im"))
+                {
+                    foundNode = xml.DocumentElement.SelectSingleNode("//figure[@id='" + str + "']");
+                    str += foundNode.InnerText;
+                }
+                else if(str.StartsWith("Te")){
+                    foundNode = xml.DocumentElement.SelectSingleNode("//lg[@id='"+str+"']");
+                    XmlNodeList lineByLine = foundNode.SelectNodes("l");
+                    foreach (XmlNode x in lineByLine)
+                    {
+                        str += x.InnerText + "\r\n";
+                    }
+                }
+                else if (str.StartsWith("Fo"))
+                {
+                    String page = str.Substring(2);
+                    foundNode = xml.DocumentElement.SelectSingleNode("//pb[@facs='#" + page + "']");
+                    str+= (foundNode.InnerXml);
+                }
+                else
+                {
+                    /// Note: To select voices that don't have <dc>, add second level and select ("//v[not(dc)]")
+                    foundNode = xml.DocumentElement.SelectSingleNode("//p[@id='" + str + "']");
+                    str += foundNode.InnerText;
+                }
+                 
+                //Console.Write(foundNode.InnerText + "\r\n");
+                
+            }
+            catch(Exception e)
+            {
+                Console.Write(e.StackTrace);
+                Console.Read();
             }
 
+            return str;
         }
+
+
+        /// <summary>
+        ///  [@nv='"+voiceNum+"']
+        /// </summary>
+        /// <param name="voiceNum"></param>
+        public static void filterByVoice(int voiceNum)
+        {
+            XmlDocument xml = new XmlDocument();
+            xml.Load("XMLFinalContentFile.xml");
+
+            XmlNodeList musics = xml.DocumentElement.SelectNodes("//p[(nv)]");
+            
+            foreach (XmlNode xn in musics)
+            {
+                XmlNode testNode = xn.SelectSingleNode("nv");
+                String str = testNode.InnerText;
+                int intVoiceCount = Convert.ToInt32(str);
+                 
+                if (intVoiceCount==voiceNum)
+                {
+                    Console.Write(xn.InnerText);
+                }
+               
+            }
+
+            
+            
+            Console.Read();
+        }
+
     }
 
 

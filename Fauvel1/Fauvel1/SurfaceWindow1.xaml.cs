@@ -37,11 +37,29 @@ namespace Fauvel1
 
             /// Issue: We currently have a limit of approx 300 lines displayed in console
             /// That's why we need to reset!
-            Class1.go(1000,1500);
-
+            ///Class1.getPoetry(10,12);
+            ///Class1.go("1rIm2"); 
+            ///Class1.go("1rMo2_t"); 
+            ///Class1.go("Fo3v"); /// Works if you add closing </pb> tag
+            ///Class1.go("Te_0035-0048");
+            
+            ///Class1.filterByVoice(2);
             // Add handlers for window availability events
             AddWindowAvailabilityHandlers();
+
+
         }
+
+
+
+        private void Canvas_TouchDown(object sender, TouchEventArgs e)
+        {
+            Console.Write("got a touch!");
+            Point touchPosition = e.TouchDevice.GetPosition(this);
+            
+            e.Handled = true;
+        }
+
 
         /// <summary>
         /// Occurs when the window is about to close. 
@@ -107,6 +125,26 @@ namespace Fauvel1
         private void OnWindowUnavailable(object sender, EventArgs e)
         {
             //TODO: disable audio, animations here
+        }
+
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+            int sLine = Convert.ToInt32(startLine.Text);
+            int eLine = Convert.ToInt32(endLine.Text);
+            String sSelectedText = Class1.getPoetry(sLine, eLine);
+            stb.Text = sSelectedText;
+            stb.Opacity = 100;
+            stb.IsReadOnly = true;
+            
+        }
+
+        private void Button_Click2(object sender, RoutedEventArgs e)
+        {
+            String sSelectedText = Class1.go(poetrySec.Text);
+            stb.Text = sSelectedText;
+            stb.Opacity = 100;
+            stb.IsReadOnly = true;
+
         }
     }
 }
