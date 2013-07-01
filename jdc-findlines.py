@@ -24,23 +24,23 @@ dir_word_imgs = 'words/'
 
 #Helper methods for doing math on pictures
 def get_row_value(y):
-	return math.fsum([pix[x,y] for x in range(leftx, rightx)])
+	return math.fsum([pix[x,y] for x in range(ulx, lrx)])
 def get_col_value(x):
-	return math.fsum([pix[x,y] for y in range(lefty, righty)])
+	return math.fsum([pix[x,y] for y in range(uly, lry)])
 
 def get_box_val(y1, y2):	
-	if y2 > righty:
-		y2 = righty
+	if y2 > lry:
+		y2 = lry
 	row_sums = [get_row_value(y) for y in range(y1, y2)]
 	box_val = math.fsum(row_sums)
 	return box_val
 
 def get_box_val_xy(x1, x2, y1, y2, im):
 	pixels = im.load()
-	if y2 > righty:
-		y2 = righty
-	if x2 > rightx:
-		x2 = rightx
+	if y2 > lry:
+		y2 = lry
+	if x2 > lrx:
+		x2 = lrx
 	k = sum([pixels[x,y] for x in range(x1, x2) for y in range(y1, y2)])
 	return k
 
@@ -70,7 +70,7 @@ def preprocess_thresh(infile, outfile):
 	misc.imsave(outfile, im)
 
 # Finds the lines! Wooo.
-def find_lines(inpath, leftx, lefty, rightx, righty, save_file=False, show_file=False):
+def find_lines(inpath, ulx, uly, lrx, lry, save_file=False, show_file=False):
 	# These shouldn't really be global; it could be cleaned up.
 	global xsize
 	global ysize
@@ -79,25 +79,23 @@ def find_lines(inpath, leftx, lefty, rightx, righty, save_file=False, show_file=
 	# Load into PIL
 	im = ImageOps.invert(ImageOps.grayscale(Image.open(inpath)))
 	pix = im.load()
-	xsize = rightx - leftx # im.size[0]
-	ysize = righty - lefty # im.size[1]
+	xsize = lrx - ulx
+	ysize = lry - uly
 	
-	line_height = 13
-	fudge = 10
-	start_y = lefty # 0
+	line_height = 65
+	fudge = 50
+	start_y = uly
 	boxes = []
 	for i in range(100):
 		new_box = line_in_range(start_y, line_height, fudge)
 		start_y = new_box[0] + line_height
 
-		# print 'is this problem: ' + str(get_box_val(new_box[0], new_box[0] + line_height))
 		if get_box_val(new_box[0], new_box[0] + line_height) == 0:
 			break
-		# print 'is this happening ever -_- ugh'
-		boxes.append(new_box[0]) # we never get to append so boxes is left empty
+		boxes.append(new_box[0])
 
 	box_vals = [get_box_val(y, y+line_height) for y in boxes]
-	med = np.median(box_vals) # box_vals is empty so this is making an error
+	med = np.median(box_vals)
 
 	filtered_boxes = filter(
 		lambda y: get_box_val(y,y+line_height) > med/2.0
@@ -105,8 +103,7 @@ def find_lines(inpath, leftx, lefty, rightx, righty, save_file=False, show_file=
 					boxes)
 
 	# left, upper, right, and lower
-	# final_boxes = [(0, y, xsize, y+line_height) for y in filtered_boxes]
-	final_boxes = [(leftx, y, rightx, y+line_height) for y in filtered_boxes]
+	final_boxes = [(ulx, y, lrx, y+line_height) for y in filtered_boxes]
 	return final_boxes
 
 # Performs particle condensation (see report)
@@ -182,10 +179,10 @@ def overlay_boxes(boxes, img_name, save_path='', excludes=[], words=None):
 if __name__ == '__main__':
 	global xsize
 	global ysize
-	global rightx
-	global righty
-	global leftx
-	global lefty
+	global lrx
+	global lry
+	global ulx
+	global uly
 	global pix
 
 	# Load column image
@@ -195,17 +192,17 @@ if __name__ == '__main__':
 	orig_loc = dir_folios + filename
 	orig_im = ImageOps.invert(ImageOps.grayscale(Image.open(orig_loc)))
 
-	leftx = int(b[1])
-	lefty = int(b[2])
-	rightx = int(b[3])
-	righty = int(b[4])
+	ulx = int(b[1])
+	uly = int(b[2])
+	lrx = int(b[3])
+	lry = int(b[4])
 
 	# Preprocess
 	bin_img_path = dir_bin_folios + filename
 	preprocess_thresh(orig_loc, bin_img_path)
 
 	# Find lines
-	boxes = find_lines(bin_img_path, leftx, lefty, rightx, righty)
+	boxes = find_lines(bin_img_path, ulx, uly, lrx, lry)
 	bin_im = ImageOps.invert(ImageOps.grayscale(Image.open(bin_img_path)))
 
 	overlay_boxes(boxes, orig_loc, save_path=dir_line_imgs + filename)
