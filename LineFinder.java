@@ -143,8 +143,8 @@ public class LineFinder extends JFrame implements MouseListener, ActionListener,
 					try {
 						f = new FileWriter("layout.txt", true);
 						b = new BufferedWriter(f);
-						b.write("<surface xml:id=\"" + foNum + side + "\">\n");
-						b.write("<zone\n" + "xml:id=\"" + foNum + side + "_p\"\n");
+						b.write("<surface id=\"" + foNum + side + "\">\n");
+						b.write("<zone\n" + "id=\"" + foNum + side + "_p\"\n");
 						b.write("ulx=\"0\"\n" + "uly=\"0\"\n" + "lrx=\"???\"\n" + "lry=\"???\">\n");
 						b.write("<graphic url=\"???\" />\n");
 						b.write("</zone>\n");
@@ -153,7 +153,7 @@ public class LineFinder extends JFrame implements MouseListener, ActionListener,
 						e.printStackTrace();
 					}
 					File file = fileChooser.getSelectedFile();
-					try { // original file will be w: 5250 and h: 7350. scale how much?
+					try { // original file will be w: 5250 and h: 7350. scaled by 10.5
 						img = ImageIO.read(file);
 						smallimg = createResizedCopy(img, 500, 700, false);
 						myPic = new ImageIcon(smallimg);
@@ -173,8 +173,6 @@ public class LineFinder extends JFrame implements MouseListener, ActionListener,
 						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
-					// auto size? GUHHHHHH
-
 				}
 				else
 					System.out.println("Invalid folio. Please try loading image again.");
@@ -257,14 +255,14 @@ public class LineFinder extends JFrame implements MouseListener, ActionListener,
 					f = new FileWriter("layout.txt", true);
 					b = new BufferedWriter(f);
 					if (newObject.type.equals("text")) { // script????
-						b.write("<zone\n" + "xml:id=\"" + newObject.name + "\"\n");
+						b.write("<zone\n" + "id=\"" + newObject.name + "\"\n");
 						b.write("ulx=\"" + newObject.topLeft.x + "\"\n" 
 								+ "uly=\"" + newObject.topLeft.y + "\"\n" 
 								+ "lrx=\"" + newObject.bottomRight.x + "\"\n" 
 								+ "lry=\"" + newObject.bottomRight.y + "\">\n" + "</zone>\n");
 					}
 					else {
-						b.write("<zone\n" + "xml:id=\"" + newObject.name + "\"\n");
+						b.write("<zone\n" + "id=\"" + newObject.name + "\"\n");
 						b.write("ulx=\"" + newObject.topLeft.x + "\"\n" 
 								+ "uly=\"" + newObject.topLeft.y + "\"\n" 
 								+ "lrx=\"" + newObject.bottomRight.x + "\"\n" 
