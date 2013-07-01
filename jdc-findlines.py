@@ -82,8 +82,8 @@ def find_lines(inpath, ulx, uly, lrx, lry, save_file=False, show_file=False):
 	xsize = lrx - ulx
 	ysize = lry - uly
 	
-	line_height = 65
-	fudge = 50
+	line_height = 70
+	fudge = 40
 	start_y = uly
 	boxes = []
 	for i in range(100):
