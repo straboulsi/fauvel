@@ -158,6 +158,7 @@ public class LineFinder extends JFrame implements MouseListener, ActionListener,
 						smallimg = createResizedCopy(img, 500, 700, false);
 						myPic = new ImageIcon(smallimg);
 						myPicLabel = new JLabel("", myPic, JLabel.CENTER);
+						myPicPanel = new JPanel();
 						myPicPanel.add(myPicLabel);
 						frame.add(myPicPanel, BorderLayout.CENTER);
 						frame.validate();
