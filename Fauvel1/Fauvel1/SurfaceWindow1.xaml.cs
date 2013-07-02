@@ -33,9 +33,7 @@ namespace Fauvel1
 
             Console.SetBufferSize(80, 1000);
 
-            List<TranslationBox> myList = Class1.makeBoxes("Fo1r");
-        
-
+            
             //Class1.getPoint("Te_0035-0048", 2);
 
             /// Console.Write("Width: " + Console.BufferWidth);
@@ -43,9 +41,9 @@ namespace Fauvel1
 
             /// Issue: We currently have a limit of approx 300 lines displayed in console
             /// That's why we need to reset!
-            Class1.getPoetry(35,48);
+            ///Class1.getPoetry(1,3);
             ///Class1.go("1rIm2"); 
-            ///Class1.go("41vVe1_t"); 
+            ///Class1.go("5rCon1_t"); 
             ///Class1.go("Fo3v"); /// Works if you add closing </pb> tag
             ///Class1.go("Te_0035-0048");
             
