@@ -32,6 +32,9 @@ namespace Fauvel1
             InitializeComponent();
 
             Console.SetBufferSize(80, 1000);
+
+            Class1.makeBoxes("Fo1v");
+
             /// Console.Write("Width: " + Console.BufferWidth);
             /// Console.Write("Height: "+Console.BufferHeight);
 
