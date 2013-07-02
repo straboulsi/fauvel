@@ -34,6 +34,7 @@ namespace Fauvel1
             Console.SetBufferSize(80, 1000);
 
             Class1.makeBoxes("Fo1v");
+            //Class1.getPoint("Te_0035-0048", 2);
 
             /// Console.Write("Width: " + Console.BufferWidth);
             /// Console.Write("Height: "+Console.BufferHeight);

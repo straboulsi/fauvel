@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections;
 using System.Linq;
 using System.Text;
 using System.Xml;
@@ -55,52 +56,45 @@ namespace Fauvel1
             return toDisplay;
         }
 
-        public static TranslationBox[] makeBoxes(String page)
+        public static ArrayList makeBoxes(String page)
         {
 
-           
+            ArrayList boxes = new ArrayList();
 
-            // These coordinates are from Jamie and her XML Layout file.
-            // Note that some adjustment may be necessary  
-            // Hard-coding translation boxes for Fo1v for now
-            // Will replace hard-coding w methods once Layout file is ready.                 
-
-            TranslationBox box1 = new TranslationBox("Te_0035-0048", getPoetry(35, 48), getEnglish(35, 48), new Point(1102, 745), new Point(2215, 2058));
-            TranslationBox box2 = new TranslationBox("Te_0049-0062", getPoetry(49, 62), getEnglish(49, 62), new Point(1092, 2992), new Point(2268, 4399));
-            TranslationBox box3 = new TranslationBox("Te_0063-0068", getPoetry(63, 68), getEnglish(63, 68), new Point(3717, 5481), new Point(4798, 6132));
-
-
-            TranslationBox[] boxes = new TranslationBox[3] {box1, box2, box3};
-
-
-            /**
-            foreach (TranslationBox box in boxes)
-            {
-                Console.Write(box.getTag()+"\r\n"+box.getOldFr()+"\r\n"+box.getEng());
-            }
-            **/
-
-            Console.Read();
-
-            /**
             try
             {
                 XmlDocument xml = new XmlDocument();
                 xml.Load("XMLFinalContentFile.xml");
 
                 XmlNodeList foundNode;
-                String pContents = "";
+                
 
                 page = page.Substring(2);
                 foundNode = xml.DocumentElement.SelectNodes("//pb[@facs='#" + page + "']/lg");
 
+                int i = 0;
 
                 foreach (XmlNode x in foundNode)
                 {
-                    ///Console.Write(x.OuterXml+"\r\n\r\n");
-                    pContents += x.OuterXml;
-                    TranslationBox temp = new TranslationBox("test", "test", new Point(1,2), new Point (5,6));
-                }
+                   
+                    String s = x.Attributes["id"].Value;
+                    int index = s.IndexOf("_");
+                    int mid = s.IndexOf("-");
+
+                    int start = Convert.ToInt32(s.Substring(index+1, 4));
+                    int end = Convert.ToInt32(s.Substring(mid + 1));
+                    
+                    boxes.Add(new TranslationBox(s, getPoetry(start, end), getEnglish(start,end), getPoint(s,1), getPoint(s,2)));
+                    
+                    i++;
+                }  
+
+                /**
+                foreach (TranslationBox tb in boxes)
+                {
+                    Console.Write(tb.tag+"\r\n"+tb.pointsToString()+"\r\n");
+                }  
+                **/
 
                 Console.Read();
 
@@ -110,9 +104,43 @@ namespace Fauvel1
                 Console.Write(e.StackTrace);
                 Console.Read();
             }
-             **/
-
+             
             return boxes;
+        }
+
+        /**
+         * The int whichPt = 1 if you want top left point and 2 if you want bottom right
+         **/
+        public static Point getPoint(String tag, int whichPt)
+        {
+            Point TL = new Point();
+            
+
+            try
+            {
+                XmlDocument xml = new XmlDocument();
+                xml.Load("layout1.xml");
+
+                XmlNodeList x = xml.DocumentElement.SelectNodes("//surface/zone");
+                foreach (XmlNode xn in x)
+                {
+                    if ((xn.Attributes["id"].Value).Equals(tag))
+                    {
+                        if (whichPt == 1)
+                            TL = new Point(Convert.ToInt32(xn.Attributes["ulx"].Value), Convert.ToInt32(xn.Attributes["uly"].Value));
+                        else if (whichPt == 2)
+                            TL = new Point(Convert.ToInt32(xn.Attributes["lrx"].Value), Convert.ToInt32(xn.Attributes["lry"].Value));
+                    }
+                }
+                
+            }
+            catch (Exception e)
+            {
+                Console.Write(e.StackTrace);
+                Console.Read();
+            }
+
+            return TL;
         }
 
 
