@@ -258,10 +258,10 @@ public class LineFinder extends JFrame implements MouseListener, ActionListener,
 					b = new BufferedWriter(f);
 					if (newObject.type.equals("text")) { // script????
 						b.write("<zone\n" + "id=\"" + newObject.name + "\"\n");
-						b.write("ulx=\"" + ((int) 10.5*newObject.topLeft.x) + "\"\n" 
-								+ "uly=\"" + ((int) 10.5*newObject.topLeft.y) + "\"\n" 
-								+ "lrx=\"" + ((int) 10.5*newObject.bottomRight.x) + "\"\n" 
-								+ "lry=\"" + ((int) 10.5*newObject.bottomRight.y) + "\">\n" + "</zone>\n");
+						b.write("ulx=\"" + ((int) (10.5*newObject.topLeft.x)) + "\"\n" 
+								+ "uly=\"" + ((int) (10.5*newObject.topLeft.y)) + "\"\n" 
+								+ "lrx=\"" + ((int) (10.5*newObject.bottomRight.x)) + "\"\n" 
+								+ "lry=\"" + ((int) (10.5*newObject.bottomRight.y)) + "\">\n" + "</zone>\n");
 					}
 					else {
 						b.write("<zone\n" + "id=\"" + newObject.name + "\"\n");
