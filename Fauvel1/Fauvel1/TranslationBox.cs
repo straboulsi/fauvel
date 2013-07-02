@@ -6,7 +6,7 @@ namespace Fauvel1
 {
     public class TranslationBox {
 
-        String tag = "";
+        public String tag = "";
         String oldFr = "";
         String eng = "";
         Point topL = new Point(0,0);
@@ -49,6 +49,11 @@ namespace Fauvel1
         public Point getTopLeft()
         {
             return topL;
+        }
+
+        public String pointsToString()
+        {
+            return topL.X + " " + topL.Y + "\r\n" + bottomR.X + " " + bottomR.Y;
         }
 
         public Point getBottomRight()
