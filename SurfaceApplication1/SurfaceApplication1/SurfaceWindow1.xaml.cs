@@ -20,6 +20,7 @@ using System.Collections;
 using System.Windows.Media.Animation;
 using System.Threading;
 using System.ComponentModel;
+using System.Diagnostics;
 
 namespace SurfaceApplication1
 {
@@ -28,6 +29,8 @@ namespace SurfaceApplication1
     /// </summary>
     public partial class SurfaceWindow1 : SurfaceWindow
     {
+        private readonly Stopwatch doubleTapSW = new Stopwatch();
+        private Point lastTapLocation;
         public static int maxPageWidth = 5250;
         public static int maxPageHeight = 7350;
         public static int minPageWidth = 664;
@@ -40,9 +43,6 @@ namespace SurfaceApplication1
         List<Tab> tabArray = new List<Tab>();
         Workers workers = new Workers();
 
-        /// <summary>
-        /// Default constructor.
-        /// </summary>
         public SurfaceWindow1()
         {
             InitializeComponent();
@@ -60,74 +60,11 @@ namespace SurfaceApplication1
             tabBar.Items.Add(newTabButton);
             createTab(1);
 
-            AddWindowAvailabilityHandlers();
         }
 
-        /// <summary>
-        /// Occurs when the window is about to close. 
-        /// </summary>
-        /// <param name="e"></param>
         protected override void OnClosed(EventArgs e)
         {
             base.OnClosed(e);
-
-            // Remove handlers for window availability events
-            RemoveWindowAvailabilityHandlers();
-        }
-
-        /// <summary>
-        /// Adds handlers for window availability events.
-        /// </summary>
-        private void AddWindowAvailabilityHandlers()
-        {
-            // Subscribe to surface window availability events
-            ApplicationServices.WindowInteractive += OnWindowInteractive;
-            ApplicationServices.WindowNoninteractive += OnWindowNoninteractive;
-            ApplicationServices.WindowUnavailable += OnWindowUnavailable;
-        }
-
-        /// <summary>
-        /// Removes handlers for window availability events.
-        /// </summary>
-        private void RemoveWindowAvailabilityHandlers()
-        {
-            // Unsubscribe from surface window availability events
-            ApplicationServices.WindowInteractive -= OnWindowInteractive;
-            ApplicationServices.WindowNoninteractive -= OnWindowNoninteractive;
-            ApplicationServices.WindowUnavailable -= OnWindowUnavailable;
-        }
-
-        /// <summary>
-        /// This is called when the user can interact with the application's window.
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void OnWindowInteractive(object sender, EventArgs e)
-        {
-            //TODO: enable audio, animations here
-            
-        }
-
-        /// <summary>
-        /// This is called when the user can see but not interact with the application's window.
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void OnWindowNoninteractive(object sender, EventArgs e)
-        {
-            //TODO: Disable audio here if it is enabled
-
-            //TODO: optionally enable animations here
-        }
-
-        /// <summary>
-        /// This is called when the application's window is not visible or interactive.
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void OnWindowUnavailable(object sender, EventArgs e)
-        {
-            //TODO: disable audio, animations here
         }
 
 
@@ -135,7 +72,6 @@ namespace SurfaceApplication1
         {
             goToPage(tabArray[tabNumber].pageNumber - 1);
         }
-
 
         private void next_Click(object sender, RoutedEventArgs e)
         {
@@ -206,7 +142,11 @@ namespace SurfaceApplication1
             recto.Stretch = Stretch.UniformToFill;
             SSC.ScatterView vScatterView = new SSC.ScatterView();
             SSC.ScatterView rScatterView = new SSC.ScatterView();
+            SSC.ScatterViewItem vScatterItem = new SSC.ScatterViewItem();
+            SSC.ScatterViewItem rScatterItem = new SSC.ScatterViewItem();
 
+            vScatterItem.PreviewTouchDown += new EventHandler<TouchEventArgs>(OnPreviewTouchDown);
+            rScatterItem.PreviewTouchDown += new EventHandler<TouchEventArgs>(OnPreviewTouchDown);
             vScatterView.HorizontalAlignment = System.Windows.HorizontalAlignment.Left;
             vScatterView.ClipToBounds = true;
             rScatterView.HorizontalAlignment = System.Windows.HorizontalAlignment.Left;
@@ -227,17 +167,12 @@ namespace SurfaceApplication1
             vScatterView.Height = minPageHeight + 2 * buffer;
             vScatterView.Margin = new Thickness(-buffer, -buffer, 0, 0);
             rScatterView.Margin = new Thickness(-buffer, -buffer, 0, 0);
-            vScatterView.Background = Brushes.Maroon;
+            vScatterView.Background = Brushes.White;
             rScatterView.Width = minPageWidth + 2 * buffer;
             rScatterView.Height = minPageHeight + 2 * buffer;
-            rScatterView.Background = Brushes.Navy;
-
-            SSC.ScatterViewItem vScatterItem = new SSC.ScatterViewItem();
-            SSC.ScatterViewItem rScatterItem = new SSC.ScatterViewItem();
+            rScatterView.Background = Brushes.White;
             vScatterItem.IsManipulationEnabled = true;
             rScatterItem.IsManipulationEnabled = true;
-            vScatterItem.SizeChanged += new SizeChangedEventHandler(scatter_SizeChanged);
-            rScatterItem.SizeChanged += new SizeChangedEventHandler(scatter_SizeChanged);
             vScatterItem.AddHandler(UIElement.ManipulationDeltaEvent, new EventHandler<ManipulationDeltaEventArgs>(scatter_ManipulationDelta), true);
             rScatterItem.AddHandler(UIElement.ManipulationDeltaEvent, new EventHandler<ManipulationDeltaEventArgs>(scatter_ManipulationDelta), true);
             vScatterItem.AddHandler(UIElement.ManipulationCompletedEvent, new EventHandler<ManipulationCompletedEventArgs>(scatter_ManipulationCompleted), true);
@@ -268,29 +203,20 @@ namespace SurfaceApplication1
             vScatterItem.SizeChanged += new SizeChangedEventHandler (makeVersoImageLarge);
             rScatterItem.SizeChanged += new SizeChangedEventHandler (makeRectoImageLarge);
 
-            Canvas vCanvas = new Canvas();
-            Canvas rCanvas = new Canvas();
-            Viewbox vVB = new Viewbox();
+            Grid vGrid = new Grid();
+            Grid rGrid = new Grid();
 
-            vCanvas.HorizontalAlignment = System.Windows.HorizontalAlignment.Left;
-            vCanvas.VerticalAlignment = System.Windows.VerticalAlignment.Top;
-            vCanvas.Background = Brushes.Olive;
-            vCanvas.ClipToBounds = true;
-            vCanvas.Children.Add(vVB);
-            vVB.Stretch = Stretch.UniformToFill;
-
-            vScatterItem.Content = verso;
-            rScatterItem.Content = recto;
+            vScatterItem.Content = vGrid;
+            rScatterItem.Content = rGrid;
+            vGrid.Children.Add(verso);
+            rGrid.Children.Add(recto);
+            verso.Stretch = Stretch.UniformToFill;
+            recto.Stretch = Stretch.UniformToFill;
 
             c_v.Children.Add(vScatterView);
             c_r.Children.Add(rScatterView);
             vScatterView.Items.Add(vScatterItem);
             rScatterView.Items.Add(rScatterItem);
-
-            verso.HorizontalAlignment = System.Windows.HorizontalAlignment.Left;
-            verso.VerticalAlignment = System.Windows.VerticalAlignment.Top;
-            recto.HorizontalAlignment = System.Windows.HorizontalAlignment.Left;
-            recto.VerticalAlignment = System.Windows.VerticalAlignment.Top;
 
             tabArray.Insert(count, new Tab(1, tab, verso, recto, can, vScatterItem, rScatterItem, c_s, delBtn));
             
@@ -307,7 +233,7 @@ namespace SurfaceApplication1
 
             BitmapImage src = new BitmapImage();
             src.BeginInit();
-            src.UriSource = new Uri("pack://application:,,,/cow.jpg", UriKind.Absolute);
+            src.UriSource = new Uri("pack://application:,,,/loading.gif", UriKind.Absolute);
             src.EndInit();
 
             verso.Source = src;
@@ -319,6 +245,9 @@ namespace SurfaceApplication1
             return tab;
         }
 
+        /*
+         * returns the tab that the user is currently using
+         */
         private Tab currentTab()
         {
             return tabArray[tabNumber];
@@ -423,10 +352,7 @@ namespace SurfaceApplication1
         /*
          * These methods are called when the pages are manipulated. They call limitScatter.
          */
-        private void scatter_SizeChanged(object sender, SizeChangedEventArgs e)
-        {
-            limitScatter((ScatterViewItem)sender);
-        }
+
         private void scatter_ManipulationDelta(object sender, ManipulationDeltaEventArgs e)
         {
             limitScatter((ScatterViewItem)sender);
@@ -467,6 +393,31 @@ namespace SurfaceApplication1
         private void pageSliderFlicked(object sender, SSC.Primitives.FlickEventArgs e)
         {
             e.Handled = true;
+        }
+
+        protected virtual void OnDoubleTouchDown(ScatterViewItem s)
+        {
+            s.Width = (double)maxPageWidth / 2;
+            s.Height = (double)maxPageHeight / 2;
+        }
+
+        private bool IsDoubleTap(TouchEventArgs e)
+        {
+            Point currentTapLocation = e.GetTouchPoint(this).Position;
+            bool tapsAreCloseInDistance = Math.Abs(currentTapLocation.X - lastTapLocation.X) < 20 && Math.Abs(currentTapLocation.Y - lastTapLocation.Y) < 20;
+            lastTapLocation = currentTapLocation;
+
+            TimeSpan elapsed = doubleTapSW.Elapsed;
+            doubleTapSW.Restart();
+            bool tapsAreCloseInTime = (elapsed != TimeSpan.Zero && elapsed < TimeSpan.FromSeconds(0.7));
+
+            return tapsAreCloseInDistance && tapsAreCloseInTime;
+        }
+
+        private void OnPreviewTouchDown(object sender, TouchEventArgs e)
+        {
+            if (IsDoubleTap(e))
+                OnDoubleTouchDown((ScatterViewItem)sender);
         }
 
     }

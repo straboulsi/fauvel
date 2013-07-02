@@ -134,6 +134,7 @@
   <ItemGroup>
     <Resource Include="cow.jpg" />
     <Resource Include="horse.jpg" />
+    <Resource Include="loading.gif" />
     <Content Include="pages\100.jpg">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
