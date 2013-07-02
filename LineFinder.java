@@ -146,14 +146,15 @@ public class LineFinder extends JFrame implements MouseListener, ActionListener,
 						b.write("<surface id=\"" + foNum + side + "\">\n");
 						b.write("<zone\n" + "id=\"" + foNum + side + "_p\"\n");
 						b.write("ulx=\"0\"\n" + "uly=\"0\"\n" + "lrx=\"???\"\n" + "lry=\"???\">\n");
-						b.write("<graphic url=\"???\" />\n");
-						b.write("</zone>\n");
+						
 					} catch (IOException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
 					File file = fileChooser.getSelectedFile();
 					try { // original file will be w: 5250 and h: 7350. scaled by 10.5
+						b.write("<graphic url=\"" + file.getName() + "\" />\n");
+						b.write("</zone>\n");
 						img = ImageIO.read(file);
 						smallimg = createResizedCopy(img, 500, 700, false);
 						myPic = new ImageIcon(smallimg);
