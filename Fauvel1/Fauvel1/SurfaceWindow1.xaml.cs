@@ -32,6 +32,9 @@ namespace Fauvel1
             InitializeComponent();
 
             Console.SetBufferSize(80, 1000);
+
+            Class1.makeBoxes("Fo1v");
+
             /// Console.Write("Width: " + Console.BufferWidth);
             /// Console.Write("Height: "+Console.BufferHeight);
 
@@ -141,6 +144,17 @@ namespace Fauvel1
         private void Button_Click2(object sender, RoutedEventArgs e)
         {
             String sSelectedText = Class1.go(poetrySec.Text);
+            stb.Text = sSelectedText;
+            stb.Opacity = 100;
+            stb.IsReadOnly = true;
+
+        }
+
+        private void Fetch_English(object sender, RoutedEventArgs e)
+        {
+            int sLine = Convert.ToInt32(startLine.Text);
+            int eLine = Convert.ToInt32(endLine.Text);
+            String sSelectedText = Class1.getEnglish(sLine,eLine);
             stb.Text = sSelectedText;
             stb.Opacity = 100;
             stb.IsReadOnly = true;

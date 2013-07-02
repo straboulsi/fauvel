@@ -59,9 +59,17 @@
         <Button 
             Click="Button_Click" 
             Canvas.Left="150" 
-            Canvas.Top="200"
+            Canvas.Top="250"
             >
             Get Poetry by line!
+        </Button>
+        
+        <Button
+            Click="Fetch_English"
+            Canvas.Left="150"
+            Canvas.Top="275"
+            >
+            Get English by line!
         </Button>
     </Canvas>
 
