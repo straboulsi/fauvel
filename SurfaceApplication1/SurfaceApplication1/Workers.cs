@@ -55,7 +55,7 @@ namespace SurfaceApplication1
             versoImageChange.DoWork += (s, e) =>
             {
                 e.Result = null;
-                int pn = 2 * tabV.pageNumber + 10;
+                int pn = 2 * tabV._page + 10;
                 BitmapImage image = new BitmapImage();
                 image.BeginInit();
                 if (!bigV)
@@ -85,7 +85,7 @@ namespace SurfaceApplication1
 
             rectoImageChange.DoWork += (s, e) =>
             {
-                int pn = 2 * tabR.pageNumber + 11;
+                int pn = 2 * tabR._page + 11;
                 BitmapImage image = new BitmapImage();
                 image.BeginInit();
                 if (!bigR)

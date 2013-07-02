@@ -99,6 +99,8 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Translate.cs" />
+    <Compile Include="TranslationBox.cs" />
     <Compile Include="Workers.cs" />
     <Compile Include="Tab.cs" />
     <Compile Include="SurfaceWindow1.xaml.cs">
@@ -132,9 +134,18 @@
     <None Include="SurfaceApplication1_TemporaryKey.pfx" />
   </ItemGroup>
   <ItemGroup>
+    <Resource Include="XMLFinalContentFile.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
     <Resource Include="cow.jpg" />
     <Resource Include="horse.jpg" />
     <Resource Include="loading.gif" />
+    <Resource Include="EnglishXML.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="layout1.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
     <Content Include="pages\100.jpg">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>

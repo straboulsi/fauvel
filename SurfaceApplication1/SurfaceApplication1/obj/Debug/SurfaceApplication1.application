@@ -8,14 +8,14 @@
     <framework targetVersion="4.0" profile="Full" supportedRuntime="4.0.30319" />
   </compatibleFrameworks>
   <dependency>
-    <dependentAssembly dependencyType="install" codebase="SurfaceApplication1.exe.manifest" size="78820">
+    <dependentAssembly dependencyType="install" codebase="SurfaceApplication1.exe.manifest" size="78821">
       <assemblyIdentity name="SurfaceApplication1.exe" version="1.0.0.5" publicKeyToken="0000000000000000" language="neutral" processorArchitecture="msil" type="win32" />
       <hash>
         <dsig:Transforms>
           <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
         </dsig:Transforms>
         <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1" />
-        <dsig:DigestValue>cGTUcgM5kreLlDlROSOt06lkW24=</dsig:DigestValue>
+        <dsig:DigestValue>wOR7ljDrTYGmT/ccL1jHaTTuV6E=</dsig:DigestValue>
       </hash>
     </dependentAssembly>
   </dependency>

@@ -42,6 +42,8 @@ namespace SurfaceApplication1
         int scatterBuffer = 3000;
         List<Tab> tabArray = new List<Tab>();
         Workers workers = new Workers();
+        enum language {None, English, OldFrench, French };
+        language currentLanguage = language.None;
 
         public SurfaceWindow1()
         {
@@ -70,37 +72,92 @@ namespace SurfaceApplication1
 
         private void prev_Click(object sender, RoutedEventArgs e)
         {
-            goToPage(tabArray[tabNumber].pageNumber - 1);
+            goToPage(tabArray[tabNumber]._page - 1);
         }
 
         private void next_Click(object sender, RoutedEventArgs e)
         {
-            goToPage(tabArray[tabNumber].pageNumber + 1);
+            goToPage(tabArray[tabNumber]._page + 1);
         }
 
         private void goToPage(int page)
         {
-            tabArray[tabNumber].pageNumber = page;
-            if (tabArray[tabNumber].pageNumber > maxPage)
-                tabArray[tabNumber].pageNumber = maxPage;
-            if (tabArray[tabNumber].pageNumber < minPage)
-                tabArray[tabNumber].pageNumber = minPage;
+            currentTab()._page = page;
+            if (page > maxPage)
+                tabArray[tabNumber]._page = maxPage;
+            if (tabArray[tabNumber]._page < minPage)
+                tabArray[tabNumber]._page = minPage;
             loadPage();
         }
 
         private void loadPage()
         {
-            tabArray[tabNumber]._vSVI.Width = minPageWidth;
-            tabArray[tabNumber]._vSVI.Height = minPageHeight;
-            tabArray[tabNumber]._rSVI.Width = minPageWidth;
-            tabArray[tabNumber]._rSVI.Height = minPageHeight;
+            Tab currentTab = this.currentTab();
 
-            int pageNumber = tabArray[tabNumber].pageNumber;
+            /* start translations */
+
+            while (currentTab._vGrid.Children.Count > 1)
+                currentTab._vGrid.Children.RemoveAt(currentTab._vGrid.Children.Count - 1);
+            while (currentTab._rGrid.Children.Count > 1)
+                currentTab._rGrid.Children.RemoveAt(currentTab._rGrid.Children.Count - 1);
+
+            string pagev = "fo" + (currentTab._page - 1).ToString() + "v";
+            string pager = "fo" + (currentTab._page    ).ToString() + "r";
+
+            currentTab._translationBoxesV = Translate.getBoxes(pagev);
+            currentTab._translationBoxesR = Translate.getBoxes(pager);
+
+            currentTab._textBlocksV = new List<TextBlock>();
+            currentTab._textBlocksR = new List<TextBlock>();
+
+            foreach(TranslationBox tb in currentTab._translationBoxesV){
+                double width, x, y, height;
+                x = tb.getTopLeft().X * 10.5;
+                y = tb.getTopLeft().Y * 10.5;
+                width = (tb.getBottomRight().X - tb.getTopLeft().X) * 10.5;
+                height = (tb.getBottomRight().Y - tb.getTopLeft().Y) * 10.5;
+
+                TextBlock t = new TextBlock();
+                Grid g = Translate.getGrid(x, y, width, height, t);
+                t.Foreground = Translate.textBrush;
+                t.Background = Translate.backBrush;
+                currentTab._textBlocksV.Add(t);
+                currentTab._vGrid.Children.Add(g);
+            }
+
+            foreach (TranslationBox tb in currentTab._translationBoxesR)
+            {
+                double width, x, y, height;
+                x = tb.getTopLeft().X * 10.5;
+                y = tb.getTopLeft().Y * 10.5;
+                width = (tb.getBottomRight().X - tb.getTopLeft().X) * 10.5;
+                height = (tb.getBottomRight().Y - tb.getTopLeft().Y) * 10.5;
+
+                TextBlock t = new TextBlock();
+                Grid g = Translate.getGrid(x, y, width, height, t);
+                t.Foreground = Translate.textBrush;
+                t.Background = Translate.backBrush;
+                currentTab._textBlocksR.Add(t);
+                currentTab._rGrid.Children.Add(g);
+            }
+
+            setTranslateText();
+
+            /* end translations */
+
+            currentTab._vSVI.Width = minPageWidth;
+            currentTab._vSVI.Height = minPageHeight;
+            currentTab._rSVI.Width = minPageWidth;
+            currentTab._rSVI.Height = minPageHeight;
+            currentTab._rSVI.Center = new Point(scatterBuffer + minPageWidth / 2, scatterBuffer + minPageHeight / 2);
+            currentTab._vSVI.Center = new Point(scatterBuffer + minPageWidth / 2, scatterBuffer + minPageHeight / 2);
+
+            int pageNumber = currentTab._page;
             int versoNum = 2 * pageNumber + 10;
             int rectoNum = 2 * pageNumber + 11;
 
-            Image verso = tabArray[tabNumber]._verso;
-            Image recto = tabArray[tabNumber]._recto;
+            Image verso = currentTab._verso;
+            Image recto = currentTab._recto;
 
             if (!workers.versoImageChange.CancellationPending)
                 workers.versoImageChange.CancelAsync();
@@ -108,15 +165,15 @@ namespace SurfaceApplication1
                 workers.rectoImageChange.CancelAsync();
 
             if (!workers.versoImageChange.IsBusy)
-                workers.updateVersoImage(currentTab(), false);
+                workers.updateVersoImage(currentTab, false);
 
             if (!workers.rectoImageChange.IsBusy)
-                workers.updateRectoImage(currentTab(), false);
+                workers.updateRectoImage(currentTab, false);
 
             pageNumberText.Text = pageNumber.ToString();
-            tabArray[tabNumber]._tab.Header = (pageNumber-1).ToString() + "v / " + pageNumber.ToString() + "r";
+            currentTab._tab.Header = (pageNumber - 1).ToString() + "v / " + pageNumber.ToString() + "r";
 
-            pageSlider.Value = currentTab().pageNumber;
+            pageSlider.Value = currentTab._page;
             
         }
 
@@ -218,7 +275,7 @@ namespace SurfaceApplication1
             vScatterView.Items.Add(vScatterItem);
             rScatterView.Items.Add(rScatterItem);
 
-            tabArray.Insert(count, new Tab(1, tab, verso, recto, can, vScatterItem, rScatterItem, c_s, delBtn));
+            tabArray.Insert(count, new Tab(1, tab, verso, recto, can, vGrid, rGrid, c_s, delBtn, vScatterItem, rScatterItem));
             
             can.Children.Add(c_v);
             can.Children.Add(c_r);
@@ -227,7 +284,7 @@ namespace SurfaceApplication1
             tabBar.Items.Insert(tabArray.Count - 1, tab);
             tabBar.SelectedIndex = tabArray.Count - 1;
 
-            int pageNumber = tabArray[tabNumber].pageNumber;
+            int pageNumber = tabArray[tabNumber]._page;
             int versoNum = 2 * pageNumber + 10;
             int rectoNum = 2 * pageNumber + 11;
 
@@ -416,9 +473,56 @@ namespace SurfaceApplication1
 
         private void OnPreviewTouchDown(object sender, TouchEventArgs e)
         {
+            /*
             if (IsDoubleTap(e))
-                OnDoubleTouchDown((ScatterViewItem)sender);
+                OnDoubleTouchDown((ScatterViewItem)sender);'*/
         }
 
+        private void languageChanged(object sender, SelectionChangedEventArgs e)
+        {
+            ComboBox box = (ComboBox)sender;
+            if (box.SelectedIndex == 0)
+                currentLanguage = language.None;
+            if (box.SelectedIndex == 1)
+                currentLanguage = language.OldFrench;
+            if (box.SelectedIndex == 2)
+                currentLanguage = language.French;
+            if (box.SelectedIndex == 3)
+                currentLanguage = language.English;
+            setTranslateText();
+        }
+
+        private void setTranslateText()
+        {
+            int leftCount, rightCount;
+            Tab tab = currentTab();
+            leftCount = tab._textBlocksV.Count;
+            rightCount = tab._textBlocksR.Count;
+
+            for (int i = 0; i < leftCount; i++)
+            {
+                tab._textBlocksV[i].Visibility = System.Windows.Visibility.Visible;
+                if (currentLanguage == language.None)
+                    tab._textBlocksV[i].Visibility = System.Windows.Visibility.Hidden;
+                if (currentLanguage == language.OldFrench)
+                    tab._textBlocksV[i].Text = tab._translationBoxesV[i].getOldFr();
+                if (currentLanguage == language.French)
+                    tab._textBlocksV[i].Text = tab._translationBoxesV[i].getOldFr();
+                if (currentLanguage == language.English)
+                    tab._textBlocksV[i].Text = tab._translationBoxesV[i].getEng();
+            }
+            for (int i = 0; i < rightCount; i++)
+            {
+                tab._textBlocksR[i].Visibility = System.Windows.Visibility.Visible;
+                if (currentLanguage == language.None)
+                    tab._textBlocksR[i].Visibility = System.Windows.Visibility.Hidden;
+                if (currentLanguage == language.OldFrench)
+                    tab._textBlocksR[i].Text = tab._translationBoxesR[i].getOldFr();
+                if (currentLanguage == language.French)
+                    tab._textBlocksR[i].Text = tab._translationBoxesR[i].getOldFr();
+                if (currentLanguage == language.English)
+                    tab._textBlocksR[i].Text = tab._translationBoxesR[i].getEng();
+            }
+        }
     }
 }
