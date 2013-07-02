@@ -33,7 +33,9 @@ namespace Fauvel1
 
             Console.SetBufferSize(80, 1000);
 
-            Class1.makeBoxes("Fo1v");
+            List<TranslationBox> myList = Class1.makeBoxes("Fo1r");
+        
+
             //Class1.getPoint("Te_0035-0048", 2);
 
             /// Console.Write("Width: " + Console.BufferWidth);
@@ -41,16 +43,23 @@ namespace Fauvel1
 
             /// Issue: We currently have a limit of approx 300 lines displayed in console
             /// That's why we need to reset!
-            ///Class1.getPoetry(10,12);
+            Class1.getPoetry(35,48);
             ///Class1.go("1rIm2"); 
-            ///Class1.go("1rMo2_t"); 
+            ///Class1.go("41vVe1_t"); 
             ///Class1.go("Fo3v"); /// Works if you add closing </pb> tag
             ///Class1.go("Te_0035-0048");
             
+            
             ///Class1.filterByVoice(2);
+            ///Class1.searchEngPoetry("beast");
+            ///Class1.searchLyrics("Dictus");
+            ///Class1.searchPicCaptions("Fauvel");
+
+
             // Add handlers for window availability events
             AddWindowAvailabilityHandlers();
 
+            
 
         }
 
@@ -138,17 +147,38 @@ namespace Fauvel1
             String sSelectedText = Class1.getPoetry(sLine, eLine);
             stb.Text = sSelectedText;
             stb.Opacity = 100;
-            stb.IsReadOnly = true;
             
+        }
+
+        private void Search_French(object sender, RoutedEventArgs e)
+        {
+            stb.Text = Class1.searchFrPoetry(SearchText.Text);
+            stb.Opacity = 100;
+        }
+
+        private void Search_English(object sender, RoutedEventArgs e)
+        {
+            stb.Text = Class1.searchEngPoetry(SearchText.Text);
+            stb.Opacity = 100;
+        }
+
+        private void Search_Lyrics(object sender, RoutedEventArgs e)
+        {
+            stb.Text = Class1.searchLyrics(SearchText.Text);
+            stb.Opacity = 100;
+        }
+
+        private void Search_Image(object sender, RoutedEventArgs e)
+        {
+            stb.Text = Class1.searchPicCaptions(SearchText.Text);
+            stb.Opacity = 100;
         }
 
         private void Button_Click2(object sender, RoutedEventArgs e)
         {
-            String sSelectedText = Class1.go(poetrySec.Text);
+            String sSelectedText = Class1.go(Tag.Text);
             stb.Text = sSelectedText;
             stb.Opacity = 100;
-            stb.IsReadOnly = true;
-
         }
 
         private void Fetch_English(object sender, RoutedEventArgs e)
@@ -158,8 +188,14 @@ namespace Fauvel1
             String sSelectedText = Class1.getEnglish(sLine,eLine);
             stb.Text = sSelectedText;
             stb.Opacity = 100;
-            stb.IsReadOnly = true;
+        }
 
+        private void TextBox_GotFocus(object sender, RoutedEventArgs e)
+        {
+            TextBox tb = (TextBox)sender;
+            tb.Text = string.Empty;
+            tb.GotFocus -= TextBox_GotFocus;
+            tb.Foreground = Brushes.Black;
         }
     }
 }

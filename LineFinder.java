@@ -145,15 +145,16 @@ public class LineFinder extends JFrame implements MouseListener, ActionListener,
 						b = new BufferedWriter(f);
 						b.write("<surface id=\"" + foNum + side + "\">\n");
 						b.write("<zone\n" + "id=\"" + foNum + side + "_p\"\n");
-						b.write("ulx=\"0\"\n" + "uly=\"0\"\n" + "lrx=\"???\"\n" + "lry=\"???\">\n");
-						b.write("<graphic url=\"???\" />\n");
-						b.write("</zone>\n");
+						b.write("ulx=\"0\"\n" + "uly=\"0\"\n" + "lrx=\"5250\"\n" + "lry=\"7350\">\n");
+						
 					} catch (IOException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
 					File file = fileChooser.getSelectedFile();
 					try { // original file will be w: 5250 and h: 7350. scaled by 10.5
+						b.write("<graphic url=\"" + file.getName() + "\" />\n");
+						b.write("</zone>\n");
 						img = ImageIO.read(file);
 						smallimg = createResizedCopy(img, 500, 700, false);
 						myPic = new ImageIcon(smallimg);
@@ -257,17 +258,17 @@ public class LineFinder extends JFrame implements MouseListener, ActionListener,
 					b = new BufferedWriter(f);
 					if (newObject.type.equals("text")) { // script????
 						b.write("<zone\n" + "id=\"" + newObject.name + "\"\n");
-						b.write("ulx=\"" + newObject.topLeft.x + "\"\n" 
-								+ "uly=\"" + newObject.topLeft.y + "\"\n" 
-								+ "lrx=\"" + newObject.bottomRight.x + "\"\n" 
-								+ "lry=\"" + newObject.bottomRight.y + "\">\n" + "</zone>\n");
+						b.write("ulx=\"" + ((int) 10.5*newObject.topLeft.x) + "\"\n" 
+								+ "uly=\"" + ((int) 10.5*newObject.topLeft.y) + "\"\n" 
+								+ "lrx=\"" + ((int) 10.5*newObject.bottomRight.x) + "\"\n" 
+								+ "lry=\"" + ((int) 10.5*newObject.bottomRight.y) + "\">\n" + "</zone>\n");
 					}
 					else {
 						b.write("<zone\n" + "id=\"" + newObject.name + "\"\n");
-						b.write("ulx=\"" + newObject.topLeft.x + "\"\n" 
-								+ "uly=\"" + newObject.topLeft.y + "\"\n" 
-								+ "lrx=\"" + newObject.bottomRight.x + "\"\n" 
-								+ "lry=\"" + newObject.bottomRight.y + "\">\n" + "</zone>\n");
+						b.write("ulx=\"" + ((int) (10.5*newObject.topLeft.x)) + "\"\n" 
+								+ "uly=\"" + ((int) (10.5*newObject.topLeft.y)) + "\"\n" 
+								+ "lrx=\"" + ((int) (10.5*newObject.bottomRight.x)) + "\"\n" 
+								+ "lry=\"" + ((int) (10.5*newObject.bottomRight.y)) + "\">\n" + "</zone>\n");
 					}
 					b.close();
 					f.close();
