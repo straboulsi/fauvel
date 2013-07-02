@@ -145,7 +145,7 @@ public class LineFinder extends JFrame implements MouseListener, ActionListener,
 						b = new BufferedWriter(f);
 						b.write("<surface id=\"" + foNum + side + "\">\n");
 						b.write("<zone\n" + "id=\"" + foNum + side + "_p\"\n");
-						b.write("ulx=\"0\"\n" + "uly=\"0\"\n" + "lrx=\"???\"\n" + "lry=\"???\">\n");
+						b.write("ulx=\"0\"\n" + "uly=\"0\"\n" + "lrx=\"5250\"\n" + "lry=\"7350\">\n");
 						
 					} catch (IOException e) {
 						// TODO Auto-generated catch block
