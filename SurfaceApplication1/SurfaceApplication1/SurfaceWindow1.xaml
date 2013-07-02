@@ -8,18 +8,6 @@
     WindowStartupLocation="CenterScreen" WindowState="Maximized"
     >
 	<Canvas x:Name="mother">
-        <Canvas x:Name="toolbar" Height="100" Width="1920" Margin="0" Background="Gray" Canvas.Top="980" d:LayoutOverrides="Width">
-            <Button x:Name="prev" Height="84" Canvas.Left="640" Width="100" Canvas.Top="8" VerticalAlignment="Top" TouchDown="prev_Click" Click="prev_Click">
-				<ed:BlockArrow Fill="#FFF4F4F5" Height="50" Orientation="Left" Stroke="Black" Width="60"/>
-			</Button>
-            <Button x:Name="next" Height="84" Canvas.Left="1180" Width="100" Canvas.Top="8" TouchDown="next_Click" Click="next_Click">
-				<ed:BlockArrow Fill="#FFF4F4F5" Height="50" Orientation="Right" Stroke="Black" Width="60"/>
-			</Button>
-			<TextBlock x:Name="pageNumberText" Height="48" Canvas.Left="800"  TextWrapping="Wrap" Text="1"  Canvas.Top="8" Width="80" FontSize="30" TextAlignment="Center"/>
-			<TextBlock                         Height="48" Canvas.Left="940"  TextWrapping="Wrap" Text="/"  Canvas.Top="8" Width="40" FontSize="30" TextAlignment="Center"/>
-            <TextBlock x:Name="maxPageText"    Height="48" Canvas.Right="800" TextWrapping="Wrap" Text="47" Canvas.Top="8" Width="80" FontSize="30" TextAlignment="Center"/>
-            <s:SurfaceSlider x:Name="pageSlider" Minimum="0" Maximum="47" Width="430" Canvas.Left="745" Canvas.Top="50" TickFrequency="1" IsSnapToTickEnabled="True" s:SurfaceThumb.PreviewFlicked="pageSliderFlicked"></s:SurfaceSlider>
-        </Canvas>
 		<TabControl x:Name="tabBar" SelectionChanged="tabBar_SelectionChanged" Height="980" Width="1344" VerticalContentAlignment="Center" VerticalAlignment="Center" HorizontalAlignment="Center" TabStripPlacement="Bottom">
             <TabControl.Resources>
                 <DataTemplate x:Key="TabHeader" DataType="TabItem">
@@ -56,7 +44,28 @@
 
             </TabItem>
         </TabControl>
-        
+        <Canvas x:Name="toolbar" Height="100" Width="1920" Margin="0" Background="Gray" Canvas.Top="980" d:LayoutOverrides="Width">
+            <Button x:Name="prev" Height="84" Canvas.Left="640" Width="100" Canvas.Top="8" VerticalAlignment="Top" TouchDown="prev_Click" Click="prev_Click">
+                <ed:BlockArrow Fill="#FFF4F4F5" Height="50" Orientation="Left" Stroke="Black" Width="60"/>
+            </Button>
+            <Button x:Name="next" Height="84" Canvas.Left="1180" Width="100" Canvas.Top="8" TouchDown="next_Click" Click="next_Click">
+                <ed:BlockArrow Fill="#FFF4F4F5" Height="50" Orientation="Right" Stroke="Black" Width="60"/>
+            </Button>
+            <TextBlock x:Name="pageNumberText" Height="48" Canvas.Left="800"  TextWrapping="Wrap" Text="1"  Canvas.Top="8" Width="80" FontSize="30" TextAlignment="Center"/>
+            <TextBlock                         Height="48" Canvas.Left="940"  TextWrapping="Wrap" Text="/"  Canvas.Top="8" Width="40" FontSize="30" TextAlignment="Center"/>
+            <TextBlock x:Name="maxPageText"    Height="48" Canvas.Right="800" TextWrapping="Wrap" Text="47" Canvas.Top="8" Width="80" FontSize="30" TextAlignment="Center"/>
+            <s:SurfaceSlider x:Name="pageSlider" Minimum="0" Maximum="47" Width="430" Canvas.Left="745" Canvas.Top="50" TickFrequency="1" IsSnapToTickEnabled="True" s:SurfaceThumb.PreviewFlicked="pageSliderFlicked"></s:SurfaceSlider>
+            <StackPanel>
+                <Menu>
+                    <MenuItem Header="Translation">
+                        <MenuItem Header="None"/>
+                        <MenuItem Header="English"/>
+                        <MenuItem Header="French"/>
+                        <MenuItem Header="Mideval French"/>
+                    </MenuItem>
+                </Menu>
+            </StackPanel>
+        </Canvas>
         <Canvas x:Name="SliderDisplay" Canvas.Left="-500" Width="200" Height="100" HorizontalAlignment="Center">
             <Image x:Name="SliderImage1" Source="\pages\11.jpg" Width="100" Stretch="UniformToFill"/>
             <Image x:Name="SliderImage2" Source="\pages\11.jpg" Width="100" Stretch="UniformToFill" Canvas.Left="100" />

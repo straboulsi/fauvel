@@ -15,3 +15,20 @@ c:\users\alison\documents\visual studio 2010\Projects\Fauvel1\Fauvel1\obj\Debug\
 c:\users\alison\documents\visual studio 2010\Projects\Fauvel1\Fauvel1\obj\Debug\GenerateResource.write.1.tlog
 c:\users\alison\documents\visual studio 2010\Projects\Fauvel1\Fauvel1\obj\Debug\Fauvel1.exe
 c:\users\alison\documents\visual studio 2010\Projects\Fauvel1\Fauvel1\obj\Debug\Fauvel1.pdb
+C:\Users\soundlab\Documents\DigitalFauvel\GitCloneClean\Fauvel1\Fauvel1\obj\Debug\Fauvel1.exe
+C:\Users\soundlab\Documents\DigitalFauvel\GitCloneClean\Fauvel1\Fauvel1\obj\Debug\Fauvel1.pdb
+C:\Users\soundlab\Documents\DigitalFauvel\GitCloneClean\Fauvel1\Fauvel1\bin\Debug\Resources\icon.png
+C:\Users\soundlab\Documents\DigitalFauvel\GitCloneClean\Fauvel1\Fauvel1\bin\Debug\Fauvel1.xml
+C:\Users\soundlab\Documents\DigitalFauvel\GitCloneClean\Fauvel1\Fauvel1\bin\Debug\Fauvel1.exe
+C:\Users\soundlab\Documents\DigitalFauvel\GitCloneClean\Fauvel1\Fauvel1\bin\Debug\Fauvel1.pdb
+C:\Users\soundlab\Documents\DigitalFauvel\GitCloneClean\Fauvel1\Fauvel1\obj\Debug\ResolveAssemblyReference.cache
+C:\Users\soundlab\Documents\DigitalFauvel\GitCloneClean\Fauvel1\Fauvel1\obj\Debug\SurfaceWindow1.baml
+C:\Users\soundlab\Documents\DigitalFauvel\GitCloneClean\Fauvel1\Fauvel1\obj\Debug\App.baml
+C:\Users\soundlab\Documents\DigitalFauvel\GitCloneClean\Fauvel1\Fauvel1\obj\Debug\SurfaceWindow1.g.cs
+C:\Users\soundlab\Documents\DigitalFauvel\GitCloneClean\Fauvel1\Fauvel1\obj\Debug\App.g.cs
+C:\Users\soundlab\Documents\DigitalFauvel\GitCloneClean\Fauvel1\Fauvel1\obj\Debug\Fauvel1_Content.g.cs
+C:\Users\soundlab\Documents\DigitalFauvel\GitCloneClean\Fauvel1\Fauvel1\obj\Debug\Fauvel1_MarkupCompile.cache
+C:\Users\soundlab\Documents\DigitalFauvel\GitCloneClean\Fauvel1\Fauvel1\obj\Debug\Fauvel1.g.resources
+C:\Users\soundlab\Documents\DigitalFauvel\GitCloneClean\Fauvel1\Fauvel1\obj\Debug\Fauvel1.Properties.Resources.resources
+C:\Users\soundlab\Documents\DigitalFauvel\GitCloneClean\Fauvel1\Fauvel1\obj\Debug\GenerateResource.read.1.tlog
+C:\Users\soundlab\Documents\DigitalFauvel\GitCloneClean\Fauvel1\Fauvel1\obj\Debug\GenerateResource.write.1.tlog
