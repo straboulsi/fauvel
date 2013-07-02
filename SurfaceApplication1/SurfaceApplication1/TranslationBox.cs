@@ -6,7 +6,7 @@ namespace SurfaceApplication1
     public class TranslationBox
     {
 
-        String tag = "";
+        public String tag = "";
         String oldFr = "";
         String eng = "";
         Point topL = new Point(0, 0);

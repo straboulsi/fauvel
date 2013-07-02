@@ -42,6 +42,8 @@ namespace SurfaceApplication1
         int scatterBuffer = 3000;
         List<Tab> tabArray = new List<Tab>();
         Workers workers = new Workers();
+        enum language {None, English, OldFrench, French };
+        language currentLanguage = language.None;
 
         public SurfaceWindow1()
         {
@@ -92,60 +94,63 @@ namespace SurfaceApplication1
         {
             Tab currentTab = this.currentTab();
 
-            foreach (Grid g in currentTab._gridsV)
-                currentTab._vGrid.Children.Remove(g);
-            foreach (Grid g in currentTab._gridsR)
-                currentTab._rGrid.Children.Remove(g);
+            /* start translations */
 
-            currentTab._translationBoxesV = Translate.getBoxes(currentTab._page);
-            currentTab._translationBoxesR = Translate.getBoxes(currentTab._page + 1);
+            while (currentTab._vGrid.Children.Count > 1)
+                currentTab._vGrid.Children.RemoveAt(currentTab._vGrid.Children.Count - 1);
+            while (currentTab._rGrid.Children.Count > 1)
+                currentTab._rGrid.Children.RemoveAt(currentTab._rGrid.Children.Count - 1);
+
+            string pagev = "fo" + (currentTab._page - 1).ToString() + "v";
+            string pager = "fo" + (currentTab._page    ).ToString() + "r";
+
+            currentTab._translationBoxesV = Translate.getBoxes(pagev);
+            currentTab._translationBoxesR = Translate.getBoxes(pager);
+
+            currentTab._textBlocksV = new List<TextBlock>();
+            currentTab._textBlocksR = new List<TextBlock>();
 
             foreach(TranslationBox tb in currentTab._translationBoxesV){
-                Grid g = new Grid();
-                TextBlock t = new TextBlock();
                 double width, x, y, height;
-                x = tb.getTopLeft().X;
-                y = tb.getTopLeft().Y;
-                width = tb.getBottomRight().X - tb.getTopLeft().X;
-                height = tb.getBottomRight().Y - tb.getTopLeft().Y;
+                x = tb.getTopLeft().X * 10.5;
+                y = tb.getTopLeft().Y * 10.5;
+                width = (tb.getBottomRight().X - tb.getTopLeft().X) * 10.5;
+                height = (tb.getBottomRight().Y - tb.getTopLeft().Y) * 10.5;
 
-                ColumnDefinition c1 = new ColumnDefinition();
-                c1.Width = new GridLength(x, GridUnitType.Star);
-                ColumnDefinition c2 = new ColumnDefinition();
-                c2.Width = new GridLength(width, GridUnitType.Star);
-                ColumnDefinition c3 = new ColumnDefinition();
-                c3.Width = new GridLength(maxPageWidth - x - width, GridUnitType.Star);
-                RowDefinition r1 = new RowDefinition();
-                r1.Height = new GridLength(y, GridUnitType.Star);
-                RowDefinition r2 = new RowDefinition();
-                r2.Height = new GridLength(height, GridUnitType.Star);
-                RowDefinition r3 = new RowDefinition();
-                r3.Height = new GridLength(maxPageHeight - y - height, GridUnitType.Star);
-
-                g.ColumnDefinitions.Add(c1);
-                g.ColumnDefinitions.Add(c2);
-                g.ColumnDefinitions.Add(c3);
-                g.RowDefinitions.Add(r1);
-                g.RowDefinitions.Add(r2);
-                g.RowDefinitions.Add(r3);
-
-                Grid.SetRow(t, 0);
-                Grid.SetColumn(t, 0);
-                g.Children.Add(t);
-                t.Width = width;
-                t.Height = height;
-                t.Foreground = Brushes.Black;
-                t.Background = Brushes.White;
-
-                t.Text = tb.getOldFr();
-                currentTab._gridsV.Add(g);
+                TextBlock t = new TextBlock();
+                Grid g = Translate.getGrid(x, y, width, height, t);
+                t.Foreground = Translate.textBrush;
+                t.Background = Translate.backBrush;
                 currentTab._textBlocksV.Add(t);
+                currentTab._vGrid.Children.Add(g);
             }
+
+            foreach (TranslationBox tb in currentTab._translationBoxesR)
+            {
+                double width, x, y, height;
+                x = tb.getTopLeft().X * 10.5;
+                y = tb.getTopLeft().Y * 10.5;
+                width = (tb.getBottomRight().X - tb.getTopLeft().X) * 10.5;
+                height = (tb.getBottomRight().Y - tb.getTopLeft().Y) * 10.5;
+
+                TextBlock t = new TextBlock();
+                Grid g = Translate.getGrid(x, y, width, height, t);
+                t.Foreground = Translate.textBrush;
+                t.Background = Translate.backBrush;
+                currentTab._textBlocksR.Add(t);
+                currentTab._rGrid.Children.Add(g);
+            }
+
+            setTranslateText();
+
+            /* end translations */
 
             currentTab._vSVI.Width = minPageWidth;
             currentTab._vSVI.Height = minPageHeight;
             currentTab._rSVI.Width = minPageWidth;
             currentTab._rSVI.Height = minPageHeight;
+            currentTab._rSVI.Center = new Point(scatterBuffer + minPageWidth / 2, scatterBuffer + minPageHeight / 2);
+            currentTab._vSVI.Center = new Point(scatterBuffer + minPageWidth / 2, scatterBuffer + minPageHeight / 2);
 
             int pageNumber = currentTab._page;
             int versoNum = 2 * pageNumber + 10;
@@ -270,7 +275,7 @@ namespace SurfaceApplication1
             vScatterView.Items.Add(vScatterItem);
             rScatterView.Items.Add(rScatterItem);
 
-            tabArray.Insert(count, new Tab(1, tab, verso, recto, can, vGrid, rGrid, c_s, delBtn));
+            tabArray.Insert(count, new Tab(1, tab, verso, recto, can, vGrid, rGrid, c_s, delBtn, vScatterItem, rScatterItem));
             
             can.Children.Add(c_v);
             can.Children.Add(c_r);
@@ -468,9 +473,56 @@ namespace SurfaceApplication1
 
         private void OnPreviewTouchDown(object sender, TouchEventArgs e)
         {
+            /*
             if (IsDoubleTap(e))
-                OnDoubleTouchDown((ScatterViewItem)sender);
+                OnDoubleTouchDown((ScatterViewItem)sender);'*/
         }
 
+        private void languageChanged(object sender, SelectionChangedEventArgs e)
+        {
+            ComboBox box = (ComboBox)sender;
+            if (box.SelectedIndex == 0)
+                currentLanguage = language.None;
+            if (box.SelectedIndex == 1)
+                currentLanguage = language.OldFrench;
+            if (box.SelectedIndex == 2)
+                currentLanguage = language.French;
+            if (box.SelectedIndex == 3)
+                currentLanguage = language.English;
+            setTranslateText();
+        }
+
+        private void setTranslateText()
+        {
+            int leftCount, rightCount;
+            Tab tab = currentTab();
+            leftCount = tab._textBlocksV.Count;
+            rightCount = tab._textBlocksR.Count;
+
+            for (int i = 0; i < leftCount; i++)
+            {
+                tab._textBlocksV[i].Visibility = System.Windows.Visibility.Visible;
+                if (currentLanguage == language.None)
+                    tab._textBlocksV[i].Visibility = System.Windows.Visibility.Hidden;
+                if (currentLanguage == language.OldFrench)
+                    tab._textBlocksV[i].Text = tab._translationBoxesV[i].getOldFr();
+                if (currentLanguage == language.French)
+                    tab._textBlocksV[i].Text = tab._translationBoxesV[i].getOldFr();
+                if (currentLanguage == language.English)
+                    tab._textBlocksV[i].Text = tab._translationBoxesV[i].getEng();
+            }
+            for (int i = 0; i < rightCount; i++)
+            {
+                tab._textBlocksR[i].Visibility = System.Windows.Visibility.Visible;
+                if (currentLanguage == language.None)
+                    tab._textBlocksR[i].Visibility = System.Windows.Visibility.Hidden;
+                if (currentLanguage == language.OldFrench)
+                    tab._textBlocksR[i].Text = tab._translationBoxesR[i].getOldFr();
+                if (currentLanguage == language.French)
+                    tab._textBlocksR[i].Text = tab._translationBoxesR[i].getOldFr();
+                if (currentLanguage == language.English)
+                    tab._textBlocksR[i].Text = tab._translationBoxesR[i].getEng();
+            }
+        }
     }
 }

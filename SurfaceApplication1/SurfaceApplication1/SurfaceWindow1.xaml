@@ -55,16 +55,12 @@
             <TextBlock                         Height="48" Canvas.Left="940"  TextWrapping="Wrap" Text="/"  Canvas.Top="8" Width="40" FontSize="30" TextAlignment="Center"/>
             <TextBlock x:Name="maxPageText"    Height="48" Canvas.Right="800" TextWrapping="Wrap" Text="47" Canvas.Top="8" Width="80" FontSize="30" TextAlignment="Center"/>
             <s:SurfaceSlider x:Name="pageSlider" Minimum="0" Maximum="47" Width="430" Canvas.Left="745" Canvas.Top="50" TickFrequency="1" IsSnapToTickEnabled="True" s:SurfaceThumb.PreviewFlicked="pageSliderFlicked"></s:SurfaceSlider>
-            <StackPanel>
-                <Menu>
-                    <MenuItem Header="Translation">
-                        <MenuItem Header="None"/>
-                        <MenuItem Header="English"/>
-                        <MenuItem Header="French"/>
-                        <MenuItem Header="Mideval French"/>
-                    </MenuItem>
-                </Menu>
-            </StackPanel>
+            <ComboBox SelectionChanged="languageChanged">
+                <ComboBoxItem Content="None"/>
+                <ComboBoxItem Content="Old French"/>
+                <ComboBoxItem Content="French"/>
+                <ComboBoxItem Content="English"/>
+            </ComboBox>
         </Canvas>
         <Canvas x:Name="SliderDisplay" Canvas.Left="-500" Width="200" Height="100" HorizontalAlignment="Center">
             <Image x:Name="SliderImage1" Source="\pages\11.jpg" Width="100" Stretch="UniformToFill"/>

@@ -24,9 +24,8 @@ namespace SurfaceApplication1
         public List<TranslationBox> _translationBoxesV, _translationBoxesR;
         public List<TextBlock> _textBlocksV, _textBlocksR;
         public Grid _vGrid, _rGrid;
-        public List<Grid> _gridsV, _gridsR;
 
-        public Tab(int page, TabItem newTab, Image newVerso, Image newRecto, Canvas canvas, Grid vGrid, Grid rGrid, Canvas cs, Button delBtn)
+        public Tab(int page, TabItem newTab, Image newVerso, Image newRecto, Canvas canvas, Grid vGrid, Grid rGrid, Canvas cs, Button delBtn, ScatterViewItem vsi, ScatterViewItem rsi)
         {
             _page = page;
             _tab = newTab;
@@ -35,14 +34,14 @@ namespace SurfaceApplication1
             _canvas = canvas;
             _vGrid = vGrid;
             _rGrid = rGrid;
+            _vSVI = vsi;
+            _rSVI = rsi;
             _cs = cs;
             _delButton = delBtn;
             numFingersRecto = 0;
             numFingersVerso = 0;
             fingerPos = new List<Point>();
             avgTouchPoint = new Point(-1, 0);
-            _translationBoxesV = Translate.getBoxes(_page);
-            _translationBoxesR = Translate.getBoxes(_page + 1);
         }
 
     }
