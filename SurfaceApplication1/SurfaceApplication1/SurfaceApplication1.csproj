@@ -99,6 +99,8 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Translate.cs" />
+    <Compile Include="TranslationBox.cs" />
     <Compile Include="Workers.cs" />
     <Compile Include="Tab.cs" />
     <Compile Include="SurfaceWindow1.xaml.cs">

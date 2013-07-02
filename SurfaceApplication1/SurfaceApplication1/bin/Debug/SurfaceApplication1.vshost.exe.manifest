@@ -84,14 +84,14 @@
     </dependentAssembly>
   </dependency>
   <dependency>
-    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="SurfaceApplication1.exe" size="986624">
+    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="SurfaceApplication1.exe" size="988160">
       <assemblyIdentity name="SurfaceApplication1" version="1.0.0.0" language="neutral" processorArchitecture="msil" />
       <hash>
         <dsig:Transforms>
           <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
         </dsig:Transforms>
         <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1" />
-        <dsig:DigestValue>bKbXHJplvR3IDInTK8QPbvKRWRE=</dsig:DigestValue>
+        <dsig:DigestValue>VtihrUcfjzT0U8kmt4Zyyvz7z4o=</dsig:DigestValue>
       </hash>
     </dependentAssembly>
   </dependency>

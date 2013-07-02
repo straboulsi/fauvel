@@ -70,37 +70,89 @@ namespace SurfaceApplication1
 
         private void prev_Click(object sender, RoutedEventArgs e)
         {
-            goToPage(tabArray[tabNumber].pageNumber - 1);
+            goToPage(tabArray[tabNumber]._page - 1);
         }
 
         private void next_Click(object sender, RoutedEventArgs e)
         {
-            goToPage(tabArray[tabNumber].pageNumber + 1);
+            goToPage(tabArray[tabNumber]._page + 1);
         }
 
         private void goToPage(int page)
         {
-            tabArray[tabNumber].pageNumber = page;
-            if (tabArray[tabNumber].pageNumber > maxPage)
-                tabArray[tabNumber].pageNumber = maxPage;
-            if (tabArray[tabNumber].pageNumber < minPage)
-                tabArray[tabNumber].pageNumber = minPage;
+            currentTab()._page = page;
+            if (page > maxPage)
+                tabArray[tabNumber]._page = maxPage;
+            if (tabArray[tabNumber]._page < minPage)
+                tabArray[tabNumber]._page = minPage;
             loadPage();
         }
 
         private void loadPage()
         {
-            tabArray[tabNumber]._vSVI.Width = minPageWidth;
-            tabArray[tabNumber]._vSVI.Height = minPageHeight;
-            tabArray[tabNumber]._rSVI.Width = minPageWidth;
-            tabArray[tabNumber]._rSVI.Height = minPageHeight;
+            Tab currentTab = this.currentTab();
 
-            int pageNumber = tabArray[tabNumber].pageNumber;
+            foreach (Grid g in currentTab._gridsV)
+                currentTab._vGrid.Children.Remove(g);
+            foreach (Grid g in currentTab._gridsR)
+                currentTab._rGrid.Children.Remove(g);
+
+            currentTab._translationBoxesV = Translate.getBoxes(currentTab._page);
+            currentTab._translationBoxesR = Translate.getBoxes(currentTab._page + 1);
+
+            foreach(TranslationBox tb in currentTab._translationBoxesV){
+                Grid g = new Grid();
+                TextBlock t = new TextBlock();
+                double width, x, y, height;
+                x = tb.getTopLeft().X;
+                y = tb.getTopLeft().Y;
+                width = tb.getBottomRight().X - tb.getTopLeft().X;
+                height = tb.getBottomRight().Y - tb.getTopLeft().Y;
+
+                ColumnDefinition c1 = new ColumnDefinition();
+                c1.Width = new GridLength(x, GridUnitType.Star);
+                ColumnDefinition c2 = new ColumnDefinition();
+                c2.Width = new GridLength(width, GridUnitType.Star);
+                ColumnDefinition c3 = new ColumnDefinition();
+                c3.Width = new GridLength(maxPageWidth - x - width, GridUnitType.Star);
+                RowDefinition r1 = new RowDefinition();
+                r1.Height = new GridLength(y, GridUnitType.Star);
+                RowDefinition r2 = new RowDefinition();
+                r2.Height = new GridLength(height, GridUnitType.Star);
+                RowDefinition r3 = new RowDefinition();
+                r3.Height = new GridLength(maxPageHeight - y - height, GridUnitType.Star);
+
+                g.ColumnDefinitions.Add(c1);
+                g.ColumnDefinitions.Add(c2);
+                g.ColumnDefinitions.Add(c3);
+                g.RowDefinitions.Add(r1);
+                g.RowDefinitions.Add(r2);
+                g.RowDefinitions.Add(r3);
+
+                Grid.SetRow(t, 0);
+                Grid.SetColumn(t, 0);
+                g.Children.Add(t);
+                t.Width = width;
+                t.Height = height;
+                t.Foreground = Brushes.Black;
+                t.Background = Brushes.White;
+
+                t.Text = tb.getOldFr();
+                currentTab._gridsV.Add(g);
+                currentTab._textBlocksV.Add(t);
+            }
+
+            currentTab._vSVI.Width = minPageWidth;
+            currentTab._vSVI.Height = minPageHeight;
+            currentTab._rSVI.Width = minPageWidth;
+            currentTab._rSVI.Height = minPageHeight;
+
+            int pageNumber = currentTab._page;
             int versoNum = 2 * pageNumber + 10;
             int rectoNum = 2 * pageNumber + 11;
 
-            Image verso = tabArray[tabNumber]._verso;
-            Image recto = tabArray[tabNumber]._recto;
+            Image verso = currentTab._verso;
+            Image recto = currentTab._recto;
 
             if (!workers.versoImageChange.CancellationPending)
                 workers.versoImageChange.CancelAsync();
@@ -108,15 +160,15 @@ namespace SurfaceApplication1
                 workers.rectoImageChange.CancelAsync();
 
             if (!workers.versoImageChange.IsBusy)
-                workers.updateVersoImage(currentTab(), false);
+                workers.updateVersoImage(currentTab, false);
 
             if (!workers.rectoImageChange.IsBusy)
-                workers.updateRectoImage(currentTab(), false);
+                workers.updateRectoImage(currentTab, false);
 
             pageNumberText.Text = pageNumber.ToString();
-            tabArray[tabNumber]._tab.Header = (pageNumber-1).ToString() + "v / " + pageNumber.ToString() + "r";
+            currentTab._tab.Header = (pageNumber - 1).ToString() + "v / " + pageNumber.ToString() + "r";
 
-            pageSlider.Value = currentTab().pageNumber;
+            pageSlider.Value = currentTab._page;
             
         }
 
@@ -218,7 +270,7 @@ namespace SurfaceApplication1
             vScatterView.Items.Add(vScatterItem);
             rScatterView.Items.Add(rScatterItem);
 
-            tabArray.Insert(count, new Tab(1, tab, verso, recto, can, vScatterItem, rScatterItem, c_s, delBtn));
+            tabArray.Insert(count, new Tab(1, tab, verso, recto, can, vGrid, rGrid, c_s, delBtn));
             
             can.Children.Add(c_v);
             can.Children.Add(c_r);
@@ -227,7 +279,7 @@ namespace SurfaceApplication1
             tabBar.Items.Insert(tabArray.Count - 1, tab);
             tabBar.SelectedIndex = tabArray.Count - 1;
 
-            int pageNumber = tabArray[tabNumber].pageNumber;
+            int pageNumber = tabArray[tabNumber]._page;
             int versoNum = 2 * pageNumber + 10;
             int rectoNum = 2 * pageNumber + 11;
 
