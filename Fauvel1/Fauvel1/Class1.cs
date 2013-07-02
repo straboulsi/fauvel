@@ -56,8 +56,9 @@ namespace Fauvel1
             }
             catch (Exception e)
             {
-                Console.Write(e.StackTrace);
-                Console.Read();
+                //Console.Write(e.StackTrace);
+                //Console.Read();
+                toDisplay = "Can't find these lines.. Try again?";
             }
 
             return toDisplay;
@@ -97,12 +98,8 @@ namespace Fauvel1
                     boxes.Add(new TranslationBox(s, getPoetry(start, end), getEnglish(start,end), getPoint(s,1), getPoint(s,2)));
                 }
 
-                foreach (TranslationBox tb in boxes)
-                {
-                    Console.Write(tb.tag);
-                }
 
-                Console.Read();
+               
 
             }
             catch (Exception e)
@@ -169,8 +166,9 @@ namespace Fauvel1
             }
             catch (Exception e)
             {
-                Console.Write(e.StackTrace);
-                Console.Read();
+                //Console.Write(e.StackTrace);
+                //Console.Read();
+                toDisplay = "Can't find the English.. Try again?";
             }
 
             return toDisplay;
@@ -218,18 +216,181 @@ namespace Fauvel1
                     foundNode = xml.DocumentElement.SelectSingleNode("//p[@id='" + str + "']");
                     str += foundNode.InnerText;
                 }
-                 
-                //Console.Write(foundNode.InnerText + "\r\n");
+                
+                ///Console.Read();
                 
             }
             catch(Exception e)
             {
-                Console.Write(e.StackTrace);
-                Console.Read();
+                str = "Sorry, your tag doesn't exist. Try again!";
             }
 
             return str;
         }
+
+
+        public static String searchFrPoetry(String search)
+        {
+            String findings = "";
+
+            try
+            {
+                XmlDocument xml = new XmlDocument();
+                xml.Load("XMLFinalContentFile.xml");
+                XmlNodeList xnl = xml.DocumentElement.SelectNodes("//lg/l");
+
+                int numFound = 0; 
+
+                foreach(XmlNode xn in xnl)
+                {
+                    if (xn.InnerText.Contains(search))
+                    {
+                        numFound++;
+                        ///Console.Write(xn.InnerText);
+                        String lineNum = xn.Attributes["n"].Value;
+                        XmlNode page = xn.ParentNode.ParentNode;
+                        String pageNum = page.Attributes["facs"].Value;
+                        
+                        pageNum = "Fo" + pageNum.Substring(1);
+                        findings += pageNum + " " + lineNum + " " + xn.InnerText + "\r\n" ;
+                        
+                    }
+                }
+
+                findings = "TOTAL: " + numFound + " results\r\n\r\n" + findings;
+
+                
+            }
+            catch (Exception e)
+            {
+                findings = "Sorry, can't find your search! Try again?";
+            }
+
+
+            return findings;
+        }
+
+
+
+
+        public static String searchEngPoetry(String search)
+        {
+            String findings = "";
+
+            try
+            {
+                XmlDocument xml = new XmlDocument();
+                xml.Load("EnglishXML.xml");
+                XmlNodeList xnl = xml.DocumentElement.SelectNodes("//lg/l");
+
+                int numFound = 0;
+
+                foreach (XmlNode xn in xnl)
+                {
+                    if (xn.InnerText.Contains(search))
+                    {
+                        numFound++;
+                        String lineNum = xn.Attributes["n"].Value;
+                       
+                        findings += lineNum + " " + xn.InnerText + "\r\n";
+
+                    }
+                }
+
+                findings = "TOTAL: " + numFound + " results\r\n\r\n" + findings;
+            }
+            catch (Exception e)
+            {
+                findings = "Sorry, can't find your search! Try again?";
+            }
+
+
+
+            return findings;
+        }
+
+
+        public static String searchLyrics(String search)
+        {
+            String findings = "";
+
+            try
+            {
+                XmlDocument xml = new XmlDocument();
+                xml.Load("XMLFinalContentFile.xml");
+                XmlNodeList xnl = xml.DocumentElement.SelectNodes("//p");
+
+                int numFound = 0;
+
+                foreach (XmlNode xn in xnl)
+                {
+                    if (xn.InnerText.Contains(search))
+                    {
+                        numFound++;
+                        String str = xn.InnerText;
+                        int index = str.IndexOf(")");
+                        str = str.Substring(0, index + 1); // The title of the musical object
+                        String tag = xn.Attributes["id"].Value;
+                        
+
+                        String page = "Fo" + (xn.ParentNode.Attributes["facs"].Value).Substring(1);
+                        findings += page + " " + tag + " " + str + "\r\n";
+                    }
+                }
+
+                findings = "TOTAL: " + numFound + " results\r\n\r\n" + findings;
+
+            }
+            catch (Exception e)
+            {
+                findings = "Sorry, can't find your search! Try again?";
+            }
+
+            return findings;
+        }
+
+
+
+        public static String searchPicCaptions(String search)
+        {
+            String findings = "";
+
+            try
+            {
+                XmlDocument xml = new XmlDocument();
+                xml.Load("XMLFinalContentFile.xml");
+                XmlNodeList xnl = xml.DocumentElement.SelectNodes("//figure");
+
+                int numFound = 0;
+
+                foreach (XmlNode xn in xnl)
+                {
+                    if (xn.InnerText.Contains(search))
+                    {
+                        numFound++;
+                        String str = xn.InnerText;
+                        String tag = xn.Attributes["id"].Value;
+
+                        String page = "Fo" + (xn.ParentNode.Attributes["facs"].Value).Substring(1);
+                        findings += page + " " + tag + " " + str + "\r\n";
+                    }
+                }
+
+                findings = "TOTAL: " + numFound + " results\r\n\r\n" + findings;
+                
+
+            }
+            catch (Exception e)
+            {
+                findings = "Sorry, can't find your search! Try again?";
+            }
+
+
+
+            return findings;
+        }
+
+
 
 
         /// <summary>
