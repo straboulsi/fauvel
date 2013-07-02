@@ -49,9 +49,10 @@ namespace Fauvel1
                 for (int i = firstLine; i <= lastLine; i++)
                 {
                     foundNode = xml.DocumentElement.SelectSingleNode("//lg/l[@n='"+i+"']");
-                    toDisplay += foundNode.InnerText + "\r\n";
+                    toDisplay += foundNode.InnerText.Trim() + "\r\n";
                 }
 
+                //Console.Read();
 
             }
             catch (Exception e)
@@ -60,7 +61,7 @@ namespace Fauvel1
                 //Console.Read();
                 toDisplay = "Can't find these lines.. Try again?";
             }
-
+           
             return toDisplay;
         }
 
@@ -161,7 +162,7 @@ namespace Fauvel1
                 for (int i = start; i <= end; i++)
                 {
                     foundNode = xml.DocumentElement.SelectSingleNode("//lg/l[@n='" + i + "']");
-                    toDisplay += foundNode.InnerText + "\r\n";
+                    toDisplay += foundNode.InnerText.Trim() + "\r\n";
                 }
             }
             catch (Exception e)
@@ -196,13 +197,13 @@ namespace Fauvel1
                 if (str.Contains("Im"))
                 {
                     foundNode = xml.DocumentElement.SelectSingleNode("//figure[@id='" + str + "']");
-                    str += foundNode.InnerText;
+                    str += foundNode.InnerText.Trim();
                 }
                 else if(str.StartsWith("Te")){
                     foundNode = xml.DocumentElement.SelectSingleNode("//lg[@id='"+str+"']");
                     XmlNodeList lineByLine = foundNode.SelectNodes("l");
                     foreach (XmlNode x in lineByLine)
-                        str += x.InnerText + "\r\n";
+                        str += x.InnerText.Trim() + "\r\n";
                 }
                 else if (str.StartsWith("Fo"))
                 {
@@ -214,7 +215,7 @@ namespace Fauvel1
                 {
                     /// Note: To select voices that don't have <dc>, add second level and select ("//v[not(dc)]")
                     foundNode = xml.DocumentElement.SelectSingleNode("//p[@id='" + str + "']");
-                    str += foundNode.InnerText;
+                    str += foundNode.InnerText.Trim();
                 }
                 
                 ///Console.Read();
@@ -252,7 +253,7 @@ namespace Fauvel1
                         String pageNum = page.Attributes["facs"].Value;
                         
                         pageNum = "Fo" + pageNum.Substring(1);
-                        findings += pageNum + " " + lineNum + " " + xn.InnerText + "\r\n" ;
+                        findings += pageNum + " " + lineNum + " " + xn.InnerText.Trim() + "\r\n";
                         
                     }
                 }
@@ -291,8 +292,8 @@ namespace Fauvel1
                     {
                         numFound++;
                         String lineNum = xn.Attributes["n"].Value;
-                       
-                        findings += lineNum + " " + xn.InnerText + "\r\n";
+
+                        findings += lineNum + " " + xn.InnerText.Trim() + "\r\n";
 
                     }
                 }

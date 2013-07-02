@@ -67,7 +67,7 @@
             GotFocus="TextBox_GotFocus"
            >
 
-           Enter ID: i.e. Te_0035-0048
+           Enter ID
         </TextBox>
 
         <TextBlock

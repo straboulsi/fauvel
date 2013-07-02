@@ -43,7 +43,7 @@ namespace Fauvel1
 
             /// Issue: We currently have a limit of approx 300 lines displayed in console
             /// That's why we need to reset!
-            ///Class1.getPoetry(10,12);
+            Class1.getPoetry(35,48);
             ///Class1.go("1rIm2"); 
             ///Class1.go("41vVe1_t"); 
             ///Class1.go("Fo3v"); /// Works if you add closing </pb> tag
