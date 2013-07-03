@@ -27,6 +27,29 @@ namespace Fauvel1
     static class Class1
     {
 
+
+        public static void test()
+        {
+            try
+            {
+                XmlDocument xml = new XmlDocument();
+                xml.Load("TestXML.xml");
+
+                XmlNodeList xnl = xml.DocumentElement.SelectNodes("//big");
+                foreach (XmlNode xn in xnl)
+                {
+                    Console.Write(xn.LastChild.InnerText);
+                }
+            }
+            catch
+            {
+                Console.Write("Error");
+            }
+
+            Console.Read();
+
+        }
+
         /**Takes in start and end line numbers.
          * Returns String of Old French poetry.
          * This is good bc Surface could send the int values of the first/last lines highlighted by user
@@ -64,6 +87,8 @@ namespace Fauvel1
                 toDisplay = "Can't find these lines.. Try again?";
             }
 
+            //Console.Write(toDisplay);
+            //Console.Read();
             toDisplay = toDisplay.TrimEnd('\r', '\n');
 
             return toDisplay;
@@ -222,15 +247,39 @@ namespace Fauvel1
                 }
                 else // Select music objects
                 {
+
                     /// Note: To select voices that don't have <dc>, add second level and select ("//v[not(dc)]")
                     foundNode = xml.DocumentElement.SelectSingleNode("//p[@id='" + str + "']");
-                    
-                    // Removing the <dc> extra letter
-                    XmlNodeList tbRemoved = foundNode.SelectNodes("dc");
+                    XmlNodeList tbRemoved;
+
+                    tbRemoved = foundNode.SelectNodes("cp");
+                    foreach (XmlNode xn in tbRemoved)
+                        foundNode.RemoveChild(xn);
+
+                    tbRemoved = foundNode.SelectNodes("nv");
                     foreach (XmlNode xn in tbRemoved)
                         foundNode.RemoveChild(xn);
 
 
+                    if (str.Substring(2, 2).Equals("Mo"))
+                    {
+                        XmlNodeList voices = foundNode.SelectNodes("v");
+                        foreach (XmlNode voice in voices)
+                        {
+                            tbRemoved = voice.SelectNodes("dc");
+                            foreach (XmlNode xn in tbRemoved)
+                                voice.RemoveChild(xn);
+                        }
+
+                    }
+
+                    else
+                    {
+                        tbRemoved = foundNode.SelectNodes("dc");
+                        foreach (XmlNode xn in tbRemoved)
+                            foundNode.RemoveChild(xn);
+                    }
+                    
                     toDisplay += foundNode.InnerText.Trim();
                 }
 
@@ -241,7 +290,7 @@ namespace Fauvel1
             {
                 toDisplay = "Sorry, your tag doesn't exist. Try again!";
             }
-            
+
             toDisplay = toDisplay.TrimEnd('\r', '\n');
             return toDisplay;
 
