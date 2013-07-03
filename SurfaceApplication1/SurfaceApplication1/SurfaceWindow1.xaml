@@ -51,16 +51,32 @@
             <Button x:Name="next" Height="84" Canvas.Left="1180" Width="100" Canvas.Top="8" TouchDown="next_Click" Click="next_Click">
                 <ed:BlockArrow Fill="#FFF4F4F5" Height="50" Orientation="Right" Stroke="Black" Width="60"/>
             </Button>
+            <Button x:Name="swap" Height="84" Canvas.Left="460" Width="100" Canvas.Top="8" TouchDown="swapOrientation" Click="swapOrientation" HorizontalContentAlignment="Center" VerticalContentAlignment="Center">
+                <Image Source="swap.png" Width="60" Height="60" Stretch="Uniform"/>
+            </Button>
             <TextBlock x:Name="pageNumberText" Height="48" Canvas.Left="800"  TextWrapping="Wrap" Text="1"  Canvas.Top="8" Width="80" FontSize="30" TextAlignment="Center"/>
             <TextBlock                         Height="48" Canvas.Left="940"  TextWrapping="Wrap" Text="/"  Canvas.Top="8" Width="40" FontSize="30" TextAlignment="Center"/>
             <TextBlock x:Name="maxPageText"    Height="48" Canvas.Right="800" TextWrapping="Wrap" Text="47" Canvas.Top="8" Width="80" FontSize="30" TextAlignment="Center"/>
             <s:SurfaceSlider x:Name="pageSlider" Minimum="0" Maximum="47" Width="430" Canvas.Left="745" Canvas.Top="50" TickFrequency="1" IsSnapToTickEnabled="True" s:SurfaceThumb.PreviewFlicked="pageSliderFlicked"></s:SurfaceSlider>
-            <ComboBox SelectionChanged="languageChanged">
-                <ComboBoxItem Content="None"/>
-                <ComboBoxItem Content="Old French"/>
-                <ComboBoxItem Content="French"/>
-                <ComboBoxItem Content="English"/>
-            </ComboBox>
+            <ListBox Canvas.Left="20" Canvas.Top="20" SelectionChanged="languageChanged" >
+                <ListBox.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <WrapPanel IsItemsHost="True"/>
+                    </ItemsPanelTemplate>
+                </ListBox.ItemsPanel>
+                <ListBoxItem x:Name="language1" Width="100" Height="60" ClipToBounds="True" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Content="None">
+                    
+                </ListBoxItem>
+                <ListBoxItem x:Name="language2" Width="100" Height="60" ClipToBounds="True" HorizontalContentAlignment="Center" VerticalContentAlignment="Center">
+                    <Image Source="/flags/oldfrench.png" Stretch="UniformToFill" Width="90" Height="50" ClipToBounds="True"/>
+                </ListBoxItem>
+                <ListBoxItem x:Name="language3" Width="100" Height="60" ClipToBounds="True" HorizontalContentAlignment="Center" VerticalContentAlignment="Center">
+                    <Image Source="/flags/french.jpg" Stretch="UniformToFill" Width="90" Height="50" ClipToBounds="True"/>
+                </ListBoxItem>
+                <ListBoxItem x:Name="language4" Width="100" Height="60" ClipToBounds="True" HorizontalContentAlignment="Center" VerticalContentAlignment="Center">
+                    <Image Source="/flags/english.jpg" Stretch="UniformToFill" Width="90" Height="50" ClipToBounds="True"/>
+                </ListBoxItem>
+            </ListBox>
         </Canvas>
         <Canvas x:Name="SliderDisplay" Canvas.Left="-500" Width="200" Height="100" HorizontalAlignment="Center">
             <Image x:Name="SliderImage1" Source="\pages\11.jpg" Width="100" Stretch="UniformToFill"/>

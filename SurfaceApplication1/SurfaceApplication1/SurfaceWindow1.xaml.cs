@@ -29,8 +29,12 @@ namespace SurfaceApplication1
     /// </summary>
     public partial class SurfaceWindow1 : SurfaceWindow
     {
+        private bool rightSwipe = false;
+        private bool leftSwipe = false;
+        private Stopwatch rightSwipeWatch, leftSwipeWatch;
         private readonly Stopwatch doubleTapSW = new Stopwatch();
         private Point lastTapLocation;
+        private Point leftSwipeStart, rightSwipeStart;
         public static int maxPageWidth = 5250;
         public static int maxPageHeight = 7350;
         public static int minPageWidth = 664;
@@ -61,7 +65,6 @@ namespace SurfaceApplication1
             newTabButton.Header = "+";
             tabBar.Items.Add(newTabButton);
             createTab(1);
-
         }
 
         protected override void OnClosed(EventArgs e)
@@ -203,7 +206,11 @@ namespace SurfaceApplication1
             SSC.ScatterViewItem rScatterItem = new SSC.ScatterViewItem();
 
             vScatterItem.PreviewTouchDown += new EventHandler<TouchEventArgs>(OnPreviewTouchDown);
+            vScatterItem.PreviewTouchDown += new EventHandler<TouchEventArgs>(leftSwipeDetectionStart);
+            vScatterItem.PreviewTouchUp   += new EventHandler<TouchEventArgs>(leftSwipeDetectionStop);
             rScatterItem.PreviewTouchDown += new EventHandler<TouchEventArgs>(OnPreviewTouchDown);
+            rScatterItem.PreviewTouchDown += new EventHandler<TouchEventArgs>(rightSwipeDetectionStart);
+            rScatterItem.PreviewTouchUp += new EventHandler<TouchEventArgs>(rightSwipeDetectionStop);
             vScatterView.HorizontalAlignment = System.Windows.HorizontalAlignment.Left;
             vScatterView.ClipToBounds = true;
             rScatterView.HorizontalAlignment = System.Windows.HorizontalAlignment.Left;
@@ -473,14 +480,19 @@ namespace SurfaceApplication1
 
         private void OnPreviewTouchDown(object sender, TouchEventArgs e)
         {
+            ScatterViewItem item = (ScatterViewItem)sender;
             /*
             if (IsDoubleTap(e))
                 OnDoubleTouchDown((ScatterViewItem)sender);'*/
         }
 
+        private void OnPreviewTouchUp(object sender, TouchEventArgs e)
+        {
+        }
+
         private void languageChanged(object sender, SelectionChangedEventArgs e)
         {
-            ComboBox box = (ComboBox)sender;
+            ListBox box = (ListBox)sender;
             if (box.SelectedIndex == 0)
                 currentLanguage = language.None;
             if (box.SelectedIndex == 1)
@@ -523,6 +535,53 @@ namespace SurfaceApplication1
                 if (currentLanguage == language.English)
                     tab._textBlocksR[i].Text = tab._translationBoxesR[i].getEng();
             }
+        }
+
+        private void swapOrientation(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        public void testText(string str)
+        {
+            maxPageText.Text = str;
+        }
+
+        public void rightSwipeDetectionStart(object sender, TouchEventArgs e)
+        {
+            testText("down");
+            ScatterViewItem item = (ScatterViewItem)sender;
+            if (item.Width == minPageWidth && item.TouchesOver.Count<TouchDevice>() == 1 && item.TouchesOver.ElementAt<TouchDevice>(0).GetPosition((ScatterView)item.Parent).X > scatterBuffer + minPageWidth - 100)
+            {
+                rightSwipe = true;
+                rightSwipeStart = item.TouchesOver.ElementAt<TouchDevice>(0).GetPosition((ScatterView)item.Parent);
+                rightSwipeWatch = new Stopwatch();
+                rightSwipeWatch.Start();
+            }
+            else
+                rightSwipe = false;
+        }
+        public void rightSwipeDetectionStop(object sender, TouchEventArgs e)
+        {
+            testText("up!");
+            ScatterViewItem item = (ScatterViewItem)sender;
+            if (rightSwipe && item.TouchesOver.ElementAt<TouchDevice>(0).GetPosition((ScatterView)item.Parent).X < scatterBuffer + minPageWidth - 100)
+            {
+                Point second = item.TouchesOver.ElementAt<TouchDevice>(0).GetPosition((ScatterView)item.Parent);
+                if ((second.X < rightSwipeStart.X - 80 && rightSwipeWatch.ElapsedMilliseconds < 1000) || (Math.Abs(second.X - rightSwipeStart.X) < 10 && Math.Abs(second.Y - rightSwipeStart.Y) < 10 && rightSwipeWatch.ElapsedMilliseconds < 400))
+                {
+                    next_Click(null, null);
+                }
+            }
+            rightSwipe = false;
+        }
+        public void leftSwipeDetectionStart(object sender, TouchEventArgs e)
+        {
+            ScatterViewItem item = (ScatterViewItem)sender;
+        }
+        public void leftSwipeDetectionStop(object sender, TouchEventArgs e)
+        {
+            ScatterViewItem item = (ScatterViewItem)sender;
         }
     }
 }
