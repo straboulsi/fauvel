@@ -65,6 +65,7 @@
             Width="200"
             Foreground="Gray"
             GotFocus="TextBox_GotFocus"
+            PreviewKeyDown="Enter_Clicked"
            >
 
            Enter ID

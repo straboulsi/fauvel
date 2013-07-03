@@ -31,21 +31,17 @@ namespace Fauvel1
         {
             InitializeComponent();
 
-            Console.SetBufferSize(80, 1000);
 
-            List<TranslationBox> myList = Class1.makeBoxes("Fo1r");
-        
-
-            //Class1.getPoint("Te_0035-0048", 2);
-
-            /// Console.Write("Width: " + Console.BufferWidth);
-            /// Console.Write("Height: "+Console.BufferHeight);
-
-            /// Issue: We currently have a limit of approx 300 lines displayed in console
-            /// That's why we need to reset!
-            Class1.getPoetry(35,48);
+            /// NB: Default limit is approx 300 lines displayed in console
+            /// If you need to print more, use Console.SetBufferSize(width, height);
+           
+            ///Class1.test();
+            ///Class1.getPoint("Te_0035-0048", 2);
+            ///Class1.getPoetry(1,3);
             ///Class1.go("1rIm2"); 
-            ///Class1.go("41vVe1_t"); 
+            ///Class1.go("1rMo3_t"); 
+            ///Class1.go("34vLa1_t");
+
             ///Class1.go("Fo3v"); /// Works if you add closing </pb> tag
             ///Class1.go("Te_0035-0048");
             
@@ -140,11 +136,27 @@ namespace Fauvel1
             //TODO: disable audio, animations here
         }
 
+
+        private void Enter_Clicked(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.Return)
+            {
+                Button_Click2(sender, e);
+                e.Handled = true;
+            }
+        }
+
+
         private void Button_Click(object sender, RoutedEventArgs e)
         {
             int sLine = Convert.ToInt32(startLine.Text);
             int eLine = Convert.ToInt32(endLine.Text);
-            String sSelectedText = Class1.getPoetry(sLine, eLine);
+            String sSelectedText = "";
+
+            if (sLine > eLine)
+                sSelectedText = "Please enter the lower number on the left!";
+            else
+                sSelectedText = Class1.getPoetry(sLine, eLine);
             stb.Text = sSelectedText;
             stb.Opacity = 100;
             
@@ -185,7 +197,11 @@ namespace Fauvel1
         {
             int sLine = Convert.ToInt32(startLine.Text);
             int eLine = Convert.ToInt32(endLine.Text);
-            String sSelectedText = Class1.getEnglish(sLine,eLine);
+            String sSelectedText = "";
+            if(sLine > eLine)
+                sSelectedText = "Please enter the lower number on the left!";
+            else
+                sSelectedText = Class1.getEnglish(sLine,eLine);
             stb.Text = sSelectedText;
             stb.Opacity = 100;
         }

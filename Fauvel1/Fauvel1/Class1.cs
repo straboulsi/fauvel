@@ -27,6 +27,29 @@ namespace Fauvel1
     static class Class1
     {
 
+
+        public static void test()
+        {
+            try
+            {
+                XmlDocument xml = new XmlDocument();
+                xml.Load("TestXML.xml");
+
+                XmlNodeList xnl = xml.DocumentElement.SelectNodes("//big");
+                foreach (XmlNode xn in xnl)
+                {
+                    Console.Write(xn.LastChild.InnerText);
+                }
+            }
+            catch
+            {
+                Console.Write("Error");
+            }
+
+            Console.Read();
+
+        }
+
         /**Takes in start and end line numbers.
          * Returns String of Old French poetry.
          * This is good bc Surface could send the int values of the first/last lines highlighted by user
@@ -48,12 +71,14 @@ namespace Fauvel1
                 
                 for (int i = firstLine; i <= lastLine; i++)
                 {
+                    
                     foundNode = xml.DocumentElement.SelectSingleNode("//lg/l[@n='"+i+"']");
+                    foundNode = foundNode.RemoveChild(foundNode.LastChild); // Removes the drop cap inner text
+
                     toDisplay += foundNode.InnerText.Trim() + "\r\n";
                 }
 
-                //Console.Read();
-
+                
             }
             catch (Exception e)
             {
@@ -61,7 +86,11 @@ namespace Fauvel1
                 //Console.Read();
                 toDisplay = "Can't find these lines.. Try again?";
             }
-           
+
+            //Console.Write(toDisplay);
+            //Console.Read();
+            toDisplay = toDisplay.TrimEnd('\r', '\n');
+
             return toDisplay;
         }
 
@@ -172,6 +201,8 @@ namespace Fauvel1
                 toDisplay = "Can't find the English.. Try again?";
             }
 
+            toDisplay = toDisplay.TrimEnd('\r', '\n');
+
             return toDisplay;
         }
 
@@ -187,7 +218,7 @@ namespace Fauvel1
         **/
         public static String go(String str)
         {
-            ///Console.Write("Input: "+ str+"\r\n");
+            String toDisplay = "";
             try
             {
                 XmlDocument xml = new XmlDocument();
@@ -197,36 +228,72 @@ namespace Fauvel1
                 if (str.Contains("Im"))
                 {
                     foundNode = xml.DocumentElement.SelectSingleNode("//figure[@id='" + str + "']");
-                    str += foundNode.InnerText.Trim();
+                    toDisplay += foundNode.InnerText.Trim();
                 }
                 else if(str.StartsWith("Te")){
                     foundNode = xml.DocumentElement.SelectSingleNode("//lg[@id='"+str+"']");
                     XmlNodeList lineByLine = foundNode.SelectNodes("l");
                     foreach (XmlNode x in lineByLine)
-                        str += x.InnerText.Trim() + "\r\n";
+                    {
+                        XmlNode newX = x.RemoveChild(x.LastChild); // Removes the drop cap inner text
+                        toDisplay += newX.InnerText.Trim() + "\r\n";
+                    }
                 }
                 else if (str.StartsWith("Fo"))
                 {
                     String page = str.Substring(2);
                     foundNode = xml.DocumentElement.SelectSingleNode("//pb[@facs='#" + page + "']");
-                    str+= (foundNode.InnerXml);
+                    toDisplay += foundNode.InnerXml;
                 }
-                else
+                else // Select music objects
                 {
+
                     /// Note: To select voices that don't have <dc>, add second level and select ("//v[not(dc)]")
                     foundNode = xml.DocumentElement.SelectSingleNode("//p[@id='" + str + "']");
-                    str += foundNode.InnerText.Trim();
+                    XmlNodeList tbRemoved;
+
+                    tbRemoved = foundNode.SelectNodes("cp");
+                    foreach (XmlNode xn in tbRemoved)
+                        foundNode.RemoveChild(xn);
+
+                    tbRemoved = foundNode.SelectNodes("nv");
+                    foreach (XmlNode xn in tbRemoved)
+                        foundNode.RemoveChild(xn);
+
+
+                    if (str.Substring(2, 2).Equals("Mo"))
+                    {
+                        XmlNodeList voices = foundNode.SelectNodes("v");
+                        foreach (XmlNode voice in voices)
+                        {
+                            tbRemoved = voice.SelectNodes("dc");
+                            foreach (XmlNode xn in tbRemoved)
+                                voice.RemoveChild(xn);
+                        }
+
+                    }
+
+                    else
+                    {
+                        tbRemoved = foundNode.SelectNodes("dc");
+                        foreach (XmlNode xn in tbRemoved)
+                            foundNode.RemoveChild(xn);
+                    }
+                    
+                    toDisplay += foundNode.InnerText.Trim();
                 }
+
                 
-                ///Console.Read();
                 
             }
             catch(Exception e)
             {
-                str = "Sorry, your tag doesn't exist. Try again!";
+                toDisplay = "Sorry, your tag doesn't exist. Try again!";
             }
 
-            return str;
+            toDisplay = toDisplay.TrimEnd('\r', '\n');
+            return toDisplay;
+
         }
 
 
@@ -244,8 +311,10 @@ namespace Fauvel1
 
                 foreach(XmlNode xn in xnl)
                 {
+                   
                     if (xn.InnerText.Contains(search))
                     {
+                       
                         numFound++;
                         ///Console.Write(xn.InnerText);
                         String lineNum = xn.Attributes["n"].Value;
@@ -260,14 +329,13 @@ namespace Fauvel1
 
                 findings = "TOTAL: " + numFound + " results\r\n\r\n" + findings;
 
-                
             }
             catch (Exception e)
             {
                 findings = "Sorry, can't find your search! Try again?";
             }
 
-
+            findings = findings.TrimEnd('\r', '\n');
             return findings;
         }
 
@@ -306,7 +374,7 @@ namespace Fauvel1
             }
 
 
-
+            findings = findings.TrimEnd('\r', '\n');
             return findings;
         }
 
@@ -347,6 +415,7 @@ namespace Fauvel1
                 findings = "Sorry, can't find your search! Try again?";
             }
 
+            findings = findings.TrimEnd('\r', '\n');
             return findings;
         }
 
@@ -387,7 +456,7 @@ namespace Fauvel1
             }
 
 
-
+            findings = findings.TrimEnd('\r', '\n');
             return findings;
         }
 
