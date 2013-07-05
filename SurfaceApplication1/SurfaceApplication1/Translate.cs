@@ -2,19 +2,49 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Xml;
+using System.Xml.Schema;
+using System.Xml.XPath;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
+using Microsoft.Surface;
+using Microsoft.Surface.Presentation;
+using Microsoft.Surface.Presentation.Controls;
+using Microsoft.Surface.Presentation.Input;
+using System.IO;
 
 namespace SurfaceApplication1
 {
+
+    /**
+     * This class fetches information from the various XML files.
+     * It can search for a section of poetry, music lyrics, or image description by tag id.
+     * It can also return specific lines of poetry by line number, both in Old French and in English.
+     * This class also makes an ArrayList of TranslationBoxes when given a page of Fauvel.
+     **/
     public static class Translate
     {
         public static Brush textBrush = (Brush)(new BrushConverter().ConvertFrom("#663311"));
         public static Brush backBrush = (Brush)(new BrushConverter().ConvertFrom("#CCE0D0B0"));
 
+        public static bool Contains(this string source, string toCheck, StringComparison comp)
+        {
+            // Note: call method as stringToSearchIn.Contains(stringToFind, StringComparison.OrdinalIgnoreCase));
+            return source.IndexOf(toCheck, comp) >= 0;
+        }
 
+
+
+
+        /**Takes in start and end line numbers.
+         * Returns String of Old French poetry.
+         * This is good bc Surface could send the int values of the first/last lines highlighted by user
+         * The overlay is then flexible and does not limit to translating entire sections of poetry
+         * <param name="firstLine">First line of target poetry section</param>
+         * <param name="lastLine">Last line of target poetry section</param>
+        **/
         public static String getPoetry(int firstLine, int lastLine)
         {
 
@@ -29,20 +59,27 @@ namespace SurfaceApplication1
 
                 for (int i = firstLine; i <= lastLine; i++)
                 {
+
                     foundNode = xml.DocumentElement.SelectSingleNode("//lg/l[@n='" + i + "']");
-                    toDisplay += foundNode.InnerText + "\r\n";
+                    foundNode = foundNode.RemoveChild(foundNode.LastChild); // Removes the drop cap inner text
+
+                    toDisplay += foundNode.InnerText.Trim() + "\r\n";
                 }
 
 
             }
             catch (Exception e)
             {
-                Console.Write(e.StackTrace);
-                Console.Read();
+                toDisplay = "Can't find these lines.. Try again?";
             }
+
+
+            toDisplay = toDisplay.TrimEnd('\r', '\n');
 
             return toDisplay;
         }
+
+
 
         public static Grid getGrid(double x, double y, double width, double height, TextBlock t)
         {
@@ -178,17 +215,19 @@ namespace SurfaceApplication1
                 for (int i = start; i <= end; i++)
                 {
                     foundNode = xml.DocumentElement.SelectSingleNode("//lg/l[@n='" + i + "']");
-                    toDisplay += foundNode.InnerText + "\r\n";
+                    toDisplay += foundNode.InnerText.Trim() + "\r\n";
                 }
             }
             catch (Exception e)
             {
-                Console.Write(e.StackTrace);
-                Console.Read();
+                toDisplay = "Can't find the English.. Try again?";
             }
+
+            toDisplay = toDisplay.TrimEnd('\r', '\n');
 
             return toDisplay;
         }
+
 
         /**
          *  <summary>
@@ -202,7 +241,7 @@ namespace SurfaceApplication1
         **/
         public static String go(String str)
         {
-            ///Console.Write("Input: "+ str+"\r\n");
+            String toDisplay = "";
             try
             {
                 XmlDocument xml = new XmlDocument();
@@ -212,39 +251,268 @@ namespace SurfaceApplication1
                 if (str.Contains("Im"))
                 {
                     foundNode = xml.DocumentElement.SelectSingleNode("//figure[@id='" + str + "']");
-                    str += foundNode.InnerText;
+                    toDisplay += foundNode.InnerText.Trim();
                 }
                 else if (str.StartsWith("Te"))
                 {
                     foundNode = xml.DocumentElement.SelectSingleNode("//lg[@id='" + str + "']");
                     XmlNodeList lineByLine = foundNode.SelectNodes("l");
                     foreach (XmlNode x in lineByLine)
-                        str += x.InnerText + "\r\n";
+                    {
+                        XmlNode newX = x.RemoveChild(x.LastChild); // Removes the drop cap inner text
+                        toDisplay += newX.InnerText.Trim() + "\r\n";
+                    }
                 }
                 else if (str.StartsWith("Fo"))
                 {
                     String page = str.Substring(2);
                     foundNode = xml.DocumentElement.SelectSingleNode("//pb[@facs='#" + page + "']");
-                    str += (foundNode.InnerXml);
+                    toDisplay += foundNode.InnerXml;
                 }
-                else
+                else // Select music objects
                 {
+
                     /// Note: To select voices that don't have <dc>, add second level and select ("//v[not(dc)]")
                     foundNode = xml.DocumentElement.SelectSingleNode("//p[@id='" + str + "']");
-                    str += foundNode.InnerText;
+                    XmlNodeList tbRemoved;
+
+                    tbRemoved = foundNode.SelectNodes("cp");
+                    foreach (XmlNode xn in tbRemoved)
+                        foundNode.RemoveChild(xn);
+
+                    tbRemoved = foundNode.SelectNodes("nv");
+                    foreach (XmlNode xn in tbRemoved)
+                        foundNode.RemoveChild(xn);
+
+
+                    if (str.Substring(2, 2).Equals("Mo"))
+                    {
+                        XmlNodeList voices = foundNode.SelectNodes("v");
+                        foreach (XmlNode voice in voices)
+                        {
+                            tbRemoved = voice.SelectNodes("dc");
+                            foreach (XmlNode xn in tbRemoved)
+                                voice.RemoveChild(xn);
+                        }
+                    }
+
+                    else
+                    {
+                        tbRemoved = foundNode.SelectNodes("dc");
+                        foreach (XmlNode xn in tbRemoved)
+                            foundNode.RemoveChild(xn);
+                    }
+
+                    toDisplay += foundNode.InnerText.Trim();
                 }
 
-                //Console.Write(foundNode.InnerText + "\r\n");
 
             }
             catch (Exception e)
             {
-                Console.Write(e.StackTrace);
-                Console.Read();
+                toDisplay = "Sorry, your tag doesn't exist. Try again!";
             }
 
-            return str;
+            toDisplay = toDisplay.TrimEnd('\r', '\n');
+            return toDisplay;
+
         }
+
+        /** Used to figure out whether a Contains search will use an Ordinal or OrdinalIgnoreCase
+         *  Default int of 0 is to ignore case (and return more search findings).
+         **/
+        public static Boolean foundBySpecifiedCase(String toFind, String toSearchIn, int caseSensitive)
+        {
+            if (caseSensitive == 0)
+                return toSearchIn.Contains(toFind, StringComparison.OrdinalIgnoreCase);
+            else
+                return toSearchIn.Contains(toFind);
+        }
+
+
+        public static Boolean foundBySpecifiedWord(String toFind, String toSearchIn, int wordSensitive)
+        {
+            if (wordSensitive == 1) // Whole word must match  
+                return Regex.IsMatch(toSearchIn, string.Format(@"\b{0}\b", Regex.Escape(toFind)));
+            else
+                return true;
+        }
+
+
+        public static String searchFrPoetry(String search, int caseSensitive, int wordSensitive)
+        {
+            String findings = "";
+
+            try
+            {
+                XmlDocument xml = new XmlDocument();
+                xml.Load("XMLFinalContentFile.xml");
+                XmlNodeList xnl = xml.DocumentElement.SelectNodes("//lg/l");
+
+                int numFound = 0;
+
+
+                foreach (XmlNode xn in xnl)
+                {
+
+                    if (foundBySpecifiedCase(search, xn.InnerText, caseSensitive) && foundBySpecifiedWord(search, xn.InnerText, wordSensitive))
+                    {
+                        // Gets rid of drop caps
+                        if (xn.ChildNodes.Count > 1)
+                            xn.RemoveChild(xn.FirstChild);
+
+
+                        numFound++;
+                        String lineNum = xn.Attributes["n"].Value;
+                        XmlNode page = xn.ParentNode.ParentNode;
+                        String pageNum = page.Attributes["facs"].Value;
+
+                        pageNum = "Fo" + pageNum.Substring(1);
+                        findings += pageNum + " " + lineNum + " " + xn.InnerText.Trim() + "\r\n";
+
+
+                    }
+
+                }
+
+                findings = "TOTAL: " + numFound + " results\r\n\r\n" + findings;
+
+            }
+            catch (Exception e)
+            {
+                findings = "Sorry, can't find your search! Try again?";
+            }
+
+
+
+            findings = findings.TrimEnd('\r', '\n');
+            return findings;
+        }
+
+
+
+
+        public static String searchEngPoetry(String search, int caseSensitive, int wordSensitive)
+        {
+            String findings = "";
+
+            try
+            {
+                XmlDocument xml = new XmlDocument();
+                xml.Load("EnglishXML.xml");
+                XmlNodeList xnl = xml.DocumentElement.SelectNodes("//lg/l");
+
+                int numFound = 0;
+
+                foreach (XmlNode xn in xnl)
+                {
+                    if (foundBySpecifiedCase(search, xn.InnerText, caseSensitive) && foundBySpecifiedWord(search, xn.InnerText, wordSensitive))
+                    {
+                        numFound++;
+                        String lineNum = xn.Attributes["n"].Value;
+
+                        findings += lineNum + " " + xn.InnerText.Trim() + "\r\n";
+
+                    }
+                }
+
+                findings = "TOTAL: " + numFound + " results\r\n\r\n" + findings;
+            }
+            catch (Exception e)
+            {
+                findings = "Sorry, can't find your search! Try again?";
+            }
+
+
+            findings = findings.TrimEnd('\r', '\n');
+            return findings;
+        }
+
+
+        public static String searchLyrics(String search, int caseSensitive, int wordSensitive)
+        {
+            String findings = "";
+
+            try
+            {
+                XmlDocument xml = new XmlDocument();
+                xml.Load("XMLFinalContentFile.xml");
+                XmlNodeList xnl = xml.DocumentElement.SelectNodes("//p");
+
+                int numFound = 0;
+
+                foreach (XmlNode xn in xnl)
+                {
+                    if (foundBySpecifiedCase(search, xn.InnerText, caseSensitive) && foundBySpecifiedWord(search, xn.InnerText, wordSensitive))
+                    {
+                        numFound++;
+                        String str = xn.InnerText;
+                        int index = str.IndexOf(")");
+                        str = str.Substring(0, index + 1); // The title of the musical object
+                        String tag = xn.Attributes["id"].Value;
+
+
+                        String page = "Fo" + (xn.ParentNode.Attributes["facs"].Value).Substring(1);
+                        findings += page + " " + tag + " " + str + "\r\n";
+                    }
+                }
+
+                findings = "TOTAL: " + numFound + " results\r\n\r\n" + findings;
+
+            }
+            catch (Exception e)
+            {
+                findings = "Sorry, can't find your search! Try again?";
+            }
+
+            findings = findings.TrimEnd('\r', '\n');
+            return findings;
+        }
+
+
+
+        public static String searchPicCaptions(String search, int caseSensitive, int wordSensitive)
+        {
+            String findings = "";
+
+            try
+            {
+                XmlDocument xml = new XmlDocument();
+                xml.Load("XMLFinalContentFile.xml");
+                XmlNodeList xnl = xml.DocumentElement.SelectNodes("//figure");
+
+                int numFound = 0;
+
+                foreach (XmlNode xn in xnl)
+                {
+                    if (foundBySpecifiedCase(search, xn.InnerText, caseSensitive) && foundBySpecifiedWord(search, xn.InnerText, wordSensitive))
+                    {
+                        numFound++;
+                        String str = xn.InnerText;
+                        String tag = xn.Attributes["id"].Value;
+
+                        String page = "Fo" + (xn.ParentNode.Attributes["facs"].Value).Substring(1);
+                        findings += page + " " + tag + " " + str + "\r\n";
+                    }
+                }
+
+                findings = "TOTAL: " + numFound + " results\r\n\r\n" + findings;
+
+
+            }
+            catch (Exception e)
+            {
+                findings = "Sorry, can't find your search! Try again?";
+            }
+
+
+            findings = findings.TrimEnd('\r', '\n');
+            return findings;
+        }
+
+
+
+
 
         public static void filterByVoice(int voiceNum)
         {

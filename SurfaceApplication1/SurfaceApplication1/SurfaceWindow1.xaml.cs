@@ -583,5 +583,54 @@ namespace SurfaceApplication1
         {
             ScatterViewItem item = (ScatterViewItem)sender;
         }
+
+
+        private void TextBox_GotFocus(object sender, RoutedEventArgs e)
+        {
+            TextBox tb = (TextBox)sender;
+            tb.Text = string.Empty;
+            tb.GotFocus -= TextBox_GotFocus;
+            tb.Foreground = Brushes.Black;
+        }
+
+        private void Enter_Clicked(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.Return)
+            {
+                Search_French(sender, e);
+                e.Handled = true;
+            }
+        }
+
+        private void Search_French(object sender, RoutedEventArgs e)
+        {
+            /**
+            int caseType = 0;
+            int wordType = 0;
+            if (CaseSensitive.IsChecked == true)
+                caseType = 1;
+            if (WordSensitive.IsChecked == true)
+                wordType = 1;
+            stb.Text = Class1.searchFrPoetry(SearchText.Text, caseType, wordType);
+            **/
+            Findings.Text = Translate.searchFrPoetry(SearchText.Text, 0, 0);
+            Findings.Opacity = 100;
+        }
+
+        private void Advanced_Search(object sender, RoutedEventArgs e)
+        {
+            Findings.Text = "you picked advanced!";
+
+            AdvancedSearch.Visibility = System.Windows.Visibility.Hidden;
+            SimpleSearch.Visibility = System.Windows.Visibility.Visible;
+
+        }
+
+        private void Simple_Search(object sender, RoutedEventArgs e)
+        {
+            Findings.Text = "you picked simple!";
+            AdvancedSearch.Visibility = System.Windows.Visibility.Visible;
+            SimpleSearch.Visibility = System.Windows.Visibility.Hidden;
+        }
     }
 }
