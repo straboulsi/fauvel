@@ -138,7 +138,7 @@ public class LineFinder extends JFrame implements MouseListener, ActionListener,
 				side = in.next();
 				System.out.println("On "+foNum+side+", you should find the following objects:");
 				System.out.println(table.contents(foNum, side));
-				
+
 				if ((side.equals("r")) || (side.equals("v"))) {
 					try {
 						f = new FileWriter("layout.txt", true);
@@ -146,7 +146,7 @@ public class LineFinder extends JFrame implements MouseListener, ActionListener,
 						b.write("<surface id=\"" + foNum + side + "\">\n");
 						b.write("<zone\n" + "id=\"" + foNum + side + "_p\"\n");
 						b.write("ulx=\"0\"\n" + "uly=\"0\"\n" + "lrx=\"5250\"\n" + "lry=\"7350\">\n");
-						
+
 					} catch (IOException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
@@ -220,6 +220,14 @@ public class LineFinder extends JFrame implements MouseListener, ActionListener,
 
 	}
 
+	private boolean contdObj(ManuscriptObject find) {
+		if (objects.size() < 2)
+			return false;
+		if (objects.get(objects.size()-2).name.equals(find.name))
+			return true;
+		return false;
+	}
+
 	@Override
 	public void actionPerformed(ActionEvent arg0) {
 		if(arg0.getSource().equals(text)) {
@@ -256,19 +264,41 @@ public class LineFinder extends JFrame implements MouseListener, ActionListener,
 				try {
 					f = new FileWriter("layout.txt", true);
 					b = new BufferedWriter(f);
-					if (newObject.type.equals("text")) { // script????
-						b.write("<zone\n" + "id=\"" + newObject.name + "\"\n");
-						b.write("ulx=\"" + ((int) (10.5*newObject.topLeft.x)) + "\"\n" 
-								+ "uly=\"" + ((int) (10.5*newObject.topLeft.y)) + "\"\n" 
-								+ "lrx=\"" + ((int) (10.5*newObject.bottomRight.x)) + "\"\n" 
-								+ "lry=\"" + ((int) (10.5*newObject.bottomRight.y)) + "\">\n" + "</zone>\n");
+					if (contdObj(newObject)) {
+						if (newObject.type.equals("text")) { // script????
+							b.write("<box\n");
+							b.write("ulx=\"" + ((int) (10.5*newObject.topLeft.x)) + "\"\n" 
+									+ "uly=\"" + ((int) (10.5*newObject.topLeft.y)) + "\"\n" 
+									+ "lrx=\"" + ((int) (10.5*newObject.bottomRight.x)) + "\"\n" 
+									+ "lry=\"" + ((int) (10.5*newObject.bottomRight.y)) + "\">\n" + "</box>\n");
+						}
+						else {
+							b.write("<box\n");
+							b.write("ulx=\"" + ((int) (10.5*newObject.topLeft.x)) + "\"\n" 
+									+ "uly=\"" + ((int) (10.5*newObject.topLeft.y)) + "\"\n" 
+									+ "lrx=\"" + ((int) (10.5*newObject.bottomRight.x)) + "\"\n" 
+									+ "lry=\"" + ((int) (10.5*newObject.bottomRight.y)) + "\">\n" + "</box>\n");
+						}
 					}
 					else {
-						b.write("<zone\n" + "id=\"" + newObject.name + "\"\n");
-						b.write("ulx=\"" + ((int) (10.5*newObject.topLeft.x)) + "\"\n" 
-								+ "uly=\"" + ((int) (10.5*newObject.topLeft.y)) + "\"\n" 
-								+ "lrx=\"" + ((int) (10.5*newObject.bottomRight.x)) + "\"\n" 
-								+ "lry=\"" + ((int) (10.5*newObject.bottomRight.y)) + "\">\n" + "</zone>\n");
+						if (objects.size() != 1)
+							b.write("</zone>\n");
+						if (newObject.type.equals("text")) { // script????
+							b.write("<zone\n" + "id=\"" + newObject.name + "\"\n");
+							b.write("<box\n");
+							b.write("ulx=\"" + ((int) (10.5*newObject.topLeft.x)) + "\"\n" 
+									+ "uly=\"" + ((int) (10.5*newObject.topLeft.y)) + "\"\n" 
+									+ "lrx=\"" + ((int) (10.5*newObject.bottomRight.x)) + "\"\n" 
+									+ "lry=\"" + ((int) (10.5*newObject.bottomRight.y)) + "\">\n" + "</box>\n");
+						}
+						else {
+							b.write("<zone\n" + "id=\"" + newObject.name + "\"\n");
+							b.write("<box\n");
+							b.write("ulx=\"" + ((int) (10.5*newObject.topLeft.x)) + "\"\n" 
+									+ "uly=\"" + ((int) (10.5*newObject.topLeft.y)) + "\"\n" 
+									+ "lrx=\"" + ((int) (10.5*newObject.bottomRight.x)) + "\"\n" 
+									+ "lry=\"" + ((int) (10.5*newObject.bottomRight.y)) + "\">\n" + "</box>\n");
+						}
 					}
 					b.close();
 					f.close();
@@ -294,6 +324,7 @@ public class LineFinder extends JFrame implements MouseListener, ActionListener,
 				try {
 					f = new FileWriter("layout.txt", true);
 					b = new BufferedWriter(f);
+					b.write("</zone>\n");
 					b.write("</surface>\n");
 					b.close();
 					f.close();
