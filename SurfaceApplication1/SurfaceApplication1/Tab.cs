@@ -23,9 +23,9 @@ namespace SurfaceApplication1
         public Button _delButton;
         public List<TranslationBox> _translationBoxesV, _translationBoxesR;
         public List<TextBlock> _textBlocksV, _textBlocksR;
-        public Grid _vGrid, _rGrid, _vSwipeGrid, _rSwipeGrid;
+        public Grid _vGrid, _rGrid, _vSwipeGrid, _rSwipeGrid, _vTranslationGrid, _rTranslationGrid;
 
-        public Tab(int page, TabItem newTab, Image newVerso, Image newRecto, Canvas canvas, Grid vGrid, Grid rGrid, Button delBtn, ScatterViewItem vsi, ScatterViewItem rsi, Grid vSwipeGrid, Grid rSwipeGrid)
+        public Tab(int page, TabItem newTab, Image newVerso, Image newRecto, Canvas canvas, Grid vGrid, Grid rGrid, Button delBtn, ScatterViewItem vsi, ScatterViewItem rsi, Grid vSwipeGrid, Grid rSwipeGrid, Grid vTranslationGrid, Grid rTranslationGrid)
         {
             _page = page;
             _tab = newTab;
@@ -43,6 +43,8 @@ namespace SurfaceApplication1
             avgTouchPoint = new Point(-1, 0);
             _vSwipeGrid = vSwipeGrid;
             _rSwipeGrid = rSwipeGrid;
+            _vTranslationGrid = vTranslationGrid;
+            _rTranslationGrid = rTranslationGrid;
         }
 
     }

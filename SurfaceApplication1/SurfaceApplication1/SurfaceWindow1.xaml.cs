@@ -99,11 +99,8 @@ namespace SurfaceApplication1
 
             /* start translations */
 
-            while (currentTab._vGrid.Children.Count > 2)
-                currentTab._vGrid.Children.RemoveAt(currentTab._vGrid.Children.Count - 1);
-            while (currentTab._rGrid.Children.Count > 2)
-                currentTab._rGrid.Children.RemoveAt(currentTab._rGrid.Children.Count - 1);
-
+            currentTab._vTranslationGrid.Children.Clear();
+            currentTab._rTranslationGrid.Children.Clear();
 
             string pagev = "fo" + (currentTab._page - 1).ToString() + "v";
             string pager = "fo" + (currentTab._page).ToString() + "r";
@@ -127,7 +124,7 @@ namespace SurfaceApplication1
                 t.Foreground = Translate.textBrush;
                 t.Background = Translate.backBrush;
                 currentTab._textBlocksV.Add(t);
-                currentTab._vGrid.Children.Add(g);
+                currentTab._vTranslationGrid.Children.Add(g);
             }
 
             foreach (TranslationBox tb in currentTab._translationBoxesR)
@@ -143,7 +140,7 @@ namespace SurfaceApplication1
                 t.Foreground = Translate.textBrush;
                 t.Background = Translate.backBrush;
                 currentTab._textBlocksR.Add(t);
-                currentTab._rGrid.Children.Add(g);
+                currentTab._rTranslationGrid.Children.Add(g);
             }
 
             setTranslateText();
@@ -307,6 +304,8 @@ namespace SurfaceApplication1
 
             Grid vGrid = new Grid();
             Grid rGrid = new Grid();
+            Grid vTranslationGrid = new Grid();
+            Grid rTranslationGrid = new Grid();
             Grid bGrid = new Grid();
 
             //bScatterItem.Content = bGrid;
@@ -314,6 +313,8 @@ namespace SurfaceApplication1
             rScatterItem.Content = rGrid;
             vGrid.Children.Add(verso);
             rGrid.Children.Add(recto);
+            vGrid.Children.Add(vTranslationGrid);
+            rGrid.Children.Add(rTranslationGrid);
             vGrid.Children.Add(vSwipeHolderGrid);
             rGrid.Children.Add(rSwipeHolderGrid);
             //bGrid.Children.Add(large);
@@ -371,7 +372,7 @@ namespace SurfaceApplication1
             rScatterView.Items.Add(rScatterItem);
             //bScatterView.Items.Add(bScatterItem);
 
-            tabArray.Insert(count, new Tab(1, tab, verso, recto, can, vGrid, rGrid, delBtn, vScatterItem, rScatterItem, vSwipeGrid, rSwipeGrid));
+            tabArray.Insert(count, new Tab(1, tab, verso, recto, can, vGrid, rGrid, delBtn, vScatterItem, rScatterItem, vSwipeGrid, rSwipeGrid, vTranslationGrid, rTranslationGrid));
 
             can.Children.Add(c_v);
             can.Children.Add(c_r);
