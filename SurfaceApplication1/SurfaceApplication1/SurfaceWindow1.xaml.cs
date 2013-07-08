@@ -41,9 +41,11 @@ namespace SurfaceApplication1
         public static int minPageHeight = 930;
         public static int tabNumber = 0;
         public static int minPage = 0;
-        public static int maxPage = 88;
+        public static int maxPage = 47;
         public static Image slideImage1, slideImage2;
         int scatterBuffer = 3000;
+        int swipeLength = 18;
+        int swipeHeight = 10;
         List<Tab> tabArray = new List<Tab>();
         Workers workers = new Workers();
         enum language {None, English, OldFrench, French };
@@ -71,7 +73,6 @@ namespace SurfaceApplication1
         {
             base.OnClosed(e);
         }
-
 
         private void prev_Click(object sender, RoutedEventArgs e)
         {
@@ -354,10 +355,10 @@ namespace SurfaceApplication1
             vSwipeGrid.HorizontalAlignment = System.Windows.HorizontalAlignment.Left;
             vSwipeGrid.VerticalAlignment = System.Windows.VerticalAlignment.Top;
 
-            vSwipeGrid.Width = 100;
-            vSwipeGrid.Height = 20;
-            rSwipeGrid.Width = 100;
-            rSwipeGrid.Height = 20;
+            vSwipeGrid.Width = swipeLength;
+            vSwipeGrid.Height = swipeHeight;
+            rSwipeGrid.Width = swipeLength;
+            rSwipeGrid.Height = swipeHeight;
             vSwipeGrid.Visibility = System.Windows.Visibility.Hidden;
             rSwipeGrid.Visibility = System.Windows.Visibility.Hidden;
             vSwipeGrid.Background = Brushes.WhiteSmoke;
@@ -446,7 +447,7 @@ namespace SurfaceApplication1
             int onVal = (int)Math.Round(val);
             SliderText.Text = (onVal).ToString();
 
-            SliderText.Margin = new Thickness(SliderDisplay.Width / 2 - SliderText.ActualWidth / 2, -20, 0, 0);
+            SliderText.Margin = new Thickness(SliderDisplay.Width / 2 - SliderText.ActualWidth / 2, -swipeHeight, 0, 0);
             double middle = 1160 + (slider.Width - 30) * onVal / slider.Maximum;
             SliderDisplay.Margin = new Thickness(middle, height, 0, 0);
             SliderDisplay.Opacity = 1;
@@ -640,7 +641,7 @@ namespace SurfaceApplication1
         public void rightSwipeDetectionStart(object sender, TouchEventArgs e)
         {
             ScatterViewItem item = (ScatterViewItem)sender;
-            if (item.Width == minPageWidth && item.TouchesOver.Count<TouchDevice>() == 1 && item.TouchesOver.ElementAt<TouchDevice>(0).GetPosition(item).X > 100)
+            if (item.Width == minPageWidth && item.TouchesOver.Count<TouchDevice>() == 1 && item.TouchesOver.ElementAt<TouchDevice>(0).GetPosition(item).X > swipeLength)
             {
                 rightSwipe = true;
                 rightSwipeStart = item.TouchesOver.ElementAt<TouchDevice>(0).GetPosition(item);
@@ -658,8 +659,8 @@ namespace SurfaceApplication1
             ScatterViewItem item = (ScatterViewItem)sender;
             if (rightSwipe)
             {
-                double x = rightSwipeStart.X - 100;
-                double y = rightSwipeStart.Y - 10;
+                double x = rightSwipeStart.X - swipeLength;
+                double y = rightSwipeStart.Y - swipeHeight / 2;
                 Tab tab = currentTab();
                 tab._rSwipeGrid.Visibility = System.Windows.Visibility.Visible;
                 Grid holder = (Grid)tab._rSwipeGrid.Parent;
@@ -671,12 +672,12 @@ namespace SurfaceApplication1
                 Canvas fill = (Canvas)tab._rSwipeGrid.Children[0];
                 fill.Background = Brushes.Orange;
                 fill.HorizontalAlignment = System.Windows.HorizontalAlignment.Right;
-                fill.Height = 20;
+                fill.Height = swipeHeight;
                 if (dist < 0)
                     dist = 0;
-                if (dist > 100)
+                if (dist > swipeLength)
                 {
-                    dist = 100;
+                    dist = swipeLength;
                     fill.Background = Brushes.Green;
                 }
                 fill.Width = dist;
@@ -688,7 +689,7 @@ namespace SurfaceApplication1
             Point second = item.TouchesOver.ElementAt<TouchDevice>(0).GetPosition(item);
             if (rightSwipe)
             {
-                if (((Canvas)currentTab()._rSwipeGrid.Children[0]).Background == Brushes.Green /*(second.X < rightSwipeStart.X - 100 && rightSwipeWatch.ElapsedMilliseconds < 1000) || (Math.Abs(second.X - rightSwipeStart.X) < 10 && Math.Abs(second.Y - rightSwipeStart.Y) < 10 && rightSwipeWatch.ElapsedMilliseconds < 400)*/)
+                if (((Canvas)currentTab()._rSwipeGrid.Children[0]).Background == Brushes.Green /*(second.X < rightSwipeStart.X - swipeLength && rightSwipeWatch.ElapsedMilliseconds < 1000) || (Math.Abs(second.X - rightSwipeStart.X) < 10 && Math.Abs(second.Y - rightSwipeStart.Y) < 10 && rightSwipeWatch.ElapsedMilliseconds < 400)*/)
                     next_Click(null, null);
             }
             rightSwipe = false;
@@ -697,7 +698,7 @@ namespace SurfaceApplication1
         public void leftSwipeDetectionStart(object sender, TouchEventArgs e)
         {
             ScatterViewItem item = (ScatterViewItem)sender;
-            if (item.Width == minPageWidth && item.TouchesOver.Count<TouchDevice>() == 1 && item.TouchesOver.ElementAt<TouchDevice>(0).GetPosition(item).X < minPageWidth - 100)
+            if (item.Width == minPageWidth && item.TouchesOver.Count<TouchDevice>() == 1 && item.TouchesOver.ElementAt<TouchDevice>(0).GetPosition(item).X < minPageWidth - swipeLength)
             {
                 leftSwipe = true;
                 leftSwipeStart = item.TouchesOver.ElementAt<TouchDevice>(0).GetPosition(item);
@@ -716,7 +717,7 @@ namespace SurfaceApplication1
             if (leftSwipe)
             {
                 double x = leftSwipeStart.X;
-                double y = leftSwipeStart.Y - 10;
+                double y = leftSwipeStart.Y - swipeHeight / 2;
                 Tab tab = currentTab();
                 tab._vSwipeGrid.Visibility = System.Windows.Visibility.Visible;
                 Grid holder = (Grid)tab._vSwipeGrid.Parent;
@@ -728,12 +729,12 @@ namespace SurfaceApplication1
                 Canvas fill = (Canvas)tab._vSwipeGrid.Children[0];
                 fill.Background = Brushes.Orange;
                 fill.HorizontalAlignment = System.Windows.HorizontalAlignment.Left;
-                fill.Height = 20;
+                fill.Height = swipeHeight;
                 if (dist < 0)
                     dist = 0;
-                if (dist > 100)
+                if (dist > swipeLength)
                 {
-                    dist = 100;
+                    dist = swipeLength;
                     fill.Background = Brushes.Green;
                 }
                 fill.Width = dist;
