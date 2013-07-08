@@ -39,6 +39,7 @@ namespace SurfaceApplication1
         public static int maxPageHeight = 7350;
         public static int minPageWidth = 664;
         public static int minPageHeight = 930;
+        public static int minPageLong = 1302;
         public static int tabNumber = 0;
         public static int minPage = 0;
         public static int maxPage = 47;
@@ -50,6 +51,7 @@ namespace SurfaceApplication1
         Workers workers = new Workers();
         enum language {None, English, OldFrench, French };
         language currentLanguage = language.None;
+        private bool twoPage = false;
 
         public SurfaceWindow1()
         {
@@ -211,21 +213,21 @@ namespace SurfaceApplication1
             Grid vSwipeHolderGrid = new Grid();
             Grid rSwipeHolderGrid = new Grid();
             Canvas can = new Canvas();
-            //Canvas c_b = new Canvas();
+            Canvas c_b = new Canvas();
             Canvas c_v = new Canvas();
             Canvas c_r = new Canvas();
             Image verso = new Image();
             Image recto = new Image();
-            //Image large = new Image();
+            Image large = new Image();
             verso.Stretch = Stretch.UniformToFill;
             recto.Stretch = Stretch.UniformToFill;
-            //large.Stretch = Stretch.UniformToFill;
+            large.Stretch = Stretch.UniformToFill;
             SSC.ScatterView vScatterView = new SSC.ScatterView();
             SSC.ScatterView rScatterView = new SSC.ScatterView();
-            //SSC.ScatterView bScatterView = new SSC.ScatterView();
+            SSC.ScatterView bScatterView = new SSC.ScatterView();
             SSC.ScatterViewItem vScatterItem = new SSC.ScatterViewItem();
             SSC.ScatterViewItem rScatterItem = new SSC.ScatterViewItem();
-            //SSC.ScatterViewItem bScatterItem = new SSC.ScatterViewItem();
+            SSC.ScatterViewItem bScatterItem = new SSC.ScatterViewItem();
 
             vScatterItem.PreviewTouchDown += new EventHandler<TouchEventArgs>(OnPreviewTouchDown);
             vScatterItem.PreviewTouchDown += new EventHandler<TouchEventArgs>(leftSwipeDetectionStart);
@@ -247,13 +249,12 @@ namespace SurfaceApplication1
             c_r.Margin = new Thickness(minPageWidth, 0, 0, 0);
             c_v.ClipToBounds = true;
             c_r.ClipToBounds = true;
-            //c_b.ClipToBounds = true;
-            //c_b.Width = minPageLong;
-            //c_b.Height = minPageHeight;
+            c_b.ClipToBounds = true;
+            c_b.Width = minPageLong;
+            c_b.Height = minPageHeight;
 
-            //bScatterView.Width = minPageLong + 2 * buffer;
-            //bScatterView.Height = minPageHeight + 2 * buffer;
-            //bScatterView.Background = Brushes.White;
+            bScatterView.Width = minPageLong + 2 * buffer;
+            bScatterView.Height = minPageHeight + 2 * buffer;
             vScatterView.Width = minPageWidth + 2 * buffer;
             vScatterView.Height = minPageHeight + 2 * buffer;
             vScatterView.Margin = new Thickness(-buffer, -buffer, 0, 0);
@@ -269,15 +270,15 @@ namespace SurfaceApplication1
             vScatterItem.AddHandler(UIElement.ManipulationCompletedEvent, new EventHandler<ManipulationCompletedEventArgs>(scatter_ManipulationCompleted), true);
             rScatterItem.AddHandler(UIElement.ManipulationCompletedEvent, new EventHandler<ManipulationCompletedEventArgs>(scatter_ManipulationCompleted), true);
 
-            //bScatterItem.Width = minPageLong;
-            //bScatterItem.Height = minPageHeight;
-            //bScatterItem.MinWidth = minPageLong;
-            //bScatterItem.MinHeight = minPageHeight;
-            //bScatterItem.MaxHeight = maxPageWidth;
-            //bScatterItem.MaxWidth = maxPageHeight;
-            //bScatterItem.CanMove = true;
-            //bScatterItem.CanRotate = false;
-            //bScatterItem.CanScale = true;
+            bScatterItem.Width = minPageLong;
+            bScatterItem.Height = minPageHeight;
+            bScatterItem.MinWidth = minPageLong;
+            bScatterItem.MinHeight = minPageHeight;
+            bScatterItem.MaxHeight = maxPageWidth;
+            bScatterItem.MaxWidth = maxPageHeight;
+            bScatterItem.CanMove = true;
+            bScatterItem.CanRotate = false;
+            bScatterItem.CanScale = true;
             vScatterItem.Width = minPageWidth;
             vScatterItem.Height = minPageHeight;
             rScatterItem.Width = minPageWidth;
@@ -296,7 +297,6 @@ namespace SurfaceApplication1
             rScatterItem.CanMove = true;
             rScatterItem.CanRotate = false;
             rScatterItem.CanScale = true;
-            //vScatterItem.HorizontalContentAlignment = System.Windows.HorizontalAlignment.Stretch;
             vScatterItem.Center = new Point(buffer + minPageWidth / 2, buffer + minPageHeight / 2);
             rScatterItem.Center = new Point(buffer + minPageWidth / 2, buffer + minPageHeight / 2);
 
@@ -309,7 +309,7 @@ namespace SurfaceApplication1
             Grid rTranslationGrid = new Grid();
             Grid bGrid = new Grid();
 
-            //bScatterItem.Content = bGrid;
+            bScatterItem.Content = bGrid;
             vScatterItem.Content = vGrid;
             rScatterItem.Content = rGrid;
             vGrid.Children.Add(verso);
@@ -318,7 +318,7 @@ namespace SurfaceApplication1
             rGrid.Children.Add(rTranslationGrid);
             vGrid.Children.Add(vSwipeHolderGrid);
             rGrid.Children.Add(rSwipeHolderGrid);
-            //bGrid.Children.Add(large);
+            bGrid.Children.Add(large);
 
             ColumnDefinition c1 = new ColumnDefinition();
             c1.Width = new GridLength(1, GridUnitType.Star);
@@ -368,16 +368,16 @@ namespace SurfaceApplication1
 
             c_v.Children.Add(vScatterView);
             c_r.Children.Add(rScatterView);
-            //c_b.Children.Add(bScatterView);
+            c_b.Children.Add(bScatterView);
             vScatterView.Items.Add(vScatterItem);
             rScatterView.Items.Add(rScatterItem);
-            //bScatterView.Items.Add(bScatterItem);
+            bScatterView.Items.Add(bScatterItem);
 
             tabArray.Insert(count, new Tab(1, tab, verso, recto, can, vGrid, rGrid, delBtn, vScatterItem, rScatterItem, vSwipeGrid, rSwipeGrid, vTranslationGrid, rTranslationGrid));
 
             can.Children.Add(c_v);
             can.Children.Add(c_r);
-            //can.Children.Add(c_b);
+            can.Children.Add(c_b);
             tab.Content = can;
             tabBar.Items.Insert(tabArray.Count - 1, tab);
             tabBar.SelectedIndex = tabArray.Count - 1;
