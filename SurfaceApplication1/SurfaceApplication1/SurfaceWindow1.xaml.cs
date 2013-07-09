@@ -150,12 +150,22 @@ namespace SurfaceApplication1
 
             /* end translations */
 
-            currentTab._vSVI.Width = minPageWidth;
-            currentTab._vSVI.Height = minPageHeight;
-            currentTab._rSVI.Width = minPageWidth;
-            currentTab._rSVI.Height = minPageHeight;
-            currentTab._rSVI.Center = new Point(scatterBuffer + minPageWidth / 2, scatterBuffer + minPageHeight / 2);
-            currentTab._vSVI.Center = new Point(scatterBuffer + minPageWidth / 2, scatterBuffer + minPageHeight / 2);
+            if (currentTab._twoPage)
+            {
+                currentTab._vSVI.Width = minPageWidth;
+                currentTab._vSVI.Height = minPageHeight;
+                currentTab._rSVI.Width = minPageWidth;
+                currentTab._rSVI.Height = minPageHeight;
+            }
+            else
+            {
+                currentTab._vSVI.Width = minPageHeight;
+                currentTab._vSVI.Height = minPageLong;
+                currentTab._rSVI.Width = minPageHeight;
+                currentTab._rSVI.Height = minPageLong;
+            }
+            currentTab._rSVI.Center = new Point(currentTab._rSV.Width / 2, currentTab._rSV.Height / 2);
+            currentTab._vSVI.Center = new Point(currentTab._vSV.Width / 2, currentTab._vSV.Height / 2);
 
             int pageNumber = currentTab._page;
             int versoNum = 2 * pageNumber + 10;
@@ -213,21 +223,16 @@ namespace SurfaceApplication1
             Grid vSwipeHolderGrid = new Grid();
             Grid rSwipeHolderGrid = new Grid();
             Canvas can = new Canvas();
-            Canvas c_b = new Canvas();
             Canvas c_v = new Canvas();
             Canvas c_r = new Canvas();
             Image verso = new Image();
             Image recto = new Image();
-            Image large = new Image();
             verso.Stretch = Stretch.UniformToFill;
             recto.Stretch = Stretch.UniformToFill;
-            large.Stretch = Stretch.UniformToFill;
             SSC.ScatterView vScatterView = new SSC.ScatterView();
             SSC.ScatterView rScatterView = new SSC.ScatterView();
-            SSC.ScatterView bScatterView = new SSC.ScatterView();
             SSC.ScatterViewItem vScatterItem = new SSC.ScatterViewItem();
             SSC.ScatterViewItem rScatterItem = new SSC.ScatterViewItem();
-            SSC.ScatterViewItem bScatterItem = new SSC.ScatterViewItem();
 
             vScatterItem.PreviewTouchDown += new EventHandler<TouchEventArgs>(OnPreviewTouchDown);
             vScatterItem.PreviewTouchDown += new EventHandler<TouchEventArgs>(leftSwipeDetectionStart);
@@ -238,9 +243,7 @@ namespace SurfaceApplication1
             rScatterItem.PreviewTouchMove += new EventHandler<TouchEventArgs>(rightSwipeDetectionMove);
             rScatterItem.PreviewTouchUp += new EventHandler<TouchEventArgs>(rightSwipeDetectionStop);
             vScatterView.HorizontalAlignment = System.Windows.HorizontalAlignment.Left;
-            vScatterView.ClipToBounds = true;
             rScatterView.HorizontalAlignment = System.Windows.HorizontalAlignment.Left;
-            rScatterView.ClipToBounds = true;
             rScatterView.Margin = new System.Windows.Thickness(minPageWidth, 0, 0, 0);
             c_v.Width = minPageWidth;
             c_v.Height = minPageHeight;
@@ -249,12 +252,7 @@ namespace SurfaceApplication1
             c_r.Margin = new Thickness(minPageWidth, 0, 0, 0);
             c_v.ClipToBounds = true;
             c_r.ClipToBounds = true;
-            c_b.ClipToBounds = true;
-            c_b.Width = minPageLong;
-            c_b.Height = minPageHeight;
 
-            bScatterView.Width = minPageLong + 2 * buffer;
-            bScatterView.Height = minPageHeight + 2 * buffer;
             vScatterView.Width = minPageWidth + 2 * buffer;
             vScatterView.Height = minPageHeight + 2 * buffer;
             vScatterView.Margin = new Thickness(-buffer, -buffer, 0, 0);
@@ -270,15 +268,6 @@ namespace SurfaceApplication1
             vScatterItem.AddHandler(UIElement.ManipulationCompletedEvent, new EventHandler<ManipulationCompletedEventArgs>(scatter_ManipulationCompleted), true);
             rScatterItem.AddHandler(UIElement.ManipulationCompletedEvent, new EventHandler<ManipulationCompletedEventArgs>(scatter_ManipulationCompleted), true);
 
-            bScatterItem.Width = minPageLong;
-            bScatterItem.Height = minPageHeight;
-            bScatterItem.MinWidth = minPageLong;
-            bScatterItem.MinHeight = minPageHeight;
-            bScatterItem.MaxHeight = maxPageWidth;
-            bScatterItem.MaxWidth = maxPageHeight;
-            bScatterItem.CanMove = true;
-            bScatterItem.CanRotate = false;
-            bScatterItem.CanScale = true;
             vScatterItem.Width = minPageWidth;
             vScatterItem.Height = minPageHeight;
             rScatterItem.Width = minPageWidth;
@@ -307,9 +296,7 @@ namespace SurfaceApplication1
             Grid rGrid = new Grid();
             Grid vTranslationGrid = new Grid();
             Grid rTranslationGrid = new Grid();
-            Grid bGrid = new Grid();
 
-            bScatterItem.Content = bGrid;
             vScatterItem.Content = vGrid;
             rScatterItem.Content = rGrid;
             vGrid.Children.Add(verso);
@@ -318,7 +305,6 @@ namespace SurfaceApplication1
             rGrid.Children.Add(rTranslationGrid);
             vGrid.Children.Add(vSwipeHolderGrid);
             rGrid.Children.Add(rSwipeHolderGrid);
-            bGrid.Children.Add(large);
 
             ColumnDefinition c1 = new ColumnDefinition();
             c1.Width = new GridLength(1, GridUnitType.Star);
@@ -368,16 +354,13 @@ namespace SurfaceApplication1
 
             c_v.Children.Add(vScatterView);
             c_r.Children.Add(rScatterView);
-            c_b.Children.Add(bScatterView);
             vScatterView.Items.Add(vScatterItem);
             rScatterView.Items.Add(rScatterItem);
-            bScatterView.Items.Add(bScatterItem);
 
-            tabArray.Insert(count, new Tab(1, tab, verso, recto, can, vGrid, rGrid, delBtn, vScatterItem, rScatterItem, vSwipeGrid, rSwipeGrid, vTranslationGrid, rTranslationGrid));
+            tabArray.Insert(count, new Tab(1, tab, verso, recto, can, c_v, c_r, vGrid, rGrid, delBtn, vScatterView, rScatterView, vScatterItem, rScatterItem, vSwipeGrid, rSwipeGrid, vTranslationGrid, rTranslationGrid));
 
             can.Children.Add(c_v);
             can.Children.Add(c_r);
-            can.Children.Add(c_b);
             tab.Content = can;
             tabBar.Items.Insert(tabArray.Count - 1, tab);
             tabBar.SelectedIndex = tabArray.Count - 1;
@@ -386,18 +369,114 @@ namespace SurfaceApplication1
             int versoNum = 2 * pageNumber + 10;
             int rectoNum = 2 * pageNumber + 11;
 
-            BitmapImage src = new BitmapImage();
-            src.BeginInit();
-            src.UriSource = new Uri("pack://application:,,,/loading.gif", UriKind.Absolute);
-            src.EndInit();
-
-            verso.Source = src;
-            recto.Source = src;
-
             pageNumberText.Text = pageNumber.ToString();
             currentTab()._tab.Header = (pageNumber - 1).ToString() + "v / " + pageNumber.ToString() + "r";
 
             return tab;
+        }
+
+        private void swapOrientation(object sender, RoutedEventArgs e)
+        {
+            if (currentTab()._twoPage)
+                setToOnePage(true);
+            else
+                setToTwoPages();
+        }
+
+        private void setToTwoPages()
+        {
+            Tab tab = currentTab();
+            Canvas c_v = tab._c_v;
+            Canvas c_r = tab._c_r;
+            ScatterView vScatterView = tab._vSV;
+            ScatterView rScatterView = tab._rSV;
+            ScatterViewItem vScatterItem = (ScatterViewItem)vScatterView.Items[0];
+            ScatterViewItem rScatterItem = (ScatterViewItem)rScatterView.Items[0];
+
+            c_v.Width = minPageWidth;
+            c_r.Width = minPageWidth;
+            c_r.Margin = new Thickness(minPageWidth, 0, 0, 0);
+
+            vScatterView.Width = minPageLong + 2 * scatterBuffer;
+            vScatterView.Height = minPageHeight + 2 * scatterBuffer;
+            rScatterView.Width = minPageLong + 2 * scatterBuffer;
+            rScatterView.Height = minPageHeight + 2 * scatterBuffer;
+
+            vScatterItem.Width = minPageLong;
+            vScatterItem.Height = minPageHeight;
+            rScatterItem.Width = minPageLong;
+            rScatterItem.Height = minPageHeight;
+            vScatterItem.MaxWidth = maxPageHeight;
+            vScatterItem.MaxHeight = maxPageWidth;
+            rScatterItem.MaxWidth = maxPageHeight;
+            rScatterItem.MaxHeight = maxPageWidth;
+            vScatterItem.MinWidth = minPageLong;
+            vScatterItem.MinHeight = minPageHeight;
+            rScatterItem.MinWidth = minPageLong;
+            rScatterItem.MinHeight = minPageHeight;
+            vScatterItem.Orientation = 0;
+            rScatterItem.Orientation = 0;
+
+            vScatterItem.Center = new Point(vScatterView.Width / 2, vScatterView.Height / 2);
+            rScatterItem.Center = new Point(rScatterView.Width / 2, rScatterView.Height / 2);
+
+            int pageNumber = currentTab()._page;
+            pageNumberText.Text = pageNumber.ToString();
+            currentTab()._tab.Header = (pageNumber - 1).ToString() + "v / " + pageNumber.ToString() + "r";
+
+            currentTab()._twoPage = true;
+        }
+
+        private void setToOnePage(bool left)
+        {
+            Tab tab = currentTab();
+            Canvas c_v = tab._c_v;
+            Canvas c_r = tab._c_r;
+            if (left)
+            {
+                c_v.Visibility = System.Windows.Visibility.Visible;
+                c_r.Visibility = System.Windows.Visibility.Collapsed;
+            }
+            else
+            {
+                c_v.Visibility = System.Windows.Visibility.Collapsed;
+                c_r.Visibility = System.Windows.Visibility.Visible;
+            }
+            ScatterView vScatterView = tab._vSV;
+            ScatterView rScatterView = tab._rSV;
+            ScatterViewItem vScatterItem = (ScatterViewItem)vScatterView.Items[0];
+            ScatterViewItem rScatterItem = (ScatterViewItem)rScatterView.Items[0];
+
+            if (currentTab()._twoPage)
+            {
+                c_v.Width = minPageLong;
+                c_r.Width = minPageLong;
+                c_r.Margin = new Thickness(0);
+                vScatterView.Width = minPageLong + 2 * scatterBuffer;
+                vScatterView.Height = minPageHeight + 2 * scatterBuffer;
+                rScatterView.Width = minPageLong + 2 * scatterBuffer;
+                rScatterView.Height = minPageHeight + 2 * scatterBuffer;
+                vScatterItem.MinWidth = minPageHeight;
+                vScatterItem.MinHeight = minPageLong;
+                rScatterItem.MinWidth = minPageHeight;
+                rScatterItem.MinHeight = minPageLong;
+                vScatterItem.Orientation = 270;
+                rScatterItem.Orientation = 270;
+            }
+
+            vScatterItem.Width = vScatterItem.MinWidth;
+            vScatterItem.Height = vScatterItem.MinHeight;
+            rScatterItem.Width = rScatterItem.MinWidth;
+            rScatterItem.Height = rScatterItem.MinHeight;
+            vScatterItem.Center = new Point(scatterBuffer + minPageLong / 2, scatterBuffer + minPageHeight / 2);
+            rScatterItem.Center = new Point(scatterBuffer + minPageLong / 2, scatterBuffer + minPageHeight / 2);
+
+            //good maybe
+            int pageNumber = currentTab()._page;
+            pageNumberText.Text = pageNumber.ToString();
+            currentTab()._tab.Header = (pageNumber - 1).ToString() + "v / " + pageNumber.ToString() + "r";
+
+            currentTab()._twoPage = false;
         }
 
         /*
@@ -408,6 +487,9 @@ namespace SurfaceApplication1
             return tabArray[tabNumber];
         }
 
+        /*
+         * 
+         */
         private void tabBar_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             TabItem tab = tabBar.SelectedItem as TabItem;
@@ -523,23 +605,46 @@ namespace SurfaceApplication1
         private void limitScatter(ScatterViewItem i)
         {
             double x,y,w,h;
-            x = i.Center.X;
-            y = i.Center.Y;
-            w = i.ActualWidth / 2;
-            h = i.ActualHeight / 2;
-            if (x > scatterBuffer + w)
-                i.Center = new Point(scatterBuffer + w, y);
-            if (x < scatterBuffer + minPageWidth - w)
-                i.Center = new Point(scatterBuffer + minPageWidth - w, y);
+            if (currentTab()._twoPage)
+            {
+                x = i.Center.X;
+                y = i.Center.Y;
+                w = i.ActualWidth / 2;
+                h = i.ActualHeight / 2;
+                if (x > scatterBuffer + w)
+                    i.Center = new Point(scatterBuffer + w, y);
+                if (x < scatterBuffer + minPageWidth - w)
+                    i.Center = new Point(scatterBuffer + minPageWidth - w, y);
 
-            x = i.Center.X;
-            y = i.Center.Y;
-            w = i.ActualWidth / 2;
-            h = i.ActualHeight / 2;
-            if (y > scatterBuffer + h)
-                i.Center = new Point(x, scatterBuffer + h);
-            if (y < scatterBuffer + minPageHeight - h)
-                i.Center = new Point(x, scatterBuffer + minPageHeight - h);
+                x = i.Center.X;
+                y = i.Center.Y;
+                w = i.ActualWidth / 2;
+                h = i.ActualHeight / 2;
+                if (y > scatterBuffer + h)
+                    i.Center = new Point(x, scatterBuffer + h);
+                if (y < scatterBuffer + minPageHeight - h)
+                    i.Center = new Point(x, scatterBuffer + minPageHeight - h);
+            }
+            else
+            {
+                x = i.Center.X;
+                y = i.Center.Y;
+                w = i.Height / 2;
+                h = i.Width / 2;
+                if (x > scatterBuffer + w)
+                    i.Center = new Point(scatterBuffer + w, y);
+                if (x < scatterBuffer + minPageLong - w)
+                    i.Center = new Point(scatterBuffer + minPageLong - w, y);
+
+                x = i.Center.X;
+                y = i.Center.Y;
+                w = i.Height / 2;
+                h = i.Width / 2;
+                if (y > scatterBuffer + h)
+                    i.Center = new Point(x, scatterBuffer + h);
+                if (y < scatterBuffer + minPageHeight - h)
+                    i.Center = new Point(x, scatterBuffer + minPageHeight - h);
+            }
         }
 
         /*
@@ -626,11 +731,6 @@ namespace SurfaceApplication1
                 if (currentLanguage == language.English)
                     tab._textBlocksR[i].Text = tab._translationBoxesR[i].getEng();
             }
-        }
-
-        private void swapOrientation(object sender, RoutedEventArgs e)
-        {
-
         }
 
         public void testText(string str)
