@@ -6,7 +6,7 @@ instructions on using LineFinder
 1. Run LineFinder from the repository. You may have to compile it first, so the commands to use are:
 
 javac LineFinder.java
-java LineFinder
+java -Xmx6g LineFinder
 
 2. A window should pop up, and from there click File->Open
 3. Find the folder of formatted folio images you have on your disk
