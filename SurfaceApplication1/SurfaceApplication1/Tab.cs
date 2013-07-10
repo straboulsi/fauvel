@@ -15,7 +15,7 @@ namespace SurfaceApplication1
         public int _page;
         public TabItem _tab;
         public Image _verso, _recto;
-        public Canvas _canvas;
+        public Canvas _canvas, _c_v, _c_r;
         public ScatterViewItem _vSVI, _rSVI;
         public int numFingersVerso, numFingersRecto;
         public List<Point> fingerPos;
@@ -23,15 +23,19 @@ namespace SurfaceApplication1
         public Button _delButton;
         public List<TranslationBox> _translationBoxesV, _translationBoxesR;
         public List<TextBlock> _textBlocksV, _textBlocksR;
-        public Grid _vGrid, _rGrid, _vSwipeGrid, _rSwipeGrid;
+        public Grid _vGrid, _rGrid, _vSwipeGrid, _rSwipeGrid, _vTranslationGrid, _rTranslationGrid;
+        public bool _twoPage;
+        public ScatterView _vSV, _rSV;
 
-        public Tab(int page, TabItem newTab, Image newVerso, Image newRecto, Canvas canvas, Grid vGrid, Grid rGrid, Button delBtn, ScatterViewItem vsi, ScatterViewItem rsi, Grid vSwipeGrid, Grid rSwipeGrid)
+        public Tab(int page, TabItem newTab, Image newVerso, Image newRecto, Canvas canvas, Canvas c_v, Canvas c_r, Grid vGrid, Grid rGrid, Button delBtn, ScatterView vSV, ScatterView rSV, ScatterViewItem vsi, ScatterViewItem rsi, Grid vSwipeGrid, Grid rSwipeGrid, Grid vTranslationGrid, Grid rTranslationGrid)
         {
             _page = page;
             _tab = newTab;
             _verso = newVerso;
             _recto = newRecto;
             _canvas = canvas;
+            _c_v = c_v;
+            _c_r = c_r;
             _vGrid = vGrid;
             _rGrid = rGrid;
             _vSVI = vsi;
@@ -43,6 +47,11 @@ namespace SurfaceApplication1
             avgTouchPoint = new Point(-1, 0);
             _vSwipeGrid = vSwipeGrid;
             _rSwipeGrid = rSwipeGrid;
+            _vTranslationGrid = vTranslationGrid;
+            _rTranslationGrid = rTranslationGrid;
+            _twoPage = true;
+            _vSV = vSV;
+            _rSV = rSV;
         }
 
     }

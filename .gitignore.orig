@@ -1,0 +1,21 @@
+SurfaceApplication1/SurfaceApplication1/pages/
+.DS_Store
+.DS_Store?
+*.class
+._*
+.Spotlight-V100
+.Trashes
+Icon?
+ehthumbs.db
+Thumbs.db
+XMLFinalContentFile*
+SurfaceApplication1/SurfaceApplication1/smallpages/
+<<<<<<< HEAD
+SurfaceApplication1/SurfaceApplication1/obj/Debug/
+SurfaceApplication1/SurfaceApplication1/obj/Debug/
+Fauvel1/Fauvel1/bin/
+Fauvel1/Fauvel1/obj/
+=======
+SurfaceApplication1/SurfaceApplication1/obj/
+SurfaceApplication1/SurfaceApplication1/bin/
+>>>>>>> d3b897b819c10cb53e05179355c29aea084ff7dc
