@@ -27,29 +27,8 @@ namespace Fauvel1
      **/
     static class Class1
     {
+        
 
-
-        public static void test()
-        {
-            try
-            {
-                XmlDocument xml = new XmlDocument();
-                xml.Load("TestXML.xml");
-
-                XmlNodeList xnl = xml.DocumentElement.SelectNodes("//big");
-                foreach (XmlNode xn in xnl)
-                {
-                    Console.Write(xn.LastChild.InnerText);
-                }
-            }
-            catch
-            {
-                Console.Write("Error");
-            }
-
-            Console.Read();
-
-        }
 
         public static bool Contains(this string source, string toCheck, StringComparison comp)
         {
@@ -65,40 +44,38 @@ namespace Fauvel1
          * <param name="firstLine">First line of target poetry section</param>
          * <param name="lastLine">Last line of target poetry section</param>
         **/
-        public static String getPoetry(int firstLine, int lastLine)
+        public static String getPoetry(int firstLine, int lastLine, XmlDocument xml)
         {
 
+            
             String toDisplay = "";
             try
             {
-                XmlDocument xml = new XmlDocument();
-                xml.Load("XMLFinalContentFile.xml");
 
+              
 
-                XmlNode foundNode;
                 
-                for (int i = firstLine; i <= lastLine; i++)
+                XmlNodeList foundNodes = xml.DocumentElement.SelectNodes("//lg/l[@n>=" + firstLine + "and @n<=" + lastLine+"]");
+                foreach (XmlNode xn in foundNodes)
                 {
-                    
-                    foundNode = xml.DocumentElement.SelectSingleNode("//lg/l[@n='"+i+"']");
-                    foundNode = foundNode.RemoveChild(foundNode.LastChild); // Removes the drop cap inner text
-
-                    toDisplay += foundNode.InnerText.Trim() + "\r\n";
+                    if (xn.HasChildNodes)
+                        toDisplay += xn.LastChild.InnerText.Trim() + "\r\n";
+                    else 
+                        toDisplay += xn.InnerText.Trim() + "\r\n";
                 }
-
+                 
                 
             }
             catch (Exception e)
             {
-                //Console.Write(e.StackTrace);
-                //Console.Read();
-                toDisplay = "Can't find these lines.. Try again?";
+                Console.Write(e.StackTrace);
+                //toDisplay = "Can't find these lines.. Try again?";
             }
 
-            //Console.Write(toDisplay);
-            //Console.Read();
             toDisplay = toDisplay.TrimEnd('\r', '\n');
 
+           ///Console.Write(toDisplay);
+            ///Console.Read();
             return toDisplay;
         }
 
@@ -108,16 +85,14 @@ namespace Fauvel1
          * Consults the Content (Old French), Layout, and English XML files. 
          * Calls on other methods in this class to fetch English, French, or coordinates.
          **/
-        public static List<TranslationBox> makeBoxes(String page)
+        public static List<TranslationBox> getBoxes(String page, XmlDocument xml, XmlDocument engXml, XmlDocument layoutXml)
         {
 
             List<TranslationBox> boxes = new List<TranslationBox>();
 
             try
             {
-                XmlDocument xml = new XmlDocument();
-                xml.Load("XMLFinalContentFile.xml");
-
+               
                 XmlNodeList foundNode;
 
                 page = page.Substring(2);
@@ -127,17 +102,18 @@ namespace Fauvel1
                 {
                    
                     String s = x.Attributes["id"].Value;
+                    Console.Write(s);
+
+
                     int index = s.IndexOf("_");
                     int mid = s.IndexOf("-");
 
                     int start = Convert.ToInt32(s.Substring(index+1, 4));
                     int end = Convert.ToInt32(s.Substring(mid + 1));
                     
-                    boxes.Add(new TranslationBox(s, getPoetry(start, end), getEnglish(start,end), getPoint(s,1), getPoint(s,2)));
+                    boxes.Add(new TranslationBox(s, getPoetry(start, end, xml), getEnglish(start,end, engXml), getPoint(s,1, layoutXml), getPoint(s,2, layoutXml)));
                 }
 
-
-               
 
             }
             catch (Exception e)
@@ -145,6 +121,16 @@ namespace Fauvel1
                 Console.Write(e.StackTrace);
                 Console.Read();
             }
+
+            foreach (TranslationBox tb in boxes)
+            {
+                Console.Write(tb.getOldFr() + "\r\n" + tb.getEng() + "\r\n" + tb.pointsToString());
+
+
+            }
+
+
+            Console.Read();
             return boxes;
         }
 
@@ -154,14 +140,13 @@ namespace Fauvel1
          * Fetches top left and bottom right coordinates from Layout XML file when given tag id of object.
          * The int whichPt should = 1 if you want top left point and 2 if you want bottom right.
          **/
-        public static Point getPoint(String tag, int whichPt)
+        public static Point getPoint(String tag, int whichPt, XmlDocument xml)
         {
             Point TL = new Point();
 
             try
             {
-                XmlDocument xml = new XmlDocument();
-                xml.Load("layout1.xml");
+                
 
                 XmlNodeList x = xml.DocumentElement.SelectNodes("//surface/zone");
                 foreach (XmlNode xn in x)
@@ -186,26 +171,27 @@ namespace Fauvel1
         /**
          * Fetches English translation for a section of poetry, given starting and ending line numbers.
          **/
-        public static String getEnglish(int start, int end)
+        public static String getEnglish(int start, int end, XmlDocument xml)
         {
             String toDisplay = "";
 
             try
             {
-                XmlDocument xml = new XmlDocument();
-                xml.Load("EnglishXML.xml");
+                //XmlDocument xml = new XmlDocument();
+                //xml.Load("EnglishXML.xml");
 
-                XmlNode foundNode;
-                for (int i = start; i <= end; i++)
+
+                XmlNodeList foundNodes = xml.DocumentElement.SelectNodes("//lg/l[@n>=" + start + "and @n<=" + end + "]");
+                foreach (XmlNode xn in foundNodes)
                 {
-                    foundNode = xml.DocumentElement.SelectSingleNode("//lg/l[@n='" + i + "']");
-                    toDisplay += foundNode.InnerText.Trim() + "\r\n";
+                    toDisplay += xn.InnerText.Trim() + "\r\n";
                 }
+
+
+
             }
             catch (Exception e)
             {
-                //Console.Write(e.StackTrace);
-                //Console.Read();
                 toDisplay = "Can't find the English.. Try again?";
             }
 
@@ -224,13 +210,11 @@ namespace Fauvel1
          *  Searching Fo1v or some other page gives you all contents of that page.
          *  <param name="str">The value of the id</param>
         **/
-        public static String go(String str)
+        public static String go(String str, XmlDocument xml)
         {
             String toDisplay = "";
             try
             {
-                XmlDocument xml = new XmlDocument();
-                xml.Load("XMLFinalContentFile.xml");
                 XmlNode foundNode;
 
                 if (str.Contains("Im"))
@@ -325,14 +309,12 @@ namespace Fauvel1
         }
         
 
-        public static String searchFrPoetry(String search, int caseSensitive, int wordSensitive)
+        public static String searchFrPoetry(String search, int caseSensitive, int wordSensitive, XmlDocument xml)
         {
             String findings = "";
 
             try
             {
-                XmlDocument xml = new XmlDocument();
-                xml.Load("XMLFinalContentFile.xml");
                 XmlNodeList xnl = xml.DocumentElement.SelectNodes("//lg/l");
 
                 int numFound = 0;
@@ -378,14 +360,12 @@ namespace Fauvel1
 
 
 
-        public static String searchEngPoetry(String search, int caseSensitive, int wordSensitive)
+        public static String searchEngPoetry(String search, int caseSensitive, int wordSensitive, XmlDocument xml)
         {
             String findings = "";
 
             try
             {
-                XmlDocument xml = new XmlDocument();
-                xml.Load("EnglishXML.xml");
                 XmlNodeList xnl = xml.DocumentElement.SelectNodes("//lg/l");
 
                 int numFound = 0;
@@ -415,14 +395,12 @@ namespace Fauvel1
         }
 
 
-        public static String searchLyrics(String search, int caseSensitive, int wordSensitive)
+        public static String searchLyrics(String search, int caseSensitive, int wordSensitive, XmlDocument xml)
         {
             String findings = "";
 
             try
             {
-                XmlDocument xml = new XmlDocument();
-                xml.Load("XMLFinalContentFile.xml");
                 XmlNodeList xnl = xml.DocumentElement.SelectNodes("//p");
 
                 int numFound = 0;
@@ -457,14 +435,12 @@ namespace Fauvel1
 
 
 
-        public static String searchPicCaptions(String search, int caseSensitive, int wordSensitive)
+        public static String searchPicCaptions(String search, int caseSensitive, int wordSensitive, XmlDocument xml)
         {
             String findings = "";
 
             try
             {
-                XmlDocument xml = new XmlDocument();
-                xml.Load("XMLFinalContentFile.xml");
                 XmlNodeList xnl = xml.DocumentElement.SelectNodes("//figure");
 
                 int numFound = 0;
@@ -504,11 +480,9 @@ namespace Fauvel1
         ///  Returns a list of the music objects with a certain # of voices
         /// </summary>
         /// <param name="voiceNum"></param>
-        public static void filterByVoice(int voiceNum)
+        public static void filterByVoice(int voiceNum, XmlDocument xml)
         {
-            XmlDocument xml = new XmlDocument();
-            xml.Load("XMLFinalContentFile.xml");
-
+            
             XmlNodeList musics = xml.DocumentElement.SelectNodes("//p[(nv)]");
             
             foreach (XmlNode xn in musics)

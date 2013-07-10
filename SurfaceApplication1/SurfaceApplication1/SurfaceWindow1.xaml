@@ -33,66 +33,7 @@
 		</TabControl>
         <TabControl x:Name="sideBar" Canvas.Left="1344" Height="980" Width="576" VerticalContentAlignment="Center" VerticalAlignment="Center" HorizontalAlignment="Center" TabStripPlacement="Bottom">
             <TabItem>
-                <Canvas x:Name="Search">
-                    <Label
-                        x:Name="SearchPrompt"
-                        Canvas.Left="150"
-                        Canvas.Top="125"
-                        Foreground="Black"
-                     >
-                        Search:
-                    </Label>
-                    <TextBox 
-                        x:Name="SearchText"
-                        Canvas.Left="150"
-                        Canvas.Top="150"
-                        Width="300"
-                        Foreground="Gray"
-                        GotFocus="TextBox_GotFocus"
-                        PreviewKeyDown="Enter_Clicked"
-                     >
-                        Enter text
-
-                    </TextBox>
-                    <Button 
-                        x:Name="AdvancedSearch"
-                         Click="Advanced_Search"
-                         Canvas.Left="300"
-                         Canvas.Top="175"
-                         Width="150"
-                        >
-                        Advanced Options
-                    </Button>
-
-                    <Button 
-                        x:Name="SimpleSearch"
-                         Click="Simple_Search"
-                         Canvas.Left="300"
-                         Canvas.Top="175"
-                         Width="150"
-                        Opacity="0"
-                        Visibility="Hidden"
-                        >
-                        Default Options
-                    </Button>
-
-
-                    <TextBox 
-            x:Name="Findings" 
-            Canvas.Top="225" 
-            Canvas.Left="150" 
-            Height="550"
-            Width="300"
-            Opacity="0"
-            VerticalScrollBarVisibility="Visible"
-            HorizontalScrollBarVisibility="Visible"
-            IsReadOnly="True"
-            >
-
-                    </TextBox>
-
-
-                </Canvas>
+                <!-- Search sideBar stuff goes here! -->
             </TabItem>
             <TabItem>
 
