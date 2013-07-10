@@ -45,13 +45,12 @@ namespace SurfaceApplication1
         public static int maxPage = 47;
         public static Image slideImage1, slideImage2;
         int scatterBuffer = 3000;
-        int swipeLength = 18;
+        int swipeLength = 10;
         int swipeHeight = 10;
         List<Tab> tabArray = new List<Tab>();
         Workers workers = new Workers();
-        enum language {None, English, OldFrench, French };
+        enum language {None, English, OldFrench, French};
         language currentLanguage = language.None;
-        private bool twoPage = false;
 
         public SurfaceWindow1()
         {
@@ -100,7 +99,7 @@ namespace SurfaceApplication1
         {
             Tab currentTab = this.currentTab();
 
-            /* start translations */
+            /* start translations 
 
             currentTab._vTranslationGrid.Children.Clear();
             currentTab._rTranslationGrid.Children.Clear();
@@ -188,14 +187,8 @@ namespace SurfaceApplication1
             image2.Freeze();
             recto.Source = image2;
 
-            if (!workers.versoImageChange.CancellationPending)
-                workers.versoImageChange.CancelAsync();
-            if (!workers.rectoImageChange.CancellationPending)
-                workers.rectoImageChange.CancelAsync();
-
             if (!workers.versoImageChange.IsBusy)
                 workers.updateVersoImage(currentTab, false);
-
             if (!workers.rectoImageChange.IsBusy)
                 workers.updateRectoImage(currentTab, false);
 
@@ -242,6 +235,8 @@ namespace SurfaceApplication1
             rScatterItem.PreviewTouchDown += new EventHandler<TouchEventArgs>(rightSwipeDetectionStart);
             rScatterItem.PreviewTouchMove += new EventHandler<TouchEventArgs>(rightSwipeDetectionMove);
             rScatterItem.PreviewTouchUp += new EventHandler<TouchEventArgs>(rightSwipeDetectionStop);
+            vScatterItem.MouseWheel += new System.Windows.Input.MouseWheelEventHandler(wheelIt);
+            rScatterItem.MouseWheel += new System.Windows.Input.MouseWheelEventHandler(wheelIt);
             vScatterView.HorizontalAlignment = System.Windows.HorizontalAlignment.Left;
             rScatterView.HorizontalAlignment = System.Windows.HorizontalAlignment.Left;
             rScatterView.Margin = new System.Windows.Thickness(minPageWidth, 0, 0, 0);
@@ -373,6 +368,24 @@ namespace SurfaceApplication1
             currentTab()._tab.Header = (pageNumber - 1).ToString() + "v / " + pageNumber.ToString() + "r";
 
             return tab;
+        }
+
+        private void wheelIt(object sender, MouseWheelEventArgs e)
+        {
+            int d = e.Delta;
+            ScatterViewItem item = (ScatterViewItem)sender;
+            double width = item.Width + d;
+            double height = item.Height + d * 1.4;
+            if (height > item.MaxHeight)
+                height = item.MaxHeight;
+            if (height < item.MinHeight)
+                height = item.MinHeight;
+            if (width > item.MaxWidth)
+                width = item.MaxWidth;
+            if (width < item.MinWidth)
+                width = item.MinWidth;
+            item.Height = height;
+            item.Width = width;
         }
 
         private void swapOrientation(object sender, RoutedEventArgs e)
@@ -537,10 +550,7 @@ namespace SurfaceApplication1
             SliderDisplay.Margin = new Thickness(middle, height, 0, 0);
             SliderDisplay.Opacity = 1;
 
-            if (!workers.slideImageChange.CancellationPending)
-                workers.slideImageChange.CancelAsync();
-            if (!workers.slideImageChange.IsBusy)
-                workers.updateSlideImage(onVal);
+            workers.updateSlideImage(onVal);
         }
 
         /*
@@ -563,8 +573,6 @@ namespace SurfaceApplication1
                 ScatterViewItem item = (ScatterViewItem)sender;
                 if (item.ActualWidth > minPageWidth)
                 {
-                    if (!workers.versoImageChange.CancellationPending)
-                        workers.versoImageChange.CancelAsync();
                     if (!workers.rectoImageChange.IsBusy)
                         workers.updateVersoImage(currentTab(), true);
                 }
@@ -581,8 +589,6 @@ namespace SurfaceApplication1
                 ScatterViewItem item = (ScatterViewItem)sender;
                 if (item.ActualWidth > minPageWidth)
                 {
-                    if (!workers.rectoImageChange.CancellationPending)
-                        workers.rectoImageChange.CancelAsync();
                     if (!workers.rectoImageChange.IsBusy)
                         workers.updateRectoImage(currentTab(), true);
                 }
@@ -658,10 +664,21 @@ namespace SurfaceApplication1
             e.Handled = true;
         }
 
-        protected virtual void OnDoubleTouchDown(ScatterViewItem s)
+        protected virtual void OnDoubleTouchDown(ScatterViewItem s, Point p)
         {
+            testText(p.X.ToString());
+            double x = p.X / maxPageWidth;
+            double y = p.Y / maxPageHeight;
+            
+            /*
             s.Width = (double)maxPageWidth / 2;
-            s.Height = (double)maxPageHeight / 2;
+            s.Height = (double)maxPageHeight / 2;*/
+            double xcenter = ((ScatterView)s.Parent).Width / 2;
+            double ycenter = ((ScatterView)s.Parent).Height / 2;
+            xcenter += (.5 - x) * s.Width;
+            ycenter += (.5 - y) * s.Height;
+
+            s.Center = new Point(xcenter, ycenter);
         }
 
         private bool IsDoubleTap(TouchEventArgs e)
@@ -680,9 +697,8 @@ namespace SurfaceApplication1
         private void OnPreviewTouchDown(object sender, TouchEventArgs e)
         {
             ScatterViewItem item = (ScatterViewItem)sender;
-            /*
             if (IsDoubleTap(e))
-                OnDoubleTouchDown((ScatterViewItem)sender);'*/
+                OnDoubleTouchDown((ScatterViewItem)sender, e.TouchDevice.GetTouchPoint(item).Position);
         }
 
         private void OnPreviewTouchUp(object sender, TouchEventArgs e)
