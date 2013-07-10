@@ -395,27 +395,23 @@ namespace SurfaceApplication1
 
             c_v.Width = minPageWidth;
             c_r.Width = minPageWidth;
+            c_v.Visibility = System.Windows.Visibility.Visible;
+            c_r.Visibility = System.Windows.Visibility.Visible;
             c_r.Margin = new Thickness(minPageWidth, 0, 0, 0);
 
-            vScatterView.Width = minPageLong + 2 * scatterBuffer;
-            vScatterView.Height = minPageHeight + 2 * scatterBuffer;
-            rScatterView.Width = minPageLong + 2 * scatterBuffer;
-            rScatterView.Height = minPageHeight + 2 * scatterBuffer;
+            vScatterView.Width = minPageWidth + 2 * scatterBuffer;
+            rScatterView.Width = minPageWidth + 2 * scatterBuffer;
 
-            vScatterItem.Width = minPageLong;
-            vScatterItem.Height = minPageHeight;
-            rScatterItem.Width = minPageLong;
-            rScatterItem.Height = minPageHeight;
-            vScatterItem.MaxWidth = maxPageHeight;
-            vScatterItem.MaxHeight = maxPageWidth;
-            rScatterItem.MaxWidth = maxPageHeight;
-            rScatterItem.MaxHeight = maxPageWidth;
-            vScatterItem.MinWidth = minPageLong;
+            vScatterItem.MinWidth = minPageWidth;
             vScatterItem.MinHeight = minPageHeight;
-            rScatterItem.MinWidth = minPageLong;
+            rScatterItem.MinWidth = minPageWidth;
             rScatterItem.MinHeight = minPageHeight;
             vScatterItem.Orientation = 0;
             rScatterItem.Orientation = 0;
+            vScatterItem.Width = vScatterItem.MinWidth;
+            vScatterItem.Height = vScatterItem.MinHeight;
+            rScatterItem.Width = rScatterItem.MinWidth;
+            rScatterItem.Height = rScatterItem.MinHeight;
 
             vScatterItem.Center = new Point(vScatterView.Width / 2, vScatterView.Height / 2);
             rScatterItem.Center = new Point(rScatterView.Width / 2, rScatterView.Height / 2);
@@ -425,6 +421,15 @@ namespace SurfaceApplication1
             currentTab()._tab.Header = (pageNumber - 1).ToString() + "v / " + pageNumber.ToString() + "r";
 
             currentTab()._twoPage = true;
+        }
+
+        private string getPageFromNumber(int number)
+        {
+            /*  br
+                bv
+                tr
+                tv*/
+            return null;
         }
 
         private void setToOnePage(bool left)
@@ -453,9 +458,7 @@ namespace SurfaceApplication1
                 c_r.Width = minPageLong;
                 c_r.Margin = new Thickness(0);
                 vScatterView.Width = minPageLong + 2 * scatterBuffer;
-                vScatterView.Height = minPageHeight + 2 * scatterBuffer;
                 rScatterView.Width = minPageLong + 2 * scatterBuffer;
-                rScatterView.Height = minPageHeight + 2 * scatterBuffer;
                 vScatterItem.MinWidth = minPageHeight;
                 vScatterItem.MinHeight = minPageLong;
                 rScatterItem.MinWidth = minPageHeight;

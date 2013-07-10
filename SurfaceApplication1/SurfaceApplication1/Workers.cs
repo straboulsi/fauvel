@@ -66,7 +66,10 @@ namespace SurfaceApplication1
                 if (versoImageChange.CancellationPending) return;
                 image.EndInit();
                 image.Freeze();
-                e.Result = image;
+                if (pn == 2 * tabR._page + 10)
+                    e.Result = image;
+                else
+                    return;
             };
             versoImageChange.RunWorkerCompleted += (s, e) =>
             {
@@ -96,7 +99,10 @@ namespace SurfaceApplication1
                 if (rectoImageChange.CancellationPending) return;
                 image.EndInit();
                 image.Freeze();
-                e.Result = image;
+                if (pn == 2 * tabR._page + 11)
+                    e.Result = image;
+                else
+                    return;
             };
             rectoImageChange.RunWorkerCompleted += (s, e) =>
             {
