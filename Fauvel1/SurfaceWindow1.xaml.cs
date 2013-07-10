@@ -15,6 +15,10 @@ using Microsoft.Surface;
 using Microsoft.Surface.Presentation;
 using Microsoft.Surface.Presentation.Controls;
 using Microsoft.Surface.Presentation.Input;
+using System.Diagnostics;
+using System.Xml;
+using System.Xml.Schema;
+using System.Xml.XPath;
 
 namespace Fauvel1
 {
@@ -23,6 +27,11 @@ namespace Fauvel1
     /// </summary>
     public partial class SurfaceWindow1 : SurfaceWindow
     {
+
+        XmlDocument xml;
+        XmlDocument engXml;
+        XmlDocument layoutXml;
+
         /// <summary>
         /// Default constructor.
         /// </summary>
@@ -33,12 +42,44 @@ namespace Fauvel1
 
             
 
+            ///Class1.getBoxes("Fo1v");
+
             /// NB: Default limit is approx 300 lines displayed in console
             /// If you need to print more, use Console.SetBufferSize(width, height);
-           
-            ///Class1.test();
+           /// Console.SetBufferSize(300, 1200);
             ///Class1.getPoint("Te_0035-0048", 2);
-            ///Class1.getPoetry(1,3);
+            ///Stopwatch sw = new Stopwatch();
+            ///sw.Start();
+           //Console.Write("Before method " +DateTime.Now+" "+DateTime.Now.Millisecond);
+
+            xml = new XmlDocument();
+            xml.Load("XMLFinalContentFile.xml");
+            engXml = new XmlDocument();
+            engXml.Load("EnglishXML.xml");
+            layoutXml = new XmlDocument();
+            layoutXml.Load("layout1.xml");
+
+
+            ///Class1.getBoxes("Fo1v", xml, engXml, layoutXml);
+           
+
+            //Console.Write(Class1.getEnglish(500,1000, engXml)); 
+
+            // Lines 4500-5500 took 10.91 sec using next sibling and 10.79 sec using line by line search and 0.14 sec using selectNodes
+            // Lines 1500-2500 took 4.64 sec using next sibling and 4.56 sec using line by line search and 0.14 sec using selectNodes
+            // Lines 1500-3500 took 10.02 sec using next sibling and 9.82 sec using line by line search and 0.38 sec using selectNodes
+            // Lines 1500-1570 took 0.30 sec using next sibling and 0.29 sec using line by line search and 0.07 sec using selectNodes
+            // Lines 500-5500 took 32.3 sec using next sibling and 31 sec using line by line search and 3.31 sec using selectNodes
+            ///Console.Write(Class1.getEnglish(1000, 1500));
+            /**
+            sw.Stop();
+            TimeSpan ts = sw.Elapsed;
+
+            string elapsedTime = String.Format("{0:00}:{1:00}:{2:00}.{3:00}",
+            ts.Hours, ts.Minutes, ts.Seconds,
+            ts.Milliseconds / 10);
+            **/
+          
             ///Class1.go("1rIm2"); 
             ///Class1.go("1rMo3_t"); 
             ///Class1.go("34vLa1_t");
@@ -53,6 +94,9 @@ namespace Fauvel1
             ///Class1.searchLyrics("Dictus");
             ///Class1.searchPicCaptions("Fauvel");
 
+
+
+            ///Console.Read();
             // Add handlers for window availability events
             AddWindowAvailabilityHandlers();
             
@@ -157,7 +201,7 @@ namespace Fauvel1
             if (sLine > eLine)
                 sSelectedText = "Please enter the lower number on the left!";
             else
-                sSelectedText = Class1.getPoetry(sLine, eLine);
+                sSelectedText = Class1.getPoetry(sLine, eLine, xml);
             stb.Text = sSelectedText;
             stb.Opacity = 100;
             
@@ -171,7 +215,7 @@ namespace Fauvel1
                 caseType = 1;
             if (WordSensitive.IsChecked == true)
                 wordType = 1;
-            stb.Text = Class1.searchFrPoetry(SearchText.Text, caseType, wordType);
+            stb.Text = Class1.searchFrPoetry(SearchText.Text, caseType, wordType, xml);
             stb.Opacity = 100;
         }
 
@@ -184,7 +228,7 @@ namespace Fauvel1
             if (WordSensitive.IsChecked == true)
                 wordType = 1;
             
-            stb.Text = Class1.searchEngPoetry(SearchText.Text, caseType, wordType);
+            stb.Text = Class1.searchEngPoetry(SearchText.Text, caseType, wordType, engXml);
             stb.Opacity = 100;
         }
 
@@ -196,7 +240,7 @@ namespace Fauvel1
                 caseType = 1;
             if (WordSensitive.IsChecked == true)
                 wordType = 1;
-            stb.Text = Class1.searchLyrics(SearchText.Text, caseType, wordType);
+            stb.Text = Class1.searchLyrics(SearchText.Text, caseType, wordType, xml);
             stb.Opacity = 100;
         }
 
@@ -208,13 +252,13 @@ namespace Fauvel1
                 caseType = 1;
             if (WordSensitive.IsChecked == true)
                 wordType = 1; 
-            stb.Text = Class1.searchPicCaptions(SearchText.Text, caseType, wordType);
+            stb.Text = Class1.searchPicCaptions(SearchText.Text, caseType, wordType, xml);
             stb.Opacity = 100;
         }
 
         private void Button_Click2(object sender, RoutedEventArgs e)
         {
-            String sSelectedText = Class1.go(Tag.Text);
+            String sSelectedText = Class1.go(Tag.Text, xml);
             stb.Text = sSelectedText;
             stb.Opacity = 100;
         }
@@ -227,7 +271,7 @@ namespace Fauvel1
             if(sLine > eLine)
                 sSelectedText = "Please enter the lower number on the left!";
             else
-                sSelectedText = Class1.getEnglish(sLine,eLine);
+                sSelectedText = Class1.getEnglish(sLine,eLine, engXml);
             stb.Text = sSelectedText;
             stb.Opacity = 100;
         }

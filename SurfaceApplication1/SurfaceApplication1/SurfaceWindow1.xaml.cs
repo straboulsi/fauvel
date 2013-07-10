@@ -21,6 +21,9 @@ using System.Windows.Media.Animation;
 using System.Threading;
 using System.ComponentModel;
 using System.Diagnostics;
+using System.Xml;
+using System.Xml.Schema;
+using System.Xml.XPath;
 
 namespace SurfaceApplication1
 {
@@ -52,6 +55,10 @@ namespace SurfaceApplication1
         enum language {None, English, OldFrench, French};
         language currentLanguage = language.None;
 
+        XmlDocument xml;
+        XmlDocument engXml;
+        XmlDocument layoutXml;
+
         public SurfaceWindow1()
         {
             InitializeComponent();
@@ -68,6 +75,15 @@ namespace SurfaceApplication1
             newTabButton.Header = "+";
             tabBar.Items.Add(newTabButton);
             createTab(1);
+
+
+            // Loads the Xml documents
+            xml = new XmlDocument();
+            xml.Load("XMLFinalContentFile.xml");
+            engXml = new XmlDocument();
+            engXml.Load("EnglishXML.xml");
+            layoutXml = new XmlDocument();
+            layoutXml.Load("layout1.xml");
         }
 
         protected override void OnClosed(EventArgs e)
@@ -107,8 +123,8 @@ namespace SurfaceApplication1
             string pagev = "fo" + (currentTab._page - 1).ToString() + "v";
             string pager = "fo" + (currentTab._page).ToString() + "r";
 
-            currentTab._translationBoxesV = Translate.getBoxes(pagev);
-            currentTab._translationBoxesR = Translate.getBoxes(pager);
+            currentTab._translationBoxesV = Translate.getBoxes(pagev, xml, engXml, layoutXml);
+            currentTab._translationBoxesR = Translate.getBoxes(pager, xml, engXml, layoutXml);
 
             currentTab._textBlocksV = new List<TextBlock>();
             currentTab._textBlocksR = new List<TextBlock>();
@@ -881,44 +897,7 @@ namespace SurfaceApplication1
             tb.Foreground = Brushes.Black;
         }
 
-        private void Enter_Clicked(object sender, KeyEventArgs e)
-        {
-            if (e.Key == Key.Return)
-            {
-                Search_French(sender, e);
-                e.Handled = true;
-            }
-        }
 
-        private void Search_French(object sender, RoutedEventArgs e)
-        {
-            /**
-            int caseType = 0;
-            int wordType = 0;
-            if (CaseSensitive.IsChecked == true)
-                caseType = 1;
-            if (WordSensitive.IsChecked == true)
-                wordType = 1;
-            stb.Text = Class1.searchFrPoetry(SearchText.Text, caseType, wordType);
-            **/
-            Findings.Text = Translate.searchFrPoetry(SearchText.Text, 0, 0);
-            Findings.Opacity = 100;
-        }
-
-        private void Advanced_Search(object sender, RoutedEventArgs e)
-        {
-            Findings.Text = "you picked advanced!";
-
-            AdvancedSearch.Visibility = System.Windows.Visibility.Hidden;
-            SimpleSearch.Visibility = System.Windows.Visibility.Visible;
-
-        }
-
-        private void Simple_Search(object sender, RoutedEventArgs e)
-        {
-            Findings.Text = "you picked simple!";
-            AdvancedSearch.Visibility = System.Windows.Visibility.Visible;
-            SimpleSearch.Visibility = System.Windows.Visibility.Hidden;
-        }
+        
     }
 }
