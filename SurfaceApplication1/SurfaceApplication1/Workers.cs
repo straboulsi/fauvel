@@ -20,7 +20,8 @@ namespace SurfaceApplication1
         public void updateSlideImage(int pageNum)
         {
             slideInt = pageNum;
-            slideImageChange.RunWorkerAsync();
+            if(!slideImageChange.IsBusy)
+                slideImageChange.RunWorkerAsync();
         }
 
         public void updateVersoImage(Tab newTab, bool big)
@@ -61,12 +62,13 @@ namespace SurfaceApplication1
                 if (!bigV)
                     image.DecodePixelWidth = SurfaceWindow1.minPageWidth;
                 image.CacheOption = BitmapCacheOption.OnLoad;
-                if (versoImageChange.CancellationPending) return;
                 image.UriSource = new Uri("pages/" + pn.ToString() + ".jpg", UriKind.Relative);
-                if (versoImageChange.CancellationPending) return;
                 image.EndInit();
                 image.Freeze();
-                e.Result = image;
+                if (pn == 2 * tabR._page + 10)
+                    e.Result = image;
+                else
+                    return;
             };
             versoImageChange.RunWorkerCompleted += (s, e) =>
             {
@@ -91,12 +93,13 @@ namespace SurfaceApplication1
                 if (!bigR)
                     image.DecodePixelWidth = SurfaceWindow1.minPageWidth;
                 image.CacheOption = BitmapCacheOption.OnLoad;
-                if (rectoImageChange.CancellationPending) return;
                 image.UriSource = new Uri("pages/" + pn.ToString() + ".jpg", UriKind.Relative);
-                if (rectoImageChange.CancellationPending) return;
                 image.EndInit();
                 image.Freeze();
-                e.Result = image;
+                if (pn == 2 * tabR._page + 11)
+                    e.Result = image;
+                else
+                    return;
             };
             rectoImageChange.RunWorkerCompleted += (s, e) =>
             {

@@ -515,9 +515,15 @@ namespace SurfaceApplication1
         {
             if (tabBar.Items.Count > 2)
             {
-                TabItem selectedTab = tabBar.SelectedItem as TabItem;
-                tabBar.Items.Remove(tabBar.Items[tabNumber]);
-                tabArray.Remove(tabArray[tabNumber]);
+                List<TabItem> tabitems = (List<TabItem>)tabBar.DataContext;
+                tabBar.DataContext = null;
+                tabitems.Remove(currentTab()._tab);
+                tabBar.DataContext = tabitems;
+
+                tabArray.Remove(currentTab());
+
+                tabNumber = 0;
+                tabBar.SelectedItem = currentTab()._tab;
             }
         }
 

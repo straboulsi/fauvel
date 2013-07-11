@@ -10,12 +10,11 @@ ehthumbs.db
 Thumbs.db
 XMLFinalContentFile*
 SurfaceApplication1/SurfaceApplication1/smallpages/
+SurfaceApplication1/SurfaceApplication1/obj/
+SurfaceApplication1/SurfaceApplication1/bin/
 <<<<<<< HEAD
-SurfaceApplication1/SurfaceApplication1/obj/Debug/
-SurfaceApplication1/SurfaceApplication1/obj/Debug/
 Fauvel1/Fauvel1/bin/
 Fauvel1/Fauvel1/obj/
 =======
-SurfaceApplication1/SurfaceApplication1/obj/
-SurfaceApplication1/SurfaceApplication1/bin/
->>>>>>> d3b897b819c10cb53e05179355c29aea084ff7dc
+SurfaceApplication1/SurfaceApplication1/smallpages
+>>>>>>> 2ad6f50a62c75b439f5f04633b20e5c9468148fa
