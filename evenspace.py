@@ -48,7 +48,7 @@ if __name__ == '__main__':
 	# Print the line coordinates
 	for i in range(len(boxes)):
 		with open ("linelayout.txt", "a") as myfile:
-			myfile.write("<l n=\"" + str(lstart+i) + "\" pn=\"" + str(i+1) + "\n")
+			myfile.write("<l n=\"" + str(lstart+i) + "\" pn=\"" + str(i+1) + "\"\n")
 			myfile.write("ulx=\"" + str(boxes[i][0]) + "\"\n")
 			myfile.write("uly=\"" + str(boxes[i][1]) + "\"\n")
 			myfile.write("lrx=\"" + str(boxes[i][2]) + "\"\n")
