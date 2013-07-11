@@ -40,15 +40,15 @@ namespace SurfaceApplication1
         private Point leftSwipeStart, rightSwipeStart;
         public static int maxPageWidth = 5250;
         public static int maxPageHeight = 7350;
-        public static int minPageWidth = 664;
-        public static int minPageHeight = 930;
-        public static int minPageLong = 1302;
+        public static int minPageWidth = 650;
+        public static int minPageHeight = 910;
+        public static int minPageLong = 1274;
         public static int tabNumber = 0;
         public static int minPage = 0;
         public static int maxPage = 47;
         public static Image slideImage1, slideImage2;
         int scatterBuffer = 3000;
-        int swipeLength = 10;
+        int swipeLength = 50;
         int swipeHeight = 10;
         List<Tab> tabArray = new List<Tab>();
         Workers workers = new Workers();
@@ -533,12 +533,12 @@ namespace SurfaceApplication1
 
             for (int i = 0; i < tabArray.Count; i++)
             {
-                tabArray[tabNumber]._delButton.Visibility = System.Windows.Visibility.Collapsed;
+                tabArray[i]._delButton.Visibility = System.Windows.Visibility.Collapsed;
                 if (tabArray[i]._tab.Equals(tab))
                     tabNumber = i;
-                
             }
-            tabArray[tabNumber]._delButton.Visibility = System.Windows.Visibility.Visible;
+            //tabArray[tabNumber]._delButton.Visibility = System.Windows.Visibility.Visible;
+            testText(tabNumber.ToString());
 
             loadPage();
         }
@@ -547,9 +547,11 @@ namespace SurfaceApplication1
         {
             if (tabBar.Items.Count > 2)
             {
-                TabItem selectedTab = tabBar.SelectedItem as TabItem;
-                tabBar.Items.Remove(tabBar.Items[tabNumber]);
-                tabArray.Remove(tabArray[tabNumber]);
+                Tab ct = currentTab();
+                TabItem ti = ct._tab;
+                tabBar.SelectedItem = tabArray[0]._tab;
+                tabArray.Remove(ct);
+                tabBar.Items.Remove(ti);
             }
         }
 
@@ -682,19 +684,98 @@ namespace SurfaceApplication1
 
         protected virtual void OnDoubleTouchDown(ScatterViewItem s, Point p)
         {
-            testText(p.X.ToString());
-            double x = p.X / maxPageWidth;
-            double y = p.Y / maxPageHeight;
-            
-            /*
-            s.Width = (double)maxPageWidth / 2;
-            s.Height = (double)maxPageHeight / 2;*/
+            resizePageToRect(s, getRectFromPoint(true, p));
+
+            lastTapLocation = new Point(-1000, -1000);
+        }
+
+        private Rect getRectFromPoint(bool verso, Point p)
+        {
+            return new Rect(200, 200, 1600, 2000);
+        }
+
+        private void resizePageToRect(ScatterViewItem s, Rect r)
+        {
+            Grid g = new Grid();
+            ((Grid)s.Content).Children.Add(g);
+            g.ShowGridLines = true;
+            ColumnDefinition c1 = new ColumnDefinition();
+            c1.Width = new GridLength(r.X, GridUnitType.Star);
+            ColumnDefinition c2 = new ColumnDefinition();
+            c2.Width = new GridLength(r.Width, GridUnitType.Star);
+            ColumnDefinition c3 = new ColumnDefinition();
+            c3.Width = new GridLength(SurfaceWindow1.maxPageWidth - r.X - r.Width, GridUnitType.Star);
+            RowDefinition r1 = new RowDefinition();
+            r1.Height = new GridLength(r.Y, GridUnitType.Star);
+            RowDefinition r2 = new RowDefinition();
+            r2.Height = new GridLength(r.Height, GridUnitType.Star);
+            RowDefinition r3 = new RowDefinition();
+            r3.Height = new GridLength(SurfaceWindow1.maxPageHeight - r.Y - r.Height, GridUnitType.Star);
+
+            g.ColumnDefinitions.Add(c1);
+            g.ColumnDefinitions.Add(c2);
+            g.ColumnDefinitions.Add(c3);
+            g.RowDefinitions.Add(r1);
+            g.RowDefinitions.Add(r2);
+            g.RowDefinitions.Add(r3);
+
+            bool sizeToHeight = r.Height > r.Width * 1.4;
+            double h = r.Height;
+            double w = r.Width;
+            double endWidth, endHeight;
+            double multiplier = 1;
+            if (sizeToHeight)
+            {
+                if (h > minPageHeight)
+                    multiplier = minPageHeight / h;
+            }
+            else
+            {
+                if (w > minPageWidth)
+                    multiplier = minPageWidth / w;
+            }
+            endWidth  = s.MaxWidth  * multiplier;
+            endHeight = s.MaxHeight * multiplier;
+
+            double x = (r.Left + r.Width / 2) / maxPageWidth;
+            double y = (r.Top + r.Height / 2) / maxPageHeight;
             double xcenter = ((ScatterView)s.Parent).Width / 2;
             double ycenter = ((ScatterView)s.Parent).Height / 2;
-            xcenter += (.5 - x) * s.Width;
-            ycenter += (.5 - y) * s.Height;
+            xcenter += (.5 - x) * endWidth;
+            ycenter += (.5 - y) * endHeight;
 
-            s.Center = new Point(xcenter, ycenter);
+            Storyboard stb = new Storyboard();
+            DoubleAnimation moveWidth = new DoubleAnimation();
+            DoubleAnimation moveHeight = new DoubleAnimation();
+            PointAnimation moveCenter = new PointAnimation();
+
+            Point endPoint = new Point(xcenter, ycenter);
+            moveCenter.From = s.ActualCenter;
+            moveCenter.To = endPoint;
+            moveWidth.From = s.ActualWidth;
+            moveWidth.To = endWidth;
+            moveHeight.From = s.ActualHeight;
+            moveHeight.To = endHeight;
+            moveCenter.Duration = new Duration(TimeSpan.FromMilliseconds(150));
+            moveWidth.Duration = new Duration(TimeSpan.FromMilliseconds(150));
+            moveHeight.Duration = new Duration(TimeSpan.FromMilliseconds(150));
+            moveWidth.FillBehavior = FillBehavior.Stop;
+            moveHeight.FillBehavior = FillBehavior.Stop;
+            moveCenter.FillBehavior = FillBehavior.Stop;
+            stb.Children.Add(moveCenter);
+            stb.Children.Add(moveWidth);
+            stb.Children.Add(moveHeight);
+            Storyboard.SetTarget(moveCenter, s);
+            Storyboard.SetTarget(moveWidth, s);
+            Storyboard.SetTarget(moveHeight, s);
+            Storyboard.SetTargetProperty(moveCenter, new PropertyPath(ScatterViewItem.CenterProperty));
+            Storyboard.SetTargetProperty(moveWidth,  new PropertyPath(ScatterViewItem.WidthProperty));
+            Storyboard.SetTargetProperty(moveHeight, new PropertyPath(ScatterViewItem.HeightProperty));
+
+            s.Center = endPoint;
+            s.Width = endWidth;
+            s.Height = endHeight;
+            stb.Begin(this);
         }
 
         private bool IsDoubleTap(TouchEventArgs e)
@@ -712,6 +793,8 @@ namespace SurfaceApplication1
 
         private void OnPreviewTouchDown(object sender, TouchEventArgs e)
         {
+            if (((ScatterViewItem)sender).TouchesOver.Count() > 1)
+                lastTapLocation = new Point(-1000, -1000);
             ScatterViewItem item = (ScatterViewItem)sender;
             if (IsDoubleTap(e))
                 OnDoubleTouchDown((ScatterViewItem)sender, e.TouchDevice.GetTouchPoint(item).Position);
