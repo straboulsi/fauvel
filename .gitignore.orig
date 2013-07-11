@@ -12,5 +12,9 @@ XMLFinalContentFile*
 SurfaceApplication1/SurfaceApplication1/smallpages/
 SurfaceApplication1/SurfaceApplication1/obj/
 SurfaceApplication1/SurfaceApplication1/bin/
+<<<<<<< HEAD
 Fauvel1/Fauvel1/bin/
 Fauvel1/Fauvel1/obj/
+=======
+SurfaceApplication1/SurfaceApplication1/smallpages
+>>>>>>> 2ad6f50a62c75b439f5f04633b20e5c9468148fa
