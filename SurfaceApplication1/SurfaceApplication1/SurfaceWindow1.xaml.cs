@@ -45,7 +45,7 @@ namespace SurfaceApplication1
         public static int minPageLong = 1274;
         public static int tabNumber = 0;
         public static int minPage = 0;
-        public static int maxPage = 47;
+        public static int maxPage = 95;
         public static Image slideImage1, slideImage2;
         int scatterBuffer = 3000;
         int swipeLength = 50;
@@ -54,6 +54,7 @@ namespace SurfaceApplication1
         Workers workers = new Workers();
         enum language {None, English, OldFrench, French};
         language currentLanguage = language.None;
+        bool dtOut = false;
 
         XmlDocument xml;
         XmlDocument engXml;
@@ -70,7 +71,6 @@ namespace SurfaceApplication1
             slideImage2 = SliderImage2;
 
             //other initialization
-            maxPageText.Text = maxPage.ToString();
             TabItem newTabButton = new TabItem();
             newTabButton.Header = "+";
             tabBar.Items.Add(newTabButton);
@@ -93,28 +93,46 @@ namespace SurfaceApplication1
 
         private void prev_Click(object sender, RoutedEventArgs e)
         {
-            goToPage(tabArray[tabNumber]._page - 1);
+
+            Tab tab = currentTab();
+            if (tab._twoPage)
+            {
+                goToPage((tab._page - 2) % 2);
+            }
+            else
+            {
+                goToPage(tab._page - 1);
+            }
         }
 
         private void next_Click(object sender, RoutedEventArgs e)
         {
-            goToPage(tabArray[tabNumber]._page + 1);
+            Tab tab = currentTab();
+            if (tab._twoPage)
+            {
+                goToPage((tab._page + 2) % 2);
+            }
+            else
+            {
+                goToPage(tab._page + 1);
+            }
         }
 
         private void goToPage(int page)
         {
-            currentTab()._page = page;
+            Tab tab = currentTab();
+            tab._page = page;
             if (page > maxPage)
-                tabArray[tabNumber]._page = maxPage;
-            if (tabArray[tabNumber]._page < minPage)
-                tabArray[tabNumber]._page = minPage;
+                tab._page = maxPage;
+            if (tab._page < minPage)
+                tab._page = minPage;
             loadPage();
         }
 
         private void loadPage()
         {
             Tab currentTab = this.currentTab();
-
+            testText.Text = currentTab._page.ToString();
             /* start translations 
 
             currentTab._vTranslationGrid.Children.Clear();
@@ -208,7 +226,7 @@ namespace SurfaceApplication1
             if (!workers.rectoImageChange.IsBusy)
                 workers.updateRectoImage(currentTab, false);
 
-            pageNumberText.Text = pageNumber.ToString();
+            pageNumberText.Text = PageNamer.getPageText(currentTab._page, currentTab._twoPage);
             currentTab._tab.Header = (pageNumber - 1).ToString() + "v / " + pageNumber.ToString() + "r";
 
             pageSlider.Value = currentTab._page;
@@ -224,6 +242,7 @@ namespace SurfaceApplication1
             tab.FontSize = 25;
             tab.Name = string.Format("tabItem_{0}", count);
             tab.HeaderTemplate = tabBar.FindResource("TabHeader") as DataTemplate;
+            
 
             Button delBtn = new Button();
 
@@ -368,7 +387,7 @@ namespace SurfaceApplication1
             vScatterView.Items.Add(vScatterItem);
             rScatterView.Items.Add(rScatterItem);
 
-            tabArray.Insert(count, new Tab(1, tab, verso, recto, can, c_v, c_r, vGrid, rGrid, delBtn, vScatterView, rScatterView, vScatterItem, rScatterItem, vSwipeGrid, rSwipeGrid, vTranslationGrid, rTranslationGrid));
+            tabArray.Insert(count, new Tab(2, tab, verso, recto, can, c_v, c_r, vGrid, rGrid, delBtn, vScatterView, rScatterView, vScatterItem, rScatterItem, vSwipeGrid, rSwipeGrid, vTranslationGrid, rTranslationGrid));
 
             can.Children.Add(c_v);
             can.Children.Add(c_r);
@@ -380,7 +399,6 @@ namespace SurfaceApplication1
             int versoNum = 2 * pageNumber + 10;
             int rectoNum = 2 * pageNumber + 11;
 
-            pageNumberText.Text = pageNumber.ToString();
             currentTab()._tab.Header = (pageNumber - 1).ToString() + "v / " + pageNumber.ToString() + "r";
 
             return tab;
@@ -407,9 +425,14 @@ namespace SurfaceApplication1
         private void swapOrientation(object sender, RoutedEventArgs e)
         {
             if (currentTab()._twoPage)
+            {
                 setToOnePage(true);
+            }
             else
+            {
                 setToTwoPages();
+            }
+
         }
 
         private void setToTwoPages()
@@ -421,6 +444,10 @@ namespace SurfaceApplication1
             ScatterView rScatterView = tab._rSV;
             ScatterViewItem vScatterItem = (ScatterViewItem)vScatterView.Items[0];
             ScatterViewItem rScatterItem = (ScatterViewItem)rScatterView.Items[0];
+
+            pageSlider.Maximum = 47;
+            pageSlider.Value = tab._page / 2;
+            pageNumberText.Text = PageNamer.getPageText(tab._page, tab._twoPage);
 
             c_v.Width = minPageWidth;
             c_r.Width = minPageWidth;
@@ -446,7 +473,6 @@ namespace SurfaceApplication1
             rScatterItem.Center = new Point(rScatterView.Width / 2, rScatterView.Height / 2);
 
             int pageNumber = currentTab()._page;
-            pageNumberText.Text = pageNumber.ToString();
             currentTab()._tab.Header = (pageNumber - 1).ToString() + "v / " + pageNumber.ToString() + "r";
 
             currentTab()._twoPage = true;
@@ -481,6 +507,11 @@ namespace SurfaceApplication1
             ScatterViewItem vScatterItem = (ScatterViewItem)vScatterView.Items[0];
             ScatterViewItem rScatterItem = (ScatterViewItem)rScatterView.Items[0];
 
+
+            pageSlider.Maximum = 95;
+            pageSlider.Value = tab._page;
+            pageNumberText.Text = PageNamer.getPageText(tab._page, tab._twoPage);
+
             if (currentTab()._twoPage)
             {
                 c_v.Width = minPageLong;
@@ -502,11 +533,6 @@ namespace SurfaceApplication1
             rScatterItem.Height = rScatterItem.MinHeight;
             vScatterItem.Center = new Point(scatterBuffer + minPageLong / 2, scatterBuffer + minPageHeight / 2);
             rScatterItem.Center = new Point(scatterBuffer + minPageLong / 2, scatterBuffer + minPageHeight / 2);
-
-            //good maybe
-            int pageNumber = currentTab()._page;
-            pageNumberText.Text = pageNumber.ToString();
-            currentTab()._tab.Header = (pageNumber - 1).ToString() + "v / " + pageNumber.ToString() + "r";
 
             currentTab()._twoPage = false;
         }
@@ -538,7 +564,6 @@ namespace SurfaceApplication1
                     tabNumber = i;
             }
             //tabArray[tabNumber]._delButton.Visibility = System.Windows.Visibility.Visible;
-            testText(tabNumber.ToString());
 
             loadPage();
         }
@@ -849,11 +874,6 @@ namespace SurfaceApplication1
                 if (currentLanguage == language.English)
                     tab._textBlocksR[i].Text = tab._translationBoxesR[i].getEng();
             }
-        }
-
-        public void testText(string str)
-        {
-            maxPageText.Text = str;
         }
 
         public void rightSwipeDetectionStart(object sender, TouchEventArgs e)

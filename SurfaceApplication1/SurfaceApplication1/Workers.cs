@@ -30,7 +30,8 @@ namespace SurfaceApplication1
             {
                 tabV = newTab;
                 bigV = big;
-                versoImageChange.RunWorkerAsync();
+                if(!versoImageChange.IsBusy)
+                    versoImageChange.RunWorkerAsync();
             }
         }
 
@@ -40,7 +41,8 @@ namespace SurfaceApplication1
             {
                 tabR = newTab;
                 bigR = big;
-                rectoImageChange.RunWorkerAsync();
+                if (!rectoImageChange.IsBusy)
+                    rectoImageChange.RunWorkerAsync();
             }
         }
 
