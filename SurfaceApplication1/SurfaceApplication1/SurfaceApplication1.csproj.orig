@@ -141,18 +141,28 @@
     <Resource Include="XMLFinalContentFile.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Resource>
+<<<<<<< HEAD
+    <Resource Include="EnglishXML.xml">
+=======
+    <Resource Include="cow.jpg" />
+    <Resource Include="horse.jpg" />
+    <Resource Include="loading.gif" />
     <Content Include="EnglishXML.xml">
+>>>>>>> 69efc7a2df449f5c8806732891872000dd2b177a
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Resource Include="flags\english.jpg" />
     <Resource Include="flags\french.jpg" />
     <Resource Include="flags\oldfrench.png" />
-    <Content Include="layout_full.xml">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
+<<<<<<< HEAD
     <Resource Include="icons\pageTurn.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Resource>
+=======
+    <Content Include="layout_full.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+>>>>>>> 69efc7a2df449f5c8806732891872000dd2b177a
     <Content Include="pages\100.jpg">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
