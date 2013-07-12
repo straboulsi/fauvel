@@ -76,14 +76,20 @@ namespace SurfaceApplication1
             tabBar.Items.Add(newTabButton);
             createTab(1);
 
-
-            // Loads the Xml documents
-            xml = new XmlDocument();
-            xml.Load("XMLFinalContentFile.xml");
-            engXml = new XmlDocument();
-            engXml.Load("EnglishXML.xml");
-            layoutXml = new XmlDocument();
-            layoutXml.Load("layout1.xml");
+            try
+            {
+                // Loads the Xml documents
+                xml = new XmlDocument();
+                xml.Load("XMLFinalContentFile.xml");
+                engXml = new XmlDocument();
+                engXml.Load("EnglishXML.xml");
+                layoutXml = new XmlDocument();
+                layoutXml.Load("layout_full.xml");
+            }
+            catch (Exception e)
+            {
+                String temp = e.StackTrace;
+            }
         }
 
         protected override void OnClosed(EventArgs e)
