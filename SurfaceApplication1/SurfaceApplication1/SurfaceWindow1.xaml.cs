@@ -54,7 +54,7 @@ namespace SurfaceApplication1
         Workers workers = new Workers();
         enum language {None, English, OldFrench, French};
         language currentLanguage = language.None;
-        bool dtOut = false;
+        bool dtOut = false; // double tap to zoom out
 
         XmlDocument xml;
         XmlDocument engXml;
@@ -663,6 +663,7 @@ namespace SurfaceApplication1
         private void limitScatter(ScatterViewItem i)
         {
             double x,y,w,h;
+            bool fullscreen = false;
             if (currentTab()._twoPage)
             {
                 x = i.Center.X;
@@ -682,6 +683,9 @@ namespace SurfaceApplication1
                     i.Center = new Point(x, scatterBuffer + h);
                 if (y < scatterBuffer + minPageHeight - h)
                     i.Center = new Point(x, scatterBuffer + minPageHeight - h);
+
+                if (i.Width < i.MinWidth + 1)
+                    fullscreen = true;
             }
             else
             {
@@ -702,7 +706,13 @@ namespace SurfaceApplication1
                     i.Center = new Point(x, scatterBuffer + h);
                 if (y < scatterBuffer + minPageHeight - h)
                     i.Center = new Point(x, scatterBuffer + minPageHeight - h);
+
+                if (i.Width < i.MinWidth + 1)
+                    fullscreen = true;
             }
+
+            if (fullscreen)
+                dtOut = false;
         }
 
         /*
@@ -715,8 +725,16 @@ namespace SurfaceApplication1
 
         protected virtual void OnDoubleTouchDown(ScatterViewItem s, Point p)
         {
-            resizePageToRect(s, getRectFromPoint(true, p));
-
+            if (!dtOut)
+            {
+                resizePageToRect(s, getRectFromPoint(true, p));
+                dtOut = true;
+            }
+            else
+            {
+                resizePagetoSmall(s);
+                dtOut = false;
+            }
             lastTapLocation = new Point(-1000, -1000);
         }
 
@@ -725,31 +743,51 @@ namespace SurfaceApplication1
             return new Rect(200, 200, 1600, 2000);
         }
 
+        private void resizePagetoSmall(ScatterViewItem s)
+        {
+            double endWidth, endHeight;
+            endWidth = s.MinWidth;
+            endHeight = s.MinHeight;
+
+            double xcenter = ((ScatterView)s.Parent).Width / 2;
+            double ycenter = ((ScatterView)s.Parent).Height / 2;
+
+            Storyboard stb = new Storyboard();
+            DoubleAnimation moveWidth = new DoubleAnimation();
+            DoubleAnimation moveHeight = new DoubleAnimation();
+            PointAnimation moveCenter = new PointAnimation();
+
+            Point endPoint = new Point(xcenter, ycenter);
+            moveCenter.From = s.ActualCenter;
+            moveCenter.To = endPoint;
+            moveWidth.From = s.ActualWidth;
+            moveWidth.To = endWidth;
+            moveHeight.From = s.ActualHeight;
+            moveHeight.To = endHeight;
+            moveCenter.Duration = new Duration(TimeSpan.FromMilliseconds(150));
+            moveWidth.Duration = new Duration(TimeSpan.FromMilliseconds(150));
+            moveHeight.Duration = new Duration(TimeSpan.FromMilliseconds(150));
+            moveWidth.FillBehavior = FillBehavior.Stop;
+            moveHeight.FillBehavior = FillBehavior.Stop;
+            moveCenter.FillBehavior = FillBehavior.Stop;
+            stb.Children.Add(moveCenter);
+            stb.Children.Add(moveWidth);
+            stb.Children.Add(moveHeight);
+            Storyboard.SetTarget(moveCenter, s);
+            Storyboard.SetTarget(moveWidth, s);
+            Storyboard.SetTarget(moveHeight, s);
+            Storyboard.SetTargetProperty(moveCenter, new PropertyPath(ScatterViewItem.CenterProperty));
+            Storyboard.SetTargetProperty(moveWidth, new PropertyPath(ScatterViewItem.WidthProperty));
+            Storyboard.SetTargetProperty(moveHeight, new PropertyPath(ScatterViewItem.HeightProperty));
+
+            s.Center = endPoint;
+            s.Width = endWidth;
+            s.Height = endHeight;
+            stb.Begin(this);
+        }
+
         private void resizePageToRect(ScatterViewItem s, Rect r)
         {
-            Grid g = new Grid();
-            ((Grid)s.Content).Children.Add(g);
-            g.ShowGridLines = true;
-            ColumnDefinition c1 = new ColumnDefinition();
-            c1.Width = new GridLength(r.X, GridUnitType.Star);
-            ColumnDefinition c2 = new ColumnDefinition();
-            c2.Width = new GridLength(r.Width, GridUnitType.Star);
-            ColumnDefinition c3 = new ColumnDefinition();
-            c3.Width = new GridLength(SurfaceWindow1.maxPageWidth - r.X - r.Width, GridUnitType.Star);
-            RowDefinition r1 = new RowDefinition();
-            r1.Height = new GridLength(r.Y, GridUnitType.Star);
-            RowDefinition r2 = new RowDefinition();
-            r2.Height = new GridLength(r.Height, GridUnitType.Star);
-            RowDefinition r3 = new RowDefinition();
-            r3.Height = new GridLength(SurfaceWindow1.maxPageHeight - r.Y - r.Height, GridUnitType.Star);
-
-            g.ColumnDefinitions.Add(c1);
-            g.ColumnDefinitions.Add(c2);
-            g.ColumnDefinitions.Add(c3);
-            g.RowDefinitions.Add(r1);
-            g.RowDefinitions.Add(r2);
-            g.RowDefinitions.Add(r3);
-
             bool sizeToHeight = r.Height > r.Width * 1.4;
             double h = r.Height;
             double w = r.Width;
