@@ -26,8 +26,9 @@ namespace SurfaceApplication1
         public Grid _vGrid, _rGrid, _vSwipeGrid, _rSwipeGrid, _vTranslationGrid, _rTranslationGrid;
         public bool _twoPage;
         public ScatterView _vSV, _rSV;
+        public TextBlock _headerTB;
 
-        public Tab(int page, TabItem newTab, Image newVerso, Image newRecto, Canvas canvas, Canvas c_v, Canvas c_r, Grid vGrid, Grid rGrid, Button delBtn, ScatterView vSV, ScatterView rSV, ScatterViewItem vsi, ScatterViewItem rsi, Grid vSwipeGrid, Grid rSwipeGrid, Grid vTranslationGrid, Grid rTranslationGrid)
+        public Tab(int page, TabItem newTab, Image newVerso, Image newRecto, Canvas canvas, Canvas c_v, Canvas c_r, Grid vGrid, Grid rGrid, Button delBtn, ScatterView vSV, ScatterView rSV, ScatterViewItem vsi, ScatterViewItem rsi, Grid vSwipeGrid, Grid rSwipeGrid, Grid vTranslationGrid, Grid rTranslationGrid, TextBlock headerText)
         {
             _page = page;
             _tab = newTab;
@@ -52,6 +53,7 @@ namespace SurfaceApplication1
             _twoPage = true;
             _vSV = vSV;
             _rSV = rSV;
+            _headerTB = headerText;
         }
 
     }

@@ -12,7 +12,7 @@
             <TabControl.Resources>
                 <DataTemplate x:Key="TabHeader" DataType="TabItem">
                     <DockPanel>
-                        <Button x:Name="btnDelete" DockPanel.Dock="Right" Height="30" Width="30" Margin="5,0,0,0" Padding="0" Click="btnDelete_Click">
+                        <Button x:Name="btnDelete" DockPanel.Dock="Right" Height="30" Width="30" Margin="5,0,0,0"   Padding="0" PreviewTouchDown="btnDelete_Click" Click="btnDelete_Click">
                             <TextBlock Height="20" Text="x" Width="20" TextAlignment="Center" FontSize="12"/>
                         </Button>
                         <TextBlock Text="{Binding RelativeSource={RelativeSource AncestorType={x:Type TabItem}}, Path=Header}" />

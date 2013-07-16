@@ -141,18 +141,14 @@
     <Resource Include="XMLFinalContentFile.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Resource>
-    <Content Include="EnglishXML.xml">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
     <Resource Include="flags\english.jpg" />
     <Resource Include="flags\french.jpg" />
     <Resource Include="flags\oldfrench.png" />
-    <Content Include="layout_full.xml">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
     <Resource Include="icons\pageTurn.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Resource>
+    <Resource Include="EnglishXML.xml" />
+    <Resource Include="layout_full.xml" />
     <Content Include="pages\100.jpg">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>

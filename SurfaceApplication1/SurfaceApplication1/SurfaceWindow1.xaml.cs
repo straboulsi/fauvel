@@ -47,7 +47,7 @@ namespace SurfaceApplication1
         public static int minPage = 0;
         public static int maxPage = 95;
         public static Image slideImage1, slideImage2;
-        int scatterBuffer = 3000;
+        int scatterBuffer = 5000;
         int swipeLength = 50;
         int swipeHeight = 10;
         List<Tab> tabArray = new List<Tab>();
@@ -233,7 +233,7 @@ namespace SurfaceApplication1
                 workers.updateRectoImage(currentTab, false);
 
             pageNumberText.Text = PageNamer.getPageText(currentTab._page, currentTab._twoPage);
-            currentTab._tab.Header = (pageNumber - 1).ToString() + "v / " + pageNumber.ToString() + "r";
+            currentTab._headerTB.Text = (pageNumber - 1).ToString() + "v / " + pageNumber.ToString() + "r";
 
             pageSlider.Value = currentTab._page;
 
@@ -244,13 +244,25 @@ namespace SurfaceApplication1
             int buffer = scatterBuffer;
             int count = tabArray.Count;
             TabItem tab = new TabItem();
-            tab.Header = string.Format("0v / 1r");
             tab.FontSize = 25;
             tab.Name = string.Format("tabItem_{0}", count);
-            tab.HeaderTemplate = tabBar.FindResource("TabHeader") as DataTemplate;
-            
-
+            DockPanel heda = new DockPanel();
+            tab.Header = heda;
             Button delBtn = new Button();
+            delBtn.Height = 30;
+            delBtn.Width = 30;
+            delBtn.Margin = new Thickness(10, 0, 0, 0);
+            delBtn.PreviewTouchDown += new EventHandler<TouchEventArgs>(btnDelete_Touch);
+            delBtn.Click += new RoutedEventHandler(btnDelete_Click);
+            TextBlock hedatext = new TextBlock();
+            hedatext.Text = "yo";
+            TextBlock ex = new TextBlock();
+            ex.Text = "x";
+            ex.FontSize = 20;
+            delBtn.Content = ex;
+
+            heda.Children.Add(hedatext);
+            heda.Children.Add(delBtn);
 
             Grid vSwipeGrid = new Grid();
             Grid rSwipeGrid = new Grid();
@@ -393,7 +405,7 @@ namespace SurfaceApplication1
             vScatterView.Items.Add(vScatterItem);
             rScatterView.Items.Add(rScatterItem);
 
-            tabArray.Insert(count, new Tab(2, tab, verso, recto, can, c_v, c_r, vGrid, rGrid, delBtn, vScatterView, rScatterView, vScatterItem, rScatterItem, vSwipeGrid, rSwipeGrid, vTranslationGrid, rTranslationGrid));
+            tabArray.Insert(count, new Tab(2, tab, verso, recto, can, c_v, c_r, vGrid, rGrid, delBtn, vScatterView, rScatterView, vScatterItem, rScatterItem, vSwipeGrid, rSwipeGrid, vTranslationGrid, rTranslationGrid, hedatext));
 
             can.Children.Add(c_v);
             can.Children.Add(c_r);
@@ -405,7 +417,7 @@ namespace SurfaceApplication1
             int versoNum = 2 * pageNumber + 10;
             int rectoNum = 2 * pageNumber + 11;
 
-            currentTab()._tab.Header = (pageNumber - 1).ToString() + "v / " + pageNumber.ToString() + "r";
+            currentTab()._headerTB.Text = (pageNumber - 1).ToString() + "v / " + pageNumber.ToString() + "r";
 
             return tab;
         }
@@ -479,7 +491,7 @@ namespace SurfaceApplication1
             rScatterItem.Center = new Point(rScatterView.Width / 2, rScatterView.Height / 2);
 
             int pageNumber = currentTab()._page;
-            currentTab()._tab.Header = (pageNumber - 1).ToString() + "v / " + pageNumber.ToString() + "r";
+            currentTab()._headerTB.Text = (pageNumber - 1).ToString() + "v / " + pageNumber.ToString() + "r";
 
             currentTab()._twoPage = true;
         }
@@ -563,15 +575,21 @@ namespace SurfaceApplication1
                 TabItem newTab = createTab(1);
             }
 
+            tabArray[tabNumber]._delButton.Visibility = System.Windows.Visibility.Collapsed;
+
             for (int i = 0; i < tabArray.Count; i++)
             {
-                tabArray[i]._delButton.Visibility = System.Windows.Visibility.Collapsed;
                 if (tabArray[i]._tab.Equals(tab))
                     tabNumber = i;
             }
-            //tabArray[tabNumber]._delButton.Visibility = System.Windows.Visibility.Visible;
+            tabArray[tabNumber]._delButton.Visibility = System.Windows.Visibility.Visible;
 
             loadPage();
+        }
+
+        private void btnDelete_Touch(object sender, TouchEventArgs e)
+        {
+            btnDelete_Click(sender, null);
         }
 
         private void btnDelete_Click(object sender, RoutedEventArgs e)
@@ -580,9 +598,20 @@ namespace SurfaceApplication1
             {
                 Tab ct = currentTab();
                 TabItem ti = ct._tab;
-                tabBar.SelectedItem = tabArray[0]._tab;
+                if (tabNumber >= tabBar.Items.Count - 2)
+                    tabBar.SelectedItem = tabArray[tabNumber - 1]._tab;
+                else
+                {
+                    tabBar.SelectedItem = tabArray[tabNumber + 1]._tab;
+                }
                 tabArray.Remove(ct);
                 tabBar.Items.Remove(ti);
+            }
+            TabItem tab = tabBar.SelectedItem as TabItem;
+            for (int i = 0; i < tabArray.Count; i++)
+            {
+                if (tabArray[i]._tab.Equals(tab))
+                    tabNumber = i;
             }
         }
 
@@ -795,30 +824,44 @@ namespace SurfaceApplication1
             double multiplier = 1;
             if (sizeToHeight)
             {
-                if (h > minPageHeight)
+                if (!currentTab()._twoPage && h > minPageLong)
+                    multiplier = minPageLong / h;
+                if(currentTab()._twoPage && h > minPageHeight)
                     multiplier = minPageHeight / h;
             }
             else
             {
-                if (w > minPageWidth)
+                if (!currentTab()._twoPage && w > minPageHeight)
+                    multiplier = minPageHeight / w;
+                if (currentTab()._twoPage && w > minPageWidth)
                     multiplier = minPageWidth / w;
             }
+
             endWidth  = s.MaxWidth  * multiplier;
             endHeight = s.MaxHeight * multiplier;
+            double x, y, xcenter, ycenter;
+            x = (r.Left + r.Width / 2) / maxPageWidth;
+            y = (r.Top + r.Height / 2) / maxPageHeight;
+            xcenter = ((ScatterView)s.Parent).Width / 2;
+            ycenter = ((ScatterView)s.Parent).Height / 2;
 
-            double x = (r.Left + r.Width / 2) / maxPageWidth;
-            double y = (r.Top + r.Height / 2) / maxPageHeight;
-            double xcenter = ((ScatterView)s.Parent).Width / 2;
-            double ycenter = ((ScatterView)s.Parent).Height / 2;
-            xcenter += (.5 - x) * endWidth;
-            ycenter += (.5 - y) * endHeight;
+            if (currentTab()._twoPage)
+            {
+                xcenter += (.5 - x) * endWidth;
+                ycenter += (.5 - y) * endHeight;
+            }
+            else
+            {
+                xcenter += (.5 - y) * endHeight;
+                ycenter += (.5 + x) * endWidth;
+            }
 
-            Storyboard stb = new Storyboard();
+            Point endPoint = new Point(xcenter, ycenter);
+
+            /*Storyboard stb = new Storyboard();
             DoubleAnimation moveWidth = new DoubleAnimation();
             DoubleAnimation moveHeight = new DoubleAnimation();
             PointAnimation moveCenter = new PointAnimation();
-
-            Point endPoint = new Point(xcenter, ycenter);
             moveCenter.From = s.ActualCenter;
             moveCenter.To = endPoint;
             moveWidth.From = s.ActualWidth;
@@ -839,18 +882,18 @@ namespace SurfaceApplication1
             Storyboard.SetTarget(moveHeight, s);
             Storyboard.SetTargetProperty(moveCenter, new PropertyPath(ScatterViewItem.CenterProperty));
             Storyboard.SetTargetProperty(moveWidth,  new PropertyPath(ScatterViewItem.WidthProperty));
-            Storyboard.SetTargetProperty(moveHeight, new PropertyPath(ScatterViewItem.HeightProperty));
+            Storyboard.SetTargetProperty(moveHeight, new PropertyPath(ScatterViewItem.HeightProperty));*/
 
             s.Center = endPoint;
             s.Width = endWidth;
             s.Height = endHeight;
-            stb.Begin(this);
+            //stb.Begin(this);
         }
 
         private bool IsDoubleTap(TouchEventArgs e)
         {
             Point currentTapLocation = e.GetTouchPoint(this).Position;
-            bool tapsAreCloseInDistance = Math.Abs(currentTapLocation.X - lastTapLocation.X) < 20 && Math.Abs(currentTapLocation.Y - lastTapLocation.Y) < 20;
+            bool tapsAreCloseInDistance = Math.Abs(currentTapLocation.X - lastTapLocation.X) < 30 && Math.Abs(currentTapLocation.Y - lastTapLocation.Y) < 30;
             lastTapLocation = currentTapLocation;
 
             TimeSpan elapsed = doubleTapSW.Elapsed;
