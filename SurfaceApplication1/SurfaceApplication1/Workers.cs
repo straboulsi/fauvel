@@ -131,7 +131,10 @@ namespace SurfaceApplication1
                 if (slideImageChange.CancellationPending) return;
                 image1.UriSource = new Uri("smallpages/" + pn.ToString() + ".jpg", UriKind.Relative);
                 if (slideImageChange.CancellationPending) return;
-                image2.UriSource = new Uri("smallpages/" + (pn + 1).ToString() + ".jpg", UriKind.Relative);
+                if(slideInt != SurfaceWindow1.maxPage)
+                    image2.UriSource = new Uri("smallpages/" + (pn + 1).ToString() + ".jpg", UriKind.Relative);
+                else
+                    image2.UriSource = new Uri("smallpages/" + pn.ToString() + ".jpg", UriKind.Relative);
                 if (slideImageChange.CancellationPending) return;
                 image1.EndInit();
                 image2.EndInit();

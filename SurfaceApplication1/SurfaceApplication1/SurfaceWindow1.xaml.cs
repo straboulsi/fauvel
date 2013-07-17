@@ -235,7 +235,10 @@ namespace SurfaceApplication1
             pageNumberText.Text = pageText;
             currentTab._headerTB.Text = pageText;
 
-            pageSlider.Value = currentTab._page;
+            if(currentTab._twoPage)
+                pageSlider.Value = currentTab._page / 2;
+            else
+                pageSlider.Value = currentTab._page;
 
         }
 
@@ -496,10 +499,12 @@ namespace SurfaceApplication1
             vScatterItem.Center = new Point(vScatterView.Width / 2, vScatterView.Height / 2);
             rScatterItem.Center = new Point(rScatterView.Width / 2, rScatterView.Height / 2);
 
-            int pageNumber = currentTab()._page;
-            currentTab()._headerTB.Text = (pageNumber - 1).ToString() + "v / " + pageNumber.ToString() + "r";
-
             currentTab()._twoPage = true;
+
+            int pageNumber = currentTab()._page;
+            String pageText = PageNamer.getPageText(pageNumber, currentTab()._twoPage);
+            pageNumberText.Text = pageText;
+            currentTab()._headerTB.Text = pageText;
         }
 
         private string getPageFromNumber(int number)
@@ -559,6 +564,11 @@ namespace SurfaceApplication1
             rScatterItem.Center = new Point(scatterBuffer + minPageLong / 2, scatterBuffer + minPageHeight / 2);
 
             currentTab()._twoPage = false;
+
+            int pageNumber = currentTab()._page;
+            String pageText = PageNamer.getPageText(pageNumber, currentTab()._twoPage);
+            pageNumberText.Text = pageText;
+            currentTab()._headerTB.Text = pageText;
         }
 
         /*
@@ -627,13 +637,29 @@ namespace SurfaceApplication1
             SurfaceSlider slider = (SurfaceSlider)sender;
             double val = slider.Value;
             int onVal = (int)Math.Round(val);
-            SliderText.Text = (onVal).ToString();
+            if (currentTab()._twoPage)
+            {
+                SliderText.Text = PageNamer.getPageText(2 * onVal, true);
+            }
+            else
+            {
+                SliderText.Text = PageNamer.getPageText(onVal, false);
+            }
 
             SliderText.Margin = new Thickness(SliderDisplay.Width / 2 - SliderText.ActualWidth / 2, -swipeHeight, 0, 0);
             double middle = 1160 + (slider.Width - 30) * onVal / slider.Maximum;
             SliderDisplay.Margin = new Thickness(middle, height, 0, 0);
             SliderDisplay.Opacity = 1;
-
+            if (currentTab()._twoPage)
+            {
+                SliderImage1.Margin = new Thickness(0, 0, 0, 0);
+                SliderImage2.Opacity = 100;
+            }
+            else
+            {
+                SliderImage1.Margin = new Thickness(50, 0, 0, 0);
+                SliderImage2.Opacity = 0;
+            }
             workers.updateSlideImage(onVal);
         }
 
@@ -644,7 +670,10 @@ namespace SurfaceApplication1
         {
             SliderDisplay.Opacity = 0;
             SurfaceSlider slider = (SurfaceSlider)sender;
-            goToPage((int)Math.Round(slider.Value));
+            if (currentTab()._twoPage)
+                goToPage((int)Math.Round(2 * slider.Value));
+            else
+                goToPage((int)Math.Round(slider.Value));
         }
 
         /*
