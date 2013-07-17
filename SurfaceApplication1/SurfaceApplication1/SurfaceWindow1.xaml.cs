@@ -103,7 +103,9 @@ namespace SurfaceApplication1
             Tab tab = currentTab();
             if (tab._twoPage)
             {
-                goToPage((tab._page - 2) % 2);
+                int newPage = tab._page - 2;
+                newPage -= newPage % 2;
+                goToPage(newPage);
             }
             else
             {
@@ -111,12 +113,16 @@ namespace SurfaceApplication1
             }
         }
 
+
+
         private void next_Click(object sender, RoutedEventArgs e)
         {
             Tab tab = currentTab();
             if (tab._twoPage)
             {
-                goToPage((tab._page + 2) % 2);
+                int newPage = tab._page + 2;
+                newPage -= newPage % 2;
+                goToPage(newPage);
             }
             else
             {
@@ -129,7 +135,12 @@ namespace SurfaceApplication1
             Tab tab = currentTab();
             tab._page = page;
             if (page > maxPage)
-                tab._page = maxPage;
+            {
+                if(currentTab()._twoPage)
+                    tab._page = maxPage - 1;
+                else
+                    tab._page = maxPage;
+            }
             if (tab._page < minPage)
                 tab._page = minPage;
             loadPage();
@@ -189,40 +200,28 @@ namespace SurfaceApplication1
 
             /* end translations */
 
-            if (currentTab._twoPage)
-            {
-                currentTab._vSVI.Width = minPageWidth;
-                currentTab._vSVI.Height = minPageHeight;
-                currentTab._rSVI.Width = minPageWidth;
-                currentTab._rSVI.Height = minPageHeight;
-            }
-            else
-            {
-                currentTab._vSVI.Width = minPageHeight;
-                currentTab._vSVI.Height = minPageLong;
-                currentTab._rSVI.Width = minPageHeight;
-                currentTab._rSVI.Height = minPageLong;
-            }
+            currentTab._vSVI.Width = currentTab._vSVI.MinWidth;
+            currentTab._vSVI.Height = currentTab._vSVI.MinHeight;
+            currentTab._rSVI.Width = currentTab._rSVI.MinWidth;
+            currentTab._rSVI.Height = currentTab._rSVI.MinHeight;
             currentTab._rSVI.Center = new Point(currentTab._rSV.Width / 2, currentTab._rSV.Height / 2);
             currentTab._vSVI.Center = new Point(currentTab._vSV.Width / 2, currentTab._vSV.Height / 2);
 
             int pageNumber = currentTab._page;
-            int versoNum = 2 * pageNumber + 10;
-            int rectoNum = 2 * pageNumber + 11;
 
             Image verso = currentTab._verso;
             Image recto = currentTab._recto;
 
             BitmapImage image = new BitmapImage();
             image.BeginInit();
-            image.UriSource = new Uri("smallpages/" + (2 * currentTab._page + 10).ToString() + ".jpg", UriKind.Relative);
+            image.UriSource = new Uri("smallpages/" + (currentTab._page + 10).ToString() + ".jpg", UriKind.Relative);
             image.EndInit();
             image.Freeze();
             verso.Source = image;
 
             BitmapImage image2 = new BitmapImage();
             image2.BeginInit();
-            image2.UriSource = new Uri("smallpages/" + (2 * currentTab._page + 11).ToString() + ".jpg", UriKind.Relative);
+            image2.UriSource = new Uri("smallpages/" + (currentTab._page + 11).ToString() + ".jpg", UriKind.Relative);
             image2.EndInit();
             image2.Freeze();
             recto.Source = image2;
@@ -232,8 +231,9 @@ namespace SurfaceApplication1
             if (!workers.rectoImageChange.IsBusy)
                 workers.updateRectoImage(currentTab, false);
 
-            pageNumberText.Text = PageNamer.getPageText(currentTab._page, currentTab._twoPage);
-            currentTab._headerTB.Text = (pageNumber - 1).ToString() + "v / " + pageNumber.ToString() + "r";
+            String pageText = PageNamer.getPageText(currentTab._page, currentTab._twoPage);
+            pageNumberText.Text = pageText;
+            currentTab._headerTB.Text = pageText;
 
             pageSlider.Value = currentTab._page;
 
@@ -290,6 +290,8 @@ namespace SurfaceApplication1
             rScatterItem.PreviewTouchUp += new EventHandler<TouchEventArgs>(rightSwipeDetectionStop);
             vScatterItem.MouseWheel += new System.Windows.Input.MouseWheelEventHandler(wheelIt);
             rScatterItem.MouseWheel += new System.Windows.Input.MouseWheelEventHandler(wheelIt);
+            vScatterItem.PreviewMouseLeftButtonDown += new MouseButtonEventHandler(leftMouse);
+            vScatterItem.PreviewMouseRightButtonDown += new MouseButtonEventHandler(rightMouse);
             vScatterView.HorizontalAlignment = System.Windows.HorizontalAlignment.Left;
             rScatterView.HorizontalAlignment = System.Windows.HorizontalAlignment.Left;
             rScatterView.Margin = new System.Windows.Thickness(minPageWidth, 0, 0, 0);
@@ -412,13 +414,7 @@ namespace SurfaceApplication1
             tab.Content = can;
             tabBar.Items.Insert(tabArray.Count - 1, tab);
             tabBar.SelectedIndex = tabArray.Count - 1;
-
-            int pageNumber = tabArray[tabNumber]._page;
-            int versoNum = 2 * pageNumber + 10;
-            int rectoNum = 2 * pageNumber + 11;
-
-            currentTab()._headerTB.Text = (pageNumber - 1).ToString() + "v / " + pageNumber.ToString() + "r";
-
+            
             return tab;
         }
 
@@ -438,6 +434,16 @@ namespace SurfaceApplication1
                 width = item.MinWidth;
             item.Height = height;
             item.Width = width;
+        }
+
+        private void leftMouse(object sender, MouseButtonEventArgs e)
+        {
+            prev_Click(null, null);
+        }
+
+        private void rightMouse(object sender, MouseButtonEventArgs e)
+        {
+            next_Click(null, null);
         }
 
         private void swapOrientation(object sender, RoutedEventArgs e)

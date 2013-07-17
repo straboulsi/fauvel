@@ -58,7 +58,7 @@ namespace SurfaceApplication1
             versoImageChange.DoWork += (s, e) =>
             {
                 e.Result = null;
-                int pn = 2 * tabV._page + 10;
+                int pn = tabV._page + 10;
                 BitmapImage image = new BitmapImage();
                 image.BeginInit();
                 if (!bigV)
@@ -67,7 +67,7 @@ namespace SurfaceApplication1
                 image.UriSource = new Uri("pages/" + pn.ToString() + ".jpg", UriKind.Relative);
                 image.EndInit();
                 image.Freeze();
-                if (pn == 2 * tabR._page + 10)
+                if (pn == tabR._page + 10)
                     e.Result = image;
                 else
                     return;
@@ -89,7 +89,7 @@ namespace SurfaceApplication1
 
             rectoImageChange.DoWork += (s, e) =>
             {
-                int pn = 2 * tabR._page + 11;
+                int pn = tabR._page + 11;
                 BitmapImage image = new BitmapImage();
                 image.BeginInit();
                 if (!bigR)
@@ -98,7 +98,7 @@ namespace SurfaceApplication1
                 image.UriSource = new Uri("pages/" + pn.ToString() + ".jpg", UriKind.Relative);
                 image.EndInit();
                 image.Freeze();
-                if (pn == 2 * tabR._page + 11)
+                if (pn == tabR._page + 11)
                     e.Result = image;
                 else
                     return;
@@ -121,7 +121,7 @@ namespace SurfaceApplication1
             slideImageChange.DoWork += (s, e) =>
             {
                 e.Result = null;
-                int pn = 2 * slideInt + 10;
+                int pn = slideInt + 10;
                 BitmapImage image1 = new BitmapImage();
                 BitmapImage image2 = new BitmapImage();
                 image1.BeginInit();

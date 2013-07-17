@@ -25,10 +25,13 @@ namespace SurfaceApplication1
         {
             if (i > SurfaceWindow1.maxPage)
                 return "";
-            if (twopage)
-                return pageNames[2 * i] + " / " + pageNames[2 * i + 1];
             else
-                return pageNames[i];
+            {
+                if (twopage)
+                    return pageNames[i] + " / " + pageNames[i + 1];
+                else
+                    return pageNames[i];
+            }
         }
     }
 }
