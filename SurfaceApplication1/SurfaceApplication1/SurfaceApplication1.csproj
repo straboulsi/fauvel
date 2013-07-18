@@ -146,7 +146,9 @@
     <Resource Include="flags\oldfrench.png" />
     <Resource Include="EnglishXML.xml" />
     <Resource Include="layout_full.xml" />
-    <Content Include="icons\pageTurn.png" />
+    <Resource Include="icons\pageTurn.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
     <Content Include="pages\100.jpg">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
