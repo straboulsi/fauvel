@@ -7,8 +7,8 @@
     WindowStyle="None" ResizeMode="NoResize"
     WindowStartupLocation="CenterScreen" WindowState="Maximized"
     >
-	<Canvas x:Name="mother">
-		<TabControl x:Name="tabBar" SelectionChanged="tabBar_SelectionChanged" Height="980" Width="1344" VerticalContentAlignment="Center" VerticalAlignment="Center" HorizontalAlignment="Center" TabStripPlacement="Bottom">
+    <Canvas x:Name="mother" Background="White">
+        <TabControl x:Name="tabBar" SelectionChanged="tabBar_SelectionChanged" Height="980" Width="1344" VerticalContentAlignment="Center" VerticalAlignment="Center" HorizontalAlignment="Center" TabStripPlacement="Bottom">
             <TabControl.Resources>
                 <DataTemplate x:Key="TabHeader" DataType="TabItem">
                     <DockPanel>
@@ -30,20 +30,90 @@
                     <Setter Property="ScrollViewer.HorizontalScrollBarVisibility" Value="Auto"></Setter>
                 </Style>
             </TabControl.Resources>
-		</TabControl>
-        <TabControl x:Name="sideBar" Canvas.Left="1344" Height="980" Width="576" VerticalContentAlignment="Center" VerticalAlignment="Center" HorizontalAlignment="Center" TabStripPlacement="Bottom">
-            <TabItem>
-                
-            </TabItem>
-            <TabItem>
+        </TabControl>
+        <TabControl x:Name="tabDynamic" ItemsSource="{Binding}" Canvas.Left="1344" Height="980" Width="576" SelectionChanged="searchTabDynamic_SelectionChanged" 
+                    VerticalContentAlignment="Center" VerticalAlignment="Center" HorizontalAlignment="Center" TabStripPlacement="Top" FontFamily="Cambria">
 
-            </TabItem>
-            <TabItem>
+            <TabControl.Resources>
+                <DataTemplate x:Key="NewSearchTab" DataType="TabItem">
+                    <DockPanel>
 
-            </TabItem>
-            <TabItem>
+                        <Grid>
+                            <Image Width="100" Height="40" Source="magnifyingglass.png" Opacity="0.3"/>
+                            <TextBlock Text="" VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="21"/>
+                        </Grid>
 
-            </TabItem>
+
+                    </DockPanel>
+                </DataTemplate>
+
+                <DataTemplate x:Key="NewAnnotateTab" DataType="TabItem">
+                    <DockPanel>
+
+                        <Grid>
+                            <Image Width="100" Height="40" Source="pencil.jpg" Opacity="0.3"/>
+                            <TextBlock Text="" VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="21"/>
+                        </Grid>
+
+                    </DockPanel>
+                </DataTemplate>
+
+                <DataTemplate x:Key="NewStudyTab" DataType="TabItem">
+                    <DockPanel>
+
+                        <Grid>
+                            <Image Width="100" Height="40" Source="musicnote.png" Opacity="0.3"/>
+                            <TextBlock Text="" VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="21"/>
+                        </Grid>
+
+                    </DockPanel>
+                </DataTemplate>
+
+                <Style TargetType="TextBox">
+                    <Setter Property="VerticalAlignment" Value="Stretch"></Setter>
+                    <Setter Property="HorizontalAlignment" Value="Stretch"></Setter>
+                    <Setter Property="AcceptsReturn" Value="True"></Setter>
+                    <Setter Property="TextWrapping" Value="WrapWithOverflow"></Setter>
+                    <Setter Property="MaxLines" Value="5000"></Setter>
+                    <Setter Property="ScrollViewer.VerticalScrollBarVisibility" Value="Auto"></Setter>
+                    <Setter Property="ScrollViewer.HorizontalScrollBarVisibility" Value="Auto"></Setter>
+                </Style>
+
+                <Style x:Key="RoundButtonTemplate" TargetType="Button">
+                    <Setter Property="Background" Value="White"/>
+                    <Setter Property="Foreground" Value="Black" />
+                    <Setter Property="Height" Value="120"/>
+                    <Setter Property="Width" Value="120"/>
+
+                    <Setter Property="Template">
+                        <Setter.Value>
+                            <ControlTemplate TargetType="Button">
+                                <Border BorderBrush="Black" CornerRadius="15" Background="{TemplateBinding Background}"
+                                BorderThickness="5">
+                                    <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center">
+
+                                    </ContentPresenter>
+                                </Border>
+                            </ControlTemplate>
+                        </Setter.Value>
+                    </Setter>
+                </Style>
+
+                <Style x:Key="ButtonTextTemplate" TargetType="TextBlock">
+                    <Setter Property="HorizontalAlignment" Value="Center"/>
+                    <Setter Property="VerticalAlignment" Value="Center"/>
+                    <Setter Property="FontWeight" Value="Bold"/>
+                    <Setter Property="FontSize" Value="25"/>
+                    <Setter Property="FontFamily" Value="Cambria"/>
+                </Style>
+
+                <Style x:Key="ButtonImageTemplate" TargetType="Image">
+                    <Setter Property="Height" Value="100"/>
+                    <Setter Property="Width" Value="100"/>
+                    <Setter Property="Opacity" Value="0.3"/>
+                </Style>
+
+            </TabControl.Resources>
         </TabControl>
         <Canvas x:Name="toolbar" Height="100" Width="1920" Margin="0" Background="Gray" Canvas.Top="980" d:LayoutOverrides="Width">
             <Button x:Name="prev" Height="84" Canvas.Left="640" Width="100" Canvas.Top="8" VerticalAlignment="Top" TouchDown="prev_Click" Click="prev_Click">
@@ -65,7 +135,7 @@
                     </ItemsPanelTemplate>
                 </ListBox.ItemsPanel>
                 <ListBoxItem x:Name="language1" Width="100" Height="60" ClipToBounds="True" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Content="None">
-                    
+
                 </ListBoxItem>
                 <ListBoxItem x:Name="language2" Width="100" Height="60" ClipToBounds="True" HorizontalContentAlignment="Center" VerticalContentAlignment="Center">
                     <Image Source="/flags/oldfrench.png" Stretch="UniformToFill" Width="90" Height="50" ClipToBounds="True"/>
@@ -83,6 +153,6 @@
             <Image x:Name="SliderImage2" Source="/pages/11.jpg" Width="100" Stretch="UniformToFill" Canvas.Left="100" />
             <TextBlock x:Name="SliderText" HorizontalAlignment="Center" Canvas.Top="-70" Text=" " FontSize="50" Foreground="#222222"/>
         </Canvas>
-        
-	</Canvas>
+
+    </Canvas>
 </s:SurfaceWindow>

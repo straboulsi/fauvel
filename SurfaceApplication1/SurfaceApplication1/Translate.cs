@@ -9,6 +9,12 @@ using System.Xml.XPath;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
+using System.Windows.Data;
+using System.Windows.Documents;
+using System.Windows.Input;
+using System.Windows.Media.Imaging;
+using System.Windows.Navigation;
+using System.Windows.Shapes;
 using Microsoft.Surface;
 using Microsoft.Surface.Presentation;
 using Microsoft.Surface.Presentation.Controls;
@@ -59,13 +65,15 @@ namespace SurfaceApplication1
                     else
                         toDisplay += xn.InnerText.Trim() + "\r\n";
                 }
-                 
+
 
 
             }
             catch (Exception e)
             {
-                toDisplay = "Can't find these lines.. Try again?";
+                ///toDisplay = "Can't find these lines.. Try again?";
+                Console.Write(e.StackTrace);
+                Console.Read();
             }
 
 
@@ -122,7 +130,7 @@ namespace SurfaceApplication1
 
             try
             {
-               XmlNodeList foundNode;
+                XmlNodeList foundNode;
 
                 page = page.Substring(2);
                 foundNode = xml.DocumentElement.SelectNodes("//pb[@facs='#" + page + "']/lg");
@@ -140,7 +148,7 @@ namespace SurfaceApplication1
                     boxes.Add(new TranslationBox(s, getPoetry(start, end, xml), getEnglish(start, end, engXml), getPoint(s, 1, layoutXml), getPoint(s, 2, layoutXml)));
                 }
 
-                
+
             }
             catch (Exception e)
             {
@@ -152,54 +160,82 @@ namespace SurfaceApplication1
 
 
 
+
         /**
          * Fetches top left and bottom right coordinates from Layout XML file when given tag id of object.
          * The int whichPt should = 1 if you want top left point and 2 if you want bottom right.
          **/
-        public static Point getPoint(String tag, int whichPt, XmlDocument xml)
+        public static Point getPoint(String tag, int whichPt, XmlDocument layoutXml)
         {
             Point TL = new Point();
 
             try
             {
-               XmlNodeList x = xml.DocumentElement.SelectNodes("//surface/zone");
-                foreach (XmlNode xn in x)
-                {
-                    if ((xn.Attributes["id"].Value).Equals(tag))
-                    {
-                        if (whichPt == 1)
-                            TL = new Point(Convert.ToInt32(xn.Attributes["ulx"].Value), Convert.ToInt32(xn.Attributes["uly"].Value));
-                        else if (whichPt == 2)
-                            TL = new Point(Convert.ToInt32(xn.Attributes["lrx"].Value), Convert.ToInt32(xn.Attributes["lry"].Value));
-                    }
-                }
+
+                XmlNode xn = layoutXml.DocumentElement.SelectSingleNode("//surface/zone[@id='" + tag + "']");
+
+                if (whichPt == 1)
+                    TL = new Point(Convert.ToInt32(xn.FirstChild.Attributes["ulx"].Value), Convert.ToInt32(xn.FirstChild.Attributes["uly"].Value));
+                else if (whichPt == 2)
+                    TL = new Point(Convert.ToInt32(xn.FirstChild.Attributes["lrx"].Value), Convert.ToInt32(xn.FirstChild.Attributes["lry"].Value));
+
             }
             catch (Exception e)
             {
                 Console.Write(e.StackTrace);
                 Console.Read();
             }
+
             return TL;
         }
+
+        public static Point getLinePoint(String lineNum, int whichPt, XmlDocument layoutXml)
+        {
+            Point TL = new Point();
+
+            try
+            {
+
+                XmlNode xn = layoutXml.DocumentElement.SelectSingleNode("//l[@n='" + lineNum + "']");
+                XmlNode section = xn.ParentNode;
+
+                if (whichPt == 1)
+                    TL = new Point(Convert.ToInt32(section.FirstChild.Attributes["ulx"].Value), Convert.ToInt32(section.FirstChild.Attributes["uly"].Value));
+                else if (whichPt == 2)
+                    TL = new Point(Convert.ToInt32(section.FirstChild.Attributes["lrx"].Value), Convert.ToInt32(section.FirstChild.Attributes["lry"].Value));
+
+            }
+            catch (Exception e)
+            {
+                Console.Write(e.StackTrace);
+                Console.Read();
+            }
+
+            return TL;
+        }
+
 
         /**
          * Fetches English translation for a section of poetry, given starting and ending line numbers.
          **/
-        public static String getEnglish(int start, int end, XmlDocument xml)
+        public static String getEnglish(int start, int end, XmlDocument engXml)
         {
             String toDisplay = "";
 
             try
             {
-                XmlNodeList foundNodes = xml.DocumentElement.SelectNodes("//lg/l[@n>=" + start + "and @n<=" + end + "]");
+                XmlNodeList foundNodes = engXml.DocumentElement.SelectNodes("//lg/l[@n>=" + start + "and @n<=" + end + "]");
                 foreach (XmlNode xn in foundNodes)
                 {
                     toDisplay += xn.InnerText.Trim() + "\r\n";
                 }
+
             }
             catch (Exception e)
             {
-                toDisplay = "Can't find the English.. Try again?";
+                ///toDisplay = "Can't find the English.. Try again?";
+                Console.Write(e.StackTrace);
+                Console.Read();
             }
 
             toDisplay = toDisplay.TrimEnd('\r', '\n');
@@ -316,13 +352,13 @@ namespace SurfaceApplication1
         }
 
 
-        public static String searchFrPoetry(String search, int caseSensitive, int wordSensitive, XmlDocument xml)
+        public static List<SearchResult> searchFrPoetry(String search, int caseSensitive, int wordSensitive, XmlDocument xml, XmlDocument engXml, XmlDocument layoutXml)
         {
-            String findings = "";
+
+            List<SearchResult> results = new List<SearchResult>();
 
             try
             {
-                
                 XmlNodeList xnl = xml.DocumentElement.SelectNodes("//lg/l");
 
                 int numFound = 0;
@@ -333,79 +369,146 @@ namespace SurfaceApplication1
 
                     if (foundBySpecifiedCase(search, xn.InnerText, caseSensitive) && foundBySpecifiedWord(search, xn.InnerText, wordSensitive))
                     {
+                        SearchResult newResult = new SearchResult();
+
                         // Gets rid of drop caps
                         if (xn.ChildNodes.Count > 1)
                             xn.RemoveChild(xn.FirstChild);
 
-
                         numFound++;
                         String lineNum = xn.Attributes["n"].Value;
+                        newResult.lineNum = Convert.ToInt32(lineNum);
+                        newResult.resultType = 1;
                         XmlNode page = xn.ParentNode.ParentNode;
                         String pageNum = page.Attributes["facs"].Value;
-
                         pageNum = "Fo" + pageNum.Substring(1);
-                        findings += pageNum + " " + lineNum + " " + xn.InnerText.Trim() + "\r\n";
+                        newResult.folio = pageNum;
+                        newResult.excerpt = getPoetry(newResult.lineNum - 4, newResult.lineNum + 4, xml);
+                        newResult.text1 = xn.InnerText.Trim();
+                        Console.Write(newResult.text1);
+                        newResult.text2 = getEnglish(newResult.lineNum, newResult.lineNum, engXml);
 
 
+
+
+                        newResult.thumbnail = convertImage(Thumbnailer.cropImage(Thumbnailer.getImage(newResult.folio, layoutXml), Thumbnailer.getLineRect(lineNum, layoutXml)));
+
+
+                        results.Add(newResult);
                     }
 
                 }
 
-                findings = "TOTAL: " + numFound + " results\r\n\r\n" + findings;
 
             }
             catch (Exception e)
             {
-                findings = "Sorry, can't find your search! Try again?";
+                Console.Write(e.StackTrace);
+                Console.Read();
             }
 
+            return results;
+        }
 
+        public static String getPageByLineNum(int lineNum, XmlDocument xml)
+        {
+            String folio = "Fo";
 
-            findings = findings.TrimEnd('\r', '\n');
-            return findings;
+            try
+            {
+                XmlNode xnl = xml.DocumentElement.SelectSingleNode("//lg/l[@n=" + lineNum + "]");
+                String folioTemp = xnl.ParentNode.ParentNode.Attributes["facs"].Value;
+                folioTemp = folioTemp.Substring(1);
+                folio += folioTemp;
+            }
+            catch (Exception e)
+            {
+                Console.Write(e.StackTrace);
+                Console.Read();
+            }
+
+            return folio;
         }
 
 
 
-
-        public static String searchEngPoetry(String search, int caseSensitive, int wordSensitive, XmlDocument xml)
+        // lg, p, figure = 1, 2, 3
+        public static String getPageByTag(String tag, int type, XmlDocument xml)
         {
-            String findings = "";
+            String folio = "Fo";
+            String tagType = "";
+            if (type == 1)
+                tagType = "lg";
+            else if (type == 2)
+                tagType = "p";
+            else if (type == 3)
+                tagType = "figure";
 
             try
             {
-                XmlNodeList xnl = xml.DocumentElement.SelectNodes("//lg/l");
+                XmlNode xnl = xml.DocumentElement.SelectSingleNode("//" + tagType + "[@id='" + tag + "']");
+                String folioTemp = xnl.ParentNode.Attributes["facs"].Value;
+                folioTemp = folioTemp.Substring(1);
+                folio += folioTemp;
+            }
+
+            catch (Exception e)
+            {
+                Console.Write(e.StackTrace);
+                Console.Read();
+            }
+
+            return folio;
+
+        }
+
+
+
+        public static List<SearchResult> searchEngPoetry(String search, int caseSensitive, int wordSensitive, XmlDocument xml, XmlDocument engXml, XmlDocument layoutXml)
+        {
+            List<SearchResult> results = new List<SearchResult>();
+
+            try
+            {
+                XmlNodeList xnl = engXml.DocumentElement.SelectNodes("//lg/l");
 
                 int numFound = 0;
 
                 foreach (XmlNode xn in xnl)
                 {
+
                     if (foundBySpecifiedCase(search, xn.InnerText, caseSensitive) && foundBySpecifiedWord(search, xn.InnerText, wordSensitive))
                     {
+                        SearchResult newResult = new SearchResult();
                         numFound++;
                         String lineNum = xn.Attributes["n"].Value;
+                        newResult.lineNum = Convert.ToInt32(lineNum);
+                        newResult.resultType = 1;
+                        newResult.text1 = xn.InnerText.Trim();
+                        newResult.text2 = getPoetry(newResult.lineNum, newResult.lineNum, xml);
+                        newResult.folio = getPageByLineNum(newResult.lineNum, xml);
+                        newResult.excerpt = getEnglish(newResult.lineNum - 4, newResult.lineNum + 4, engXml);
+                        newResult.thumbnail = convertImage(Thumbnailer.cropImage(Thumbnailer.getImage(newResult.folio, layoutXml), Thumbnailer.getLineRect(lineNum, layoutXml)));
 
-                        findings += lineNum + " " + xn.InnerText.Trim() + "\r\n";
-
+                        results.Add(newResult);
                     }
                 }
 
-                findings = "TOTAL: " + numFound + " results\r\n\r\n" + findings;
             }
             catch (Exception e)
             {
-                findings = "Sorry, can't find your search! Try again?";
+                Console.Write(e.StackTrace);
+                Console.Read();
             }
 
-
-            findings = findings.TrimEnd('\r', '\n');
-            return findings;
+            return results;
         }
 
 
-        public static String searchLyrics(String search, int caseSensitive, int wordSensitive, XmlDocument xml)
+        public static List<SearchResult> searchLyrics(String search, int caseSensitive, int wordSensitive, XmlDocument xml, XmlDocument layoutXml)
         {
-            String findings = "";
+            List<SearchResult> results = new List<SearchResult>();
+            String thisTitle = "";
 
             try
             {
@@ -413,39 +516,139 @@ namespace SurfaceApplication1
 
                 int numFound = 0;
 
-                foreach (XmlNode xn in xnl)
+                foreach (XmlNode node in xnl)
                 {
-                    if (foundBySpecifiedCase(search, xn.InnerText, caseSensitive) && foundBySpecifiedWord(search, xn.InnerText, wordSensitive))
+                    if (foundBySpecifiedCase(search, node.InnerText, caseSensitive) && foundBySpecifiedWord(search, node.InnerText, wordSensitive))
                     {
+                        XmlNode xn = lyricsOnly(node);
+
+                        SearchResult newResult = new SearchResult();
+                        newResult.resultType = 2;
                         numFound++;
                         String str = xn.InnerText;
+                        String[] allLyrics = str.Trim().Split(new String[] { "\r\n", "\n" }, StringSplitOptions.None);
+
+
+                        int lyricLineNum = -5;
+                        for (int i = 0; i < allLyrics.Length; i++)
+                        {
+                            String thisLine = allLyrics[i];
+                            if (foundBySpecifiedCase(search, allLyrics[i], caseSensitive) && foundBySpecifiedWord(search, allLyrics[i], wordSensitive))
+                            {
+                                lyricLineNum = i;
+                                break;
+                            }
+                        }
+
+                        int firstLine = lyricLineNum - 3;
+                        int lastLine = lyricLineNum + 3;
+                        if (firstLine < 0)
+                            firstLine = 0;
+                        if (lastLine >= allLyrics.Length)
+                            lastLine = allLyrics.Length - 1;
+
+                        if (firstLine > 0)
+                            newResult.excerpt += "...\r\n";
+
+                        for (int i = firstLine; i <= lastLine; i++)
+                            newResult.excerpt += allLyrics[i].Trim() + "\r\n";
+
+                        if (lastLine != allLyrics.Length - 1)
+                            newResult.excerpt += "...";
+
                         int index = str.IndexOf(")");
                         str = str.Substring(0, index + 1); // The title of the musical object
-                        String tag = xn.Attributes["id"].Value;
-
-
-                        String page = "Fo" + (xn.ParentNode.Attributes["facs"].Value).Substring(1);
-                        findings += page + " " + tag + " " + str + "\r\n";
+                        thisTitle = str;
+                        newResult.text1 = str.Trim();
+                        newResult.tag = xn.Attributes["id"].Value;
+                        newResult.folio = "Fo" + (xn.ParentNode.Attributes["facs"].Value).Substring(1);
+                        newResult.resultType = 2;
+                        String tag = newResult.tag.Substring(0, newResult.tag.Length - 2);
+                        Console.Write(tag);
+                        newResult.thumbnail = convertImage(Thumbnailer.cropImage(Thumbnailer.getImage(newResult.folio, layoutXml), Thumbnailer.getRect(tag, layoutXml)));
+                        results.Add(newResult);
                     }
+
                 }
 
-                findings = "TOTAL: " + numFound + " results\r\n\r\n" + findings;
 
             }
             catch (Exception e)
             {
-                findings = "Sorry, can't find your search! Try again?";
+                Console.Write(e.StackTrace);
+                Console.Read();
             }
 
-            findings = findings.TrimEnd('\r', '\n');
-            return findings;
+
+            return results;
+        }
+
+        public static System.Windows.Controls.Image convertImage(System.Drawing.Image gdiImg)
+        {
+
+            System.Windows.Controls.Image img = new System.Windows.Controls.Image();
+
+            //convert System.Drawing.Image to WPF image
+            System.Drawing.Bitmap bmp = new System.Drawing.Bitmap(gdiImg);
+            IntPtr hBitmap = bmp.GetHbitmap();
+            System.Windows.Media.ImageSource WpfBitmap = System.Windows.Interop.Imaging.CreateBitmapSourceFromHBitmap(hBitmap, IntPtr.Zero, Int32Rect.Empty, BitmapSizeOptions.FromEmptyOptions());
+
+            img.Source = WpfBitmap;
+            img.Width = 500;
+            img.Height = 600;
+            img.Stretch = System.Windows.Media.Stretch.Fill;
+            return img;
         }
 
 
 
-        public static String searchPicCaptions(String search, int caseSensitive, int wordSensitive, XmlDocument xml)
+        // Filters out all cps, dcs, nvs, etc.
+        public static XmlNode lyricsOnly(XmlNode originalNode)
         {
-            String findings = "";
+            XmlNodeList cps = originalNode.SelectNodes("cp");
+            if (cps.Count != 0)
+            {
+                foreach (XmlNode node in cps)
+                    originalNode.RemoveChild(node);
+            }
+
+            XmlNode nv = originalNode.SelectSingleNode("nv");
+            if (nv != null)
+                originalNode.RemoveChild(nv);
+
+            XmlNodeList vs = originalNode.SelectNodes("v");
+            if (vs.Count == 0)
+            {
+                XmlNodeList dcs = originalNode.SelectNodes("dc");
+                if (dcs != null)
+                {
+                    foreach (XmlNode node in dcs)
+                        originalNode.RemoveChild(node);
+                }
+
+            }
+            else
+            {
+                foreach (XmlNode voice in vs)
+                {
+                    XmlNodeList dcs = voice.SelectNodes("dc");
+                    if (dcs.Count != 0)
+                    {
+                        foreach (XmlNode node in dcs)
+                            voice.RemoveChild(node);
+                    }
+                }
+            }
+
+
+            return originalNode;
+        }
+
+
+
+        public static List<SearchResult> searchPicCaptions(String search, int caseSensitive, int wordSensitive, XmlDocument xml, XmlDocument layoutXml)
+        {
+            List<SearchResult> results = new List<SearchResult>();
 
             try
             {
@@ -458,28 +661,31 @@ namespace SurfaceApplication1
                     if (foundBySpecifiedCase(search, xn.InnerText, caseSensitive) && foundBySpecifiedWord(search, xn.InnerText, wordSensitive))
                     {
                         numFound++;
-                        String str = xn.InnerText;
-                        String tag = xn.Attributes["id"].Value;
+                        SearchResult newResult = new SearchResult();
 
-                        String page = "Fo" + (xn.ParentNode.Attributes["facs"].Value).Substring(1);
-                        findings += page + " " + tag + " " + str + "\r\n";
+                        newResult.resultType = 3;
+                        int index = xn.InnerText.IndexOf("(");
+                        newResult.text1 = xn.InnerText.Substring(0, index).Trim();
+                        newResult.text2 = xn.InnerText.Substring(index).Trim();
+                        newResult.excerpt = xn.InnerText.Trim();
+                        newResult.tag = xn.Attributes["id"].Value;
+                        newResult.folio = "Fo" + (xn.ParentNode.Attributes["facs"].Value).Substring(1);
+                        newResult.thumbnail = convertImage(Thumbnailer.cropImage(Thumbnailer.getImage(newResult.folio, layoutXml), Thumbnailer.getRect(newResult.tag, layoutXml)));
+                        newResult.thumbnail.Width = 100;
+                        newResult.thumbnail.Height = 100;
+                        results.Add(newResult);
                     }
                 }
-
-                findings = "TOTAL: " + numFound + " results\r\n\r\n" + findings;
-
 
             }
             catch (Exception e)
             {
-                findings = "Sorry, can't find your search! Try again?";
+                Console.Write(e.StackTrace);
+                Console.Read();
             }
 
-
-            findings = findings.TrimEnd('\r', '\n');
-            return findings;
+            return results;
         }
-
 
 
 

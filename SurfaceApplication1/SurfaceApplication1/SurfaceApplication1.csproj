@@ -74,6 +74,7 @@
     <Reference Include="Microsoft.Expression.Drawing" />
     <Reference Include="System" />
     <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
     <Reference Include="System.Xml" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Core" />
@@ -103,6 +104,10 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="PageNamer.cs" />
+    <Compile Include="ResultBoxItem.cs" />
+    <Compile Include="SearchResult.cs" />
+    <Compile Include="SearchTab.cs" />
+    <Compile Include="Thumbnailer.cs" />
     <Compile Include="Translate.cs" />
     <Compile Include="TranslationBox.cs" />
     <Compile Include="Workers.cs" />
@@ -149,6 +154,8 @@
     <Resource Include="icons\pageTurn.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Resource>
+    <Resource Include="musicnote.png" />
+    <Resource Include="magnifyingglass.png" />
     <Content Include="pages\100.jpg">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -438,6 +445,7 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Resource Include="icons\leftArrow.png" />
+    <Resource Include="pencil.jpg" />
     <Content Include="Resources\icon.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
