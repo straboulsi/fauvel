@@ -14,13 +14,6 @@ namespace SurfaceApplication1
     static class Thumbnailer
     {
 
-        public static Bitmap cropAtRect(this Bitmap b, Rectangle r)
-        {
-            Bitmap nb = new Bitmap(r.Width, r.Height);
-            Graphics g = Graphics.FromImage(nb);
-            g.DrawImage(b, -r.X, -r.Y);
-            return nb;
-        }
 
         public static Image cropImage(Image img, Rectangle r)
         {
@@ -61,19 +54,10 @@ namespace SurfaceApplication1
         // Remember other types: Fo23v, Fo28br, Fo28tv
         public static Image getImage(String folio, XmlDocument layoutXml)
         {
-            Stopwatch sw6 = new Stopwatch();
-            sw6.Start();
             folio = folio.Substring(2);
-            String imageName = "/pages/" + getImageName(folio, layoutXml);
-            ///String imageName = "Medieval.jpg";
-            Image image = Image.FromFile(imageName);
+            String imageName = getImageName(folio, layoutXml);
+            Image image = Image.FromFile(@"..\..\pages\" + imageName, true); 
 
-            sw6.Start();
-            TimeSpan ts6 = sw6.Elapsed;
-            string elapsedTime = String.Format("{0:00}:{1:00}:{2:00}.{3:00}",
-            ts6.Hours, ts6.Minutes, ts6.Seconds,
-            ts6.Milliseconds / 10);
-            Console.WriteLine("getImage: " + elapsedTime);
             return image;
         }
 

@@ -143,6 +143,20 @@
     <None Include="SurfaceApplication1_TemporaryKey.pfx" />
   </ItemGroup>
   <ItemGroup>
+<<<<<<< HEAD
+    <Content Include="XMLFinalContentFile.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Resource Include="flags\english.jpg" />
+    <Resource Include="flags\french.jpg" />
+    <Resource Include="flags\oldfrench.png" />
+    <Content Include="EnglishXML.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="layout_full.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+=======
     <Resource Include="..\..\..\Downloads\layout_full-New.xml" />
     <Content Include="layout_full.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
@@ -159,6 +173,9 @@
     </Content>
     <Content Include="icons\pageTurn.png" />
 =======
+    <Resource Include="EnglishXML.xml" />
+    <Resource Include="layout_full.xml" />
+>>>>>>> ba96f819ea4fe01d607eb4503050d83bfa0d50d0
     <Resource Include="icons\pageTurn.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Resource>
