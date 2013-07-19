@@ -153,16 +153,10 @@
     <Resource Include="flags\english.jpg" />
     <Resource Include="flags\french.jpg" />
     <Resource Include="flags\oldfrench.png" />
-<<<<<<< HEAD
     <Content Include="EnglishXML.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="icons\pageTurn.png" />
-=======
-    <Resource Include="icons\pageTurn.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Resource>
->>>>>>> e603bc2c762dcfdf131c60e8d33ef7b8e1023166
     <Resource Include="musicnote.png" />
     <Resource Include="magnifyingglass.png" />
     <Content Include="pages\100.jpg">
