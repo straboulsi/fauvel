@@ -122,6 +122,7 @@ namespace SurfaceApplication1
          * Creates an ArrayList of TranslationBox objects when given a folio page.
          * Consults the Content (Old French), Layout, and English XML files. 
          * Calls on other methods in this class to fetch English, French, or coordinates.
+         * Expects folio without the "Fo" - i.e. 1v, 35r, 28tr
          **/
         public static List<TranslationBox> getBoxes(String page, XmlDocument xml, XmlDocument engXml, XmlDocument layoutXml)
         {
@@ -130,24 +131,27 @@ namespace SurfaceApplication1
 
             try
             {
-                XmlNodeList foundNode;
 
-                page = page.Substring(2);
-                foundNode = xml.DocumentElement.SelectNodes("//pb[@facs='#" + page + "']/lg");
+                XmlNodeList foundNode = layoutXml.DocumentElement.SelectNodes("//surface[@id='" + page + "']/zone");
 
-                foreach (XmlNode x in foundNode)
+                foreach (XmlNode xn in foundNode)
                 {
+                    String tag = xn.Attributes["id"].Value;
+                    if (tag.StartsWith("Te"))
+                    {
+                        XmlNodeList boxList = xn.SelectNodes("box");
+                        foreach (XmlNode node in boxList)
+                        {
+                            String s = node.Attributes["id"].Value; // Returns "Te_4500-4590" or something
+                            int index = s.IndexOf("_");
+                            int mid = s.IndexOf("-");
+                            int start = Convert.ToInt32(s.Substring(index + 1, 4));
+                            int end = Convert.ToInt32(s.Substring(mid + 1));
 
-                    String s = x.Attributes["id"].Value;
-                    int index = s.IndexOf("_");
-                    int mid = s.IndexOf("-");
-
-                    int start = Convert.ToInt32(s.Substring(index + 1, 4));
-                    int end = Convert.ToInt32(s.Substring(mid + 1));
-
-                    boxes.Add(new TranslationBox(s, getPoetry(start, end, xml), getEnglish(start, end, engXml), getPoint(s, 1, layoutXml), getPoint(s, 2, layoutXml)));
+                            boxes.Add(new TranslationBox(s, getPoetry(start, end, xml), getEnglish(start, end, engXml), getPoint(s, 1, layoutXml), getPoint(s, 2, layoutXml)));
+                        }
+                    }
                 }
-
 
             }
             catch (Exception e)
@@ -155,6 +159,12 @@ namespace SurfaceApplication1
                 Console.Write(e.StackTrace);
                 Console.Read();
             }
+
+            foreach (TranslationBox tb in boxes)
+            {
+                Console.Write(tb.tag + "\r\n" + tb.pointsToString());
+            }
+
             return boxes;
         }
 
@@ -171,14 +181,25 @@ namespace SurfaceApplication1
 
             try
             {
+                XmlNode xn;
 
-                XmlNode xn = layoutXml.DocumentElement.SelectSingleNode("//surface/zone[@id='" + tag + "']");
+                if (tag.StartsWith("Te"))
+                {
+                    xn = layoutXml.DocumentElement.SelectSingleNode("//surface/zone/box[@id='" + tag + "']");
+                    if (whichPt == 1)
+                        TL = new Point(Convert.ToInt32(xn.Attributes["ulx"].Value), Convert.ToInt32(xn.Attributes["uly"].Value));
+                    else if (whichPt == 2)
+                        TL = new Point(Convert.ToInt32(xn.Attributes["lrx"].Value), Convert.ToInt32(xn.Attributes["lry"].Value));
+                }
+                else
+                {
+                    xn = layoutXml.DocumentElement.SelectSingleNode("//surface/zone[@id='" + tag + "']");
 
-                if (whichPt == 1)
-                    TL = new Point(Convert.ToInt32(xn.FirstChild.Attributes["ulx"].Value), Convert.ToInt32(xn.FirstChild.Attributes["uly"].Value));
-                else if (whichPt == 2)
-                    TL = new Point(Convert.ToInt32(xn.FirstChild.Attributes["lrx"].Value), Convert.ToInt32(xn.FirstChild.Attributes["lry"].Value));
-
+                    if (whichPt == 1)
+                        TL = new Point(Convert.ToInt32(xn.FirstChild.Attributes["ulx"].Value), Convert.ToInt32(xn.FirstChild.Attributes["uly"].Value));
+                    else if (whichPt == 2)
+                        TL = new Point(Convert.ToInt32(xn.FirstChild.Attributes["lrx"].Value), Convert.ToInt32(xn.FirstChild.Attributes["lry"].Value));
+                }
             }
             catch (Exception e)
             {

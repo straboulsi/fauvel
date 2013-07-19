@@ -198,6 +198,11 @@ namespace SurfaceApplication1
             {
                 String temp = e.StackTrace;
             }
+
+
+
+            Translate.getBoxes("34v", xml, engXml, layoutXml);
+            Console.Read();
         }
 
         protected override void OnClosed(EventArgs e)
