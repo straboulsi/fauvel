@@ -48,8 +48,8 @@ namespace SurfaceApplication1
         public static int maxPage = 95;
         public static Image slideImage1, slideImage2;
         int scatterBuffer = 5000;
-        int swipeLength = 50;
-        int swipeHeight = 10;
+        int swipeLength = 25;
+        int swipeHeight = 6;
         List<Tab> tabArray = new List<Tab>();
         Workers workers = new Workers();
         enum language { None, English, OldFrench, French };
@@ -65,7 +65,7 @@ namespace SurfaceApplication1
 
         public SurfaceWindow1()
         {
-            InitializeComponent();
+            InitializeComponent(); 
 
             // slider actions
             pageSlider.AddHandler(UIElement.ManipulationDeltaEvent, new EventHandler<ManipulationDeltaEventArgs>(slider_ManipulationDelta), true);
@@ -79,17 +79,10 @@ namespace SurfaceApplication1
             tabBar.Items.Add(newTabButton);
             createTab(1);
 
-
-
             //Search bar initialization
             veryFirstLine = 1;
             veryLastLine = 5986;
             SidebarTabItems = new List<TabItem>();
-
-
-
-
-
 
             // Lots of search sidebar things
             tabAdd = new TabItem();
@@ -97,15 +90,10 @@ namespace SurfaceApplication1
             tabAdd.Height = 40;
             tabAdd.Width = 50;
 
-
-
             Canvas newTabCanvas = new Canvas();
             newTabCanvas.Height = 899;
             newTabCanvas.Width = 550;
             tabAdd.Content = newTabCanvas;
-
-
-
 
             Button searchButton = new Button();
             searchButton.Style = tabDynamic.FindResource("RoundButtonTemplate") as Style;
@@ -191,13 +179,16 @@ namespace SurfaceApplication1
                 engXml.Load("EnglishXML.xml");
                 layoutXml = new XmlDocument();
                 layoutXml.Load("layout_full.xml");
-
-
             }
             catch (Exception e)
             {
                 String temp = e.StackTrace;
             }
+
+
+
+            Translate.getBoxes("34v", xml, engXml, layoutXml);
+            Console.Read();
         }
 
         protected override void OnClosed(EventArgs e)
@@ -257,17 +248,13 @@ namespace SurfaceApplication1
         private void loadPage()
         {
             Tab currentTab = this.currentTab();
-            testText.Text = currentTab._page.ToString();
-            /* start translations 
 
+            /* start translations */
             currentTab._vTranslationGrid.Children.Clear();
             currentTab._rTranslationGrid.Children.Clear();
 
-            string pagev = "fo" + (currentTab._page - 1).ToString() + "v";
-            string pager = "fo" + (currentTab._page).ToString() + "r";
-
-            currentTab._translationBoxesV = Translate.getBoxes(pagev, xml, engXml, layoutXml);
-            currentTab._translationBoxesR = Translate.getBoxes(pager, xml, engXml, layoutXml);
+            currentTab._translationBoxesV = Translate.getBoxes(PageNamer.getOnePageText(currentTab._page)    , xml, engXml, layoutXml);
+            currentTab._translationBoxesR = Translate.getBoxes(PageNamer.getOnePageText(currentTab._page + 1), xml, engXml, layoutXml);
 
             currentTab._textBlocksV = new List<TextBlock>();
             currentTab._textBlocksR = new List<TextBlock>();
@@ -275,10 +262,10 @@ namespace SurfaceApplication1
             foreach (TranslationBox tb in currentTab._translationBoxesV)
             {
                 double width, x, y, height;
-                x = tb.getTopLeft().X * 10.5;
-                y = tb.getTopLeft().Y * 10.5;
-                width = (tb.getBottomRight().X - tb.getTopLeft().X) * 10.5;
-                height = (tb.getBottomRight().Y - tb.getTopLeft().Y) * 10.5;
+                x = tb.getTopLeft().X;
+                y = tb.getTopLeft().Y;
+                width = (tb.getBottomRight().X - tb.getTopLeft().X);
+                height = (tb.getBottomRight().Y - tb.getTopLeft().Y);
 
                 TextBlock t = new TextBlock();
                 Grid g = Translate.getGrid(x, y, width, height, t);
@@ -291,10 +278,10 @@ namespace SurfaceApplication1
             foreach (TranslationBox tb in currentTab._translationBoxesR)
             {
                 double width, x, y, height;
-                x = tb.getTopLeft().X * 10.5;
-                y = tb.getTopLeft().Y * 10.5;
-                width = (tb.getBottomRight().X - tb.getTopLeft().X) * 10.5;
-                height = (tb.getBottomRight().Y - tb.getTopLeft().Y) * 10.5;
+                x = tb.getTopLeft().X;
+                y = tb.getTopLeft().Y;
+                width = (tb.getBottomRight().X - tb.getTopLeft().X);
+                height = (tb.getBottomRight().Y - tb.getTopLeft().Y);
 
                 TextBlock t = new TextBlock();
                 Grid g = Translate.getGrid(x, y, width, height, t);
@@ -305,7 +292,6 @@ namespace SurfaceApplication1
             }
 
             setTranslateText();
-
             /* end translations */
 
             currentTab._vSVI.Width = currentTab._vSVI.MinWidth;
@@ -458,6 +444,8 @@ namespace SurfaceApplication1
             Grid rGrid = new Grid();
             Grid vTranslationGrid = new Grid();
             Grid rTranslationGrid = new Grid();
+            Grid vBoxesGrid = new Grid();
+            Grid rBoxesGrid = new Grid();
 
             vScatterItem.Content = vGrid;
             rScatterItem.Content = rGrid;
@@ -519,7 +507,7 @@ namespace SurfaceApplication1
             vScatterView.Items.Add(vScatterItem);
             rScatterView.Items.Add(rScatterItem);
 
-            tabArray.Insert(count, new Tab(2, tab, verso, recto, can, c_v, c_r, vGrid, rGrid, delBtn, vScatterView, rScatterView, vScatterItem, rScatterItem, vSwipeGrid, rSwipeGrid, vTranslationGrid, rTranslationGrid, hedatext));
+            tabArray.Insert(count, new Tab(2, tab, verso, recto, can, c_v, c_r, vGrid, rGrid, delBtn, vScatterView, rScatterView, vScatterItem, rScatterItem, vSwipeGrid, rSwipeGrid, vTranslationGrid, rTranslationGrid, vBoxesGrid, rBoxesGrid, hedatext));
 
             can.Children.Add(c_v);
             can.Children.Add(c_r);
@@ -1072,6 +1060,8 @@ namespace SurfaceApplication1
             leftCount = tab._textBlocksV.Count;
             rightCount = tab._textBlocksR.Count;
 
+
+            testText.Text = leftCount.ToString() + " " + rightCount.ToString();
             for (int i = 0; i < leftCount; i++)
             {
                 tab._textBlocksV[i].Visibility = System.Windows.Visibility.Visible;

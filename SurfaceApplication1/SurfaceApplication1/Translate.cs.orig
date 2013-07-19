@@ -132,7 +132,11 @@ namespace SurfaceApplication1
             try
             {
 
+<<<<<<< HEAD
+                foundNode = xml.DocumentElement.SelectNodes("//pb[@facs='#" + page + "']/lg");
+=======
                 XmlNodeList foundNode = layoutXml.DocumentElement.SelectNodes("//surface[@id='" + page + "']/zone");
+>>>>>>> ba96f819ea4fe01d607eb4503050d83bfa0d50d0
 
                 foreach (XmlNode xn in foundNode)
                 {

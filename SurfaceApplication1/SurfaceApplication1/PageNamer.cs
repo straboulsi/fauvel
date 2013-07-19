@@ -33,5 +33,10 @@ namespace SurfaceApplication1
                     return pageNames[i];
             }
         }
+
+        public static String getOnePageText(int i)
+        {
+            return pageNames[i];
+        }
     }
 }

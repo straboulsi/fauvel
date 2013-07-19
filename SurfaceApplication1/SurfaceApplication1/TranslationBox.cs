@@ -9,8 +9,8 @@ namespace SurfaceApplication1
         public String tag = "";
         String oldFr = "";
         String eng = "";
-        Point topL = new Point(0, 0);
-        Point bottomR = new Point(0, 0);
+        public Point topL = new Point(0, 0);
+        public Point bottomR = new Point(0, 0);
 
         // Has string (contents) and coordinates
         // Class1 should take in page number and output array of translation boxes
@@ -54,6 +54,11 @@ namespace SurfaceApplication1
         public Point getBottomRight()
         {
             return bottomR;
+        }
+
+        public String pointsToString()
+        {
+            return topL.X + " " + topL.Y + "\r\n" + bottomR.X + " " + bottomR.Y;
         }
 
     }
