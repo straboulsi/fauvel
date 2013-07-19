@@ -143,14 +143,18 @@
     <None Include="SurfaceApplication1_TemporaryKey.pfx" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="XMLFinalContentFile.xml">
+    <Content Include="XMLFinalContentFile.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Resource>
+    </Content>
     <Resource Include="flags\english.jpg" />
     <Resource Include="flags\french.jpg" />
     <Resource Include="flags\oldfrench.png" />
-    <Resource Include="EnglishXML.xml" />
-    <Resource Include="layout_full.xml" />
+    <Content Include="EnglishXML.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="layout_full.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Resource Include="icons\pageTurn.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Resource>

@@ -132,7 +132,6 @@ namespace SurfaceApplication1
             {
                 XmlNodeList foundNode;
 
-                page = page.Substring(2);
                 foundNode = xml.DocumentElement.SelectNodes("//pb[@facs='#" + page + "']/lg");
 
                 foreach (XmlNode x in foundNode)
