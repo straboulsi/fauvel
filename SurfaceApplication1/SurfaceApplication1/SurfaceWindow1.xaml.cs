@@ -67,18 +67,6 @@ namespace SurfaceApplication1
         {
             InitializeComponent(); 
 
-            // slider actions
-            pageSlider.AddHandler(UIElement.ManipulationDeltaEvent, new EventHandler<ManipulationDeltaEventArgs>(slider_ManipulationDelta), true);
-            pageSlider.AddHandler(UIElement.ManipulationCompletedEvent, new EventHandler<ManipulationCompletedEventArgs>(slider_ManipulationCompleted), true);
-            slideImage1 = SliderImage1;
-            slideImage2 = SliderImage2;
-
-            //other initialization
-            TabItem newTabButton = new TabItem();
-            newTabButton.Header = "+";
-            tabBar.Items.Add(newTabButton);
-            createTab(1);
-
             //Search bar initialization
             veryFirstLine = 1;
             veryLastLine = 5986;
@@ -189,6 +177,19 @@ namespace SurfaceApplication1
 
             Translate.getBoxes("34v", xml, engXml, layoutXml);
             Console.Read();
+
+
+            // slider actions
+            pageSlider.AddHandler(UIElement.ManipulationDeltaEvent, new EventHandler<ManipulationDeltaEventArgs>(slider_ManipulationDelta), true);
+            pageSlider.AddHandler(UIElement.ManipulationCompletedEvent, new EventHandler<ManipulationCompletedEventArgs>(slider_ManipulationCompleted), true);
+            slideImage1 = SliderImage1;
+            slideImage2 = SliderImage2;
+
+            //other initialization
+            TabItem newTabButton = new TabItem();
+            newTabButton.Header = "+";
+            tabBar.Items.Add(newTabButton);
+            createTab(1);
         }
 
         protected override void OnClosed(EventArgs e)
@@ -198,7 +199,6 @@ namespace SurfaceApplication1
 
         private void prev_Click(object sender, RoutedEventArgs e)
         {
-
             Tab tab = currentTab();
             if (tab._twoPage)
             {
@@ -211,8 +211,6 @@ namespace SurfaceApplication1
                 goToPage(tab._page - 1);
             }
         }
-
-
 
         private void next_Click(object sender, RoutedEventArgs e)
         {
@@ -293,6 +291,26 @@ namespace SurfaceApplication1
 
             setTranslateText();
             /* end translations */
+
+            /* start ghostboxes 
+            currentTab._vBoxesGrid.Children.Clear();
+            currentTab._rBoxesGrid.Children.Clear();
+
+            List<Rect> vGhostBoxes = Translate.getGhostBoxes(PageNamer.getOnePageText(currentTab._page), xml, engXml, layoutXml);
+            List<Rect> rGhostBoxes = Translate.getGhostBoxes(PageNamer.getOnePageText(currentTab._page + 1), xml, engXml, layoutXml);
+
+            foreach (Rect r in vGhostBoxes)
+            {
+                Grid g = Translate.getGhostGrid(r.X, r.Y, r.Width, r.Height);
+                currentTab._vBoxesGrid.Children.Add(g);
+            }
+
+            foreach (Rect r in rGhostBoxes)
+            {
+                Grid g = Translate.getGhostGrid(r.X, r.Y, r.Width, r.Height);
+                currentTab._rBoxesGrid.Children.Add(g);
+            }
+            /* end ghostboxes*/
 
             currentTab._vSVI.Width = currentTab._vSVI.MinWidth;
             currentTab._vSVI.Height = currentTab._vSVI.MinHeight;
@@ -976,12 +994,12 @@ namespace SurfaceApplication1
             else
             {
                 xcenter += (.5 - y) * endHeight;
-                ycenter += (.5 + x) * endWidth;
+                ycenter += (x - .5) * endWidth;
             }
 
             Point endPoint = new Point(xcenter, ycenter);
 
-            /*Storyboard stb = new Storyboard();
+            Storyboard stb = new Storyboard();
             DoubleAnimation moveWidth = new DoubleAnimation();
             DoubleAnimation moveHeight = new DoubleAnimation();
             PointAnimation moveCenter = new PointAnimation();
@@ -1005,12 +1023,12 @@ namespace SurfaceApplication1
             Storyboard.SetTarget(moveHeight, s);
             Storyboard.SetTargetProperty(moveCenter, new PropertyPath(ScatterViewItem.CenterProperty));
             Storyboard.SetTargetProperty(moveWidth,  new PropertyPath(ScatterViewItem.WidthProperty));
-            Storyboard.SetTargetProperty(moveHeight, new PropertyPath(ScatterViewItem.HeightProperty));*/
+            Storyboard.SetTargetProperty(moveHeight, new PropertyPath(ScatterViewItem.HeightProperty));
 
             s.Center = endPoint;
             s.Width = endWidth;
             s.Height = endHeight;
-            //stb.Begin(this);
+            stb.Begin(this);
         }
 
         private bool IsDoubleTap(TouchEventArgs e)
@@ -1212,7 +1230,7 @@ namespace SurfaceApplication1
             Point second = item.TouchesOver.ElementAt<TouchDevice>(0).GetPosition(item);
             if (leftSwipe)
             {
-                if (((Canvas)currentTab()._vSwipeGrid.Children[0]).Background == Brushes.Green /*(second.X < rightSwipeStart.X - 100 && rightSwipeWatch.ElapsedMilliseconds < 1000)*/ || (Math.Abs(second.X - rightSwipeStart.X) < 10 && Math.Abs(second.Y - rightSwipeStart.Y) < 10 && rightSwipeWatch.ElapsedMilliseconds < 400 && leftSwipeStart.X > 100))
+                if (((Canvas)currentTab()._vSwipeGrid.Children[0]).Background == Brushes.Green /*(second.X < rightSwipeStart.X - 100 && rightSwipeWatch.ElapsedMilliseconds < 1000)*/ || (Math.Abs(second.X - leftSwipeStart.X) < 10 && Math.Abs(second.Y - leftSwipeStart.Y) < 10 && leftSwipeWatch.ElapsedMilliseconds < 400 && leftSwipeStart.X > 100))
                     prev_Click(null, null);
             }
             leftSwipe = false;

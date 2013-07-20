@@ -6,7 +6,7 @@
     <ProductVersion>8.0.30703</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{F66E2D8E-243A-4A44-A2BE-2C1912E26A17}</ProjectGuid>
-    <OutputType>Exe</OutputType>
+    <OutputType>WinExe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>SurfaceApplication1</RootNamespace>
     <AssemblyName>SurfaceApplication1</AssemblyName>
@@ -143,7 +143,6 @@
     <None Include="SurfaceApplication1_TemporaryKey.pfx" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="..\..\..\Downloads\layout_full-New.xml" />
     <Content Include="layout_full.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -156,7 +155,9 @@
     <Content Include="EnglishXML.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="icons\pageTurn.png" />
+    <Resource Include="icons\pageTurn.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
     <Resource Include="musicnote.png" />
     <Resource Include="magnifyingglass.png" />
     <Content Include="pages\100.jpg">
