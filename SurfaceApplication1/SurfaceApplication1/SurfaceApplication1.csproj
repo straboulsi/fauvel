@@ -143,9 +143,11 @@
     <None Include="SurfaceApplication1_TemporaryKey.pfx" />
   </ItemGroup>
   <ItemGroup>
+    <Resource Include="downArrow.png" />
     <Content Include="layout_full.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Resource Include="upArrow.png" />
     <Content Include="XMLFinalContentFile.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>

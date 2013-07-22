@@ -1284,10 +1284,12 @@ namespace SurfaceApplication1
             SearchTab tab = new SearchTab();
             tab.Name = string.Format("tab{0}", count);
 
-            tab.moreOptions.Click += new RoutedEventHandler(Show_Options);
+            tab.moreOptionsNew.Click += new RoutedEventHandler(Show_Options);
+            ///tab.moreOptions.Click += new RoutedEventHandler(Show_Options);
             tab.deleteTabButton.Click += new RoutedEventHandler(SearchbtnDelete_Click);
-            tab.lessOptions.Click += new RoutedEventHandler(Hide_Options);
-            tab.searchQueryBox.GotFocus += new RoutedEventHandler(Enter_Search);
+            ///tab.lessOptions.Click += new RoutedEventHandler(Hide_Options);
+            tab.lessOptionsNew.Click += new RoutedEventHandler(Hide_Options);
+            tab.searchQueryBox.GotFocus += new RoutedEventHandler(SearchBox_Focused);
             tab.goSearch.Click += new RoutedEventHandler(newSearch);
             tab.searchQueryBox.PreviewKeyDown += new KeyEventHandler(Enter_Clicked);
 
@@ -1564,7 +1566,8 @@ namespace SurfaceApplication1
             SearchTab selectedTab = tabDynamic.SelectedItem as SearchTab;
             selectedTab.optionsCanvas.Visibility = Visibility.Visible;
             selectedTab.topLine.Visibility = Visibility.Hidden;
-            selectedTab.moreOptions.Visibility = Visibility.Hidden;
+            ///selectedTab.moreOptions.Visibility = Visibility.Hidden;
+            selectedTab.moreOptionsNew.Visibility = Visibility.Hidden;
             if (selectedTab.searchResults.IsVisible)
                 compressResults();
         }
@@ -1574,15 +1577,22 @@ namespace SurfaceApplication1
             SearchTab selectedTab = tabDynamic.SelectedItem as SearchTab;
             selectedTab.optionsCanvas.Visibility = Visibility.Hidden;
             selectedTab.topLine.Visibility = Visibility.Visible;
-            selectedTab.moreOptions.Visibility = Visibility.Visible;
-
+            ///selectedTab.moreOptions.Visibility = Visibility.Visible;
+            selectedTab.moreOptionsNew.Visibility = Visibility.Visible;
             checkForChanges();
 
+            /**
             if (defaultOptionsChanged == true)
                 selectedTab.moreOptions.Background = Brushes.MediumTurquoise;
 
             else
                 selectedTab.moreOptions.ClearValue(Control.BackgroundProperty);
+            **/
+            if (defaultOptionsChanged == true)
+                selectedTab.moreOptionsNew.Background = Brushes.MediumTurquoise;
+
+            else
+                selectedTab.moreOptionsNew.ClearValue(Control.BackgroundProperty);
 
             if (selectedTab.searchResults.IsVisible)
                 expandResults();
@@ -1603,13 +1613,18 @@ namespace SurfaceApplication1
             return defaultOptionsChanged;
         }
 
-        private void Enter_Search(object sender, RoutedEventArgs e)
+        private void SearchBox_Focused(object sender, RoutedEventArgs e)
         {
             SearchTab selectedTab = tabDynamic.SelectedItem as SearchTab;
             if (selectedTab.searchQueryBox.Text == "Enter text")
             {
                 selectedTab.searchQueryBox.Foreground = Brushes.Black;
                 selectedTab.searchQueryBox.Text = "";
+            }
+            else if(selectedTab.searchQueryBox.Text != "")
+            {
+                selectedTab.searchQueryBox.SelectAll();
+                
             }
         }
 
