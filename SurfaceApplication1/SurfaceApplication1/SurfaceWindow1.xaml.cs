@@ -173,11 +173,7 @@ namespace SurfaceApplication1
                 String temp = e.StackTrace;
             }
 
-
-
-            Translate.getBoxes("34v", xml, engXml, layoutXml);
-            Console.Read();
-
+            
 
             // slider actions
             pageSlider.AddHandler(UIElement.ManipulationDeltaEvent, new EventHandler<ManipulationDeltaEventArgs>(slider_ManipulationDelta), true);
@@ -190,6 +186,12 @@ namespace SurfaceApplication1
             newTabButton.Header = "+";
             tabBar.Items.Add(newTabButton);
             createTab(1);
+        }
+
+        private void showBoxes(object sender, RoutedEventArgs e)
+        {
+            MessageBox.Show(string.Format("Come get yo boxes here!!!"),
+                    "Mr. Box Man", MessageBoxButton.OK);
         }
 
         protected override void OnClosed(EventArgs e)
@@ -251,8 +253,8 @@ namespace SurfaceApplication1
             currentTab._vTranslationGrid.Children.Clear();
             currentTab._rTranslationGrid.Children.Clear();
 
-            currentTab._translationBoxesV = Translate.getBoxes(PageNamer.getOnePageText(currentTab._page)    , xml, engXml, layoutXml);
-            currentTab._translationBoxesR = Translate.getBoxes(PageNamer.getOnePageText(currentTab._page + 1), xml, engXml, layoutXml);
+            currentTab._translationBoxesV = Translate.getTranslationOverlay(PageNamer.getOnePageText(currentTab._page)    , xml, engXml, layoutXml);
+            currentTab._translationBoxesR = Translate.getTranslationOverlay(PageNamer.getOnePageText(currentTab._page + 1), xml, engXml, layoutXml);
 
             currentTab._textBlocksV = new List<TextBlock>();
             currentTab._textBlocksR = new List<TextBlock>();

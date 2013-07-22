@@ -147,12 +147,15 @@
                     <Image Source="/flags/english.jpg" Stretch="UniformToFill" Width="90" Height="50" ClipToBounds="True"/>
                 </ListBoxItem>
             </ListBox>
+            <Button x:Name="debugBoxes" Height="84" Canvas.Left="1400" Width="100" Canvas.Top="8" TouchDown="showBoxes" Click="showBoxes">
+                <Image Source="box.jpg" Stretch="Uniform"/>
+            </Button>
         </Canvas>
         <Canvas x:Name="SliderDisplay" Canvas.Left="-500" Width="200" Height="100" HorizontalAlignment="Center">
             <Image x:Name="SliderImage1" Source="/pages/11.jpg" Width="100" Stretch="UniformToFill"/>
             <Image x:Name="SliderImage2" Source="/pages/11.jpg" Width="100" Stretch="UniformToFill" Canvas.Left="100" />
             <TextBlock x:Name="SliderText" HorizontalAlignment="Center" Canvas.Top="-70" Text=" " FontSize="50" Foreground="#222222"/>
         </Canvas>
-
+        
     </Canvas>
 </s:SurfaceWindow>

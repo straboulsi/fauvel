@@ -124,7 +124,7 @@ namespace SurfaceApplication1
          * Calls on other methods in this class to fetch English, French, or coordinates.
          * Expects folio without the "Fo" - i.e. 1v, 35r, 28tr
          **/
-        public static List<TranslationBox> getBoxes(String page, XmlDocument xml, XmlDocument engXml, XmlDocument layoutXml)
+        public static List<TranslationBox> getTranslationOverlay(String page, XmlDocument xml, XmlDocument engXml, XmlDocument layoutXml)
         {
 
             List<TranslationBox> boxes = new List<TranslationBox>();
@@ -169,6 +169,35 @@ namespace SurfaceApplication1
         }
 
 
+
+
+        public static List<BoundingBox> getBoxes(String page, XmlDocument layoutXml)
+        {
+            List<BoundingBox> boxes = new List<BoundingBox>();
+
+            try
+            {
+                XmlNodeList foundNodes = layoutXml.DocumentElement.SelectNodes("//surface[@id='" + page + "']/zone/box");
+                foreach (XmlNode node in foundNodes)
+                {
+                    String tag = node.ParentNode.Attributes["id"].Value;
+                    
+                    Point topL = new Point(Convert.ToDouble(node.Attributes["ulx"].Value), Convert.ToDouble(node.Attributes["uly"].Value));
+                    Point bottomR = new Point(Convert.ToDouble(node.Attributes["lrx"].Value), Convert.ToDouble(node.Attributes["lry"].Value));
+                    BoundingBox newBB = new BoundingBox(tag, topL, bottomR);
+                    boxes.Add(newBB);
+
+
+                }
+            }
+            catch (Exception e)
+            {
+
+            }
+
+            return boxes;
+
+        }
 
 
         /**
