@@ -17,37 +17,11 @@ namespace SurfaceApplication1
 
         public static Image cropImage(Image img, Rectangle r)
         {
-            /**
-            Stopwatch sw5a = new Stopwatch();
-            sw5a.Start();
-            Bitmap nb = new Bitmap(r.Width, r.Height);
-            Graphics g = Graphics.FromImage(nb);
-            g.DrawImage(img, -r.X, -r.Y);
-            sw5a.Stop();
-            TimeSpan ts5a = sw5a.Elapsed;
-            string elapsedTimea = String.Format("{0:00}:{1:00}:{2:00}.{3:00}",
-            ts5a.Hours, ts5a.Minutes, ts5a.Seconds,
-            ts5a.Milliseconds / 10);
-            Console.WriteLine("crop using Graphics: " + elapsedTimea);
-            **/
-
-            Stopwatch sw5 = new Stopwatch();
-            sw5.Start();
-
+            
             Bitmap bmpImage = new Bitmap(img);
             Bitmap bmpCrop = bmpImage.Clone(r, bmpImage.PixelFormat);
-            sw5.Stop();
-            TimeSpan ts5 = sw5.Elapsed;
-            string elapsedTime = String.Format("{0:00}:{1:00}:{2:00}.{3:00}",
-            ts5.Hours, ts5.Minutes, ts5.Seconds,
-            ts5.Milliseconds / 10);
-            Console.WriteLine("cropImage using Clone: " + elapsedTime);
-
-
-
+           
             return (Image)(bmpCrop);
-            ///
-            ///return nb;
         }
 
         // Assuming input of Fo1r, Fo1v, etc.
@@ -91,16 +65,12 @@ namespace SurfaceApplication1
                 Console.Read();
             }
 
-            Console.Write(rect.Width + "\r\n" + rect.Height);
-
+            
             return rect;
         }
 
         public static Rectangle getLineRect(String lineNum, XmlDocument layoutXml)
         {
-            Stopwatch sw7 = new Stopwatch();
-            sw7.Start();
-
             Rectangle rect = new Rectangle();
             try
             {
@@ -118,17 +88,7 @@ namespace SurfaceApplication1
                 Console.Read();
             }
 
-            Console.Write(rect.Width + "\r\n" + rect.Height);
-
-            sw7.Stop();
-            TimeSpan ts7 = sw7.Elapsed;
-            string elapsedTime = String.Format("{0:00}:{1:00}:{2:00}.{3:00}",
-            ts7.Hours, ts7.Minutes, ts7.Seconds,
-            ts7.Milliseconds / 10);
-            Console.WriteLine("getLineRect: " + elapsedTime);
-
-            ///rect = new Rectangle(0, 0, 50, 50);
-
+            
             return rect;
         }
 

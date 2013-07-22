@@ -176,7 +176,6 @@ namespace SurfaceApplication1
                 String temp = e.StackTrace;
             }
 
-            
 
             // slider actions
             pageSlider.AddHandler(UIElement.ManipulationDeltaEvent, new EventHandler<ManipulationDeltaEventArgs>(slider_ManipulationDelta), true);
@@ -1331,9 +1330,6 @@ namespace SurfaceApplication1
 
         private void newSearch(object sender, RoutedEventArgs e)
         {
-            Stopwatch sw1 = new Stopwatch();
-            sw1.Start();
-
             SearchTab selectedTab = tabDynamic.SelectedItem as SearchTab;
             String searchQuery = selectedTab.searchQueryBox.Text;
 
@@ -1374,10 +1370,10 @@ namespace SurfaceApplication1
                     resultRBI.lineInfo.Text = Convert.ToString(result.lineNum);
                     resultRBI.resultType = result.resultType;
 
-                    resultRBI.resultThumbnail = result.thumbnail; /// Add this in once we have a method to get thumbnails
-                    ///resultRBI.resultThumbnail.Source = new BitmapImage(new Uri(@"/poetry.jpg", UriKind.Relative));
-                    resultRBI.excerpt = result.excerpt;
-
+                    resultRBI.resultThumbnail = result.thumbnail; 
+                    resultRBI.excerpt1 = result.excerpt1;
+                    resultRBI.excerpt2 = result.excerpt2;
+                    resultRBI.excerpt3 = result.excerpt3;
 
                     resultRBI.resultText.Text = result.text1 + "\r\n" + result.text2;
                     poetryLB.Items.Add(resultRBI);
@@ -1412,9 +1408,9 @@ namespace SurfaceApplication1
                     resultRBI.folioInfo.Text = result.folio;
                     resultRBI.resultType = result.resultType;
                     resultRBI.resultThumbnail = result.thumbnail;
-                    ///resultRBI.resultThumbnail.Source = result.thumbnail.Source; /// Add this in once we have a method to get thumbnails
-                    ///resultRBI.resultThumbnail.Source = new BitmapImage(new Uri(@"/music.jpg", UriKind.Relative));
-                    resultRBI.excerpt = result.excerpt;
+                    resultRBI.excerpt1 = result.excerpt1;
+                    resultRBI.excerpt2 = result.excerpt2;
+                    resultRBI.excerpt3 = result.excerpt3;
                     resultRBI.resultText.Text = result.text1;
                     lyricsLB.Items.Add(resultRBI);
                     resultRBI.Selected += new RoutedEventHandler(Result_Closeup);
@@ -1444,8 +1440,10 @@ namespace SurfaceApplication1
                     ResultBoxItem resultRBI = new ResultBoxItem();
                     resultRBI.folioInfo.Text = result.folio;
                     resultRBI.resultType = result.resultType;
-                    resultRBI.resultThumbnail = result.thumbnail;
-                    resultRBI.excerpt = result.excerpt;
+                    resultRBI.resultThumbnail = result.thumbnail; 
+                    resultRBI.excerpt1 = result.excerpt1;
+                    resultRBI.excerpt2 = result.excerpt2;
+                    resultRBI.excerpt3 = result.excerpt3;
                     resultRBI.resultText.Text = result.text1 + "\r\n" + result.text2;
                     resultRBI.resultText.VerticalAlignment = VerticalAlignment.Top;
                     imagesLB.Items.Add(resultRBI);
@@ -1468,13 +1466,7 @@ namespace SurfaceApplication1
                 if (selectedTab.optionsCanvas.IsVisible)
                     compressResults();
 
-
-                sw1.Stop();
-                TimeSpan ts1 = sw1.Elapsed;
-                string elapsedTime = String.Format("{0:00}:{1:00}:{2:00}.{3:00}",
-            ts1.Hours, ts1.Minutes, ts1.Seconds,
-            ts1.Milliseconds / 10);
-                Console.WriteLine("Total time for a search: " + elapsedTime);
+                
             }
 
         }
@@ -1529,7 +1521,6 @@ namespace SurfaceApplication1
         {
             SearchTab selectedTab = tabDynamic.SelectedItem as SearchTab;
             ResultBoxItem selectedResult = e.Source as ResultBoxItem;
-            String temp = selectedResult.excerpt;
 
 
 
@@ -1551,14 +1542,15 @@ namespace SurfaceApplication1
             {
                 selectedTab.poetryPanel.Children.Clear();
                 int lineNum = Convert.ToInt32(selectedResult.lineInfo.Text);
-                closeupText.Text = selectedResult.excerpt;
                 int firstLine = lineNum - 5;
                 int lastLine = lineNum + 5;
                 if (firstLine < veryFirstLine)
                     firstLine = veryFirstLine;
                 if (lastLine > veryLastLine)
                     lastLine = veryLastLine;
-                closeupText.Text += "\r\n\r\nLines " + (firstLine) + " to " + (lastLine);
+                
+               
+
                 selectedTab.poetryPanel.Children.Add(closeupImage);
                 selectedTab.poetryPanel.Children.Add(closeupText);
             }
@@ -1566,7 +1558,6 @@ namespace SurfaceApplication1
             else if (selectedResult.resultType == 2)
             {
                 selectedTab.lyricsPanel.Children.Clear();
-                closeupText.Text = selectedResult.excerpt;
                 selectedTab.lyricsPanel.Children.Add(closeupImage);
                 selectedTab.lyricsPanel.Children.Add(closeupText);
             }
@@ -1574,23 +1565,14 @@ namespace SurfaceApplication1
             else if (selectedResult.resultType == 3)
             {
                 selectedTab.imagesPanel.Children.Clear();
-                closeupText.Text = selectedResult.excerpt;
                 selectedTab.imagesPanel.Children.Add(closeupImage);
                 selectedTab.imagesPanel.Children.Add(closeupText);
             }
 
-            /// closeupText.Text = boldWords(selectedTab.searchQueryBox.Text, closeupText.Text);
+            closeupText.Inlines.Add(new Run { FontFamily = new FontFamily("Cambria"), Text = selectedResult.excerpt1, FontWeight = FontWeights.Normal });
+            closeupText.Inlines.Add(new Run { FontFamily = new FontFamily("Cambria"), FontWeight = FontWeights.Bold, Text = selectedResult.excerpt2 });
+            closeupText.Inlines.Add(new Run { FontFamily = new FontFamily("Cambria"), FontWeight = FontWeights.Normal, Text = selectedResult.excerpt3 });
 
-
-
-        }
-
-        private String boldWords(String wordToBold, String stringToTransform)
-        {
-            stringToTransform = stringToTransform.Replace(wordToBold, "bleh");
-
-
-            return stringToTransform;
         }
 
         private void Show_Options(object sender, RoutedEventArgs e)
