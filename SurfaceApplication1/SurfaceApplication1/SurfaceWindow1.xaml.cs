@@ -85,7 +85,8 @@ namespace SurfaceApplication1
 
             Button searchButton = new Button();
             searchButton.Style = tabDynamic.FindResource("RoundButtonTemplate") as Style;
-            searchButton.Click += new RoutedEventHandler(SearchButton_Clicked);
+            searchButton.Click += new RoutedEventHandler(SearchAppSelected);
+            searchButton.TouchDown += new EventHandler<TouchEventArgs>(SearchAppSelected);
 
             Grid searchGrid = new Grid();
 
@@ -108,7 +109,8 @@ namespace SurfaceApplication1
 
             Button annotateButton = new Button();
             annotateButton.Style = tabDynamic.FindResource("RoundButtonTemplate") as Style;
-            annotateButton.Click += new RoutedEventHandler(AnnotateButton_Clicked);
+            annotateButton.Click += new RoutedEventHandler(AnnotateAppSelected);
+            annotateButton.TouchDown += new EventHandler<TouchEventArgs>(AnnotateAppSelected);
 
 
             Grid annotateGrid = new Grid();
@@ -134,7 +136,8 @@ namespace SurfaceApplication1
 
             Button studyButton = new Button();
             studyButton.Style = tabDynamic.FindResource("RoundButtonTemplate") as Style;
-            studyButton.Click += new RoutedEventHandler(StudyButton_Clicked);
+            studyButton.Click += new RoutedEventHandler(StudyAppSelected);
+            studyButton.TouchDown += new EventHandler<TouchEventArgs>(StudyAppSelected);
 
 
             Grid studyGrid = new Grid();
@@ -1253,7 +1256,7 @@ namespace SurfaceApplication1
 
         /// Here come all the searchsidebar functions!!
 
-        private void SearchButton_Clicked(object sender, RoutedEventArgs e)
+        private void SearchAppSelected(object sender, RoutedEventArgs e)
         {
             tabDynamic.DataContext = null;
             TabItem newTab = this.AddSearchTabItem();
@@ -1261,7 +1264,7 @@ namespace SurfaceApplication1
             tabDynamic.SelectedItem = newTab;
         }
 
-        private void AnnotateButton_Clicked(object sender, RoutedEventArgs e)
+        private void AnnotateAppSelected(object sender, RoutedEventArgs e)
         {
             tabDynamic.DataContext = null;
             TabItem newTab = this.AddAnnotateTabItem();
@@ -1269,7 +1272,7 @@ namespace SurfaceApplication1
             tabDynamic.SelectedItem = newTab;
         }
 
-        private void StudyButton_Clicked(object sender, RoutedEventArgs e)
+        private void StudyAppSelected(object sender, RoutedEventArgs e)
         {
             tabDynamic.DataContext = null;
             TabItem newTab = this.AddStudyTabItem();
@@ -1287,17 +1290,43 @@ namespace SurfaceApplication1
             tab.Name = string.Format("tab{0}", count);
 
             tab.moreOptionsNew.Click += new RoutedEventHandler(Show_Options);
+            tab.moreOptionsNew.TouchDown += new EventHandler<TouchEventArgs>(Show_Options);
             ///tab.moreOptions.Click += new RoutedEventHandler(Show_Options);
             tab.deleteTabButton.Click += new RoutedEventHandler(SearchbtnDelete_Click);
+            tab.deleteTabButton.TouchDown += new EventHandler<TouchEventArgs>(SearchbtnDelete_Click);
             ///tab.lessOptions.Click += new RoutedEventHandler(Hide_Options);
             tab.lessOptionsNew.Click += new RoutedEventHandler(Hide_Options);
+            tab.lessOptionsNew.TouchDown += new EventHandler<TouchEventArgs>(Hide_Options);
             tab.searchQueryBox.GotFocus += new RoutedEventHandler(SearchBox_Focused);
             tab.goSearch.Click += new RoutedEventHandler(newSearch);
+            tab.goSearch.TouchDown += new EventHandler<TouchEventArgs>(newSearch);
             tab.searchQueryBox.PreviewKeyDown += new KeyEventHandler(Enter_Clicked);
+            tab.caseSensitive.TouchDown += new EventHandler<TouchEventArgs>(changeCheck);
+            tab.wholeWordOnly.TouchDown += new EventHandler<TouchEventArgs>(changeCheck);
+            tab.wholePhraseOnly.TouchDown += new EventHandler<TouchEventArgs>(changeCheck);
+            tab.oldFrench.TouchDown += new EventHandler<TouchEventArgs>(pickLanguage);
+            tab.english.TouchDown += new EventHandler<TouchEventArgs>(pickLanguage);
 
             // insert tab item right before the last (+) tab item
             SidebarTabItems.Insert(count - 1, tab);
             return tab;
+        }
+
+        private void pickLanguage(object sender, TouchEventArgs e)
+        {
+            ComboBoxItem cbi = sender as ComboBoxItem;
+            cbi.IsSelected = true;
+            SearchTab selectedTab = tabDynamic.SelectedItem as SearchTab;
+            selectedTab.selectLanguage.SelectedIndex = 2;
+        }
+
+        private void changeCheck(object sender, TouchEventArgs e)
+        {
+            CheckBox thisbox = sender as CheckBox;
+            if (thisbox.IsChecked == true)
+                thisbox.IsChecked = false;
+            else
+                thisbox.IsChecked = true;
         }
 
         private void newSearch(object sender, RoutedEventArgs e)
@@ -1353,6 +1382,7 @@ namespace SurfaceApplication1
                     resultRBI.resultText.Text = result.text1 + "\r\n" + result.text2;
                     poetryLB.Items.Add(resultRBI);
                     resultRBI.Selected += new RoutedEventHandler(Result_Closeup);
+                    ///resultRBI.Selected += new EventHandler<TouchEventArgs>(Result_Closeup);
                 }
 
                 selectedTab.poetryTab.Header = "Poetry (" + poetryResults.Count + ")";

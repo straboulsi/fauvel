@@ -11,6 +11,11 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using Microsoft.Surface;
+using Microsoft.Surface.Presentation;
+using Microsoft.Surface.Presentation.Controls;
+using SSC = Microsoft.Surface.Presentation.Controls;
+using Microsoft.Surface.Presentation.Input;
 
 namespace SurfaceApplication1
 {
@@ -35,6 +40,7 @@ namespace SurfaceApplication1
         public StackPanel poetryPanel, lyricsPanel, imagesPanel;
         public Button moreOptionsNew, lessOptionsNew;
         public Image downArrow, upArrow;
+        
 
         public SearchTab()
         {
@@ -180,6 +186,7 @@ namespace SurfaceApplication1
             caseSensitive.Content = (string)"Case sensitive";
             Canvas.SetLeft(caseSensitive, 40);
             Canvas.SetTop(caseSensitive, 170);
+            caseSensitive.Visibility = System.Windows.Visibility.Visible;
 
             wholeWordOnly.FontSize = 10;
             wholeWordOnly.LayoutTransform = st;
