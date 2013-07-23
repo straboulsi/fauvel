@@ -119,11 +119,11 @@ namespace SurfaceApplication1
                 e.Result = tab._page;
                 tab._vBoxesGrid.Children.Clear();
 
-                List<Rect> vGhostBoxes = Translate.getGhostBoxes(PageNamer.getOnePageText(tab._page), SurfaceWindow1.xml, SurfaceWindow1.engXml, SurfaceWindow1.layoutXml);
-                
-                foreach (Rect r in vGhostBoxes)
+                List<BoundingBox> vGhostBoxes = Translate.getGhostBoxes(PageNamer.getOnePageText(tab._page), SurfaceWindow1.layoutXml);
+
+                foreach (BoundingBox r in vGhostBoxes)
                 {
-                    Grid g = Translate.getGhostGrid(r.X, r.Y, r.Width, r.Height);
+                    Grid g = Translate.getGrid(r.X, r.Y, r.Width, r.Height, null);
                     tab._vBoxesGrid.Children.Add(g);
                 }
             };
@@ -139,7 +139,7 @@ namespace SurfaceApplication1
             versoTranslations.DoWork += (s, e) =>
             {
                 e.Result = tab._page;
-                tab._translationBoxesV = Translate.getBoxes(PageNamer.getOnePageText(tab._page), SurfaceWindow1.xml, SurfaceWindow1.engXml, SurfaceWindow1.layoutXml);
+                tab._translationBoxesV = Translate.getTranslationOverlay(PageNamer.getOnePageText(tab._page), SurfaceWindow1.xml, SurfaceWindow1.engXml, SurfaceWindow1.layoutXml);
                 tab._textBlocksV = new List<TextBlock>();
 
                 foreach (TranslationBox tb in tab._translationBoxesV)
@@ -172,7 +172,7 @@ namespace SurfaceApplication1
 
             rectoTranslations.DoWork += (s, e) =>
             {
-                tab._translationBoxesR = Translate.getBoxes(PageNamer.getOnePageText(tab._page + 1), SurfaceWindow1.xml, SurfaceWindow1.engXml, SurfaceWindow1.layoutXml);
+                tab._translationBoxesR = Translate.getTranslationOverlay(PageNamer.getOnePageText(tab._page + 1), SurfaceWindow1.xml, SurfaceWindow1.engXml, SurfaceWindow1.layoutXml);
                 tab._textBlocksR = new List<TextBlock>();
 
                 foreach (TranslationBox tb in tab._translationBoxesR)

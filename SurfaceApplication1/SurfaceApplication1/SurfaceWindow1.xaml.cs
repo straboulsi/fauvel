@@ -84,8 +84,7 @@ namespace SurfaceApplication1
 
             Button searchButton = new Button();
             searchButton.Style = tabDynamic.FindResource("RoundButtonTemplate") as Style;
-            searchButton.Click += new RoutedEventHandler(SearchAppSelected);
-            searchButton.TouchDown += new EventHandler<TouchEventArgs>(SearchAppSelected);
+            searchButton.Click += new RoutedEventHandler(SearchButton_Clicked);
 
             Grid searchGrid = new Grid();
 
@@ -108,8 +107,7 @@ namespace SurfaceApplication1
 
             Button annotateButton = new Button();
             annotateButton.Style = tabDynamic.FindResource("RoundButtonTemplate") as Style;
-            annotateButton.Click += new RoutedEventHandler(AnnotateAppSelected);
-            annotateButton.TouchDown += new EventHandler<TouchEventArgs>(AnnotateAppSelected);
+            annotateButton.Click += new RoutedEventHandler(AnnotateButton_Clicked);
 
 
             Grid annotateGrid = new Grid();
@@ -135,8 +133,7 @@ namespace SurfaceApplication1
 
             Button studyButton = new Button();
             studyButton.Style = tabDynamic.FindResource("RoundButtonTemplate") as Style;
-            studyButton.Click += new RoutedEventHandler(StudyAppSelected);
-            studyButton.TouchDown += new EventHandler<TouchEventArgs>(StudyAppSelected);
+            studyButton.Click += new RoutedEventHandler(StudyButton_Clicked);
 
 
             Grid studyGrid = new Grid();
@@ -175,6 +172,8 @@ namespace SurfaceApplication1
                 String temp = e.StackTrace;
             }
 
+            Translate.getTranslationOverlay("34v", xml, engXml, layoutXml);
+            Console.Read();
 
             // slider actions
             pageSlider.AddHandler(UIElement.ManipulationDeltaEvent, new EventHandler<ManipulationDeltaEventArgs>(slider_ManipulationDelta), true);
@@ -187,12 +186,6 @@ namespace SurfaceApplication1
             newTabButton.Header = "+";
             tabBar.Items.Add(newTabButton);
             createTab(1);
-        }
-
-        private void showBoxes(object sender, RoutedEventArgs e)
-        {
-            MessageBox.Show(string.Format("Come get yo boxes here!!!"),
-                    "Mr. Box Man", MessageBoxButton.OK);
         }
 
         protected override void OnClosed(EventArgs e)
@@ -1155,7 +1148,7 @@ namespace SurfaceApplication1
 
         /// Here come all the searchsidebar functions!!
 
-        private void SearchAppSelected(object sender, RoutedEventArgs e)
+        private void SearchButton_Clicked(object sender, RoutedEventArgs e)
         {
             tabDynamic.DataContext = null;
             TabItem newTab = this.AddSearchTabItem();
@@ -1163,7 +1156,7 @@ namespace SurfaceApplication1
             tabDynamic.SelectedItem = newTab;
         }
 
-        private void AnnotateAppSelected(object sender, RoutedEventArgs e)
+        private void AnnotateButton_Clicked(object sender, RoutedEventArgs e)
         {
             tabDynamic.DataContext = null;
             TabItem newTab = this.AddAnnotateTabItem();
@@ -1171,7 +1164,7 @@ namespace SurfaceApplication1
             tabDynamic.SelectedItem = newTab;
         }
 
-        private void StudyAppSelected(object sender, RoutedEventArgs e)
+        private void StudyButton_Clicked(object sender, RoutedEventArgs e)
         {
             tabDynamic.DataContext = null;
             TabItem newTab = this.AddStudyTabItem();
@@ -1188,48 +1181,23 @@ namespace SurfaceApplication1
             SearchTab tab = new SearchTab();
             tab.Name = string.Format("tab{0}", count);
 
-            tab.moreOptionsNew.Click += new RoutedEventHandler(Show_Options);
-            tab.moreOptionsNew.TouchDown += new EventHandler<TouchEventArgs>(Show_Options);
-            ///tab.moreOptions.Click += new RoutedEventHandler(Show_Options);
+            tab.moreOptions.Click += new RoutedEventHandler(Show_Options);
             tab.deleteTabButton.Click += new RoutedEventHandler(SearchbtnDelete_Click);
-            tab.deleteTabButton.TouchDown += new EventHandler<TouchEventArgs>(SearchbtnDelete_Click);
-            ///tab.lessOptions.Click += new RoutedEventHandler(Hide_Options);
-            tab.lessOptionsNew.Click += new RoutedEventHandler(Hide_Options);
-            tab.lessOptionsNew.TouchDown += new EventHandler<TouchEventArgs>(Hide_Options);
-            tab.searchQueryBox.GotFocus += new RoutedEventHandler(SearchBox_Focused);
+            tab.lessOptions.Click += new RoutedEventHandler(Hide_Options);
+            tab.searchQueryBox.GotFocus += new RoutedEventHandler(Enter_Search);
             tab.goSearch.Click += new RoutedEventHandler(newSearch);
-            tab.goSearch.TouchDown += new EventHandler<TouchEventArgs>(newSearch);
             tab.searchQueryBox.PreviewKeyDown += new KeyEventHandler(Enter_Clicked);
-            tab.caseSensitive.TouchDown += new EventHandler<TouchEventArgs>(changeCheck);
-            tab.wholeWordOnly.TouchDown += new EventHandler<TouchEventArgs>(changeCheck);
-            tab.wholePhraseOnly.TouchDown += new EventHandler<TouchEventArgs>(changeCheck);
-            tab.oldFrench.TouchDown += new EventHandler<TouchEventArgs>(pickLanguage);
-            tab.english.TouchDown += new EventHandler<TouchEventArgs>(pickLanguage);
 
             // insert tab item right before the last (+) tab item
             SidebarTabItems.Insert(count - 1, tab);
             return tab;
         }
 
-        private void pickLanguage(object sender, TouchEventArgs e)
-        {
-            ComboBoxItem cbi = sender as ComboBoxItem;
-            cbi.IsSelected = true;
-            SearchTab selectedTab = tabDynamic.SelectedItem as SearchTab;
-            selectedTab.selectLanguage.SelectedIndex = 2;
-        }
-
-        private void changeCheck(object sender, TouchEventArgs e)
-        {
-            CheckBox thisbox = sender as CheckBox;
-            if (thisbox.IsChecked == true)
-                thisbox.IsChecked = false;
-            else
-                thisbox.IsChecked = true;
-        }
-
         private void newSearch(object sender, RoutedEventArgs e)
         {
+            Stopwatch sw1 = new Stopwatch();
+            sw1.Start();
+
             SearchTab selectedTab = tabDynamic.SelectedItem as SearchTab;
             String searchQuery = selectedTab.searchQueryBox.Text;
 
@@ -1270,15 +1238,14 @@ namespace SurfaceApplication1
                     resultRBI.lineInfo.Text = Convert.ToString(result.lineNum);
                     resultRBI.resultType = result.resultType;
 
-                    resultRBI.resultThumbnail = result.thumbnail; 
-                    resultRBI.excerpt1 = result.excerpt1;
-                    resultRBI.excerpt2 = result.excerpt2;
-                    resultRBI.excerpt3 = result.excerpt3;
+                    resultRBI.resultThumbnail = result.thumbnail; /// Add this in once we have a method to get thumbnails
+                    ///resultRBI.resultThumbnail.Source = new BitmapImage(new Uri(@"/poetry.jpg", UriKind.Relative));
+                    resultRBI.excerpt = result.excerpt;
+
 
                     resultRBI.resultText.Text = result.text1 + "\r\n" + result.text2;
                     poetryLB.Items.Add(resultRBI);
                     resultRBI.Selected += new RoutedEventHandler(Result_Closeup);
-                    ///resultRBI.Selected += new EventHandler<TouchEventArgs>(Result_Closeup);
                 }
 
                 selectedTab.poetryTab.Header = "Poetry (" + poetryResults.Count + ")";
@@ -1308,9 +1275,9 @@ namespace SurfaceApplication1
                     resultRBI.folioInfo.Text = result.folio;
                     resultRBI.resultType = result.resultType;
                     resultRBI.resultThumbnail = result.thumbnail;
-                    resultRBI.excerpt1 = result.excerpt1;
-                    resultRBI.excerpt2 = result.excerpt2;
-                    resultRBI.excerpt3 = result.excerpt3;
+                    ///resultRBI.resultThumbnail.Source = result.thumbnail.Source; /// Add this in once we have a method to get thumbnails
+                    ///resultRBI.resultThumbnail.Source = new BitmapImage(new Uri(@"/music.jpg", UriKind.Relative));
+                    resultRBI.excerpt = result.excerpt;
                     resultRBI.resultText.Text = result.text1;
                     lyricsLB.Items.Add(resultRBI);
                     resultRBI.Selected += new RoutedEventHandler(Result_Closeup);
@@ -1340,10 +1307,8 @@ namespace SurfaceApplication1
                     ResultBoxItem resultRBI = new ResultBoxItem();
                     resultRBI.folioInfo.Text = result.folio;
                     resultRBI.resultType = result.resultType;
-                    resultRBI.resultThumbnail = result.thumbnail; 
-                    resultRBI.excerpt1 = result.excerpt1;
-                    resultRBI.excerpt2 = result.excerpt2;
-                    resultRBI.excerpt3 = result.excerpt3;
+                    resultRBI.resultThumbnail = result.thumbnail;
+                    resultRBI.excerpt = result.excerpt;
                     resultRBI.resultText.Text = result.text1 + "\r\n" + result.text2;
                     resultRBI.resultText.VerticalAlignment = VerticalAlignment.Top;
                     imagesLB.Items.Add(resultRBI);
@@ -1366,7 +1331,13 @@ namespace SurfaceApplication1
                 if (selectedTab.optionsCanvas.IsVisible)
                     compressResults();
 
-                
+
+                sw1.Stop();
+                TimeSpan ts1 = sw1.Elapsed;
+                string elapsedTime = String.Format("{0:00}:{1:00}:{2:00}.{3:00}",
+            ts1.Hours, ts1.Minutes, ts1.Seconds,
+            ts1.Milliseconds / 10);
+                Console.WriteLine("Total time for a search: " + elapsedTime);
             }
 
         }
@@ -1421,6 +1392,7 @@ namespace SurfaceApplication1
         {
             SearchTab selectedTab = tabDynamic.SelectedItem as SearchTab;
             ResultBoxItem selectedResult = e.Source as ResultBoxItem;
+            String temp = selectedResult.excerpt;
 
 
 
@@ -1442,15 +1414,14 @@ namespace SurfaceApplication1
             {
                 selectedTab.poetryPanel.Children.Clear();
                 int lineNum = Convert.ToInt32(selectedResult.lineInfo.Text);
+                closeupText.Text = selectedResult.excerpt;
                 int firstLine = lineNum - 5;
                 int lastLine = lineNum + 5;
                 if (firstLine < veryFirstLine)
                     firstLine = veryFirstLine;
                 if (lastLine > veryLastLine)
                     lastLine = veryLastLine;
-                
-               
-
+                closeupText.Text += "\r\n\r\nLines " + (firstLine) + " to " + (lastLine);
                 selectedTab.poetryPanel.Children.Add(closeupImage);
                 selectedTab.poetryPanel.Children.Add(closeupText);
             }
@@ -1458,6 +1429,7 @@ namespace SurfaceApplication1
             else if (selectedResult.resultType == 2)
             {
                 selectedTab.lyricsPanel.Children.Clear();
+                closeupText.Text = selectedResult.excerpt;
                 selectedTab.lyricsPanel.Children.Add(closeupImage);
                 selectedTab.lyricsPanel.Children.Add(closeupText);
             }
@@ -1465,14 +1437,23 @@ namespace SurfaceApplication1
             else if (selectedResult.resultType == 3)
             {
                 selectedTab.imagesPanel.Children.Clear();
+                closeupText.Text = selectedResult.excerpt;
                 selectedTab.imagesPanel.Children.Add(closeupImage);
                 selectedTab.imagesPanel.Children.Add(closeupText);
             }
 
-            closeupText.Inlines.Add(new Run { FontFamily = new FontFamily("Cambria"), Text = selectedResult.excerpt1, FontWeight = FontWeights.Normal });
-            closeupText.Inlines.Add(new Run { FontFamily = new FontFamily("Cambria"), FontWeight = FontWeights.Bold, Text = selectedResult.excerpt2 });
-            closeupText.Inlines.Add(new Run { FontFamily = new FontFamily("Cambria"), FontWeight = FontWeights.Normal, Text = selectedResult.excerpt3 });
+            /// closeupText.Text = boldWords(selectedTab.searchQueryBox.Text, closeupText.Text);
 
+
+
+        }
+
+        private String boldWords(String wordToBold, String stringToTransform)
+        {
+            stringToTransform = stringToTransform.Replace(wordToBold, "bleh");
+
+
+            return stringToTransform;
         }
 
         private void Show_Options(object sender, RoutedEventArgs e)
@@ -1480,8 +1461,7 @@ namespace SurfaceApplication1
             SearchTab selectedTab = tabDynamic.SelectedItem as SearchTab;
             selectedTab.optionsCanvas.Visibility = Visibility.Visible;
             selectedTab.topLine.Visibility = Visibility.Hidden;
-            ///selectedTab.moreOptions.Visibility = Visibility.Hidden;
-            selectedTab.moreOptionsNew.Visibility = Visibility.Hidden;
+            selectedTab.moreOptions.Visibility = Visibility.Hidden;
             if (selectedTab.searchResults.IsVisible)
                 compressResults();
         }
@@ -1491,22 +1471,15 @@ namespace SurfaceApplication1
             SearchTab selectedTab = tabDynamic.SelectedItem as SearchTab;
             selectedTab.optionsCanvas.Visibility = Visibility.Hidden;
             selectedTab.topLine.Visibility = Visibility.Visible;
-            ///selectedTab.moreOptions.Visibility = Visibility.Visible;
-            selectedTab.moreOptionsNew.Visibility = Visibility.Visible;
+            selectedTab.moreOptions.Visibility = Visibility.Visible;
+
             checkForChanges();
 
-            /**
             if (defaultOptionsChanged == true)
                 selectedTab.moreOptions.Background = Brushes.MediumTurquoise;
 
             else
                 selectedTab.moreOptions.ClearValue(Control.BackgroundProperty);
-            **/
-            if (defaultOptionsChanged == true)
-                selectedTab.moreOptionsNew.Background = Brushes.MediumTurquoise;
-
-            else
-                selectedTab.moreOptionsNew.ClearValue(Control.BackgroundProperty);
 
             if (selectedTab.searchResults.IsVisible)
                 expandResults();
@@ -1527,18 +1500,13 @@ namespace SurfaceApplication1
             return defaultOptionsChanged;
         }
 
-        private void SearchBox_Focused(object sender, RoutedEventArgs e)
+        private void Enter_Search(object sender, RoutedEventArgs e)
         {
             SearchTab selectedTab = tabDynamic.SelectedItem as SearchTab;
             if (selectedTab.searchQueryBox.Text == "Enter text")
             {
                 selectedTab.searchQueryBox.Foreground = Brushes.Black;
                 selectedTab.searchQueryBox.Text = "";
-            }
-            else if(selectedTab.searchQueryBox.Text != "")
-            {
-                selectedTab.searchQueryBox.SelectAll();
-                
             }
         }
 

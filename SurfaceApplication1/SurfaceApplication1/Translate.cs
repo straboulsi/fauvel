@@ -110,12 +110,23 @@ namespace SurfaceApplication1
             g.RowDefinitions.Add(r2);
             g.RowDefinitions.Add(r3);
 
-            Viewbox v = new Viewbox();
-            Grid.SetRow(v, 1);
-            Grid.SetColumn(v, 1);
-            g.Children.Add(v);
-            v.Child = t;
-            v.Stretch = Stretch.Uniform;
+            if (t != null)
+            {
+                Viewbox v = new Viewbox();
+                Grid.SetRow(v, 1);
+                Grid.SetColumn(v, 1);
+                g.Children.Add(v);
+                v.Child = t;
+                v.Stretch = Stretch.Uniform;
+            }
+            else
+            {
+                Grid filla = new Grid();
+                Grid.SetRow(filla, 1);
+                Grid.SetColumn(filla, 1);
+                g.Children.Add(filla);
+                filla.Background = Brushes.Azure;
+            }
 
             return g;
         }
@@ -168,7 +179,7 @@ namespace SurfaceApplication1
 
 
 
-        public static List<BoundingBox> getBoxes(String page, XmlDocument layoutXml)
+        public static List<BoundingBox> getGhostBoxes(String page, XmlDocument layoutXml)
         {
             List<BoundingBox> boxes = new List<BoundingBox>();
 
@@ -183,11 +194,11 @@ namespace SurfaceApplication1
                     Point bottomR = new Point(Convert.ToDouble(node.Attributes["lrx"].Value), Convert.ToDouble(node.Attributes["lry"].Value));
                     BoundingBox newBB = new BoundingBox(tag, topL, bottomR);
                     boxes.Add(newBB);
-
+                }
 
                 }
-            }
             catch (Exception e)
+            {
             {
 
             }
