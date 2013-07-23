@@ -51,21 +51,20 @@ namespace SurfaceApplication1
         int swipeLength = 25;
         int swipeHeight = 6;
         List<Tab> tabArray = new List<Tab>();
-        Workers workers = new Workers();
-        enum language { None, English, OldFrench, French };
-        language currentLanguage = language.None;
+        public enum language { None, English, OldFrench, French };
+        public static language currentLanguage = language.None;
         bool dtOut = false; // double tap to zoom out
 
         private List<TabItem> SidebarTabItems;
         private TabItem tabAdd;
         private Boolean defaultOptionsChanged;
-        public XmlDocument xml, engXml, layoutXml;
+        public static XmlDocument xml, engXml, layoutXml;
         public int veryFirstLine, veryLastLine;
 
 
         public SurfaceWindow1()
         {
-            InitializeComponent(); 
+            InitializeComponent();
 
             //Search bar initialization
             veryFirstLine = 1;
@@ -247,70 +246,9 @@ namespace SurfaceApplication1
         {
             Tab currentTab = this.currentTab();
 
-            /* start translations */
-            currentTab._vTranslationGrid.Children.Clear();
-            currentTab._rTranslationGrid.Children.Clear();
+            currentTab._worker.updateTranslations();
 
-            currentTab._translationBoxesV = Translate.getBoxes(PageNamer.getOnePageText(currentTab._page)    , xml, engXml, layoutXml);
-            currentTab._translationBoxesR = Translate.getBoxes(PageNamer.getOnePageText(currentTab._page + 1), xml, engXml, layoutXml);
-
-            currentTab._textBlocksV = new List<TextBlock>();
-            currentTab._textBlocksR = new List<TextBlock>();
-
-            foreach (TranslationBox tb in currentTab._translationBoxesV)
-            {
-                double width, x, y, height;
-                x = tb.getTopLeft().X;
-                y = tb.getTopLeft().Y;
-                width = (tb.getBottomRight().X - tb.getTopLeft().X);
-                height = (tb.getBottomRight().Y - tb.getTopLeft().Y);
-
-                TextBlock t = new TextBlock();
-                Grid g = Translate.getGrid(x, y, width, height, t);
-                t.Foreground = Translate.textBrush;
-                t.Background = Translate.backBrush;
-                currentTab._textBlocksV.Add(t);
-                currentTab._vTranslationGrid.Children.Add(g);
-            }
-
-            foreach (TranslationBox tb in currentTab._translationBoxesR)
-            {
-                double width, x, y, height;
-                x = tb.getTopLeft().X;
-                y = tb.getTopLeft().Y;
-                width = (tb.getBottomRight().X - tb.getTopLeft().X);
-                height = (tb.getBottomRight().Y - tb.getTopLeft().Y);
-
-                TextBlock t = new TextBlock();
-                Grid g = Translate.getGrid(x, y, width, height, t);
-                t.Foreground = Translate.textBrush;
-                t.Background = Translate.backBrush;
-                currentTab._textBlocksR.Add(t);
-                currentTab._rTranslationGrid.Children.Add(g);
-            }
-
-            setTranslateText();
-            /* end translations */
-
-            /* start ghostboxes 
-            currentTab._vBoxesGrid.Children.Clear();
-            currentTab._rBoxesGrid.Children.Clear();
-
-            List<Rect> vGhostBoxes = Translate.getGhostBoxes(PageNamer.getOnePageText(currentTab._page), xml, engXml, layoutXml);
-            List<Rect> rGhostBoxes = Translate.getGhostBoxes(PageNamer.getOnePageText(currentTab._page + 1), xml, engXml, layoutXml);
-
-            foreach (Rect r in vGhostBoxes)
-            {
-                Grid g = Translate.getGhostGrid(r.X, r.Y, r.Width, r.Height);
-                currentTab._vBoxesGrid.Children.Add(g);
-            }
-
-            foreach (Rect r in rGhostBoxes)
-            {
-                Grid g = Translate.getGhostGrid(r.X, r.Y, r.Width, r.Height);
-                currentTab._rBoxesGrid.Children.Add(g);
-            }
-            /* end ghostboxes*/
+            currentTab._worker.updateGhostBoxes();
 
             currentTab._vSVI.Width = currentTab._vSVI.MinWidth;
             currentTab._vSVI.Height = currentTab._vSVI.MinHeight;
@@ -341,10 +279,8 @@ namespace SurfaceApplication1
                 recto.Source = image2;
             }
 
-            if (!workers.versoImageChange.IsBusy)
-                workers.updateVersoImage(currentTab, false);
-            if (currentTab._twoPage && !workers.rectoImageChange.IsBusy)
-                workers.updateRectoImage(currentTab, false);
+            currentTab._worker.updateVersoImage(false);
+            currentTab._worker.updateRectoImage(false);
 
             String pageText = PageNamer.getPageText(currentTab._page, currentTab._twoPage);
             pageNumberText.Text = pageText;
@@ -766,7 +702,8 @@ namespace SurfaceApplication1
                 SliderImage1.Margin = new Thickness(50, 0, 0, 0);
                 SliderImage2.Opacity = 0;
             }
-            workers.updateSlideImage(onVal);
+
+            currentTab()._worker.updateSlideImage(onVal);
         }
 
         /*
@@ -787,13 +724,12 @@ namespace SurfaceApplication1
          */
         private void makeVersoImageLarge(object sender, SizeChangedEventArgs e)
         {
-            if (!workers.bigV)
+            if (!currentTab()._worker.bigV)
             {
                 ScatterViewItem item = (ScatterViewItem)sender;
                 if (item.ActualWidth > minPageWidth)
                 {
-                    if (!workers.rectoImageChange.IsBusy)
-                        workers.updateVersoImage(currentTab(), true);
+                    currentTab()._worker.updateVersoImage(true);
                 }
             }
         }
@@ -803,13 +739,12 @@ namespace SurfaceApplication1
          */
         private void makeRectoImageLarge(object sender, SizeChangedEventArgs e)
         {
-            if (!workers.bigR)
+            if (!currentTab()._worker.bigR)
             {
                 ScatterViewItem item = (ScatterViewItem)sender;
                 if (item.ActualWidth > minPageWidth)
                 {
-                    if (currentTab()._twoPage && !workers.rectoImageChange.IsBusy)
-                        workers.updateRectoImage(currentTab(), true);
+                        currentTab()._worker.updateRectoImage(true);
                 }
             }
         }
@@ -1068,42 +1003,7 @@ namespace SurfaceApplication1
                 currentLanguage = language.French;
             if (box.SelectedIndex == 3)
                 currentLanguage = language.English;
-            setTranslateText();
-        }
-
-        private void setTranslateText()
-        {
-            int leftCount, rightCount;
-            Tab tab = currentTab();
-            leftCount = tab._textBlocksV.Count;
-            rightCount = tab._textBlocksR.Count;
-
-
-            testText.Text = leftCount.ToString() + " " + rightCount.ToString();
-            for (int i = 0; i < leftCount; i++)
-            {
-                tab._textBlocksV[i].Visibility = System.Windows.Visibility.Visible;
-                if (currentLanguage == language.None)
-                    tab._textBlocksV[i].Visibility = System.Windows.Visibility.Hidden;
-                if (currentLanguage == language.OldFrench)
-                    tab._textBlocksV[i].Text = tab._translationBoxesV[i].getOldFr();
-                if (currentLanguage == language.French)
-                    tab._textBlocksV[i].Text = tab._translationBoxesV[i].getOldFr();
-                if (currentLanguage == language.English)
-                    tab._textBlocksV[i].Text = tab._translationBoxesV[i].getEng();
-            }
-            for (int i = 0; i < rightCount; i++)
-            {
-                tab._textBlocksR[i].Visibility = System.Windows.Visibility.Visible;
-                if (currentLanguage == language.None)
-                    tab._textBlocksR[i].Visibility = System.Windows.Visibility.Hidden;
-                if (currentLanguage == language.OldFrench)
-                    tab._textBlocksR[i].Text = tab._translationBoxesR[i].getOldFr();
-                if (currentLanguage == language.French)
-                    tab._textBlocksR[i].Text = tab._translationBoxesR[i].getOldFr();
-                if (currentLanguage == language.English)
-                    tab._textBlocksR[i].Text = tab._translationBoxesR[i].getEng();
-            }
+            currentTab()._worker.setTranslateText(currentLanguage);
         }
 
         public void rightSwipeDetectionStart(object sender, TouchEventArgs e)

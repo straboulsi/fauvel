@@ -27,6 +27,7 @@ namespace SurfaceApplication1
         public bool _twoPage;
         public ScatterView _vSV, _rSV;
         public TextBlock _headerTB;
+        public Workers _worker;
 
         public Tab(int page, TabItem newTab, Image newVerso, Image newRecto, Canvas canvas, Canvas c_v, Canvas c_r, Grid vGrid, Grid rGrid, Button delBtn, ScatterView vSV, ScatterView rSV, ScatterViewItem vsi, ScatterViewItem rsi, Grid vSwipeGrid, Grid rSwipeGrid, Grid vTranslationGrid, Grid rTranslationGrid, Grid vBoxesGrid, Grid rBoxesGrid, TextBlock headerText)
         {
@@ -56,6 +57,7 @@ namespace SurfaceApplication1
             _vSV = vSV;
             _rSV = rSV;
             _headerTB = headerText;
+            _worker = new Workers(this);
         }
 
     }
