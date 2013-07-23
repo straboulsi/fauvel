@@ -172,11 +172,8 @@ namespace SurfaceApplication1
                 String temp = e.StackTrace;
             }
 
-
-
-            Translate.getBoxes("34v", xml, engXml, layoutXml);
+            Translate.getTranslationOverlay("34v", xml, engXml, layoutXml);
             Console.Read();
-
 
             // slider actions
             pageSlider.AddHandler(UIElement.ManipulationDeltaEvent, new EventHandler<ManipulationDeltaEventArgs>(slider_ManipulationDelta), true);

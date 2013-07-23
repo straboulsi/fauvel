@@ -20,6 +20,7 @@ using Microsoft.Surface.Presentation;
 using Microsoft.Surface.Presentation.Controls;
 using Microsoft.Surface.Presentation.Input;
 using System.IO;
+using System.Globalization;
 
 namespace SurfaceApplication1
 {
@@ -34,6 +35,7 @@ namespace SurfaceApplication1
     {
         public static Brush textBrush = (Brush)(new BrushConverter().ConvertFrom("#663311"));
         public static Brush backBrush = (Brush)(new BrushConverter().ConvertFrom("#CCE0D0B0"));
+        public static CompareInfo myComp = CultureInfo.InvariantCulture.CompareInfo;
 
         public static bool Contains(this string source, string toCheck, StringComparison comp)
         {
@@ -108,12 +110,23 @@ namespace SurfaceApplication1
             g.RowDefinitions.Add(r2);
             g.RowDefinitions.Add(r3);
 
-            Viewbox v = new Viewbox();
-            Grid.SetRow(v, 1);
-            Grid.SetColumn(v, 1);
-            g.Children.Add(v);
-            v.Child = t;
-            v.Stretch = Stretch.Uniform;
+            if (t != null)
+            {
+                Viewbox v = new Viewbox();
+                Grid.SetRow(v, 1);
+                Grid.SetColumn(v, 1);
+                g.Children.Add(v);
+                v.Child = t;
+                v.Stretch = Stretch.Uniform;
+            }
+            else
+            {
+                Grid filla = new Grid();
+                Grid.SetRow(filla, 1);
+                Grid.SetColumn(filla, 1);
+                g.Children.Add(filla);
+                filla.Background = Brushes.Azure;
+            }
 
             return g;
         }
@@ -124,7 +137,7 @@ namespace SurfaceApplication1
          * Calls on other methods in this class to fetch English, French, or coordinates.
          * Expects folio without the "Fo" - i.e. 1v, 35r, 28tr
          **/
-        public static List<TranslationBox> getBoxes(String page, XmlDocument xml, XmlDocument engXml, XmlDocument layoutXml)
+        public static List<TranslationBox> getTranslationOverlay(String page, XmlDocument xml, XmlDocument engXml, XmlDocument layoutXml)
         {
 
             List<TranslationBox> boxes = new List<TranslationBox>();
@@ -160,15 +173,37 @@ namespace SurfaceApplication1
                 Console.Read();
             }
 
-            foreach (TranslationBox tb in boxes)
-            {
-                Console.Write(tb.tag + "\r\n" + tb.pointsToString());
-            }
-
             return boxes;
         }
 
 
+
+
+        public static List<BoundingBox> getGhostBoxes(String page, XmlDocument layoutXml)
+        {
+            List<BoundingBox> boxes = new List<BoundingBox>();
+
+            try
+            {
+                XmlNodeList foundNodes = layoutXml.DocumentElement.SelectNodes("//surface[@id='" + page + "']/zone/box");
+                foreach (XmlNode node in foundNodes)
+                {
+                    String tag = node.ParentNode.Attributes["id"].Value;
+                    
+                    Point topL = new Point(Convert.ToDouble(node.Attributes["ulx"].Value), Convert.ToDouble(node.Attributes["uly"].Value));
+                    Point bottomR = new Point(Convert.ToDouble(node.Attributes["lrx"].Value), Convert.ToDouble(node.Attributes["lry"].Value));
+                    BoundingBox newBB = new BoundingBox(tag, topL, bottomR);
+                    boxes.Add(newBB);
+                }
+            }
+            catch (Exception e)
+            {
+
+            }
+
+            return boxes;
+
+        }
 
 
         /**
@@ -404,9 +439,16 @@ namespace SurfaceApplication1
                         String pageNum = page.Attributes["facs"].Value;
                         pageNum = "Fo" + pageNum.Substring(1);
                         newResult.folio = pageNum;
-                        newResult.excerpt = getPoetry(newResult.lineNum - 4, newResult.lineNum + 4, xml);
+
+                        String resultLine = getPoetry(newResult.lineNum, newResult.lineNum, xml);
+                        String str1 = resultLine.Substring(0, myComp.IndexOf(resultLine, search, CompareOptions.IgnoreCase));
+                        String str2 = resultLine.Substring(myComp.IndexOf(resultLine, search, CompareOptions.IgnoreCase) + search.Length);
+                        String lineInfo = "\r\n\r\nLines " + (newResult.lineNum - 4) + " to " + (newResult.lineNum + 4);
+
+                        newResult.excerpt1 = getPoetry(newResult.lineNum - 4, newResult.lineNum - 1, xml) + "\r\n" + str1;
+                        newResult.excerpt2 = search;
+                        newResult.excerpt3 = str2 + "\r\n" + getPoetry(newResult.lineNum + 1, newResult.lineNum + 4, xml) + lineInfo;
                         newResult.text1 = xn.InnerText.Trim();
-                        Console.Write(newResult.text1);
                         newResult.text2 = getEnglish(newResult.lineNum, newResult.lineNum, engXml);
 
 
@@ -508,7 +550,15 @@ namespace SurfaceApplication1
                         newResult.text1 = xn.InnerText.Trim();
                         newResult.text2 = getPoetry(newResult.lineNum, newResult.lineNum, xml);
                         newResult.folio = getPageByLineNum(newResult.lineNum, xml);
-                        newResult.excerpt = getEnglish(newResult.lineNum - 4, newResult.lineNum + 4, engXml);
+                        ///newResult.excerpt = getEnglish(newResult.lineNum - 4, newResult.lineNum + 4, engXml);
+                        String resultLine = getEnglish(newResult.lineNum, newResult.lineNum, engXml);
+                        String str1 = resultLine.Substring(0, myComp.IndexOf(resultLine, search, CompareOptions.IgnoreCase));
+                        String str2 = resultLine.Substring(myComp.IndexOf(resultLine, search, CompareOptions.IgnoreCase) + search.Length);
+                        String lineInfo = "\r\n\r\nLines " + (newResult.lineNum - 4) + " to " + (newResult.lineNum + 4);
+
+                        newResult.excerpt1 = getEnglish(newResult.lineNum - 4, newResult.lineNum - 1, xml) + "\r\n" + str1;
+                        newResult.excerpt2 = search;
+                        newResult.excerpt3 = str2 + "\r\n" + getEnglish(newResult.lineNum + 1, newResult.lineNum + 4, xml) + lineInfo;
                         newResult.thumbnail = convertImage(Thumbnailer.cropImage(Thumbnailer.getImage(newResult.folio, layoutXml), Thumbnailer.getLineRect(lineNum, layoutXml)));
 
                         results.Add(newResult);
@@ -529,7 +579,6 @@ namespace SurfaceApplication1
         public static List<SearchResult> searchLyrics(String search, int caseSensitive, int wordSensitive, XmlDocument xml, XmlDocument layoutXml)
         {
             List<SearchResult> results = new List<SearchResult>();
-            String thisTitle = "";
 
             try
             {
@@ -568,24 +617,28 @@ namespace SurfaceApplication1
                         if (lastLine >= allLyrics.Length)
                             lastLine = allLyrics.Length - 1;
 
+                        String excerpt = "";
+
                         if (firstLine > 0)
-                            newResult.excerpt += "...\r\n";
+                            excerpt += "...\r\n";
 
                         for (int i = firstLine; i <= lastLine; i++)
-                            newResult.excerpt += allLyrics[i].Trim() + "\r\n";
+                            excerpt += allLyrics[i].Trim() + "\r\n";
 
                         if (lastLine != allLyrics.Length - 1)
-                            newResult.excerpt += "...";
+                            excerpt += "...";
 
-                        int index = str.IndexOf(")");
-                        str = str.Substring(0, index + 1); // The title of the musical object
-                        thisTitle = str;
-                        newResult.text1 = str.Trim();
+                        
+
+                        newResult.excerpt1 = excerpt.Substring(0, myComp.IndexOf(excerpt, search, CompareOptions.IgnoreCase));
+                        newResult.excerpt2 = search;
+                        newResult.excerpt3 = excerpt.Substring(myComp.IndexOf(excerpt, search, CompareOptions.IgnoreCase) + search.Length);
+
+                        newResult.text1 = allLyrics[0];
                         newResult.tag = xn.Attributes["id"].Value;
                         newResult.folio = "Fo" + (xn.ParentNode.Attributes["facs"].Value).Substring(1);
                         newResult.resultType = 2;
                         String tag = newResult.tag.Substring(0, newResult.tag.Length - 2);
-                        Console.Write(tag);
                         newResult.thumbnail = convertImage(Thumbnailer.cropImage(Thumbnailer.getImage(newResult.folio, layoutXml), Thumbnailer.getRect(tag, layoutXml)));
                         results.Add(newResult);
                     }
@@ -688,7 +741,12 @@ namespace SurfaceApplication1
                         int index = xn.InnerText.IndexOf("(");
                         newResult.text1 = xn.InnerText.Substring(0, index).Trim();
                         newResult.text2 = xn.InnerText.Substring(index).Trim();
-                        newResult.excerpt = xn.InnerText.Trim();
+                        String resultLine = xn.InnerText.Trim();
+                        String str1 = resultLine.Substring(0, myComp.IndexOf(resultLine, search, CompareOptions.IgnoreCase));
+                        String str2 = resultLine.Substring(myComp.IndexOf(resultLine, search, CompareOptions.IgnoreCase) + search.Length);
+                        newResult.excerpt1 = str1;
+                        newResult.excerpt2 = search;
+                        newResult.excerpt3 = str2;
                         newResult.tag = xn.Attributes["id"].Value;
                         newResult.folio = "Fo" + (xn.ParentNode.Attributes["facs"].Value).Substring(1);
                         newResult.thumbnail = convertImage(Thumbnailer.cropImage(Thumbnailer.getImage(newResult.folio, layoutXml), Thumbnailer.getRect(newResult.tag, layoutXml)));
@@ -721,9 +779,7 @@ namespace SurfaceApplication1
                 String str = testNode.InnerText;
                 int intVoiceCount = Convert.ToInt32(str);
 
-                if (intVoiceCount == voiceNum)
-                    Console.Write(xn.InnerText);
-
+                
             }
 
             Console.Read();

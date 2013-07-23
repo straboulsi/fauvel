@@ -21,7 +21,7 @@ namespace SurfaceApplication1
     class ResultBoxItem : ListBoxItem
     {
         public StackPanel resultStack, infoStack;
-        public String excerpt;
+        public String excerpt1, excerpt2, excerpt3;
         public TextBlock folioInfo, lineInfo, resultText;
         public Image resultThumbnail;
         public int resultType; // 1 = poetry, 2 = music, 3 = image

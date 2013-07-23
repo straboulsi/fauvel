@@ -68,6 +68,7 @@
   <PropertyGroup>
     <SignManifests>true</SignManifests>
   </PropertyGroup>
+  <PropertyGroup />
   <PropertyGroup>
     <NoWin32Manifest>true</NoWin32Manifest>
   </PropertyGroup>
@@ -104,6 +105,7 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="BoundingBox.cs" />
     <Compile Include="PageNamer.cs" />
     <Compile Include="ResultBoxItem.cs" />
     <Compile Include="SearchResult.cs" />
@@ -144,9 +146,12 @@
     <None Include="SurfaceApplication1_TemporaryKey.pfx" />
   </ItemGroup>
   <ItemGroup>
+    <Resource Include="downArrow.png" />
+    <Resource Include="box.jpg" />
     <Content Include="layout_full.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Resource Include="upArrow.png" />
     <Content Include="XMLFinalContentFile.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
