@@ -16,7 +16,7 @@ namespace SurfaceApplication1
 {
     public class SearchResult
     {
-        public String folio, text1, text2, excerpt, tag;
+        public String folio, text1, text2, excerpt1, excerpt2, excerpt3, tag;
         public int lineNum;
         public Image thumbnail;
         public int resultType; // 1 = poetry, 2 = music, 3 = image
