@@ -195,8 +195,10 @@ namespace SurfaceApplication1
                     BoundingBox newBB = new BoundingBox(tag, topL, bottomR);
                     boxes.Add(newBB);
                 }
-            }
+
+                }
             catch (Exception e)
+            {
             {
 
             }
