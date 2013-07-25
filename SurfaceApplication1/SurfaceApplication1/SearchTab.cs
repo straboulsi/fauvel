@@ -14,7 +14,6 @@ using System.Windows.Shapes;
 using Microsoft.Surface;
 using Microsoft.Surface.Presentation;
 using Microsoft.Surface.Presentation.Controls;
-using SSC = Microsoft.Surface.Presentation.Controls;
 using Microsoft.Surface.Presentation.Input;
 
 namespace SurfaceApplication1
@@ -22,27 +21,32 @@ namespace SurfaceApplication1
 
     class SearchTab : TabItem
     {
-        public Canvas searchCanvas, optionsCanvas, poetryCanvas, lyricsCanvas, imagesCanvas;
+        public Canvas searchCanvas, poetryCanvas, lyricsCanvas, imagesCanvas;
+        ///public Canvas optionsCanvas;
         public Grid tabHeaderGrid;
-        public Button deleteTabButton, goSearch;
-        public TextBlock searchPrompt, searchTabHeader, poetryResults;
+        public Button deleteTabButton, goSearch, selectLanguageButton;
+        public TextBlock searchPrompt, searchTabHeader;
         public TextBox searchQueryBox;
         public Image tabHeaderImage;
         public Line topLine, bottomLine;
         public CheckBox caseSensitive, wholeWordOnly, wholePhraseOnly;
         public ScaleTransform st;
-        public ComboBox selectLanguage;
-        public ComboBoxItem oldFrench, modernFrench, english;
+        ///public ComboBox selectLanguage;
+        ///public ComboBoxItem oldFrench, modernFrench, English;
+        public SurfaceListBox selectLanguage;
+        public SurfaceListBoxItem pickLanguage, oldFrench, modernFrench, English;
         public TabControl searchResults;
         public TabItem poetryTab, lyricsTab, imagesTab;
         public ScrollViewer poetryScroll, lyricsScroll, imagesScroll;
         public StackPanel poetryPanel, lyricsPanel, imagesPanel;
         public Button moreOptions, fewerOptions;
         public Image downArrow, upArrow;
+        ///public enum searchLang { oldFrench = 0, modernFrench = 1, English = 2 };
         
 
         public SearchTab()
         {
+            
 
             searchCanvas = new Canvas();
             tabHeaderGrid = new Grid();
@@ -57,7 +61,7 @@ namespace SurfaceApplication1
             moreOptions = new Button();
             topLine = new Line();
 
-            optionsCanvas = new Canvas();
+            ///optionsCanvas = new Canvas();
             fewerOptions = new Button();
             upArrow = new Image();
             caseSensitive = new CheckBox();
@@ -66,10 +70,16 @@ namespace SurfaceApplication1
             st = new ScaleTransform();
             bottomLine = new Line();
 
-            selectLanguage = new ComboBox();
-            oldFrench = new ComboBoxItem();
-            modernFrench = new ComboBoxItem();
-            english = new ComboBoxItem();
+            //selectLanguage = new ComboBox();
+            //oldFrench = new ComboBoxItem();
+            //modernFrench = new ComboBoxItem();
+            //english = new ComboBoxItem();
+            selectLanguage = new SurfaceListBox();
+            pickLanguage = new SurfaceListBoxItem();
+            oldFrench = new SurfaceListBoxItem();
+            modernFrench = new SurfaceListBoxItem();
+            English = new SurfaceListBoxItem();
+            selectLanguageButton = new Button();
 
             searchResults = new TabControl();
             poetryTab = new TabItem();
@@ -84,7 +94,6 @@ namespace SurfaceApplication1
             imagesCanvas = new Canvas();
             imagesScroll = new ScrollViewer();
             imagesPanel = new StackPanel();
-            poetryResults = new TextBlock();
 
 
 
@@ -154,7 +163,7 @@ namespace SurfaceApplication1
             
 
             /// The objects on the optionsCanvas
-            optionsCanvas.Visibility = Visibility.Hidden;
+            ///optionsCanvas.Visibility = Visibility.Hidden;
 
             st.ScaleX = 2;
             st.ScaleY = 2;
@@ -164,7 +173,7 @@ namespace SurfaceApplication1
             caseSensitive.Content = (string)"Case sensitive";
             Canvas.SetLeft(caseSensitive, 40);
             Canvas.SetTop(caseSensitive, 170);
-            caseSensitive.Visibility = System.Windows.Visibility.Visible;
+            
 
             wholeWordOnly.FontSize = 10;
             wholeWordOnly.LayoutTransform = st;
@@ -178,23 +187,33 @@ namespace SurfaceApplication1
             Canvas.SetLeft(wholePhraseOnly, 243);
             Canvas.SetTop(wholePhraseOnly, 227);
 
-            selectLanguage.Background = Brushes.White;
-            selectLanguage.Text = "Select language";
+            selectLanguage.Background = Brushes.Gray;
+            selectLanguage.Visibility = Visibility.Collapsed;
             selectLanguage.Width = 175;
-            selectLanguage.Height = 40;
+            //selectLanguage.Height = 40;
             selectLanguage.FontSize = 21;
             selectLanguage.HorizontalContentAlignment = HorizontalAlignment.Center;
             selectLanguage.SelectedIndex = 0;
             Canvas.SetLeft(selectLanguage, 34);
-            Canvas.SetTop(selectLanguage, 220);
+            Canvas.SetTop(selectLanguage, 220); // should be 220 but let's try this
 
+            Canvas.SetLeft(selectLanguageButton, 34);
+            Canvas.SetTop(selectLanguageButton, 220);
+            selectLanguageButton.Width = 175;
+            selectLanguageButton.Height = 40;
+            selectLanguageButton.Visibility = Visibility.Hidden;
+            selectLanguageButton.Content = (string)"Old French";
+            selectLanguageButton.FontSize = 21;
+
+            pickLanguage.Content = (string)"Pick a language:";
             oldFrench.Content = (string)"Old French";
             modernFrench.Content = (string)"Modern French";
-            english.Content = (string)"English";
+            English.Content = (string)"English";
 
+            selectLanguage.Items.Add(pickLanguage);
             selectLanguage.Items.Add(oldFrench);
             selectLanguage.Items.Add(modernFrench);
-            selectLanguage.Items.Add(english);
+            selectLanguage.Items.Add(English);
 
             bottomLine.X1 = 40;
             bottomLine.Y1 = 183;
@@ -208,7 +227,7 @@ namespace SurfaceApplication1
             upArrow.Opacity = 0.3;
             upArrow.HorizontalAlignment = HorizontalAlignment.Center;
             TextBlock lessOptText = new TextBlock();
-            lessOptText.Text = "Less Options";
+            lessOptText.Text = "Fewer Options";
             Grid lessOptGrid = new Grid();
             fewerOptions.Content = lessOptGrid;
             fewerOptions.Width = 100;
@@ -235,7 +254,6 @@ namespace SurfaceApplication1
             poetryTab.Height = 40;
             poetryTab.Width = 159;
             poetryTab.Content = poetryCanvas;
-            ///poetryTab.Content = poetryResults;
 
             poetryCanvas.Height = 629;
             poetryCanvas.Children.Add(poetryScroll);
@@ -295,14 +313,27 @@ namespace SurfaceApplication1
             searchCanvas.Children.Add(moreOptions);
             searchCanvas.Children.Add(deleteTabButton);
 
-            searchCanvas.Children.Add(optionsCanvas);
-            optionsCanvas.Children.Add(bottomLine);
-            optionsCanvas.Children.Add(fewerOptions);
-            optionsCanvas.Children.Add(caseSensitive);
-            optionsCanvas.Children.Add(wholeWordOnly);
-            optionsCanvas.Children.Add(wholePhraseOnly);
-            optionsCanvas.Children.Add(selectLanguage);
-            
+            ///searchCanvas.Children.Add(optionsCanvas);
+            //optionsCanvas.Children.Add(bottomLine);
+            //optionsCanvas.Children.Add(fewerOptions);
+            ///optionsCanvas.Children.Add(caseSensitive);
+            //optionsCanvas.Children.Add(wholeWordOnly);
+            //optionsCanvas.Children.Add(wholePhraseOnly);
+            ///optionsCanvas.Children.Add(selectLanguage);
+
+            searchCanvas.Children.Add(caseSensitive);
+            searchCanvas.Children.Add(bottomLine);
+            searchCanvas.Children.Add(selectLanguage);
+            searchCanvas.Children.Add(selectLanguageButton);
+            searchCanvas.Children.Add(fewerOptions);
+            searchCanvas.Children.Add(wholeWordOnly);
+            searchCanvas.Children.Add(wholePhraseOnly);
+            caseSensitive.Visibility = Visibility.Hidden;
+            selectLanguage.Visibility = Visibility.Hidden;
+            bottomLine.Visibility = Visibility.Hidden;
+            fewerOptions.Visibility = Visibility.Hidden;
+            wholeWordOnly.Visibility = Visibility.Hidden;
+            wholePhraseOnly.Visibility = Visibility.Hidden;
 
             searchCanvas.Children.Add(searchResults);
 
