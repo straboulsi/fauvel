@@ -25,7 +25,6 @@ namespace SurfaceApplication1
         public Canvas searchCanvas, optionsCanvas, poetryCanvas, lyricsCanvas, imagesCanvas;
         public Grid tabHeaderGrid;
         public Button deleteTabButton, goSearch;
-        public Button moreOptions, lessOptions;
         public TextBlock searchPrompt, searchTabHeader, poetryResults;
         public TextBox searchQueryBox;
         public Image tabHeaderImage;
@@ -38,7 +37,7 @@ namespace SurfaceApplication1
         public TabItem poetryTab, lyricsTab, imagesTab;
         public ScrollViewer poetryScroll, lyricsScroll, imagesScroll;
         public StackPanel poetryPanel, lyricsPanel, imagesPanel;
-        public Button moreOptionsNew, lessOptionsNew;
+        public Button moreOptions, fewerOptions;
         public Image downArrow, upArrow;
         
 
@@ -55,13 +54,11 @@ namespace SurfaceApplication1
             searchTabHeader = new TextBlock();
             searchQueryBox = new TextBox();
             goSearch = new Button();
-            ///moreOptions = new Button();
-            moreOptionsNew = new Button();
+            moreOptions = new Button();
             topLine = new Line();
 
             optionsCanvas = new Canvas();
-            ///lessOptions = new Button();
-            lessOptionsNew = new Button();
+            fewerOptions = new Button();
             upArrow = new Image();
             caseSensitive = new CheckBox();
             wholeWordOnly = new CheckBox();
@@ -131,15 +128,7 @@ namespace SurfaceApplication1
             Canvas.SetLeft(goSearch, 378);
             Canvas.SetTop(goSearch, 90);
 
-            /**
-            moreOptions.Height = 30;
-            moreOptions.Width = 30;
-            moreOptions.Content = (string)"▼";
-            moreOptions.FontSize = 20;
-            moreOptions.VerticalContentAlignment = VerticalAlignment.Top;
-            Canvas.SetLeft(moreOptions, 40);
-            Canvas.SetTop(moreOptions, 143);
-            **/
+           
             downArrow = new Image();
             downArrow.Source = new BitmapImage(new Uri(@"/downArrow.png", UriKind.Relative));
             downArrow.Opacity = 0.3;
@@ -147,20 +136,18 @@ namespace SurfaceApplication1
             TextBlock moreOptText = new TextBlock();
             moreOptText.Text = "More Options";
             Grid optionsGrid = new Grid();
-            moreOptionsNew.Content = optionsGrid;
-            moreOptionsNew.Width = 100;
-            moreOptionsNew.Height = 20;
+            moreOptions.Content = optionsGrid;
+            moreOptions.Width = 100;
+            moreOptions.Height = 20;
             optionsGrid.Children.Add(downArrow);
             optionsGrid.Children.Add(moreOptText);
-            Canvas.SetLeft(moreOptionsNew, 225);
-            Canvas.SetTop(moreOptionsNew, 153);
+            Canvas.SetLeft(moreOptions, 225);
+            Canvas.SetTop(moreOptions, 153);
             
             
-            ///topLine.X1 = 72;
             topLine.X1 = 40;
             topLine.Y1 = 163;
             topLine.X2 = 500;
-            ///topLine.X2 = 473;
             topLine.Y2 = 163;
             topLine.Stroke = Brushes.Black;
             topLine.StrokeThickness = 2;
@@ -168,15 +155,6 @@ namespace SurfaceApplication1
 
             /// The objects on the optionsCanvas
             optionsCanvas.Visibility = Visibility.Hidden;
-            /**
-            lessOptions.Height = 30;
-            lessOptions.Width = 30;
-            lessOptions.FontSize = 20;
-            lessOptions.Content = (string)"▲";
-            lessOptions.VerticalContentAlignment = VerticalAlignment.Top;
-            Canvas.SetLeft(lessOptions, 40);
-            Canvas.SetTop(lessOptions, 281);
-            **/
 
             st.ScaleX = 2;
             st.ScaleY = 2;
@@ -218,10 +196,8 @@ namespace SurfaceApplication1
             selectLanguage.Items.Add(modernFrench);
             selectLanguage.Items.Add(english);
 
-            ///bottomLine.X1 = 72;
             bottomLine.X1 = 40;
             bottomLine.Y1 = 183;
-            ///bottomLine.X2 = 473;
             bottomLine.X2 = 500;
             bottomLine.Y2 = 183;
             bottomLine.Stroke = Brushes.Black;
@@ -234,13 +210,13 @@ namespace SurfaceApplication1
             TextBlock lessOptText = new TextBlock();
             lessOptText.Text = "Less Options";
             Grid lessOptGrid = new Grid();
-            lessOptionsNew.Content = lessOptGrid;
-            lessOptionsNew.Width = 100;
-            lessOptionsNew.Height = 20;
+            fewerOptions.Content = lessOptGrid;
+            fewerOptions.Width = 100;
+            fewerOptions.Height = 20;
             lessOptGrid.Children.Add(upArrow);
             lessOptGrid.Children.Add(lessOptText);
-            Canvas.SetLeft(lessOptionsNew, 225);
-            Canvas.SetTop(lessOptionsNew, 285);
+            Canvas.SetLeft(fewerOptions, 225);
+            Canvas.SetTop(fewerOptions, 285);
 
 
 
@@ -315,15 +291,13 @@ namespace SurfaceApplication1
             searchCanvas.Children.Add(searchPrompt);
             searchCanvas.Children.Add(searchQueryBox);
             searchCanvas.Children.Add(goSearch);
-            ///searchCanvas.Children.Add(moreOptions);
             searchCanvas.Children.Add(topLine);
-            searchCanvas.Children.Add(moreOptionsNew);
+            searchCanvas.Children.Add(moreOptions);
             searchCanvas.Children.Add(deleteTabButton);
 
             searchCanvas.Children.Add(optionsCanvas);
             optionsCanvas.Children.Add(bottomLine);
-            ///optionsCanvas.Children.Add(lessOptions);
-            optionsCanvas.Children.Add(lessOptionsNew);
+            optionsCanvas.Children.Add(fewerOptions);
             optionsCanvas.Children.Add(caseSensitive);
             optionsCanvas.Children.Add(wholeWordOnly);
             optionsCanvas.Children.Add(wholePhraseOnly);
@@ -331,9 +305,6 @@ namespace SurfaceApplication1
             
 
             searchCanvas.Children.Add(searchResults);
-
-
-
 
         }
 
