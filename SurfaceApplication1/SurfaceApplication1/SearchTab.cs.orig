@@ -25,11 +25,6 @@ namespace SurfaceApplication1
         public Canvas searchCanvas, optionsCanvas, poetryCanvas, lyricsCanvas, imagesCanvas;
         public Grid tabHeaderGrid;
         public Button deleteTabButton, goSearch;
-<<<<<<< HEAD
-        public Button moreOptions, lessOptions;
-=======
-        ///public Button moreOptions, lessOptions;
->>>>>>> 6210368dca1582b6db222eedfcdd802f1a83c976
         public TextBlock searchPrompt, searchTabHeader, poetryResults;
         public TextBox searchQueryBox;
         public Image tabHeaderImage;
@@ -42,7 +37,7 @@ namespace SurfaceApplication1
         public TabItem poetryTab, lyricsTab, imagesTab;
         public ScrollViewer poetryScroll, lyricsScroll, imagesScroll;
         public StackPanel poetryPanel, lyricsPanel, imagesPanel;
-        public Button moreOptionsNew, lessOptionsNew;
+        public Button moreOptionsNew, fewerOptionsNew;
         public Image downArrow, upArrow;
         
 

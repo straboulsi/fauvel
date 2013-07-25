@@ -165,7 +165,7 @@ namespace SurfaceApplication1
             {
                 // Loads the Xml documents
                 xml = new XmlDocument();
-                xml.Load("XMLFinalContentFile.xml");
+                xml.Load("OriginalTextXML.xml");
                 engXml = new XmlDocument();
                 engXml.Load("EnglishXML.xml");
                 layoutXml = new XmlDocument();
@@ -173,7 +173,7 @@ namespace SurfaceApplication1
             }
             catch (Exception e)
             {
-                String temp = e.StackTrace;
+                Console.Write(e.StackTrace);
             }
 
             Translate.getTranslationOverlay("34v", xml, engXml, layoutXml);
@@ -1211,21 +1211,33 @@ namespace SurfaceApplication1
             SearchTab tab = new SearchTab();
             tab.Name = string.Format("tab{0}", count);
 
-            tab.moreOptionsNew.Click += new RoutedEventHandler(Show_Options);
-            tab.moreOptionsNew.TouchDown += new EventHandler<TouchEventArgs>(Show_Options);
+            tab.moreOptions.Click += new RoutedEventHandler(Show_Options);
+            tab.moreOptions.TouchDown += new EventHandler<TouchEventArgs>(Show_Options);
             tab.deleteTabButton.Click += new RoutedEventHandler(SearchbtnDelete_Click);
             tab.deleteTabButton.TouchDown += new EventHandler<TouchEventArgs>(SearchbtnDelete_Click);
-            tab.lessOptionsNew.Click += new RoutedEventHandler(Hide_Options);
-            tab.lessOptionsNew.TouchDown += new EventHandler<TouchEventArgs>(Hide_Options);
+            tab.fewerOptions.Click += new RoutedEventHandler(Hide_Options);
+            tab.fewerOptions.TouchDown += new EventHandler<TouchEventArgs>(Hide_Options);
             tab.searchQueryBox.GotFocus += new RoutedEventHandler(Clear_SearchBox);
             tab.searchQueryBox.TouchDown += new EventHandler<TouchEventArgs>(Clear_SearchBox);
             tab.goSearch.Click += new RoutedEventHandler(newSearch);
             tab.goSearch.TouchDown += new EventHandler<TouchEventArgs>(newSearch);
             tab.searchQueryBox.PreviewKeyDown += new KeyEventHandler(Enter_Clicked);
+            tab.caseSensitive.TouchDown += new EventHandler<TouchEventArgs>(changeCheck);
+            tab.wholePhraseOnly.TouchDown += new EventHandler<TouchEventArgs>(changeCheck);
+            tab.wholeWordOnly.TouchDown += new EventHandler<TouchEventArgs>(changeCheck);
 
             // insert tab item right before the last (+) tab item
             SidebarTabItems.Insert(count - 1, tab);
             return tab;
+        }
+
+        private void changeCheck(object sender, TouchEventArgs e)
+        {
+            CheckBox thisbox = sender as CheckBox;
+            if (thisbox.IsChecked == true)
+                thisbox.IsChecked = false;
+            else if (thisbox.IsChecked == false)
+                thisbox.IsChecked = true;
         }
 
         private void newSearch(object sender, RoutedEventArgs e)
@@ -1284,7 +1296,7 @@ namespace SurfaceApplication1
                 if (poetryResults.Count == 0)
                 {
                     TextBlock noResults = new TextBlock();
-                    noResults.Text = "Sorry, your search returned no results.";
+                    noResults.Text = "Sorry, your search returned no poetry results.";
                     selectedTab.poetryTab.Content = noResults;
                 }
                 else
@@ -1319,7 +1331,7 @@ namespace SurfaceApplication1
                 if (lyricResults.Count == 0)
                 {
                     TextBlock noResults = new TextBlock();
-                    noResults.Text = "Sorry, your search returned no results.";
+                    noResults.Text = "Sorry, your search returned no music lyric results.";
                     selectedTab.lyricsTab.Content = noResults;
                 }
                 else
@@ -1353,7 +1365,7 @@ namespace SurfaceApplication1
                 if (imagesResults.Count == 0)
                 {
                     TextBlock noResults = new TextBlock();
-                    noResults.Text = "Sorry, your search returned no results.";
+                    noResults.Text = "Sorry, your search returned no image results.";
                     selectedTab.imagesTab.Content = noResults;
                 }
                 else
@@ -1462,7 +1474,7 @@ namespace SurfaceApplication1
             SearchTab selectedTab = tabDynamic.SelectedItem as SearchTab;
             selectedTab.optionsCanvas.Visibility = Visibility.Visible;
             selectedTab.topLine.Visibility = Visibility.Hidden;
-            selectedTab.moreOptionsNew.Visibility = Visibility.Hidden;
+            selectedTab.moreOptions.Visibility = Visibility.Hidden;
             if (selectedTab.searchResults.IsVisible)
                 compressResults();
         }
@@ -1472,15 +1484,15 @@ namespace SurfaceApplication1
             SearchTab selectedTab = tabDynamic.SelectedItem as SearchTab;
             selectedTab.optionsCanvas.Visibility = Visibility.Hidden;
             selectedTab.topLine.Visibility = Visibility.Visible;
-            selectedTab.moreOptionsNew.Visibility = Visibility.Visible;
+            selectedTab.moreOptions.Visibility = Visibility.Visible;
 
             checkForChanges();
 
             if (defaultOptionsChanged == true)
-                selectedTab.moreOptionsNew.Background = Brushes.MediumTurquoise;
+                selectedTab.moreOptions.Background = Brushes.MediumTurquoise;
 
             else
-                selectedTab.moreOptionsNew.ClearValue(Control.BackgroundProperty);
+                selectedTab.moreOptions.ClearValue(Control.BackgroundProperty);
 
             if (selectedTab.searchResults.IsVisible)
                 expandResults();
