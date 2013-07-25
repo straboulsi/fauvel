@@ -85,7 +85,8 @@ namespace SurfaceApplication1
 
             Button searchButton = new Button();
             searchButton.Style = tabDynamic.FindResource("RoundButtonTemplate") as Style;
-            searchButton.Click += new RoutedEventHandler(SearchButton_Clicked);
+            searchButton.Click += new RoutedEventHandler(SearchButton_Selected);
+            searchButton.TouchDown += new EventHandler<TouchEventArgs>(SearchButton_Selected);
 
             Grid searchGrid = new Grid();
 
@@ -108,7 +109,8 @@ namespace SurfaceApplication1
 
             Button annotateButton = new Button();
             annotateButton.Style = tabDynamic.FindResource("RoundButtonTemplate") as Style;
-            annotateButton.Click += new RoutedEventHandler(AnnotateButton_Clicked);
+            annotateButton.Click += new RoutedEventHandler(AnnotateButton_Selected);
+            annotateButton.TouchDown += new EventHandler<TouchEventArgs>(AnnotateButton_Selected);
 
 
             Grid annotateGrid = new Grid();
@@ -134,7 +136,8 @@ namespace SurfaceApplication1
 
             Button studyButton = new Button();
             studyButton.Style = tabDynamic.FindResource("RoundButtonTemplate") as Style;
-            studyButton.Click += new RoutedEventHandler(StudyButton_Clicked);
+            studyButton.Click += new RoutedEventHandler(StudyButton_Selected);
+            studyButton.TouchDown += new EventHandler<TouchEventArgs>(StudyButton_Selected);
 
 
             Grid studyGrid = new Grid();
@@ -1175,7 +1178,7 @@ namespace SurfaceApplication1
 
         /// Here come all the searchsidebar functions!!
 
-        private void SearchButton_Clicked(object sender, RoutedEventArgs e)
+        private void SearchButton_Selected(object sender, RoutedEventArgs e)
         {
             tabDynamic.DataContext = null;
             TabItem newTab = this.AddSearchTabItem();
@@ -1183,7 +1186,7 @@ namespace SurfaceApplication1
             tabDynamic.SelectedItem = newTab;
         }
 
-        private void AnnotateButton_Clicked(object sender, RoutedEventArgs e)
+        private void AnnotateButton_Selected(object sender, RoutedEventArgs e)
         {
             tabDynamic.DataContext = null;
             TabItem newTab = this.AddAnnotateTabItem();
@@ -1191,7 +1194,7 @@ namespace SurfaceApplication1
             tabDynamic.SelectedItem = newTab;
         }
 
-        private void StudyButton_Clicked(object sender, RoutedEventArgs e)
+        private void StudyButton_Selected(object sender, RoutedEventArgs e)
         {
             tabDynamic.DataContext = null;
             TabItem newTab = this.AddStudyTabItem();
@@ -1208,11 +1211,16 @@ namespace SurfaceApplication1
             SearchTab tab = new SearchTab();
             tab.Name = string.Format("tab{0}", count);
 
-            tab.moreOptions.Click += new RoutedEventHandler(Show_Options);
+            tab.moreOptionsNew.Click += new RoutedEventHandler(Show_Options);
+            tab.moreOptionsNew.TouchDown += new EventHandler<TouchEventArgs>(Show_Options);
             tab.deleteTabButton.Click += new RoutedEventHandler(SearchbtnDelete_Click);
-            tab.lessOptions.Click += new RoutedEventHandler(Hide_Options);
-            tab.searchQueryBox.GotFocus += new RoutedEventHandler(Enter_Search);
+            tab.deleteTabButton.TouchDown += new EventHandler<TouchEventArgs>(SearchbtnDelete_Click);
+            tab.lessOptionsNew.Click += new RoutedEventHandler(Hide_Options);
+            tab.lessOptionsNew.TouchDown += new EventHandler<TouchEventArgs>(Hide_Options);
+            tab.searchQueryBox.GotFocus += new RoutedEventHandler(Clear_SearchBox);
+            tab.searchQueryBox.TouchDown += new EventHandler<TouchEventArgs>(Clear_SearchBox);
             tab.goSearch.Click += new RoutedEventHandler(newSearch);
+            tab.goSearch.TouchDown += new EventHandler<TouchEventArgs>(newSearch);
             tab.searchQueryBox.PreviewKeyDown += new KeyEventHandler(Enter_Clicked);
 
             // insert tab item right before the last (+) tab item
@@ -1454,7 +1462,7 @@ namespace SurfaceApplication1
             SearchTab selectedTab = tabDynamic.SelectedItem as SearchTab;
             selectedTab.optionsCanvas.Visibility = Visibility.Visible;
             selectedTab.topLine.Visibility = Visibility.Hidden;
-            selectedTab.moreOptions.Visibility = Visibility.Hidden;
+            selectedTab.moreOptionsNew.Visibility = Visibility.Hidden;
             if (selectedTab.searchResults.IsVisible)
                 compressResults();
         }
@@ -1464,15 +1472,15 @@ namespace SurfaceApplication1
             SearchTab selectedTab = tabDynamic.SelectedItem as SearchTab;
             selectedTab.optionsCanvas.Visibility = Visibility.Hidden;
             selectedTab.topLine.Visibility = Visibility.Visible;
-            selectedTab.moreOptions.Visibility = Visibility.Visible;
+            selectedTab.moreOptionsNew.Visibility = Visibility.Visible;
 
             checkForChanges();
 
             if (defaultOptionsChanged == true)
-                selectedTab.moreOptions.Background = Brushes.MediumTurquoise;
+                selectedTab.moreOptionsNew.Background = Brushes.MediumTurquoise;
 
             else
-                selectedTab.moreOptions.ClearValue(Control.BackgroundProperty);
+                selectedTab.moreOptionsNew.ClearValue(Control.BackgroundProperty);
 
             if (selectedTab.searchResults.IsVisible)
                 expandResults();
@@ -1493,13 +1501,14 @@ namespace SurfaceApplication1
             return defaultOptionsChanged;
         }
 
-        private void Enter_Search(object sender, RoutedEventArgs e)
+        private void Clear_SearchBox(object sender, RoutedEventArgs e)
         {
             SearchTab selectedTab = tabDynamic.SelectedItem as SearchTab;
             if (selectedTab.searchQueryBox.Text == "Enter text")
             {
                 selectedTab.searchQueryBox.Foreground = Brushes.Black;
                 selectedTab.searchQueryBox.Text = "";
+                selectedTab.searchQueryBox.Focus();
             }
         }
 

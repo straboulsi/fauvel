@@ -151,6 +151,7 @@
     <Resource Include="icons\prev.png" />
     <Resource Include="icons\save.png" />
     <Resource Include="icons\zoom.png" />
+    <Resource Include="bin\prev.png" />
     <Content Include="layout_full.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
