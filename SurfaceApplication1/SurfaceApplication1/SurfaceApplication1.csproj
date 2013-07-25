@@ -148,10 +148,14 @@
   <ItemGroup>
     <Resource Include="downArrow.png" />
     <Resource Include="box.jpg" />
-    <Resource Include="icons\prev.png" />
+    <Resource Include="icons\prev.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
     <Resource Include="icons\save.png" />
     <Resource Include="icons\zoom.png" />
-    <Resource Include="bin\prev.png" />
+    <Resource Include="bin\prev.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
     <Content Include="layout_full.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>

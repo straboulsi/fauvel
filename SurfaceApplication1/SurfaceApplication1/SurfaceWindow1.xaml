@@ -8,7 +8,7 @@
     WindowStartupLocation="CenterScreen" WindowState="Maximized"
     >
     <Canvas x:Name="mother" Background="White">
-        <TabControl x:Name="tabBar" SelectionChanged="tabBar_SelectionChanged" Height="980" Width="1344" VerticalContentAlignment="Center" VerticalAlignment="Center" HorizontalAlignment="Center" TabStripPlacement="Bottom">
+        <TabControl x:Name="tabBar" SelectionChanged="tabBar_SelectionChanged" Height="980" Width="1344" VerticalContentAlignment="Center" VerticalAlignment="Center" HorizontalAlignment="Center" TabStripPlacement="Top">
             <TabControl.Resources>
                 <DataTemplate x:Key="TabHeader" DataType="TabItem">
                     <DockPanel>
