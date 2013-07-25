@@ -35,6 +35,8 @@ namespace SurfaceApplication1
     {
         public static Brush textBrush = (Brush)(new BrushConverter().ConvertFrom("#663311"));
         public static Brush backBrush = (Brush)(new BrushConverter().ConvertFrom("#CCE0D0B0"));
+        public static Brush blockBrush = (Brush)(new BrushConverter().ConvertFrom("#ccffffff"));
+        public static Brush blockFillerBrush = (Brush)(new BrushConverter().ConvertFrom("#33000000"));
         public static CompareInfo myComp = CultureInfo.InvariantCulture.CompareInfo;
 
         public static bool Contains(this string source, string toCheck, StringComparison comp)
@@ -120,11 +122,15 @@ namespace SurfaceApplication1
             }
             else
             {
+                Border B = new Border();
+                B.BorderBrush = blockBrush;
+                B.BorderThickness = new Thickness(2);
                 Grid filla = new Grid();
-                Grid.SetRow(filla, 1);
-                Grid.SetColumn(filla, 1);
-                g.Children.Add(filla);
-                filla.Background = Brushes.Azure;
+                Grid.SetRow(B, 1);
+                Grid.SetColumn(B, 1);
+                g.Children.Add(B);
+                B.Child = filla;
+                filla.Background = blockFillerBrush;
             }
 
             return g;

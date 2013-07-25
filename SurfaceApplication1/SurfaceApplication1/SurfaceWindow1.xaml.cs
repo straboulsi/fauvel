@@ -196,8 +196,16 @@ namespace SurfaceApplication1
 
         private void showBoxes(object sender, RoutedEventArgs e)
         {
-            MessageBox.Show(string.Format("Come get yo boxes here!!!"),
-                    "Mr. Box Man", MessageBoxButton.OK);
+            if (currentTab()._rBoxesGrid.Visibility == System.Windows.Visibility.Visible)
+                currentTab()._rBoxesGrid.Visibility = System.Windows.Visibility.Hidden;
+            else
+                currentTab()._rBoxesGrid.Visibility = System.Windows.Visibility.Visible;
+
+
+            if (currentTab()._vBoxesGrid.Visibility == System.Windows.Visibility.Visible)
+                currentTab()._vBoxesGrid.Visibility = System.Windows.Visibility.Hidden;
+            else
+                currentTab()._vBoxesGrid.Visibility = System.Windows.Visibility.Visible;
         }
 
         private void prev_Click(object sender, RoutedEventArgs e)
@@ -249,6 +257,9 @@ namespace SurfaceApplication1
         private void loadPage()
         {
             Tab currentTab = this.currentTab();
+
+            currentTab._vTranslationGrid.Children.Clear();
+            currentTab._rTranslationGrid.Children.Clear();
 
             currentTab._worker.updateTranslations();
 
@@ -414,6 +425,8 @@ namespace SurfaceApplication1
             rGrid.Children.Add(recto);
             vGrid.Children.Add(vTranslationGrid);
             rGrid.Children.Add(rTranslationGrid);
+            vGrid.Children.Add(vBoxesGrid);
+            rGrid.Children.Add(rBoxesGrid);
             vGrid.Children.Add(vSwipeHolderGrid);
             rGrid.Children.Add(rSwipeHolderGrid);
 
