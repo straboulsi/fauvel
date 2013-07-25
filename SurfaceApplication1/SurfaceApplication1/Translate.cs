@@ -89,7 +89,6 @@ namespace SurfaceApplication1
         public static Grid getGrid(double x, double y, double width, double height, TextBlock t)
         {
             Grid g = new Grid();
-
             ColumnDefinition c1 = new ColumnDefinition();
             c1.Width = new GridLength(x, GridUnitType.Star);
             ColumnDefinition c2 = new ColumnDefinition();
@@ -198,7 +197,6 @@ namespace SurfaceApplication1
 
                 }
             catch (Exception e)
-            {
             {
 
             }

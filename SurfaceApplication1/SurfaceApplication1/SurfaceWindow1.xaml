@@ -125,27 +125,20 @@
             <Button x:Name="swap" Height="84" Canvas.Left="460" Width="100" Canvas.Top="8" TouchDown="swapOrientation" Click="swapOrientation" HorizontalContentAlignment="Center" VerticalContentAlignment="Center">
                 <Image Source="icons/pageTurn.png" Stretch="Uniform"/>
             </Button>
+            <!--
             <TextBlock x:Name="testText" Height="48" TextWrapping="Wrap" Text="1" Canvas.Left="20" Canvas.Top="-900"  Width="220" FontSize="30" HorizontalAlignment="Center" TextAlignment="Center"/>
+            -->
             <TextBlock x:Name="pageNumberText" Height="48" TextWrapping="Wrap" Text="1" Canvas.Left="850" Canvas.Top="10"  Width="220" FontSize="30" HorizontalAlignment="Center" TextAlignment="Center"/>
-            <s:SurfaceSlider x:Name="pageSlider" Minimum="0" Maximum="47" Width="430" Canvas.Left="745" Canvas.Top="50" TickFrequency="1" IsSnapToTickEnabled="True" s:SurfaceThumb.PreviewFlicked="pageSliderFlicked"></s:SurfaceSlider>
-            <ListBox Canvas.Left="20" Canvas.Top="20" SelectionChanged="languageChanged" >
-                <ListBox.ItemsPanel>
-                    <ItemsPanelTemplate>
-                        <WrapPanel IsItemsHost="True"/>
-                    </ItemsPanelTemplate>
-                </ListBox.ItemsPanel>
-                <ListBoxItem x:Name="language1" Width="100" Height="60" ClipToBounds="True" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Content="None">
-
-                </ListBoxItem>
-                <ListBoxItem x:Name="language2" Width="100" Height="60" ClipToBounds="True" HorizontalContentAlignment="Center" VerticalContentAlignment="Center">
-                    <Image Source="/flags/oldfrench.png" Stretch="UniformToFill" Width="90" Height="50" ClipToBounds="True"/>
-                </ListBoxItem>
-                <ListBoxItem x:Name="language3" Width="100" Height="60" ClipToBounds="True" HorizontalContentAlignment="Center" VerticalContentAlignment="Center">
-                    <Image Source="/flags/french.jpg" Stretch="UniformToFill" Width="90" Height="50" ClipToBounds="True"/>
-                </ListBoxItem>
-                <ListBoxItem x:Name="language4" Width="100" Height="60" ClipToBounds="True" HorizontalContentAlignment="Center" VerticalContentAlignment="Center">
-                    <Image Source="/flags/english.jpg" Stretch="UniformToFill" Width="90" Height="50" ClipToBounds="True"/>
-                </ListBoxItem>
+            <s:SurfaceSlider x:Name="pageSlider" PreviewTouchUp="pageSlider_PreviewTouchUp" PreviewTouchDown="pageSlider_PreviewTouchDown" Minimum="0" Maximum="47" Width="430" Canvas.Left="745" Canvas.Top="50" TickFrequency="1" IsSnapToTickEnabled="True" s:SurfaceThumb.PreviewFlicked="pageSliderFlicked"></s:SurfaceSlider>
+            <s:SurfaceButton x:Name="prevlanguageButton" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Canvas.Left="20" Canvas.Top="50" Width="40" Height="40" PreviewTouchDown="languagePrevious">
+                <Image Source="icons/prev.png" />
+            </s:SurfaceButton>
+            <s:SurfaceButton x:Name="languageButton" Content="None" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Canvas.Left="70" Canvas.Top="50" Width="150" Height="40" PreviewTouchDown="languageVisibility"/>
+            <ListBox x:Name="languageBox" Visibility="Collapsed" Canvas.Left="20" Canvas.Top="-70" Width="200" SelectionChanged="languageChanged">
+                <ListBoxItem x:Name="language1" Height="40" ClipToBounds="True" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Content="None" />
+                <ListBoxItem x:Name="language2" Height="40" ClipToBounds="True" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Content="Old French" />
+                <ListBoxItem x:Name="language3" Height="40" ClipToBounds="True" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Content="French" />
+                <ListBoxItem x:Name="language4" Height="40" ClipToBounds="True" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Content="English" />
             </ListBox>
             <Button x:Name="debugBoxes" Height="84" Canvas.Left="1400" Width="100" Canvas.Top="8" TouchDown="showBoxes" Click="showBoxes">
                 <Image Source="box.jpg" Stretch="Uniform"/>

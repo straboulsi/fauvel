@@ -148,6 +148,9 @@
   <ItemGroup>
     <Resource Include="downArrow.png" />
     <Resource Include="box.jpg" />
+    <Resource Include="icons\prev.png" />
+    <Resource Include="icons\save.png" />
+    <Resource Include="icons\zoom.png" />
     <Content Include="layout_full.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -155,15 +158,10 @@
     <Content Include="XMLFinalContentFile.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Resource Include="flags\english.jpg" />
-    <Resource Include="flags\french.jpg" />
-    <Resource Include="flags\oldfrench.png" />
     <Content Include="EnglishXML.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Resource Include="icons\pageTurn.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Resource>
+    <Resource Include="icons\pageTurn.png" />
     <Resource Include="musicnote.png" />
     <Resource Include="magnifyingglass.png" />
     <Content Include="pages\100.jpg">
@@ -459,9 +457,7 @@
     <Content Include="Resources\icon.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Resource Include="icons\rightArrow.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Resource>
+    <Resource Include="icons\rightArrow.png" />
     <Content Include="smallpages\100.jpg">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>

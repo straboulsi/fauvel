@@ -28,6 +28,7 @@ namespace SurfaceApplication1
         public ScatterView _vSV, _rSV;
         public TextBlock _headerTB;
         public Workers _worker;
+        public List<BoundingBox> _rGhostBoxes, _vGhostBoxes;
 
         public Tab(int page, TabItem newTab, Image newVerso, Image newRecto, Canvas canvas, Canvas c_v, Canvas c_r, Grid vGrid, Grid rGrid, Button delBtn, ScatterView vSV, ScatterView rSV, ScatterViewItem vsi, ScatterViewItem rsi, Grid vSwipeGrid, Grid rSwipeGrid, Grid vTranslationGrid, Grid rTranslationGrid, Grid vBoxesGrid, Grid rBoxesGrid, TextBlock headerText)
         {
