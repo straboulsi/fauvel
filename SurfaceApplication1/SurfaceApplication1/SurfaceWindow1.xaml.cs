@@ -78,9 +78,7 @@ namespace SurfaceApplication1
 
             // Lots of search sidebar things
             tabAdd = new TabItem();
-            tabAdd.Header = "+";
-            tabAdd.Height = 40;
-            tabAdd.Width = 50;
+            tabAdd.Header = "  +  ";
 
             Canvas newTabCanvas = new Canvas();
             newTabCanvas.Height = 899;
@@ -1026,13 +1024,25 @@ namespace SurfaceApplication1
             previousLanguage = currentLanguage;
             ListBox box = (ListBox)sender;
             if (box.SelectedIndex == 0)
+            {
                 currentLanguage = language.None;
+                languageButton.Content = "None";
+            }
             if (box.SelectedIndex == 1)
+            {
                 currentLanguage = language.OldFrench;
+                languageButton.Content = "Old French";
+            }
             if (box.SelectedIndex == 2)
+            {
                 currentLanguage = language.French;
+                languageButton.Content = "French";
+            }
             if (box.SelectedIndex == 3)
+            {
                 currentLanguage = language.English;
+                languageButton.Content = "English";
+            }
             currentTab()._worker.setTranslateText(currentLanguage);
 
             languageBox.Visibility = System.Windows.Visibility.Collapsed;
