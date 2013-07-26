@@ -125,7 +125,7 @@ namespace SurfaceApplication1
                 {
                     foreach (BoundingBox r in tab._vGhostBoxes)
                     {
-                        Grid g = Translate.getGrid(r.X, r.Y, r.Width, r.Height, null);
+                        Grid g = Translate.getGrid(r.X, r.Y, r.Width, r.Height, null, 0);
                         tab._vBoxesGrid.Children.Add(g);
                     }
                 }
@@ -147,7 +147,7 @@ namespace SurfaceApplication1
                 {
                     foreach (BoundingBox r in tab._rGhostBoxes)
                     {
-                        Grid g = Translate.getGrid(r.X, r.Y, r.Width, r.Height, null);
+                        Grid g = Translate.getGrid(r.X, r.Y, r.Width, r.Height, null, 0);
                         tab._rBoxesGrid.Children.Add(g);
                     }
                 }
@@ -177,7 +177,7 @@ namespace SurfaceApplication1
                         height = (tb.getBottomRight().Y - tb.getTopLeft().Y);
 
                         TextBlock t = new TextBlock();
-                        Grid g = Translate.getGrid(x, y, width, height, t);
+                        Grid g = Translate.getGrid(x, y, width, height, t, tb.lines);
                         t.Foreground = Translate.textBrush;
                         t.Background = Translate.backBrush;
                         tab._textBlocksV.Add(t);
@@ -211,7 +211,7 @@ namespace SurfaceApplication1
                         height = (tb.getBottomRight().Y - tb.getTopLeft().Y);
 
                         TextBlock t = new TextBlock();
-                        Grid g = Translate.getGrid(x, y, width, height, t);
+                        Grid g = Translate.getGrid(x, y, width, height, t, tb.lines);
                         t.Foreground = Translate.textBrush;
                         t.Background = Translate.backBrush;
                         tab._textBlocksR.Add(t);

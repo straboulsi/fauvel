@@ -122,9 +122,6 @@
             <Button x:Name="next" Height="84" Canvas.Left="1180" Width="100" Canvas.Top="8" TouchDown="next_Click" Click="next_Click">
                 <Image Source="icons/rightArrow.png" Stretch="Uniform"/>
             </Button>
-            <Button x:Name="swap" Height="84" Canvas.Left="460" Width="100" Canvas.Top="8" TouchDown="swapOrientation" Click="swapOrientation" HorizontalContentAlignment="Center" VerticalContentAlignment="Center">
-                <Image Source="icons/pageTurn.png" Stretch="Uniform"/>
-            </Button>
             <!--
             <TextBlock x:Name="testText" Height="48" TextWrapping="Wrap" Text="1" Canvas.Left="20" Canvas.Top="-900"  Width="220" FontSize="30" HorizontalAlignment="Center" TextAlignment="Center"/>
             -->

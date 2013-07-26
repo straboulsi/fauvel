@@ -88,7 +88,7 @@ namespace SurfaceApplication1
 
 
 
-        public static Grid getGrid(double x, double y, double width, double height, TextBlock t)
+        public static Grid getGrid(double x, double y, double width, double height, TextBlock t, int lines)
         {
             Grid g = new Grid();
             ColumnDefinition c1 = new ColumnDefinition();
@@ -113,12 +113,12 @@ namespace SurfaceApplication1
 
             if (t != null)
             {
-                Viewbox v = new Viewbox();
-                Grid.SetRow(v, 1);
-                Grid.SetColumn(v, 1);
-                g.Children.Add(v);
-                v.Child = t;
-                v.Stretch = Stretch.Uniform;
+                t.FontSize = 2;
+                t.TextWrapping = TextWrapping.NoWrap;
+                Grid.SetRow(t, 1);
+                Grid.SetColumn(t, 1);
+                g.Children.Add(t);
+                t.LineHeight = (height * SurfaceWindow1.minPageHeight / SurfaceWindow1.maxPageHeight) / lines;
             }
             else
             {

@@ -788,54 +788,53 @@ namespace SurfaceApplication1
          */
         private void limitScatter(ScatterViewItem i)
         {
+            /*int rCount, vCount;
+            rCount = currentTab()._textBlocksR.Count;
+            vCount = currentTab()._textBlocksV.Count;
+
+            double ratio = i.Height / minPageHeight;
+
+            for (int j = 0; j < vCount; j++)
+            {
+                TextBlock tb = currentTab()._textBlocksV[j];
+                tb.FontSize = 10 * ratio;
+                double lines = tb.ActualHeight / tb.LineHeight;
+                double heightRestriction = currentTab()._translationBoxesV[j].height * i.Height / i.MaxHeight;
+                double diff = heightRestriction - tb.ActualHeight;
+                tb.LineHeight += diff / lines;
+            }
+            for(int j = 0; j < rCount; j++)
+            {
+                TextBlock tb = currentTab()._textBlocksR[j];
+                tb.FontSize = 10 * ratio;
+                double lines = tb.ActualHeight / tb.LineHeight;
+                double heightRestriction = currentTab()._translationBoxesR[j].height * i.Height / i.MaxHeight;
+                double diff = heightRestriction - tb.ActualHeight;
+                tb.LineHeight += diff / lines;
+            }*/
+
             double x, y, w, h;
             bool fullscreen = false;
-            if (currentTab()._twoPage)
-            {
-                x = i.Center.X;
-                y = i.Center.Y;
-                w = i.ActualWidth / 2;
-                h = i.ActualHeight / 2;
-                if (x > scatterBuffer + w)
-                    i.Center = new Point(scatterBuffer + w, y);
-                if (x < scatterBuffer + minPageWidth - w)
-                    i.Center = new Point(scatterBuffer + minPageWidth - w, y);
+            x = i.Center.X;
+            y = i.Center.Y;
+            w = i.ActualWidth / 2;
+            h = i.ActualHeight / 2;
+            if (x > scatterBuffer + w)
+                i.Center = new Point(scatterBuffer + w, y);
+            if (x < scatterBuffer + minPageWidth - w)
+                i.Center = new Point(scatterBuffer + minPageWidth - w, y);
 
-                x = i.Center.X;
-                y = i.Center.Y;
-                w = i.ActualWidth / 2;
-                h = i.ActualHeight / 2;
-                if (y > scatterBuffer + h)
-                    i.Center = new Point(x, scatterBuffer + h);
-                if (y < scatterBuffer + minPageHeight - h)
-                    i.Center = new Point(x, scatterBuffer + minPageHeight - h);
+            x = i.Center.X;
+            y = i.Center.Y;
+            w = i.ActualWidth / 2;
+            h = i.ActualHeight / 2;
+            if (y > scatterBuffer + h)
+                i.Center = new Point(x, scatterBuffer + h);
+            if (y < scatterBuffer + minPageHeight - h)
+                i.Center = new Point(x, scatterBuffer + minPageHeight - h);
 
-                if (i.Width < i.MinWidth + 1)
-                    fullscreen = true;
-            }
-            else
-            {
-                x = i.Center.X;
-                y = i.Center.Y;
-                w = i.Height / 2;
-                h = i.Width / 2;
-                if (x > scatterBuffer + w)
-                    i.Center = new Point(scatterBuffer + w, y);
-                if (x < scatterBuffer + minPageLong - w)
-                    i.Center = new Point(scatterBuffer + minPageLong - w, y);
-
-                x = i.Center.X;
-                y = i.Center.Y;
-                w = i.Height / 2;
-                h = i.Width / 2;
-                if (y > scatterBuffer + h)
-                    i.Center = new Point(x, scatterBuffer + h);
-                if (y < scatterBuffer + minPageHeight - h)
-                    i.Center = new Point(x, scatterBuffer + minPageHeight - h);
-
-                if (i.Width < i.MinWidth + 1)
-                    fullscreen = true;
-            }
+            if (i.Width < i.MinWidth + 1)
+                fullscreen = true;
 
             if (fullscreen)
                 dtOut = false;
@@ -921,16 +920,12 @@ namespace SurfaceApplication1
             double multiplier = 1;
             if (sizeToHeight)
             {
-                if (!currentTab()._twoPage && h > minPageLong)
-                    multiplier = minPageLong / h;
-                if (currentTab()._twoPage && h > minPageHeight)
+                if (h > minPageHeight)
                     multiplier = minPageHeight / h;
             }
             else
             {
-                if (!currentTab()._twoPage && w > minPageHeight)
-                    multiplier = minPageHeight / w;
-                if (currentTab()._twoPage && w > minPageWidth)
+                if (w > minPageWidth)
                     multiplier = minPageWidth / w;
             }
 
