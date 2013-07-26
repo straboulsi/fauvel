@@ -11,6 +11,10 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using Microsoft.Surface;
+using Microsoft.Surface.Presentation;
+using Microsoft.Surface.Presentation.Controls;
+using Microsoft.Surface.Presentation.Input;
 
 
 namespace SurfaceApplication1
@@ -18,7 +22,7 @@ namespace SurfaceApplication1
 
 
 
-    class ResultBoxItem : ListBoxItem
+    class ResultBoxItem : SurfaceListBoxItem
     {
         public StackPanel resultStack, infoStack;
         public String excerpt1, excerpt2, excerpt3;
