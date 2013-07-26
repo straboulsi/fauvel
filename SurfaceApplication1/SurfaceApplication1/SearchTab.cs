@@ -187,15 +187,14 @@ namespace SurfaceApplication1
             Canvas.SetLeft(wholePhraseOnly, 243);
             Canvas.SetTop(wholePhraseOnly, 227);
 
-            selectLanguage.Background = Brushes.Gray;
+            selectLanguage.Background = Brushes.LightGray;
             selectLanguage.Visibility = Visibility.Collapsed;
             selectLanguage.Width = 175;
-            //selectLanguage.Height = 40;
             selectLanguage.FontSize = 21;
             selectLanguage.HorizontalContentAlignment = HorizontalAlignment.Center;
             selectLanguage.SelectedIndex = 0;
             Canvas.SetLeft(selectLanguage, 34);
-            Canvas.SetTop(selectLanguage, 220); // should be 220 but let's try this
+            Canvas.SetTop(selectLanguage, 220); 
 
             Canvas.SetLeft(selectLanguageButton, 34);
             Canvas.SetTop(selectLanguageButton, 220);
@@ -214,6 +213,14 @@ namespace SurfaceApplication1
             selectLanguage.Items.Add(oldFrench);
             selectLanguage.Items.Add(modernFrench);
             selectLanguage.Items.Add(English);
+
+            foreach (SurfaceListBoxItem s in selectLanguage.Items)
+            {
+                s.FontFamily = new FontFamily("Cambria");
+                s.VerticalContentAlignment = System.Windows.VerticalAlignment.Center;
+                s.FontSize = 21;
+                s.Height = 40;
+            }
 
             bottomLine.X1 = 40;
             bottomLine.Y1 = 183;
