@@ -20,33 +20,12 @@
                 </DataTemplate>
                 <DataTemplate x:Key="TabBody" DataType="TabItem">
                 </DataTemplate>
-                <Style TargetType="TextBox">
-                    <Setter Property="VerticalAlignment" Value="Stretch"></Setter>
-                    <Setter Property="HorizontalAlignment" Value="Stretch"></Setter>
-                    <Setter Property="AcceptsReturn" Value="True"></Setter>
-                    <Setter Property="TextWrapping" Value="WrapWithOverflow"></Setter>
-                    <Setter Property="MaxLines" Value="5000"></Setter>
-                    <Setter Property="ScrollViewer.VerticalScrollBarVisibility" Value="Auto"></Setter>
-                    <Setter Property="ScrollViewer.HorizontalScrollBarVisibility" Value="Auto"></Setter>
-                </Style>
             </TabControl.Resources>
         </TabControl>
         <TabControl x:Name="tabDynamic" ItemsSource="{Binding}" Canvas.Left="1344" Height="980" Width="576" SelectionChanged="searchTabDynamic_SelectionChanged" 
                     VerticalContentAlignment="Center" VerticalAlignment="Center" HorizontalAlignment="Center" TabStripPlacement="Top" FontFamily="Cambria">
 
             <TabControl.Resources>
-                <DataTemplate x:Key="NewSearchTab" DataType="TabItem">
-                    <DockPanel>
-
-                        <Grid>
-                            <Image Width="100" Height="40" Source="magnifyingglass.png" Opacity="0.3"/>
-                            <TextBlock Text="" VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="21"/>
-                        </Grid>
-
-
-                    </DockPanel>
-                </DataTemplate>
-
                 <DataTemplate x:Key="NewAnnotateTab" DataType="TabItem">
                     <DockPanel>
 
@@ -69,14 +48,38 @@
                     </DockPanel>
                 </DataTemplate>
 
-                <Style TargetType="TextBox">
-                    <Setter Property="VerticalAlignment" Value="Stretch"></Setter>
-                    <Setter Property="HorizontalAlignment" Value="Stretch"></Setter>
-                    <Setter Property="AcceptsReturn" Value="True"></Setter>
-                    <Setter Property="TextWrapping" Value="WrapWithOverflow"></Setter>
-                    <Setter Property="MaxLines" Value="5000"></Setter>
-                    <Setter Property="ScrollViewer.VerticalScrollBarVisibility" Value="Auto"></Setter>
-                    <Setter Property="ScrollViewer.HorizontalScrollBarVisibility" Value="Auto"></Setter>
+                <Style x:Key="SearchResultSurfaceListBox" TargetType="ListBox">
+                    <Setter Property="FontFamily" Value="Cambria"/>
+                    
+                </Style>
+
+                <Style x:Key="SearchResultSurfaceListBoxItem" TargetType="ListBoxItem">
+                    <Setter Property="FontFamily" Value="Cambria"/>
+                    <Setter Property="Height" Value="150"/>
+                    <Style.Resources>
+                        <SolidColorBrush x:Key="{x:Static SystemColors.HighlightBrushKey}"
+                        Color="LavenderBlush"/>
+                    </Style.Resources>
+                    
+                </Style>
+
+                <Style x:Key="RoundSurfaceListBoxTemplate" TargetType="ListBox">
+
+                    <Setter Property="Template">
+                        <Setter.Value>
+                            <ControlTemplate TargetType="ListBox">
+                                <Border BorderBrush="Black" CornerRadius="15" Background="{TemplateBinding Background}"
+                                BorderThickness="1">
+                                    <ListBox BorderThickness="0" Margin="1">
+                                        <ListBoxItem Content="Item 1"/>
+                                        <ListBoxItem Content="Item 2"/>
+                                        <ListBoxItem Content="Item 3"/>
+                                    </ListBox>
+                                </Border>
+                            </ControlTemplate>
+                        </Setter.Value>
+                    </Setter>
+                    <Setter Property="Height" Value="120"/>
                 </Style>
 
                 <Style x:Key="RoundButtonTemplate" TargetType="Button">

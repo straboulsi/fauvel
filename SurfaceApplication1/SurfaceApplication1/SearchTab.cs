@@ -22,7 +22,6 @@ namespace SurfaceApplication1
     class SearchTab : TabItem
     {
         public Canvas searchCanvas, poetryCanvas, lyricsCanvas, imagesCanvas;
-        ///public Canvas optionsCanvas;
         public Grid tabHeaderGrid;
         public Button deleteTabButton, goSearch, selectLanguageButton;
         public TextBlock searchPrompt, searchTabHeader;
@@ -31,18 +30,17 @@ namespace SurfaceApplication1
         public Line topLine, bottomLine;
         public CheckBox caseSensitive, wholeWordOnly, wholePhraseOnly;
         public ScaleTransform st;
-        ///public ComboBox selectLanguage;
-        ///public ComboBoxItem oldFrench, modernFrench, English;
         public SurfaceListBox selectLanguage;
         public SurfaceListBoxItem pickLanguage, oldFrench, modernFrench, English;
         public TabControl searchResults;
         public TabItem poetryTab, lyricsTab, imagesTab;
-        public ScrollViewer poetryScroll, lyricsScroll, imagesScroll;
+        public ScrollViewer lyricsScroll, imagesScroll;
+        //public ScrollViewer poetryScroll;
         public StackPanel poetryPanel, lyricsPanel, imagesPanel;
         public Button moreOptions, fewerOptions;
         public Image downArrow, upArrow;
-        ///public enum searchLang { oldFrench = 0, modernFrench = 1, English = 2 };
-        
+
+        public SurfaceScrollViewer poetryScroll;
 
         public SearchTab()
         {
@@ -61,7 +59,6 @@ namespace SurfaceApplication1
             moreOptions = new Button();
             topLine = new Line();
 
-            ///optionsCanvas = new Canvas();
             fewerOptions = new Button();
             upArrow = new Image();
             caseSensitive = new CheckBox();
@@ -70,10 +67,6 @@ namespace SurfaceApplication1
             st = new ScaleTransform();
             bottomLine = new Line();
 
-            //selectLanguage = new ComboBox();
-            //oldFrench = new ComboBoxItem();
-            //modernFrench = new ComboBoxItem();
-            //english = new ComboBoxItem();
             selectLanguage = new SurfaceListBox();
             pickLanguage = new SurfaceListBoxItem();
             oldFrench = new SurfaceListBoxItem();
@@ -86,13 +79,13 @@ namespace SurfaceApplication1
             lyricsTab = new TabItem();
             imagesTab = new TabItem();
             poetryCanvas = new Canvas();
-            poetryScroll = new ScrollViewer();
+            poetryScroll = new SurfaceScrollViewer(); //
             poetryPanel = new StackPanel();
             lyricsCanvas = new Canvas();
-            lyricsScroll = new ScrollViewer();
+            lyricsScroll = new ScrollViewer(); 
             lyricsPanel = new StackPanel();
             imagesCanvas = new Canvas();
-            imagesScroll = new ScrollViewer();
+            imagesScroll = new ScrollViewer(); 
             imagesPanel = new StackPanel();
 
 
@@ -162,9 +155,8 @@ namespace SurfaceApplication1
             topLine.StrokeThickness = 2;
             
 
-            /// The objects on the optionsCanvas
-            ///optionsCanvas.Visibility = Visibility.Hidden;
 
+            /// The objects for extended search options
             st.ScaleX = 2;
             st.ScaleY = 2;
 
@@ -184,6 +176,7 @@ namespace SurfaceApplication1
             wholePhraseOnly.FontSize = 10;
             wholePhraseOnly.LayoutTransform = st;
             wholePhraseOnly.Content = (string)"Match whole phrase only";
+            wholePhraseOnly.IsChecked = true; // This is default
             Canvas.SetLeft(wholePhraseOnly, 243);
             Canvas.SetTop(wholePhraseOnly, 227);
 
@@ -193,6 +186,10 @@ namespace SurfaceApplication1
             selectLanguage.FontSize = 21;
             selectLanguage.HorizontalContentAlignment = HorizontalAlignment.Center;
             selectLanguage.SelectedIndex = 0;
+
+
+          
+
             Canvas.SetLeft(selectLanguage, 34);
             Canvas.SetTop(selectLanguage, 220); 
 
@@ -267,6 +264,10 @@ namespace SurfaceApplication1
             poetryCanvas.Children.Add(poetryPanel);
             poetryScroll.Height = 325;
             poetryScroll.Width = 470;
+            poetryScroll.Background = Brushes.BlanchedAlmond;
+            poetryScroll.VerticalScrollBarVisibility = ScrollBarVisibility.Visible;
+            poetryScroll.HorizontalScrollBarVisibility = ScrollBarVisibility.Disabled;
+
             poetryPanel.Orientation = Orientation.Horizontal;
             poetryPanel.Height = 300;
             poetryPanel.Width = 478;
@@ -328,6 +329,7 @@ namespace SurfaceApplication1
             //optionsCanvas.Children.Add(wholePhraseOnly);
             ///optionsCanvas.Children.Add(selectLanguage);
 
+            searchCanvas.Children.Add(searchResults);
             searchCanvas.Children.Add(caseSensitive);
             searchCanvas.Children.Add(bottomLine);
             searchCanvas.Children.Add(selectLanguage);
@@ -342,7 +344,7 @@ namespace SurfaceApplication1
             wholeWordOnly.Visibility = Visibility.Hidden;
             wholePhraseOnly.Visibility = Visibility.Hidden;
 
-            searchCanvas.Children.Add(searchResults);
+
 
         }
 

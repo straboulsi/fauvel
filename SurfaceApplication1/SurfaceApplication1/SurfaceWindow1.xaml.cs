@@ -165,6 +165,17 @@ namespace SurfaceApplication1
             tabDynamic.DataContext = SidebarTabItems;
             tabDynamic.SelectedIndex = 0;
 
+
+            Button learner = new Button();
+            learner.Content = (string)"Don't mind me";
+            Canvas.SetLeft(learner, 300);
+            Canvas.SetTop(learner, 650);
+            learner.Height = 50;
+            learner.Width = 200;
+            learner.Click += new RoutedEventHandler(makeLearnerTab);
+            newTabCanvas.Children.Add(learner);
+
+
             try
             {
                 // Loads the Xml documents
@@ -1252,6 +1263,10 @@ namespace SurfaceApplication1
             tab.oldFrench.Selected += new RoutedEventHandler(searchLanguageChanged);
             tab.modernFrench.Selected += new RoutedEventHandler(searchLanguageChanged);
             tab.English.Selected += new RoutedEventHandler(searchLanguageChanged);
+
+
+            //tab.selectLanguage.Style = tabDynamic.FindResource("RoundSurfaceListBoxTemplate") as Style;
+
             // insert tab item right before the last (+) tab item
             SidebarTabItems.Insert(count - 1, tab);
             return tab;
@@ -1301,6 +1316,7 @@ namespace SurfaceApplication1
             selectedTab.selectLanguageButton.Visibility = Visibility.Visible;
             if (selectedTab.searchResults.IsVisible)
                 compressResults();
+
         }
 
         private void Hide_Options(object sender, RoutedEventArgs e)
@@ -1333,11 +1349,24 @@ namespace SurfaceApplication1
 
         private void changeCheck(object sender, TouchEventArgs e)
         {
+            SearchTab selectedTab = tabDynamic.SelectedItem as SearchTab;
             CheckBox thisbox = sender as CheckBox;
-            if (thisbox.IsChecked == true)
-                thisbox.IsChecked = false;
-            else if (thisbox.IsChecked == false)
-                thisbox.IsChecked = true;
+
+            // The following if loop is accounting for the fact that all search functions are currently set to whole phrase only
+            // There is not yet a way to search for several words appearing near each other
+            // Once that function is implemented, then the "Match whole phrase only" CheckBox will function like the other CheckBoxes
+            if (thisbox == selectedTab.wholePhraseOnly)
+            {
+                MessageBox.Show(string.Format("Oops! This function has not been added yet."),
+                    "Unmark \"Match whole phrase only\"", MessageBoxButton.OK);
+            }
+            else
+            {
+                if (thisbox.IsChecked == true)
+                    thisbox.IsChecked = false;
+                else if (thisbox.IsChecked == false)
+                    thisbox.IsChecked = true;
+            }
         }
 
         private void newSearch(object sender, RoutedEventArgs e)
@@ -1373,8 +1402,10 @@ namespace SurfaceApplication1
                 else if (currentSearchLanguage == searchLanguage.English)
                     poetryResults = Translate.searchEngPoetry(searchQuery, caseType, wordType, xml, engXml, layoutXml);
 
-                ListBox poetryLB = new ListBox();
+                SurfaceListBox poetryLB = new SurfaceListBox();
+                poetryLB.Style = tabDynamic.FindResource("SearchResultSurfaceListBox") as Style;
                 poetryLB.SetValue(ScrollViewer.HorizontalScrollBarVisibilityProperty, ScrollBarVisibility.Disabled);
+                poetryLB.SetValue(ScrollViewer.VerticalScrollBarVisibilityProperty, ScrollBarVisibility.Visible);
                 selectedTab.poetryScroll.Content = poetryLB;
 
                 foreach (SearchResult result in poetryResults)
@@ -1387,7 +1418,8 @@ namespace SurfaceApplication1
                     resultRBI.excerpt1 = result.excerpt1;
                     resultRBI.excerpt2 = result.excerpt2;
                     resultRBI.excerpt3 = result.excerpt3;
-
+                    resultRBI.Style = tabDynamic.FindResource("SearchResultSurfaceListBoxItem") as Style;
+                    resultRBI.Height = 160;
                     resultRBI.resultText.Text = result.text1 + "\r\n" + result.text2;
                     poetryLB.Items.Add(resultRBI);
                     resultRBI.Selected += new RoutedEventHandler(Result_Closeup);
@@ -1565,7 +1597,6 @@ namespace SurfaceApplication1
             if (selectedResult.resultType == 1)
             {
                 selectedTab.poetryPanel.Children.Clear();
-                int lineNum = Convert.ToInt32(selectedResult.lineInfo.Text);
                 selectedTab.poetryPanel.Children.Add(closeupImage);
                 selectedTab.poetryPanel.Children.Add(closeupText);
             }
@@ -1595,7 +1626,7 @@ namespace SurfaceApplication1
         {
             SearchTab selectedTab = tabDynamic.SelectedItem as SearchTab;
             if (selectedTab.caseSensitive.IsChecked == true | selectedTab.wholeWordOnly.IsChecked == true |
-                selectedTab.wholePhraseOnly.IsChecked == true | (selectedTab.selectLanguage.SelectedIndex != 0 && selectedTab.selectLanguage.SelectedIndex != 1))
+                selectedTab.wholePhraseOnly.IsChecked == false | (selectedTab.selectLanguage.SelectedIndex != 0 && selectedTab.selectLanguage.SelectedIndex != 1))
                 defaultOptionsChanged = true;
 
             else
@@ -1626,8 +1657,43 @@ namespace SurfaceApplication1
             // Then, add all listeners here
             TabItem tab = new TabItem(); 
             tab.Name = string.Format("tab{0}", count);
-            tab.HeaderTemplate = tabDynamic.FindResource("NewAnnotateTab") as DataTemplate;
+            tab.HeaderTemplate = tabDynamic.FindResource("NewAnnotateTab") as DataTemplate; // can be replaced if AnnotateTab object exists
 
+
+
+            // insert tab item right before the last (+) tab item
+            SidebarTabItems.Insert(count - 1, tab);
+            return tab;
+        }
+
+        private void makeLearnerTab(object sender, RoutedEventArgs e)
+        {
+            tabDynamic.DataContext = null;
+            TabItem newTab = this.AddLearnerTab();
+            tabDynamic.DataContext = SidebarTabItems;
+            tabDynamic.SelectedItem = newTab;
+        }
+
+        private TabItem AddLearnerTab()
+        {
+            int count = SidebarTabItems.Count;
+
+
+            TabItem tab = new TabItem();
+            tab.Name = string.Format("tab{0}", count);
+            tab.Header = "HI";
+            tab.Width = 100;
+
+            SurfaceScrollViewer ssv = new SurfaceScrollViewer();
+            ssv.Height = 500;
+            ssv.Width = 300;
+            ssv.Background = Brushes.Aquamarine;
+            Canvas.SetTop(ssv, 50);
+            Canvas.SetLeft(ssv, 100);
+
+            Canvas learnerCanvas = new Canvas();
+            tab.Content = learnerCanvas;
+            learnerCanvas.Children.Add(ssv);
 
 
             // insert tab item right before the last (+) tab item
@@ -1643,7 +1709,7 @@ namespace SurfaceApplication1
             // Then, add all listeners here
             TabItem tab = new TabItem();
             tab.Name = string.Format("tab{0}", count);
-            tab.HeaderTemplate = tabDynamic.FindResource("NewStudyTab") as DataTemplate;
+            tab.HeaderTemplate = tabDynamic.FindResource("NewStudyTab") as DataTemplate; // can be replaced if StudyTab object exists
 
 
 
