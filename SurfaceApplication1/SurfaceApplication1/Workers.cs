@@ -59,7 +59,7 @@ namespace SurfaceApplication1
                     if (language == SurfaceWindow1.language.OldFrench)
                         tab._textBlocksV[i].Text = tab._translationBoxesV[i].getOldFr();
                     if (language == SurfaceWindow1.language.French)
-                        tab._textBlocksV[i].Text = tab._translationBoxesV[i].getOldFr();
+                    tab._textBlocksV[i].Text = tab._translationBoxesV[i].getModFr(); 
                     if (language == SurfaceWindow1.language.English)
                         tab._textBlocksV[i].Text = tab._translationBoxesV[i].getEng();
                 }
@@ -79,7 +79,7 @@ namespace SurfaceApplication1
                     if (language == SurfaceWindow1.language.OldFrench)
                         tab._textBlocksR[i].Text = tab._translationBoxesR[i].getOldFr();
                     if (language == SurfaceWindow1.language.French)
-                        tab._textBlocksR[i].Text = tab._translationBoxesR[i].getOldFr();
+                    tab._textBlocksR[i].Text = tab._translationBoxesR[i].getModFr(); 
                     if (language == SurfaceWindow1.language.English)
                         tab._textBlocksR[i].Text = tab._translationBoxesR[i].getEng();
                 }
@@ -176,7 +176,7 @@ namespace SurfaceApplication1
             versoTranslations.DoWork += (s, e) =>
             {
                 e.Result = tab._page;
-                tab._translationBoxesV = Translate.getTranslationOverlay(PageNamer.getOnePageText(tab._page), SurfaceWindow1.xml, SurfaceWindow1.engXml, SurfaceWindow1.layoutXml);
+                tab._translationBoxesV = Translate.getTranslationOverlay(PageNamer.getOnePageText(tab._page), SurfaceWindow1.xml, SurfaceWindow1.modFrXml, SurfaceWindow1.engXml, SurfaceWindow1.layoutXml);
                 tab._textBlocksV = new List<TextBlock>();
             };
             versoTranslations.RunWorkerCompleted += (s, e) =>
@@ -207,10 +207,11 @@ namespace SurfaceApplication1
                 }
             };
 
+
             rectoTranslations.DoWork += (s, e) =>
             {
                 e.Result = tab._page + 1;
-                tab._translationBoxesR = Translate.getTranslationOverlay(PageNamer.getOnePageText(tab._page + 1), SurfaceWindow1.xml, SurfaceWindow1.engXml, SurfaceWindow1.layoutXml);
+                tab._translationBoxesR = Translate.getTranslationOverlay(PageNamer.getOnePageText(tab._page + 1), SurfaceWindow1.xml, SurfaceWindow1.modFrXml, SurfaceWindow1.engXml, SurfaceWindow1.layoutXml);
                 tab._textBlocksR = new List<TextBlock>();
             };
             rectoTranslations.RunWorkerCompleted += (s, e) =>

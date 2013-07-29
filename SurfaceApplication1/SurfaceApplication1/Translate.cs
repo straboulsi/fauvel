@@ -70,12 +70,9 @@ namespace SurfaceApplication1
                         toDisplay += xn.InnerText.Trim() + "\r\n";
                 }
 
-
-
             }
             catch (Exception e)
             {
-                ///toDisplay = "Can't find these lines.. Try again?";
                 Console.Write(e.StackTrace);
                 Console.Read();
             }
@@ -142,7 +139,7 @@ namespace SurfaceApplication1
          * Calls on other methods in this class to fetch English, French, or coordinates.
          * Expects folio without the "Fo" - i.e. 1v, 35r, 28tr
          **/
-        public static List<TranslationBox> getTranslationOverlay(String page, XmlDocument xml, XmlDocument engXml, XmlDocument layoutXml)
+        public static List<TranslationBox> getTranslationOverlay(String page, XmlDocument xml, XmlDocument modFrXml, XmlDocument engXml, XmlDocument layoutXml)
         {
 
             List<TranslationBox> boxes = new List<TranslationBox>();
@@ -166,7 +163,7 @@ namespace SurfaceApplication1
                             int start = Convert.ToInt32(s.Substring(index + 1, 4));
                             int end = Convert.ToInt32(s.Substring(mid + 1));
 
-                            boxes.Add(new TranslationBox(s, getPoetry(start, end, xml), getEnglish(start, end, engXml), getPoint(s, 1, layoutXml), getPoint(s, 2, layoutXml)));
+                            boxes.Add(new TranslationBox(s, getPoetry(start, end, xml), getModernFrench(start, end, modFrXml), getEnglish(start, end, engXml), getPoint(s, 1, layoutXml), getPoint(s, 2, layoutXml)));
                         }
                     }
                 }
