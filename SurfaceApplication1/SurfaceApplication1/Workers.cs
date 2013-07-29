@@ -16,13 +16,13 @@ namespace SurfaceApplication1
         public bool largeRectoLoaded, largeVersoLoaded;
         public int slideInt;
 
-        public BackgroundWorker versoGhostBoxes = new BackgroundWorker();
-        public BackgroundWorker rectoGhostBoxes = new BackgroundWorker();
-        public BackgroundWorker versoTranslations = new BackgroundWorker();
-        public BackgroundWorker rectoTranslations = new BackgroundWorker();
-        public BackgroundWorker slideImageChange = new BackgroundWorker();
-        public BackgroundWorker versoImageChange = new BackgroundWorker();
-        public BackgroundWorker rectoImageChange = new BackgroundWorker();
+        public BackgroundWorker versoGhostBoxes;
+        public BackgroundWorker rectoGhostBoxes;
+        public BackgroundWorker versoTranslations;
+        public BackgroundWorker rectoTranslations;
+        public BackgroundWorker slideImageChange;
+        public BackgroundWorker versoImageChange;
+        public BackgroundWorker rectoImageChange;
 
         public void updateTranslations()
         {
@@ -48,35 +48,41 @@ namespace SurfaceApplication1
 
         private void setTranslateTextVerso(SurfaceWindow1.language language)
         {
-            int leftCount = tab._textBlocksV.Count;
-            for (int i = 0; i < leftCount; i++)
+            if (tab._textBlocksV != null)
             {
-                tab._textBlocksV[i].Visibility = System.Windows.Visibility.Visible;
-                if (language == SurfaceWindow1.language.None)
-                    tab._textBlocksV[i].Visibility = System.Windows.Visibility.Hidden;
-                if (language == SurfaceWindow1.language.OldFrench)
-                    tab._textBlocksV[i].Text = tab._translationBoxesV[i].getOldFr();
-                if (language == SurfaceWindow1.language.French)
-                    tab._textBlocksV[i].Text = tab._translationBoxesV[i].getOldFr();
-                if (language == SurfaceWindow1.language.English)
-                    tab._textBlocksV[i].Text = tab._translationBoxesV[i].getEng();
+                int leftCount = tab._textBlocksV.Count;
+                for (int i = 0; i < leftCount; i++)
+                {
+                    tab._textBlocksV[i].Visibility = System.Windows.Visibility.Visible;
+                    if (language == SurfaceWindow1.language.None)
+                        tab._textBlocksV[i].Visibility = System.Windows.Visibility.Hidden;
+                    if (language == SurfaceWindow1.language.OldFrench)
+                        tab._textBlocksV[i].Text = tab._translationBoxesV[i].getOldFr();
+                    if (language == SurfaceWindow1.language.French)
+                        tab._textBlocksV[i].Text = tab._translationBoxesV[i].getOldFr();
+                    if (language == SurfaceWindow1.language.English)
+                        tab._textBlocksV[i].Text = tab._translationBoxesV[i].getEng();
+                }
             }
         }
 
         private void setTranslateTextRecto(SurfaceWindow1.language language)
         {
-            int rightCount = tab._textBlocksR.Count;
-            for (int i = 0; i < rightCount; i++)
+            if (tab._textBlocksR != null)
             {
-                tab._textBlocksR[i].Visibility = System.Windows.Visibility.Visible;
-                if (language == SurfaceWindow1.language.None)
-                    tab._textBlocksR[i].Visibility = System.Windows.Visibility.Hidden;
-                if (language == SurfaceWindow1.language.OldFrench)
-                    tab._textBlocksR[i].Text = tab._translationBoxesR[i].getOldFr();
-                if (language == SurfaceWindow1.language.French)
-                    tab._textBlocksR[i].Text = tab._translationBoxesR[i].getOldFr();
-                if (language == SurfaceWindow1.language.English)
-                    tab._textBlocksR[i].Text = tab._translationBoxesR[i].getEng();
+                int rightCount = tab._textBlocksR.Count;
+                for (int i = 0; i < rightCount; i++)
+                {
+                    tab._textBlocksR[i].Visibility = System.Windows.Visibility.Visible;
+                    if (language == SurfaceWindow1.language.None)
+                        tab._textBlocksR[i].Visibility = System.Windows.Visibility.Hidden;
+                    if (language == SurfaceWindow1.language.OldFrench)
+                        tab._textBlocksR[i].Text = tab._translationBoxesR[i].getOldFr();
+                    if (language == SurfaceWindow1.language.French)
+                        tab._textBlocksR[i].Text = tab._translationBoxesR[i].getOldFr();
+                    if (language == SurfaceWindow1.language.English)
+                        tab._textBlocksR[i].Text = tab._translationBoxesR[i].getEng();
+                }
             }
         }
 
@@ -103,6 +109,14 @@ namespace SurfaceApplication1
 
         public Workers(Tab newtab)
         {
+            versoGhostBoxes = new BackgroundWorker();
+            rectoGhostBoxes = new BackgroundWorker();
+            versoTranslations = new BackgroundWorker();
+            rectoTranslations = new BackgroundWorker();
+            slideImageChange = new BackgroundWorker();
+            versoImageChange = new BackgroundWorker();
+            rectoImageChange = new BackgroundWorker();
+
             tab = newtab;
             largeVersoLoaded = false;
             largeRectoLoaded = false;
@@ -126,8 +140,8 @@ namespace SurfaceApplication1
                 {
                     foreach (BoundingBox r in tab._vGhostBoxes)
                     {
-                        Grid g = Translate.getGrid(r.X, r.Y, r.Width, r.Height, null, 0);
-                        tab._vBoxesGrid.Children.Add(g);
+                        /*Grid g = Translate.getGrid(r.X, r.Y, r.Width, r.Height, null, 0);
+                        tab._vBoxesGrid.Children.Add(g);*/
                     }
                 }
                 else
@@ -293,7 +307,7 @@ namespace SurfaceApplication1
             slideImageChange.DoWork += (s, e) =>
             {
                 e.Result = null;
-                int pn = slideInt + 10;
+                int pn = 2 * slideInt + 10;
                 BitmapImage image1 = new BitmapImage();
                 BitmapImage image2 = new BitmapImage();
                 image1.BeginInit();

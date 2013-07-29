@@ -264,10 +264,17 @@ namespace SurfaceApplication1
             currentTab._rBoxesGrid.Children.Clear();
 
             //currentTab._worker.updateGhostBoxes();
-            
+
+            /*currentTab._rGhostBoxes = Translate.getGhostBoxes(PageNamer.getOnePageText(currentTab._page + 1), SurfaceWindow1.layoutXml);
+            foreach (BoundingBox r in currentTab._rGhostBoxes)
+            {
+                Grid g = Translate.getGrid(r.X, r.Y, r.Width, r.Height, null, 0);
+                currentTab._rBoxesGrid.Children.Add(g);
+            }
+
             currentTab._SVI.Width = currentTab._SVI.MinWidth;
             currentTab._SVI.Height = currentTab._SVI.MinHeight;
-            currentTab._SVI.Center = new Point(currentTab._SV.Width / 2, currentTab._SV.Height / 2);
+            currentTab._SVI.Center = new Point(currentTab._SV.Width / 2, currentTab._SV.Height / 2);*/
 
             int pageNumber = currentTab._page;
 
