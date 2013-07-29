@@ -30,7 +30,7 @@
                     <DockPanel>
 
                         <Grid>
-                            <Image Width="100" Height="40" Source="pencil.jpg" Opacity="0.3"/>
+                            <Image Width="100" Height="40" Source="icons/pencil.jpg" Opacity="0.3"/>
                             <TextBlock Text="" VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="21"/>
                         </Grid>
 
@@ -41,21 +41,24 @@
                     <DockPanel>
 
                         <Grid>
-                            <Image Width="100" Height="40" Source="musicnote.png" Opacity="0.3"/>
+                            <Image Width="100" Height="40" Source="icons/musicnote.png" Opacity="0.3"/>
                             <TextBlock Text="" VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="21"/>
                         </Grid>
 
                     </DockPanel>
                 </DataTemplate>
 
+                <!--This one is being reached!-->
                 <Style x:Key="SearchResultSurfaceListBox" TargetType="ListBox">
                     <Setter Property="FontFamily" Value="Cambria"/>
-                    
+                    <Setter Property="Width" Value="480"/>
+                    <Setter Property="Background" Value="White"/>
                 </Style>
 
+                <!--This one is not being reached...-->
                 <Style x:Key="SearchResultSurfaceListBoxItem" TargetType="ListBoxItem">
                     <Setter Property="FontFamily" Value="Cambria"/>
-                    <Setter Property="Height" Value="150"/>
+                    <Setter Property="Height" Value="250"/>
                     <Style.Resources>
                         <SolidColorBrush x:Key="{x:Static SystemColors.HighlightBrushKey}"
                         Color="LavenderBlush"/>

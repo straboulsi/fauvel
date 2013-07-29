@@ -66,6 +66,7 @@ namespace SurfaceApplication1
         public enum searchLanguage { oldFrench = 1, modernFrench = 2, English = 3 };
         public static searchLanguage currentSearchLanguage = searchLanguage.oldFrench;
 
+        public String pageToFind; // for opening/navigating to a new tab from a search result closeup
 
 
         public SurfaceWindow1()
@@ -162,15 +163,6 @@ namespace SurfaceApplication1
             tabDynamic.DataContext = SidebarTabItems;
             tabDynamic.SelectedIndex = 0;
 
-            Button learner = new Button();
-            learner.Content = (string)"Don't mind me";
-            Canvas.SetLeft(learner, 300);
-            Canvas.SetTop(learner, 650);
-            learner.Height = 50;
-            learner.Width = 200;
-            learner.Click += new RoutedEventHandler(makeLearnerTab);
-            newTabCanvas.Children.Add(learner);
-
             try
             {
                 // Loads the Xml documents
@@ -187,6 +179,7 @@ namespace SurfaceApplication1
             {
                 Console.Write(e.StackTrace);
             }
+
 
 
             // slider actions
@@ -1158,7 +1151,7 @@ namespace SurfaceApplication1
                 if (currentSearchLanguage == searchLanguage.oldFrench)
                     poetryResults = Translate.searchFrPoetry(searchQuery, caseType, wordType, xml, engXml, layoutXml);
                 else if(currentSearchLanguage == searchLanguage.modernFrench)
-                    poetryResults = Translate.searchModFrPoetry(searchQuery, caseType, wordType, xml, engXml, layoutXml);
+                    poetryResults = Translate.searchModFrPoetry(searchQuery, caseType, wordType, modFrXml, engXml, layoutXml);
                 else if (currentSearchLanguage == searchLanguage.English)
                     poetryResults = Translate.searchEngPoetry(searchQuery, caseType, wordType, xml, engXml, layoutXml);
 
@@ -1171,18 +1164,8 @@ namespace SurfaceApplication1
                 foreach (SearchResult result in poetryResults)
                 {
                     ResultBoxItem resultRBI = new ResultBoxItem();
-                    resultRBI.folioInfo.Text = result.folio;
-                    resultRBI.lineInfo.Text = Convert.ToString(result.lineNum);
-                    resultRBI.resultType = result.resultType;
-                    resultRBI.resultThumbnail = result.thumbnail;
-                    resultRBI.excerpt1 = result.excerpt1;
-                    resultRBI.excerpt2 = result.excerpt2;
-                    resultRBI.excerpt3 = result.excerpt3;
-                    resultRBI.Style = tabDynamic.FindResource("SearchResultSurfaceListBoxItem") as Style;
-                    resultRBI.Height = 160;
-                    resultRBI.resultText.Text = result.text1 + "\r\n" + result.text2;
+                    convertSearchResultToResultBoxItem(result, resultRBI);
                     poetryLB.Items.Add(resultRBI);
-                    resultRBI.Selected += new RoutedEventHandler(Result_Closeup);
                 }
 
                 selectedTab.poetryTab.Header = "Poetry (" + poetryResults.Count + ")";
@@ -1201,23 +1184,16 @@ namespace SurfaceApplication1
                 // Lyric results
                 List<SearchResult> lyricResults = Translate.searchLyrics(searchQuery, caseType, wordType, xml, layoutXml);
                 ListBox lyricsLB = new ListBox();
+                lyricsLB.Style = tabDynamic.FindResource("SearchResultSurfaceListBox") as Style;
                 lyricsLB.SetValue(ScrollViewer.HorizontalScrollBarVisibilityProperty, ScrollBarVisibility.Disabled);
                 selectedTab.lyricsScroll.Content = lyricsLB;
-
 
 
                 foreach (SearchResult result in lyricResults)
                 {
                     ResultBoxItem resultRBI = new ResultBoxItem();
-                    resultRBI.folioInfo.Text = result.folio;
-                    resultRBI.resultType = result.resultType;
-                    resultRBI.resultThumbnail = result.thumbnail;
-                    resultRBI.excerpt1 = result.excerpt1;
-                    resultRBI.excerpt2 = result.excerpt2;
-                    resultRBI.excerpt3 = result.excerpt3;
-                    resultRBI.resultText.Text = result.text1;
+                    convertSearchResultToResultBoxItem(result, resultRBI);
                     lyricsLB.Items.Add(resultRBI);
-                    resultRBI.Selected += new RoutedEventHandler(Result_Closeup);
                 }
 
                 selectedTab.lyricsTab.Header = "Lyrics (" + lyricResults.Count + ")";
@@ -1236,22 +1212,15 @@ namespace SurfaceApplication1
                 // Image results
                 List<SearchResult> imageResults = Translate.searchPicCaptions(searchQuery, caseType, wordType, xml, layoutXml);
                 ListBox imagesLB = new ListBox();
+                imagesLB.Style = tabDynamic.FindResource("SearchResultSurfaceListBox") as Style;
                 imagesLB.SetValue(ScrollViewer.HorizontalScrollBarVisibilityProperty, ScrollBarVisibility.Disabled);
                 selectedTab.imagesScroll.Content = imagesLB;
 
                 foreach (SearchResult result in imageResults)
                 {
                     ResultBoxItem resultRBI = new ResultBoxItem();
-                    resultRBI.folioInfo.Text = result.folio;
-                    resultRBI.resultType = result.resultType;
-                    resultRBI.resultThumbnail = result.thumbnail;
-                    resultRBI.excerpt1 = result.excerpt1;
-                    resultRBI.excerpt2 = result.excerpt2;
-                    resultRBI.excerpt3 = result.excerpt3;
-                    resultRBI.resultText.Text = result.text1 + "\r\n" + result.text2;
-                    resultRBI.resultText.VerticalAlignment = VerticalAlignment.Top;
+                    convertSearchResultToResultBoxItem(result, resultRBI);
                     imagesLB.Items.Add(resultRBI);
-                    resultRBI.Selected += new RoutedEventHandler(Result_Closeup);
                 }
 
                 selectedTab.imagesTab.Header = "Images (" + imageResults.Count + ")";
@@ -1292,6 +1261,21 @@ namespace SurfaceApplication1
                         selectedTab.searchResults.SelectedItem = selectedTab.lyricsTab;
                 }
             }
+        }
+
+        private void convertSearchResultToResultBoxItem(SearchResult sr, ResultBoxItem rbi)
+        {
+            rbi.folioInfo.Text = sr.folio;
+            rbi.lineInfo.Text = Convert.ToString(sr.lineNum);
+            rbi.resultType = sr.resultType;
+            rbi.resultThumbnail = sr.thumbnail;
+            rbi.excerpt1 = sr.excerpt1;
+            rbi.excerpt2 = sr.excerpt2;
+            rbi.excerpt3 = sr.excerpt3;
+            rbi.Height = 160; // temp, so scrollbar shows
+            rbi.Style = tabDynamic.FindResource("SearchResultSurfaceListBoxItem") as Style; // Not sure if this works..
+            rbi.resultText.Text = sr.text1 + "\r\n" + sr.text2;
+            rbi.Selected += new RoutedEventHandler(Result_Closeup);
         }
 
         private void compressResults()
@@ -1359,6 +1343,8 @@ namespace SurfaceApplication1
                 selectedTab.poetryPanel.Children.Clear();
                 selectedTab.poetryPanel.Children.Add(closeupImage);
                 selectedTab.poetryPanel.Children.Add(closeupText);
+                selectedTab.poetryPanel.TouchDown += new EventHandler<TouchEventArgs>(goToFolio);
+                pageToFind = selectedResult.folioInfo.Text;
             }
 
             else if (selectedResult.resultType == 2)
@@ -1380,6 +1366,34 @@ namespace SurfaceApplication1
             closeupText.Inlines.Add(new Run { FontFamily = new FontFamily("Cambria"), FontWeight = FontWeights.Normal, Text = selectedResult.excerpt3 });
         }
 
+
+        private void goToFolio(object sender, TouchEventArgs e)
+        {
+            if (MessageBox.Show(string.Format("Open a new tab to this folio?"),
+              "Go to Folio", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
+            {
+                createTab(1);
+                Tab tab = currentTab();
+                goToPage(folioToPageNum(pageToFind));
+            }
+        }
+
+        // Assuming folio String starts with Fo-
+        private int folioToPageNum(String folio)
+        {
+            int pageNum = 0;
+            if (folio.StartsWith("Fo"))
+                folio = folio.Substring(2);
+
+
+            if (folio.EndsWith("v"))
+                pageNum = (Convert.ToInt32(folio.Substring(0, folio.Length - 1)) + 11);
+            else if (folio.EndsWith("r"))
+                pageNum = (Convert.ToInt32(folio.Substring(0, folio.Length - 1)) + 10) -1;
+                
+
+            return pageNum;
+        }
 
 
         private Boolean checkForChanges()
@@ -1424,14 +1438,6 @@ namespace SurfaceApplication1
             // insert tab item right before the last (+) tab item
             SidebarTabItems.Insert(count - 1, tab);
             return tab;
-        }
-
-        private void makeLearnerTab(object sender, RoutedEventArgs e)
-        {
-            tabDynamic.DataContext = null;
-            TabItem newTab = this.AddLearnerTab();
-            tabDynamic.DataContext = SidebarTabItems;
-            tabDynamic.SelectedItem = newTab;
         }
 
         private TabItem AddLearnerTab()

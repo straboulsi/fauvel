@@ -538,11 +538,11 @@ namespace SurfaceApplication1
                         String resultLine = getPoetry(newResult.lineNum, newResult.lineNum, modFrXml);
                         String str1 = resultLine.Substring(0, myComp.IndexOf(resultLine, search, CompareOptions.IgnoreCase));
                         String str2 = resultLine.Substring(myComp.IndexOf(resultLine, search, CompareOptions.IgnoreCase) + search.Length);
-                        String lineInfo = "\r\n\r\nLines " + (newResult.lineNum - 4) + " to " + (newResult.lineNum + 4);
+                        String lineInfo = "\r\n\r\nLines " + (newResult.lineNum - 3) + " to " + (newResult.lineNum + 3);
 
-                        newResult.excerpt1 = getPoetry(newResult.lineNum - 4, newResult.lineNum - 1, modFrXml) + "\r\n" + str1;
+                        newResult.excerpt1 = getPoetry(newResult.lineNum - 3, newResult.lineNum - 1, modFrXml) + "\r\n" + str1;
                         newResult.excerpt2 = search;
-                        newResult.excerpt3 = str2 + "\r\n" + getPoetry(newResult.lineNum + 1, newResult.lineNum + 4, modFrXml) + lineInfo;
+                        newResult.excerpt3 = str2 + "\r\n" + getPoetry(newResult.lineNum + 1, newResult.lineNum + 3, modFrXml) + lineInfo;
                         newResult.text1 = xn.InnerText.Trim();
                         newResult.text2 = getEnglish(newResult.lineNum, newResult.lineNum, engXml);
                         newResult.thumbnail = convertImage(Thumbnailer.cropImage(Thumbnailer.getImage(newResult.folio, layoutXml), Thumbnailer.getLineRect(lineNum, layoutXml)));

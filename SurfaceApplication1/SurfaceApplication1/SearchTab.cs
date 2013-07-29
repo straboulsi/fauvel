@@ -34,13 +34,11 @@ namespace SurfaceApplication1
         public SurfaceListBoxItem pickLanguage, oldFrench, modernFrench, English;
         public TabControl searchResults;
         public TabItem poetryTab, lyricsTab, imagesTab;
-        public ScrollViewer lyricsScroll, imagesScroll;
-        //public ScrollViewer poetryScroll;
+        //public ScrollViewer poetryScroll, lyricsScroll, imagesScroll;
         public StackPanel poetryPanel, lyricsPanel, imagesPanel;
         public Button moreOptions, fewerOptions;
         public Image downArrow, upArrow;
-
-        public SurfaceScrollViewer poetryScroll;
+        public SurfaceScrollViewer poetryScroll, lyricsScroll, imagesScroll;
 
         public SearchTab()
         {
@@ -82,10 +80,10 @@ namespace SurfaceApplication1
             poetryScroll = new SurfaceScrollViewer(); //
             poetryPanel = new StackPanel();
             lyricsCanvas = new Canvas();
-            lyricsScroll = new ScrollViewer(); 
+            lyricsScroll = new SurfaceScrollViewer(); 
             lyricsPanel = new StackPanel();
             imagesCanvas = new Canvas();
-            imagesScroll = new ScrollViewer(); 
+            imagesScroll = new SurfaceScrollViewer(); 
             imagesPanel = new StackPanel();
 
 
@@ -262,9 +260,11 @@ namespace SurfaceApplication1
             poetryCanvas.Height = 629;
             poetryCanvas.Children.Add(poetryScroll);
             poetryCanvas.Children.Add(poetryPanel);
+
             poetryScroll.Height = 325;
-            poetryScroll.Width = 470;
-            //poetryScroll.Background = Brushes.BlanchedAlmond;
+            poetryScroll.Width = 470; 
+            poetryScroll.Background = Brushes.LightGray;
+            //poetryScroll.Foreground = Brushes.Tomato;
             poetryScroll.VerticalScrollBarVisibility = ScrollBarVisibility.Visible;
             poetryScroll.HorizontalScrollBarVisibility = ScrollBarVisibility.Disabled;
 
@@ -283,6 +283,9 @@ namespace SurfaceApplication1
             lyricsCanvas.Children.Add(lyricsPanel);
             lyricsScroll.Height = 325;
             lyricsScroll.Width = 470;
+            lyricsScroll.Background = Brushes.LightGray;
+            lyricsScroll.VerticalScrollBarVisibility = ScrollBarVisibility.Visible;
+            lyricsScroll.HorizontalScrollBarVisibility = ScrollBarVisibility.Disabled;
             lyricsPanel.Orientation = Orientation.Horizontal;
             lyricsPanel.Height = 300;
             lyricsPanel.Width = 478;
@@ -297,6 +300,9 @@ namespace SurfaceApplication1
             imagesCanvas.Children.Add(imagesPanel);
             imagesScroll.Height = 325;
             imagesScroll.Width = 470;
+            imagesScroll.Background = Brushes.LightGray;
+            imagesScroll.HorizontalScrollBarVisibility = ScrollBarVisibility.Disabled;
+            imagesScroll.VerticalScrollBarVisibility = ScrollBarVisibility.Visible;
             imagesPanel.Orientation = Orientation.Horizontal;
             imagesPanel.Height = 300;
             imagesPanel.Width = 478;
