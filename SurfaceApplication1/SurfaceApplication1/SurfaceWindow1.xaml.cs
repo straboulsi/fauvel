@@ -193,8 +193,7 @@ namespace SurfaceApplication1
                 Console.Write(e.StackTrace);
             }
 
-            Translate.searchModFrPoetry("plus longtemps", 0, 0, modFrXml, engXml, layoutXml);
-            Console.Read();
+
 
             // slider actions
             pageSlider.AddHandler(UIElement.ManipulationDeltaEvent, new EventHandler<ManipulationDeltaEventArgs>(slider_ManipulationDelta), true);

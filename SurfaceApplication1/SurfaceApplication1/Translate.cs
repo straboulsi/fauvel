@@ -305,6 +305,32 @@ namespace SurfaceApplication1
             return toDisplay;
         }
 
+        public static String getModernFrench(int start, int end, XmlDocument modFrXml)
+        {
+            String toDisplay = "";
+
+            try
+            {
+                XmlNodeList foundNodes = modFrXml.DocumentElement.SelectNodes("//lg/l[@n>=" + start + "and @n<=" + end + "]");
+                foreach (XmlNode xn in foundNodes)
+                {
+                    toDisplay += xn.InnerText.Trim() + "\r\n";
+                    Console.Write(xn.InnerText + "\r\n");
+                }
+
+            }
+            catch (Exception e)
+            {
+                ///toDisplay = "Can't find the English.. Try again?";
+                Console.Write(e.StackTrace);
+                Console.Read();
+            }
+
+            toDisplay = toDisplay.TrimEnd('\r', '\n');
+
+            return toDisplay;
+        }
+
 
         /**
          *  <summary>
