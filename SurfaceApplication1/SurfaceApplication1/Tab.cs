@@ -15,8 +15,8 @@ namespace SurfaceApplication1
         public int _page;
         public TabItem _tab;
         public Image _verso, _recto;
-        public Canvas _canvas, _c_v, _c_r;
-        public ScatterViewItem _vSVI, _rSVI;
+        public Canvas _canvas;
+        public ScatterViewItem _SVI;
         public int numFingersVerso, numFingersRecto;
         public List<Point> fingerPos;
         public Point avgTouchPoint;
@@ -25,24 +25,21 @@ namespace SurfaceApplication1
         public List<TextBlock> _textBlocksV, _textBlocksR;
         public Grid _vGrid, _rGrid, _vSwipeGrid, _rSwipeGrid, _vTranslationGrid, _rTranslationGrid, _vBoxesGrid, _rBoxesGrid;
         public bool _twoPage;
-        public ScatterView _vSV, _rSV;
+        public ScatterView _SV;
         public TextBlock _headerTB;
         public Workers _worker;
         public List<BoundingBox> _rGhostBoxes, _vGhostBoxes;
 
-        public Tab(int page, TabItem newTab, Image newVerso, Image newRecto, Canvas canvas, Canvas c_v, Canvas c_r, Grid vGrid, Grid rGrid, Button delBtn, ScatterView vSV, ScatterView rSV, ScatterViewItem vsi, ScatterViewItem rsi, Grid vSwipeGrid, Grid rSwipeGrid, Grid vTranslationGrid, Grid rTranslationGrid, Grid vBoxesGrid, Grid rBoxesGrid, TextBlock headerText)
+        public Tab(int page, TabItem newTab, Image newVerso, Image newRecto, Canvas canvas, Grid vGrid, Grid rGrid, Button delBtn, ScatterView SV, ScatterViewItem si, Grid vSwipeGrid, Grid rSwipeGrid, Grid vTranslationGrid, Grid rTranslationGrid, Grid vBoxesGrid, Grid rBoxesGrid, TextBlock headerText)
         {
             _page = page;
             _tab = newTab;
             _verso = newVerso;
             _recto = newRecto;
             _canvas = canvas;
-            _c_v = c_v;
-            _c_r = c_r;
             _vGrid = vGrid;
             _rGrid = rGrid;
-            _vSVI = vsi;
-            _rSVI = rsi;
+            _SVI = si;
             _delButton = delBtn;
             numFingersRecto = 0;
             numFingersVerso = 0;
@@ -55,8 +52,7 @@ namespace SurfaceApplication1
             _vBoxesGrid = vBoxesGrid;
             _rBoxesGrid = rBoxesGrid;
             _twoPage = true;
-            _vSV = vSV;
-            _rSV = rSV;
+            _SV = SV;
             _headerTB = headerText;
             _worker = new Workers(this);
         }

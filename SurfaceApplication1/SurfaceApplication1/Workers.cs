@@ -6,13 +6,14 @@ using System.ComponentModel;
 using System.Windows.Media.Imaging;
 using System.Windows.Controls;
 using System.Windows;
+using System.Windows.Threading;
 
 namespace SurfaceApplication1
 {
     class Workers
     {
         private Tab tab;
-        public bool bigV, bigR;
+        public bool largeRectoLoaded, largeVersoLoaded;
         public int slideInt;
 
         public BackgroundWorker versoGhostBoxes = new BackgroundWorker();
@@ -88,14 +89,14 @@ namespace SurfaceApplication1
 
         public void updateVersoImage(bool big)
         {
-            bigV = big;
+            largeVersoLoaded = big;
             if(!versoImageChange.IsBusy)
                 versoImageChange.RunWorkerAsync();
         }
 
         public void updateRectoImage(bool big)
         {
-            bigR = big;
+            largeRectoLoaded = big;
             if (!rectoImageChange.IsBusy)
                 rectoImageChange.RunWorkerAsync();
         }
@@ -103,8 +104,8 @@ namespace SurfaceApplication1
         public Workers(Tab newtab)
         {
             tab = newtab;
-            bigV = false;
-            bigR = false;
+            largeVersoLoaded = false;
+            largeRectoLoaded = false;
 
             rectoGhostBoxes.WorkerSupportsCancellation = true;
             versoGhostBoxes.WorkerSupportsCancellation = true;
@@ -232,7 +233,7 @@ namespace SurfaceApplication1
                 int pn = tab._page + 10;
                 BitmapImage image = new BitmapImage();
                 image.BeginInit();
-                if (!bigV)
+                if (!largeVersoLoaded)
                     image.DecodePixelWidth = SurfaceWindow1.minPageWidth;
                 image.CacheOption = BitmapCacheOption.OnLoad;
                 image.UriSource = new Uri("pages/" + pn.ToString() + ".jpg", UriKind.Relative);
@@ -263,7 +264,7 @@ namespace SurfaceApplication1
                 int pn = tab._page + 11;
                 BitmapImage image = new BitmapImage();
                 image.BeginInit();
-                if (!bigR)
+                if (!largeRectoLoaded)
                     image.DecodePixelWidth = SurfaceWindow1.minPageWidth;
                 image.CacheOption = BitmapCacheOption.OnLoad;
                 image.UriSource = new Uri("pages/" + pn.ToString() + ".jpg", UriKind.Relative);
@@ -299,14 +300,8 @@ namespace SurfaceApplication1
                 image2.BeginInit();
                 image1.CacheOption = BitmapCacheOption.OnLoad;
                 image2.CacheOption = BitmapCacheOption.OnLoad;
-                if (slideImageChange.CancellationPending) return;
                 image1.UriSource = new Uri("smallpages/" + pn.ToString() + ".jpg", UriKind.Relative);
-                if (slideImageChange.CancellationPending) return;
-                if(slideInt != SurfaceWindow1.maxPage)
-                    image2.UriSource = new Uri("smallpages/" + (pn + 1).ToString() + ".jpg", UriKind.Relative);
-                else
-                    image2.UriSource = new Uri("smallpages/" + pn.ToString() + ".jpg", UriKind.Relative);
-                if (slideImageChange.CancellationPending) return;
+                image2.UriSource = new Uri("smallpages/" + (pn + 1).ToString() + ".jpg", UriKind.Relative);
                 image1.EndInit();
                 image2.EndInit();
                 image1.Freeze();

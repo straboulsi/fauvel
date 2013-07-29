@@ -6,7 +6,7 @@
     <ProductVersion>8.0.30703</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{F66E2D8E-243A-4A44-A2BE-2C1912E26A17}</ProjectGuid>
-    <OutputType>Exe</OutputType>
+    <OutputType>WinExe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>SurfaceApplication1</RootNamespace>
     <AssemblyName>SurfaceApplication1</AssemblyName>
@@ -146,16 +146,13 @@
     <None Include="SurfaceApplication1_TemporaryKey.pfx" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="downArrow.png" />
-    <Resource Include="box.jpg" />
+    <Resource Include="icons\downArrow.png" />
+    <Resource Include="icons\box.jpg" />
     <Resource Include="icons\prev.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Resource>
     <Resource Include="icons\save.png" />
     <Resource Include="icons\zoom.png" />
-    <Resource Include="bin\prev.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Resource>
     <Content Include="XML\ModernFrenchXML.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -170,8 +167,8 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Resource Include="icons\pageTurn.png" />
-    <Resource Include="musicnote.png" />
-    <Resource Include="magnifyingglass.png" />
+    <Resource Include="icons\musicnote.png" />
+    <Resource Include="icons\magnifyingglass.png" />
     <Content Include="pages\100.jpg">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -461,7 +458,7 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Resource Include="icons\leftArrow.png" />
-    <Resource Include="pencil.jpg" />
+    <Resource Include="icons\pencil.jpg" />
     <Content Include="Resources\icon.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -780,7 +777,9 @@
       <Install>true</Install>
     </BootstrapperPackage>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="bin\" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
