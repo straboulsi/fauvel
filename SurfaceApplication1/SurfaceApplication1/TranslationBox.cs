@@ -9,6 +9,7 @@ namespace SurfaceApplication1
 
         public String tag = "";
         String oldFr = "";
+        String modFr = "";
         String eng = "";
         public Point topL = new Point(0, 0);
         public Point bottomR = new Point(0, 0);
@@ -17,10 +18,11 @@ namespace SurfaceApplication1
 
         // Has string (contents) and coordinates
         // Class1 should take in page number and output array of translation boxes
-        public TranslationBox(String aTag, String someOldFr, String someEng, Point aTopL, Point aBottomR)
+        public TranslationBox(String aTag, String someOldFr, String someModFr, String someEng, Point aTopL, Point aBottomR)
         {
             tag = aTag;
             oldFr = someOldFr;
+            modFr = someModFr;
             eng = someEng;
             topL = aTopL;
             bottomR = aBottomR;
@@ -45,6 +47,11 @@ namespace SurfaceApplication1
         public String getOldFr()
         {
             return oldFr;
+        }
+
+        public String getModFr()
+        {
+            return modFr;
         }
 
         public String getEng()

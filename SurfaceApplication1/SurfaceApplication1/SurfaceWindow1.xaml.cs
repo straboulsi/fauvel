@@ -189,7 +189,6 @@ namespace SurfaceApplication1
             }
 
 
-
             // slider actions
             pageSlider.AddHandler(UIElement.ManipulationDeltaEvent, new EventHandler<ManipulationDeltaEventArgs>(slider_ManipulationDelta), true);
             pageSlider.AddHandler(UIElement.ManipulationCompletedEvent, new EventHandler<ManipulationCompletedEventArgs>(slider_ManipulationCompleted), true);
@@ -258,12 +257,12 @@ namespace SurfaceApplication1
             currentTab._vTranslationGrid.Children.Clear();
             currentTab._rTranslationGrid.Children.Clear();
 
-            //currentTab._worker.updateTranslations();
+            //currentTab._worker.updateTranslations(); 
             
             currentTab._vBoxesGrid.Children.Clear();
             currentTab._rBoxesGrid.Children.Clear();
 
-            //currentTab._worker.updateGhostBoxes();
+            //currentTab._worker.updateGhostBoxes(); 
             
             currentTab._SVI.Width = currentTab._SVI.MinWidth;
             currentTab._SVI.Height = currentTab._SVI.MinHeight;
