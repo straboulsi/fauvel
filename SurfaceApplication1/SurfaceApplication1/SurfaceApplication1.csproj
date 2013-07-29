@@ -148,9 +148,7 @@
   <ItemGroup>
     <Resource Include="icons\downArrow.png" />
     <Resource Include="icons\box.jpg" />
-    <Resource Include="icons\prev.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Resource>
+    <Resource Include="icons\prev.png" />
     <Resource Include="icons\save.png" />
     <Resource Include="icons\zoom.png" />
     <Content Include="XML\ModernFrenchXML.xml">
