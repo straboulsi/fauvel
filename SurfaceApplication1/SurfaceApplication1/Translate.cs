@@ -485,62 +485,57 @@ namespace SurfaceApplication1
 
             List<SearchResult> results = new List<SearchResult>();
 
-            //try
-            //{
-            //    XmlNodeList xnl = modFrXml.DocumentElement.SelectNodes("//lg/l");
+            try
+            {
+                XmlNodeList xnl = modFrXml.DocumentElement.SelectNodes("//lg/l");
 
-            //    int numFound = 0;
-
-
-            //    foreach (XmlNode xn in xnl)
-            //    {
-
-            //        if (foundBySpecifiedCase(search, xn.InnerText, caseSensitive) && foundBySpecifiedWord(search, xn.InnerText, wordSensitive))
-            //        {
-            //            SearchResult newResult = new SearchResult();
-
-            //            // Gets rid of drop caps
-            //            if (xn.ChildNodes.Count > 1)
-            //                xn.RemoveChild(xn.FirstChild);
-
-            //            numFound++;
-            //            String lineNum = xn.Attributes["n"].Value;
-            //            newResult.lineNum = Convert.ToInt32(lineNum);
-            //            newResult.resultType = 1;
-            //            XmlNode page = xn.ParentNode.ParentNode;
-            //            String pageNum = page.Attributes["facs"].Value;
-            //            pageNum = "Fo" + pageNum.Substring(1);
-            //            newResult.folio = pageNum;
-
-            //            String resultLine = getPoetry(newResult.lineNum, newResult.lineNum, xml);
-            //            String str1 = resultLine.Substring(0, myComp.IndexOf(resultLine, search, CompareOptions.IgnoreCase));
-            //            String str2 = resultLine.Substring(myComp.IndexOf(resultLine, search, CompareOptions.IgnoreCase) + search.Length);
-            //            String lineInfo = "\r\n\r\nLines " + (newResult.lineNum - 4) + " to " + (newResult.lineNum + 4);
-
-            //            newResult.excerpt1 = getPoetry(newResult.lineNum - 4, newResult.lineNum - 1, xml) + "\r\n" + str1;
-            //            newResult.excerpt2 = search;
-            //            newResult.excerpt3 = str2 + "\r\n" + getPoetry(newResult.lineNum + 1, newResult.lineNum + 4, xml) + lineInfo;
-            //            newResult.text1 = xn.InnerText.Trim();
-            //            newResult.text2 = getEnglish(newResult.lineNum, newResult.lineNum, engXml);
+                int numFound = 0;
 
 
+                foreach (XmlNode xn in xnl)
+                {
+
+                    if (foundBySpecifiedCase(search, xn.InnerText, caseSensitive) && foundBySpecifiedWord(search, xn.InnerText, wordSensitive))
+                    {
+                        SearchResult newResult = new SearchResult();
+
+                        // Gets rid of drop caps
+                        if (xn.ChildNodes.Count > 1)
+                            xn.RemoveChild(xn.FirstChild);
+
+                        numFound++;
+                        String lineNum = xn.Attributes["n"].Value;
+                        newResult.lineNum = Convert.ToInt32(lineNum);
+                        newResult.resultType = 1;
+                        XmlNode page = xn.ParentNode.ParentNode;
+                        String pageNum = page.Attributes["facs"].Value;
+                        pageNum = "Fo" + pageNum.Substring(1);
+                        newResult.folio = pageNum;
+
+                        String resultLine = getPoetry(newResult.lineNum, newResult.lineNum, modFrXml);
+                        String str1 = resultLine.Substring(0, myComp.IndexOf(resultLine, search, CompareOptions.IgnoreCase));
+                        String str2 = resultLine.Substring(myComp.IndexOf(resultLine, search, CompareOptions.IgnoreCase) + search.Length);
+                        String lineInfo = "\r\n\r\nLines " + (newResult.lineNum - 4) + " to " + (newResult.lineNum + 4);
+
+                        newResult.excerpt1 = getPoetry(newResult.lineNum - 4, newResult.lineNum - 1, modFrXml) + "\r\n" + str1;
+                        newResult.excerpt2 = search;
+                        newResult.excerpt3 = str2 + "\r\n" + getPoetry(newResult.lineNum + 1, newResult.lineNum + 4, modFrXml) + lineInfo;
+                        newResult.text1 = xn.InnerText.Trim();
+                        newResult.text2 = getEnglish(newResult.lineNum, newResult.lineNum, engXml);
+                        newResult.thumbnail = convertImage(Thumbnailer.cropImage(Thumbnailer.getImage(newResult.folio, layoutXml), Thumbnailer.getLineRect(lineNum, layoutXml)));
+
+                        results.Add(newResult);
+                    }
+
+                }
 
 
-            //            newResult.thumbnail = convertImage(Thumbnailer.cropImage(Thumbnailer.getImage(newResult.folio, layoutXml), Thumbnailer.getLineRect(lineNum, layoutXml)));
-
-
-            //            results.Add(newResult);
-            //        }
-
-            //    }
-
-
-            //}
-            //catch (Exception e)
-            //{
-            //    Console.Write(e.StackTrace);
-            //    Console.Read();
-            //}
+            }
+            catch (Exception e)
+            {
+                Console.Write(e.StackTrace);
+                Console.Read();
+            }
 
             return results;
         }

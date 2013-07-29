@@ -264,7 +264,7 @@ namespace SurfaceApplication1
             poetryCanvas.Children.Add(poetryPanel);
             poetryScroll.Height = 325;
             poetryScroll.Width = 470;
-            poetryScroll.Background = Brushes.BlanchedAlmond;
+            //poetryScroll.Background = Brushes.BlanchedAlmond;
             poetryScroll.VerticalScrollBarVisibility = ScrollBarVisibility.Visible;
             poetryScroll.HorizontalScrollBarVisibility = ScrollBarVisibility.Disabled;
 

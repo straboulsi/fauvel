@@ -60,7 +60,7 @@ namespace SurfaceApplication1
         private List<TabItem> SidebarTabItems;
         private TabItem tabAdd;
         private Boolean defaultOptionsChanged;
-        public static XmlDocument xml, engXml, layoutXml;
+        public static XmlDocument xml, engXml, layoutXml, modFrXml;
         public int veryFirstLine, veryLastLine;
 
         public enum searchLanguage { oldFrench = 1, modernFrench = 2, English = 3 };
@@ -180,18 +180,20 @@ namespace SurfaceApplication1
             {
                 // Loads the Xml documents
                 xml = new XmlDocument();
-                xml.Load("OriginalTextXML.xml");
+                xml.Load(@"..\..\XML\OriginalTextXML.xml");
                 engXml = new XmlDocument();
-                engXml.Load("EnglishXML.xml");
+                engXml.Load(@"..\..\XML\EnglishXML.xml");
                 layoutXml = new XmlDocument();
-                layoutXml.Load("layout_full.xml");
+                layoutXml.Load(@"..\..\XML\LayoutXML.xml");
+                modFrXml = new XmlDocument();
+                modFrXml.Load(@"..\..\XML\ModernFrenchXML.xml");
             }
             catch (Exception e)
             {
                 Console.Write(e.StackTrace);
             }
 
-            Translate.getTranslationOverlay("34v", xml, engXml, layoutXml);
+            Translate.searchModFrPoetry("plus longtemps", 0, 0, modFrXml, engXml, layoutXml);
             Console.Read();
 
             // slider actions
