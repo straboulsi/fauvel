@@ -21,16 +21,13 @@ namespace SurfaceApplication1
                                          "40r","40v","41r","41v","42r","42v","43r","43v",
                                          "44r","44v","blank"};
 
-        public static String getPageText(int i, bool twopage)
+        public static String getPageText(int i)
         {
             if (i > SurfaceWindow1.maxPage)
                 return "";
             else
             {
-                if (twopage)
-                    return pageNames[i] + " / " + pageNames[i + 1];
-                else
-                    return pageNames[i];
+                return pageNames[i] + " / " + pageNames[i + 1];
             }
         }
 
