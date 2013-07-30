@@ -159,6 +159,10 @@ namespace SurfaceApplication1
             return toDisplay;
         }
 
+
+
+
+
         /**
          * Creates an ArrayList of TranslationBox objects when given a folio page.
          * Consults the Content (Old French), Layout, and English XML files. 
@@ -654,17 +658,13 @@ namespace SurfaceApplication1
         }
 
 
-
-
-
-
-        public static List<SearchResult> searchOriginalLyrics(String search, int caseSensitive, int wordSensitive, XmlDocument xml, XmlDocument layoutXml)
+        public static List<SearchResult> searchLyrics(String search, int caseSensitive, int wordSensitive, XmlDocument whichXml, XmlDocument layoutXml)
         {
             List<SearchResult> results = new List<SearchResult>();
 
             try
             {
-                XmlNodeList xnl = xml.DocumentElement.SelectNodes("//p");
+                XmlNodeList xnl = whichXml.DocumentElement.SelectNodes("//p");
 
                 foreach (XmlNode node in xnl)
                 {
@@ -702,7 +702,10 @@ namespace SurfaceApplication1
                             excerpt += "...\r\n";
 
                         for (int i = firstLine; i <= lastLine; i++)
-                            excerpt += allLyrics[i].Trim() + "\r\n";
+                        {
+                            if(!allLyrics[i].Trim().StartsWith("#"))
+                                excerpt += allLyrics[i].Trim() + "\r\n";
+                        }
 
                         if (lastLine != allLyrics.Length - 1)
                             excerpt += "...";
@@ -737,81 +740,6 @@ namespace SurfaceApplication1
         }
 
 
-        public static List<SearchResult> searchModFrLyrics(String search, int caseSensitive, int wordSensitive, XmlDocument modFrXml, XmlDocument layoutXml)
-        {
-            List<SearchResult> results = new List<SearchResult>();
-
-            try
-            {
-                XmlNodeList xnl = modFrXml.DocumentElement.SelectNodes("//p");
-
-                foreach (XmlNode node in xnl)
-                {
-                    if (foundBySpecifiedCase(search, node.InnerText, caseSensitive) && foundBySpecifiedWord(search, node.InnerText, wordSensitive))
-                    {
-                        XmlNode xn = modFrLyricsOnly(node);
-
-                        SearchResult newResult = new SearchResult();
-                        newResult.resultType = 2;
-                        String str = xn.InnerText;
-                        String[] allLyrics = str.Trim().Split(new String[] { "\r\n", "\n" }, StringSplitOptions.None);
-
-
-                        int lyricLineNum = -5;
-                        for (int i = 0; i < allLyrics.Length; i++)
-                        {
-                            String thisLine = allLyrics[i];
-                            if (foundBySpecifiedCase(search, allLyrics[i], caseSensitive) && foundBySpecifiedWord(search, allLyrics[i], wordSensitive))
-                            {
-                                lyricLineNum = i;
-                                break;
-                            }
-                        }
-
-                        int firstLine = lyricLineNum - 3;
-                        int lastLine = lyricLineNum + 3;
-                        if (firstLine < 0)
-                            firstLine = 0;
-                        if (lastLine >= allLyrics.Length)
-                            lastLine = allLyrics.Length - 1;
-
-                        String excerpt = "";
-
-                        if (firstLine > 0)
-                            excerpt += "...\r\n";
-
-                        for (int i = firstLine; i <= lastLine; i++)
-                            excerpt += allLyrics[i].Trim() + "\r\n";
-
-                        if (lastLine != allLyrics.Length - 1)
-                            excerpt += "...";
-
-
-                        newResult.excerpt1 = excerpt.Substring(0, myComp.IndexOf(excerpt, search, CompareOptions.IgnoreCase));
-                        newResult.excerpt2 = search;
-                        newResult.excerpt3 = excerpt.Substring(myComp.IndexOf(excerpt, search, CompareOptions.IgnoreCase) + search.Length);
-
-                        newResult.text1 = allLyrics[0];
-                        newResult.tag = xn.Attributes["id"].Value;
-                        newResult.folio = "Fo" + (xn.ParentNode.Attributes["facs"].Value).Substring(1);
-                        newResult.resultType = 2;
-                        String tag = newResult.tag.Substring(0, newResult.tag.Length - 2);
-                        newResult.thumbnail = convertImage(Thumbnailer.cropImage(Thumbnailer.getImage(newResult.folio, layoutXml), Thumbnailer.getRect(tag, layoutXml)));
-                        results.Add(newResult);
-                    }
-                }
-            }
-            catch (Exception e)
-            {
-                Console.Write(e.StackTrace);
-                Console.Read();
-            }
-
-            return results;
-        }
-
-
-
 
         public static System.Windows.Controls.Image convertImage(System.Drawing.Image gdiImg)
         {
@@ -832,7 +760,7 @@ namespace SurfaceApplication1
 
 
 
-        // Filters out all cps, dcs, nvs, etc. for original lyrics
+        // Filters out all cps, dcs, nvs, etc. 
         public static XmlNode lyricsOnly(XmlNode originalNode)
         {
             XmlNodeList cps = originalNode.SelectNodes("cp");
@@ -857,7 +785,7 @@ namespace SurfaceApplication1
                 }
 
             }
-            else
+            else if(vs.Count > 0)
             {
                 foreach (XmlNode voice in vs)
                 {
@@ -870,27 +798,6 @@ namespace SurfaceApplication1
                 }
             }
 
-
-            return originalNode;
-        }
-
-
-        public static XmlNode modFrLyricsOnly(XmlNode originalNode)
-        {
-            XmlNodeList cps = originalNode.SelectNodes("cp");
-            if (cps.Count != 0)
-            {
-                foreach (XmlNode node in cps)
-                    originalNode.RemoveChild(node);
-            }
-
-            Console.Write("\r\n1: "+originalNode.InnerXml);
-
-            XmlNode nv = originalNode.SelectSingleNode("nv");
-            if (nv != null)
-                originalNode.RemoveChild(nv);
-
-            Console.Write("\r\n2: " + originalNode.InnerXml);
 
             return originalNode;
         }

@@ -151,6 +151,7 @@
     <Resource Include="icons\prev.png" />
     <Resource Include="icons\save.png" />
     <Resource Include="icons\zoom.png" />
+    <Resource Include="icons\magnifyingglass.png" />
     <Content Include="XML\ModernFrenchXML.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -166,7 +167,6 @@
     </Content>
     <Resource Include="icons\pageTurn.png" />
     <Resource Include="icons\musicnote.png" />
-    <Resource Include="icons\magnifyingglass.png" />
     <Content Include="pages\100.jpg">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>

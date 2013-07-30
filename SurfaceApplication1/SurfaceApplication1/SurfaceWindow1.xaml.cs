@@ -96,7 +96,7 @@ namespace SurfaceApplication1
             Grid searchGrid = new Grid();
 
             Image searchIm = new Image();
-            searchIm.Source = new BitmapImage(new Uri(@"/magnifyingglass.png", UriKind.Relative));
+            searchIm.Source = new BitmapImage(new Uri(@"..\..\icons\magnifyingglass.png", UriKind.Relative));
             searchIm.Style = tabDynamic.FindResource("ButtonImageTemplate") as Style;
 
             TextBlock searchText = new TextBlock();
@@ -118,7 +118,7 @@ namespace SurfaceApplication1
             Grid annotateGrid = new Grid();
 
             Image annotateIm = new Image();
-            annotateIm.Source = new BitmapImage(new Uri(@"/pencil.jpg", UriKind.Relative));
+            annotateIm.Source = new BitmapImage(new Uri(@"..\..\icons\pencil.jpg", UriKind.Relative));
             annotateIm.Style = tabDynamic.FindResource("ButtonImageTemplate") as Style;
 
             TextBlock annotateText = new TextBlock();
@@ -145,7 +145,7 @@ namespace SurfaceApplication1
             Grid studyGrid = new Grid();
 
             Image studyIm = new Image();
-            studyIm.Source = new BitmapImage(new Uri(@"/musicnote.png", UriKind.Relative));
+            studyIm.Source = new BitmapImage(new Uri(@"..\..\icons\musicnote.png", UriKind.Relative));
             studyIm.Style = tabDynamic.FindResource("ButtonImageTemplate") as Style;
 
             TextBlock studyText = new TextBlock();
@@ -443,6 +443,18 @@ namespace SurfaceApplication1
             return tab;
         }
 
+        /* 
+         * The following method was written when tabs weren't switching via touch
+         * It may not end up being needed... We'll see.
+         */
+        //private void SearchTabItem_TouchDown(object sender, TouchEventArgs e)
+        //{
+        //    SearchTab tab = sender as SearchTab;
+        //    TabControl control = tab.Parent as TabControl;
+        //    control.SelectedItem = tab;
+        //    e.Handled = true;
+        //}
+
         private void wheelIt(object sender, MouseWheelEventArgs e)
         {
             int d = e.Delta;
@@ -469,9 +481,7 @@ namespace SurfaceApplication1
             return tabArray[tabNumber];
         }
 
-        /*
-         * 
-         */
+
         private void tabBar_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             TabItem tab = tabBar.SelectedItem as TabItem;
@@ -1057,10 +1067,8 @@ namespace SurfaceApplication1
         {
             optionsShown = true;
             SearchTab selectedTab = tabDynamic.SelectedItem as SearchTab;
-            ///selectedTab.optionsCanvas.Visibility = Visibility.Visible;
             selectedTab.topLine.Visibility = Visibility.Hidden;
             selectedTab.caseSensitive.Visibility = Visibility.Visible;
-            ///selectedTab.selectLanguage.Visibility = Visibility.Visible;
             selectedTab.bottomLine.Visibility = Visibility.Visible;
             selectedTab.fewerOptions.Visibility = Visibility.Visible;
             selectedTab.wholeWordOnly.Visibility = Visibility.Visible;
@@ -1075,7 +1083,6 @@ namespace SurfaceApplication1
         private void Hide_Options(object sender, RoutedEventArgs e)
         {
             SearchTab selectedTab = tabDynamic.SelectedItem as SearchTab;
-            ///selectedTab.optionsCanvas.Visibility = Visibility.Hidden;
             selectedTab.topLine.Visibility = Visibility.Visible;
             selectedTab.moreOptions.Visibility = Visibility.Visible;
             selectedTab.caseSensitive.Visibility = Visibility.Hidden;
@@ -1184,9 +1191,9 @@ namespace SurfaceApplication1
                 // Lyric results
                 List<SearchResult> lyricResults = new List<SearchResult>();
                 if (currentSearchLanguage == searchLanguage.oldFrench)
-                    lyricResults = Translate.searchOriginalLyrics(searchQuery, caseType, wordType, xml, layoutXml);
+                    lyricResults = Translate.searchLyrics(searchQuery, caseType, wordType, xml, layoutXml);
                 else if (currentSearchLanguage == searchLanguage.modernFrench)
-                    lyricResults = Translate.searchModFrLyrics(searchQuery, caseType, wordType, modFrXml, layoutXml);
+                    lyricResults = Translate.searchLyrics(searchQuery, caseType, wordType, modFrXml, layoutXml);
 
                 ListBox lyricsLB = new ListBox();
                 lyricsLB.Style = tabDynamic.FindResource("SearchResultSurfaceListBox") as Style;
@@ -1278,7 +1285,7 @@ namespace SurfaceApplication1
             rbi.excerpt1 = sr.excerpt1;
             rbi.excerpt2 = sr.excerpt2;
             rbi.excerpt3 = sr.excerpt3;
-            rbi.Height = 160; // temp, so scrollbar shows
+            rbi.Height = 80; // temp taller than desired, so scrollbar shows
             rbi.Style = tabDynamic.FindResource("SearchResultSurfaceListBoxItem") as Style; // Not sure if this works..
             rbi.resultText.Text = sr.text1 + "\r\n" + sr.text2;
             rbi.Selected += new RoutedEventHandler(Result_Closeup);
@@ -1350,7 +1357,6 @@ namespace SurfaceApplication1
                 selectedTab.poetryPanel.Children.Add(closeupImage);
                 selectedTab.poetryPanel.Children.Add(closeupText);
                 selectedTab.poetryPanel.TouchDown += new EventHandler<TouchEventArgs>(goToFolio);
-                pageToFind = selectedResult.folioInfo.Text;
             }
 
             else if (selectedResult.resultType == 2)
@@ -1358,6 +1364,7 @@ namespace SurfaceApplication1
                 selectedTab.lyricsPanel.Children.Clear();
                 selectedTab.lyricsPanel.Children.Add(closeupImage);
                 selectedTab.lyricsPanel.Children.Add(closeupText);
+                selectedTab.lyricsPanel.TouchDown += new EventHandler<TouchEventArgs>(goToFolio);
             }
 
             else if (selectedResult.resultType == 3)
@@ -1365,7 +1372,10 @@ namespace SurfaceApplication1
                 selectedTab.imagesPanel.Children.Clear();
                 selectedTab.imagesPanel.Children.Add(closeupImage);
                 selectedTab.imagesPanel.Children.Add(closeupText);
+                selectedTab.imagesPanel.TouchDown += new EventHandler<TouchEventArgs>(goToFolio);
             }
+
+            pageToFind = selectedResult.folioInfo.Text;
 
             closeupText.Inlines.Add(new Run { FontFamily = new FontFamily("Cambria"), Text = selectedResult.excerpt1, FontWeight = FontWeights.Normal });
             closeupText.Inlines.Add(new Run { FontFamily = new FontFamily("Cambria"), FontWeight = FontWeights.Bold, Text = selectedResult.excerpt2 });
@@ -1380,25 +1390,16 @@ namespace SurfaceApplication1
             {
                 createTab(1);
                 Tab tab = currentTab();
-                goToPage(folioToPageNum(pageToFind));
+
+                if (pageToFind.StartsWith("Fo"))
+                    pageToFind = pageToFind.Substring(2);
+                String imageName = Thumbnailer.getImageName(pageToFind, layoutXml);
+                int pageNum = Convert.ToInt32(imageName.Substring(0, imageName.IndexOf(".jpg")));
+                if (pageNum % 2 == 1) // If odd, meaning it's a Fo_r, we want to aim for the previous page.
+                    pageNum--;
+                goToPage(pageNum - 10);
+                loadPage();
             }
-        }
-
-        // Assuming folio String starts with Fo-
-        private int folioToPageNum(String folio)
-        {
-            int pageNum = 0;
-            if (folio.StartsWith("Fo"))
-                folio = folio.Substring(2);
-
-
-            if (folio.EndsWith("v"))
-                pageNum = (Convert.ToInt32(folio.Substring(0, folio.Length - 1)) + 11);
-            else if (folio.EndsWith("r"))
-                pageNum = (Convert.ToInt32(folio.Substring(0, folio.Length - 1)) + 10) -1;
-                
-
-            return pageNum;
         }
 
 
@@ -1423,8 +1424,11 @@ namespace SurfaceApplication1
             {
                 selectedTab.searchQueryBox.Foreground = Brushes.Black;
                 selectedTab.searchQueryBox.Text = "";
-                selectedTab.searchQueryBox.Focus();
             }
+            else
+                selectedTab.searchQueryBox.SelectAll();
+
+            selectedTab.searchQueryBox.Focus();
         }
 
 
