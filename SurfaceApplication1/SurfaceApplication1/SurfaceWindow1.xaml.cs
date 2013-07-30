@@ -180,7 +180,7 @@ namespace SurfaceApplication1
                 Console.Write(e.StackTrace);
             }
 
-
+            
 
             // slider actions
             pageSlider.AddHandler(UIElement.ManipulationDeltaEvent, new EventHandler<ManipulationDeltaEventArgs>(slider_ManipulationDelta), true);
@@ -1149,7 +1149,7 @@ namespace SurfaceApplication1
 
                 List<SearchResult> poetryResults = new List<SearchResult>();
                 if (currentSearchLanguage == searchLanguage.oldFrench)
-                    poetryResults = Translate.searchFrPoetry(searchQuery, caseType, wordType, xml, engXml, layoutXml);
+                    poetryResults = Translate.searchOldFrPoetry(searchQuery, caseType, wordType, xml, engXml, layoutXml);
                 else if(currentSearchLanguage == searchLanguage.modernFrench)
                     poetryResults = Translate.searchModFrPoetry(searchQuery, caseType, wordType, modFrXml, engXml, layoutXml);
                 else if (currentSearchLanguage == searchLanguage.English)
@@ -1182,7 +1182,12 @@ namespace SurfaceApplication1
 
 
                 // Lyric results
-                List<SearchResult> lyricResults = Translate.searchLyrics(searchQuery, caseType, wordType, xml, layoutXml);
+                List<SearchResult> lyricResults = new List<SearchResult>();
+                if (currentSearchLanguage == searchLanguage.oldFrench)
+                    lyricResults = Translate.searchOriginalLyrics(searchQuery, caseType, wordType, xml, layoutXml);
+                else if (currentSearchLanguage == searchLanguage.modernFrench)
+                    lyricResults = Translate.searchModFrLyrics(searchQuery, caseType, wordType, modFrXml, layoutXml);
+
                 ListBox lyricsLB = new ListBox();
                 lyricsLB.Style = tabDynamic.FindResource("SearchResultSurfaceListBox") as Style;
                 lyricsLB.SetValue(ScrollViewer.HorizontalScrollBarVisibilityProperty, ScrollBarVisibility.Disabled);
@@ -1266,8 +1271,9 @@ namespace SurfaceApplication1
         private void convertSearchResultToResultBoxItem(SearchResult sr, ResultBoxItem rbi)
         {
             rbi.folioInfo.Text = sr.folio;
-            rbi.lineInfo.Text = Convert.ToString(sr.lineNum);
             rbi.resultType = sr.resultType;
+            if(rbi.resultType == 1)
+                rbi.lineInfo.Text = Convert.ToString(sr.lineNum);
             rbi.resultThumbnail = sr.thumbnail;
             rbi.excerpt1 = sr.excerpt1;
             rbi.excerpt2 = sr.excerpt2;
