@@ -152,6 +152,9 @@
     <Resource Include="icons\save.png" />
     <Resource Include="icons\zoom.png" />
     <Resource Include="icons\magnifyingglass.png" />
+    <SplashScreen Include="Resources\splashImage.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </SplashScreen>
     <Content Include="XML\ModernFrenchXML.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>

@@ -644,8 +644,12 @@ namespace SurfaceApplication1
         {
             if (!dtOut)
             {
-                resizePageToRect(s, getRectFromPoint(true, p));
-                dtOut = true;
+                Rect rect = getRectFromPoint(true, p);
+                if(!rect.Equals(Rect.Empty))
+                {
+                    resizePageToRect(s, rect);
+                    dtOut = true;
+                }
             }
             else
             {
@@ -657,7 +661,19 @@ namespace SurfaceApplication1
 
         private Rect getRectFromPoint(bool verso, Point p)
         {
-            return new Rect(200, 200, 1600, 2000);
+            if (p.X < maxPageWidth)
+            {
+                foreach (BoundingBox bb in currentTab()._vGhostBoxes)
+                    if (p.X > bb.X && p.Y > bb.Y && p.X < bb.X + bb.Width && p.Y < bb.Y + bb.Height)
+                        return new Rect(bb.X, bb.Y, bb.Width, bb.Height);
+            }
+            else
+            {
+                foreach (BoundingBox bb in currentTab()._rGhostBoxes)
+                    if (p.X > bb.X + maxPageWidth && p.Y > bb.Y && p.X < bb.X + maxPageWidth + bb.Width && p.Y < bb.Y + bb.Height)
+                        return new Rect(bb.X + maxPageWidth, bb.Y, bb.Width, bb.Height); 
+            }
+            return Rect.Empty;
         }
 
         private void resizePagetoSmall(ScatterViewItem s)
@@ -696,16 +712,15 @@ namespace SurfaceApplication1
             Storyboard.SetTargetProperty(moveCenter, new PropertyPath(ScatterViewItem.CenterProperty));
             Storyboard.SetTargetProperty(moveWidth, new PropertyPath(ScatterViewItem.WidthProperty));
             Storyboard.SetTargetProperty(moveHeight, new PropertyPath(ScatterViewItem.HeightProperty));
-
-            s.Center = endPoint;
             s.Width = endWidth;
             s.Height = endHeight;
+            s.Center = endPoint;
             stb.Begin(this);
         }
 
         private void resizePageToRect(ScatterViewItem s, Rect r)
         {
-            bool sizeToHeight = r.Height > r.Width * 1.4;
+            bool sizeToHeight = 2 * r.Height > r.Width * 1.4;
             double h = r.Height;
             double w = r.Width;
             double endWidth, endHeight;
@@ -717,14 +732,14 @@ namespace SurfaceApplication1
             }
             else
             {
-                if (w > minPageWidth)
-                    multiplier = minPageWidth / w;
+                if (w > minPageWidth * 2)
+                    multiplier = minPageWidth * 2 / w;
             }
 
             endWidth = s.MaxWidth * multiplier;
             endHeight = s.MaxHeight * multiplier;
             double x, y, xcenter, ycenter;
-            x = (r.Left + r.Width / 2) / maxPageWidth;
+            x = (r.Left + r.Width / 2) / maxPageWidth / 2;
             y = (r.Top + r.Height / 2) / maxPageHeight;
             xcenter = ((ScatterView)s.Parent).Width / 2;
             ycenter = ((ScatterView)s.Parent).Height / 2;
@@ -744,9 +759,10 @@ namespace SurfaceApplication1
             moveWidth.To = endWidth;
             moveHeight.From = s.ActualHeight;
             moveHeight.To = endHeight;
-            moveCenter.Duration = new Duration(TimeSpan.FromMilliseconds(150));
-            moveWidth.Duration = new Duration(TimeSpan.FromMilliseconds(150));
-            moveHeight.Duration = new Duration(TimeSpan.FromMilliseconds(150));
+            int milliseconds = 150;
+            moveCenter.Duration = new Duration(TimeSpan.FromMilliseconds(milliseconds));
+            moveWidth.Duration = new Duration(TimeSpan.FromMilliseconds(milliseconds));
+            moveHeight.Duration = new Duration(TimeSpan.FromMilliseconds(milliseconds));
             moveWidth.FillBehavior = FillBehavior.Stop;
             moveHeight.FillBehavior = FillBehavior.Stop;
             moveCenter.FillBehavior = FillBehavior.Stop;
@@ -760,9 +776,9 @@ namespace SurfaceApplication1
             Storyboard.SetTargetProperty(moveWidth,  new PropertyPath(ScatterViewItem.WidthProperty));
             Storyboard.SetTargetProperty(moveHeight, new PropertyPath(ScatterViewItem.HeightProperty));
 
-            s.Center = endPoint;
             s.Width = endWidth;
             s.Height = endHeight;
+            s.Center = endPoint;
             stb.Begin(this);
         }
 
@@ -785,7 +801,12 @@ namespace SurfaceApplication1
                 lastTapLocation = new Point(-1000, -1000);
             ScatterViewItem item = (ScatterViewItem)sender;
             if (IsDoubleTap(e))
-                OnDoubleTouchDown((ScatterViewItem)sender, e.TouchDevice.GetTouchPoint(item).Position);
+            {
+                Point p = e.TouchDevice.GetTouchPoint(item).Position;
+                double x = p.X * item.MaxWidth / item.Width;
+                double y = p.Y * item.MaxWidth / item.Width;
+                OnDoubleTouchDown((ScatterViewItem)sender, new Point(x, y));
+            }
         }
 
         private void OnPreviewTouchUp(object sender, TouchEventArgs e)
