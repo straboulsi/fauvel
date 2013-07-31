@@ -193,7 +193,7 @@ namespace SurfaceApplication1
             TabItem newTabButton = new TabItem();
             newTabButton.Header = "+";
             tabBar.Items.Add(newTabButton);
-            createTab(1);
+            createTab(2);
         }
 
         protected override void OnClosed(EventArgs e)
@@ -434,7 +434,7 @@ namespace SurfaceApplication1
             can.Children.Add(ScatterView);
             ScatterView.Items.Add(ScatterItem);
 
-            tabArray.Insert(count, new Tab(2, tab, verso, recto, can, vGrid, rGrid, delBtn, ScatterView, ScatterItem, vSwipeGrid, rSwipeGrid, vTranslationGrid, rTranslationGrid, vBoxesGrid, rBoxesGrid, hedatext));
+            tabArray.Insert(count, new Tab(page, tab, verso, recto, can, vGrid, rGrid, delBtn, ScatterView, ScatterItem, vSwipeGrid, rSwipeGrid, vTranslationGrid, rTranslationGrid, vBoxesGrid, rBoxesGrid, hedatext));
 
             tab.Content = can;
             tabBar.Items.Insert(tabArray.Count - 1, tab);
@@ -459,7 +459,7 @@ namespace SurfaceApplication1
 
         private void wheelIt(object sender, MouseWheelEventArgs e)
         {
-            loadPage();
+            createTab(currentTab()._page + 2);
             int d = e.Delta;
             ScatterViewItem item = (ScatterViewItem)sender;
             double width = item.Width + 2 * d;
@@ -1389,7 +1389,7 @@ namespace SurfaceApplication1
             if (MessageBox.Show(string.Format("Open a new tab to this folio?"),
               "Go to Folio", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
             {
-                createTab(1);
+                createTab(2);
                 Tab tab = currentTab();
 
                 if (pageToFind.StartsWith("Fo"))
