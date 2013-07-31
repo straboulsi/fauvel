@@ -68,6 +68,7 @@ namespace SurfaceApplication1
         public static searchLanguage currentSearchLanguage = searchLanguage.oldFrench;
 
         public String pageToFind; // for opening/navigating to a new tab from a search result closeup
+        public String previousPageToFind;
 
 
         public SurfaceWindow1()
@@ -82,7 +83,9 @@ namespace SurfaceApplication1
             // Lots of search sidebar things
             tabAdd = new TabItem();
             tabAdd.Header = "  +  ";
+            tabAdd.FontSize = 25;
             tabAdd.Height = 40;
+            tabAdd.FontFamily = new FontFamily("Cambria");
 
             Canvas newTabCanvas = new Canvas();
             newTabCanvas.Height = 899;
@@ -1161,7 +1164,6 @@ namespace SurfaceApplication1
                     poetryResults = Translate.searchEngPoetry(searchQuery, caseType, wordType, xml, engXml, layoutXml);
 
                 SurfaceListBox poetryLB = new SurfaceListBox();
-                
                 poetryLB.Style = tabDynamic.FindResource("SearchResultSurfaceListBox") as Style;
                 poetryLB.SetValue(ScrollViewer.HorizontalScrollBarVisibilityProperty, ScrollBarVisibility.Disabled);
                 poetryLB.SetValue(ScrollViewer.VerticalScrollBarVisibilityProperty, ScrollBarVisibility.Visible);
@@ -1212,7 +1214,7 @@ namespace SurfaceApplication1
                 if (lyricResults.Count == 0)
                 {
                     TextBlock noResults = new TextBlock();
-                    noResults.Text = "Sorry, your search returned no music lyric results.";
+                    noResults.Text = "Sorry, your search returned no music lyric results.\r\n\r\nNB: Lyrics only exist in original text or Modern French - no English.";
                     selectedTab.lyricsTab.Content = noResults;
                 }
                 else
@@ -1239,7 +1241,7 @@ namespace SurfaceApplication1
                 if (imageResults.Count == 0)
                 {
                     TextBlock noResults = new TextBlock();
-                    noResults.Text = "Sorry, your search returned no image results.";
+                    noResults.Text = "Sorry, your search returned no image results.\r\n\r\nNB: Image captions exist in Modern French only; no English (yet).";
                     selectedTab.imagesTab.Content = noResults;
                 }
                 else
@@ -1285,8 +1287,12 @@ namespace SurfaceApplication1
             rbi.excerpt2 = sr.excerpt2;
             rbi.excerpt3 = sr.excerpt3;
             rbi.Height = 80; // temp taller than desired, so scrollbar shows
+            rbi.HorizontalAlignment = System.Windows.HorizontalAlignment.Left;
+            rbi.Width = 430;
             rbi.Style = tabDynamic.FindResource("SearchResultSurfaceListBoxItem") as Style; // Not sure if this works..
             rbi.resultText.Text = sr.text1 + "\r\n" + sr.text2;
+            rbi.BorderBrush = Brushes.LightGray;
+            rbi.BorderThickness = new Thickness(1.0);
             rbi.Selected += new RoutedEventHandler(Result_Closeup);
         }
 
@@ -1384,8 +1390,7 @@ namespace SurfaceApplication1
 
         private void goToFolio(object sender, TouchEventArgs e)
         {
-            if (MessageBox.Show(string.Format("Open a new tab to this folio?"),
-              "Go to Folio", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
+            if (pageToFind != previousPageToFind)
             {
                 if (pageToFind.StartsWith("Fo"))
                     pageToFind = pageToFind.Substring(2);
@@ -1393,7 +1398,9 @@ namespace SurfaceApplication1
                 int pageNum = Convert.ToInt32(imageName.Substring(0, imageName.IndexOf(".jpg")));
                 if (pageNum % 2 == 1) // If odd, meaning it's a Fo_r, we want to aim for the previous page.
                     pageNum--;
+
                 createTab(pageNum - 10);
+                previousPageToFind = pageToFind;
             }
         }
 

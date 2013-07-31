@@ -3035,7 +3035,7 @@
       <p id="10vMo2_t">
         Motet : Servant regem misericordia (PM 33)
         <nv> 3 </nv>
-        <cp> 11rMo1 </cp>
+        <cp> 11rMo1 </cp> <firstcp/>
         <v>
           <dc>S</dc>(Triplum) Servant regem misericaordia
           Et veritas necnon clemencia.
@@ -3281,7 +3281,7 @@
       <p id="11vMo1_t">
         Motet : Condicio Nature defuit (PM 35)
         <nv> 3 </nv>
-        <cp> 12rMo1 </cp>
+        <cp> 12rMo1 </cp> <firstcp/>
         <v>
           <dc>C</dc>(Triplum) Condicio Nature defuit
           In filio quem Virgo genuit ;
@@ -3491,7 +3491,7 @@
 
       <p id="12rPr1_t">
         Prose : Carnalitas, Luxuria in Falvelli palacio (PM 36)
-        <cp>12vPr1</cp>
+        <cp>12vPr1</cp> <firstcp/>
         <dc>C</dc>Carnalitas, luxuria
         In Falvelli palacio
         Presunt et inconstancia;
@@ -3966,7 +3966,7 @@
 
       <p id="14rPr1_t">
         Prose : Inter membra singula (PM 40)
-        <cp>14vPr1</cp> <cp>15rPr1</cp>
+        <cp>14vPr1</cp> <cp>15rPr1</cp> <firstcp/>
         <dc>I</dc>Inter membra singula
         De ventris ingluvie
         Murmur est et questio,
@@ -4415,7 +4415,7 @@
 
       <p id="15vMo1_t">
         Motet: La mesnie fauveline (PM 41)
-        <cp>16rMo1</cp>
+        <cp>16rMo1</cp> <firstcp/>
         <nv> 3 </nv>
         <v>
           <dc>L</dc>(Triplum) La mesnie fauveline
@@ -4808,7 +4808,7 @@
 
       <p id="16vBa2_t">
         Ballade : Aÿ Amours tant me dure (PM 43)
-        <cp>17rBa1</cp>
+        <cp>17rBa1</cp> <firstcp/>
         <dc>A</dc>Aÿ ! Amours, tant me dure
         Le mal que j'ai a porter
         Et me grieve outre mesure
@@ -4944,7 +4944,7 @@
       # Lay de Fauvel (PM 44) is split over Fo17 – Fo18v
       <p id="17rLa1_t">
         Lay de Fauvel: Talant que j'ai d'obeïr (PM 44)
-        <cp> 17vLa1 </cp> <cp> 18rLa1 </cp> <cp> 18vLa1 </cp>
+        <cp> 17vLa1 </cp> <cp> 18rLa1 </cp> <cp> 18vLa1 </cp> <firstcp/>
         <dc>T</dc>Talant que j'ai d'obeïr
         Et de fere le plaisir
         A celle en qui mi desir
@@ -5441,7 +5441,7 @@
 
       <p id="19rLa1_t">
         Lai de Fortune : Je qui poair seule ai (PM 46)
-        <cp> 19vLa1 </cp>
+        <cp> 19vLa1 </cp> <firstcp/>
         <dc>J</dc>Je qui poair seule ai de conforter
         Toute autre gent, forment me desconfort
         De ce larron qu'ai tant fait deporter
@@ -5601,7 +5601,7 @@
 
       <p id="19vRo1_t">
         Rondeau: Fauvel est mal assegné (PM 47)
-        <cp> 20rRo1 </cp>
+        <cp> 20rRo1 </cp> <firstcp/>
         Fauvet est mal assegné
         De venir a son desir.
       </p>
@@ -6429,7 +6429,7 @@
 
       <p id="22rLa1_t">
         Lai : Veritas, equitas, largitas corruit (PM 52)
-        <cp> 22vLa1 </cp> <cp> 23rLa1 </cp>
+        <cp> 22vLa1 </cp> <cp> 23rLa1 </cp> <firstcp/>
         <dc>V</dc>Veritas, equitas,
         Largitas corruit;
         Falsitas, pravitas,
@@ -6982,7 +6982,7 @@
 
       <p id="23vBa1_t">
         Ballade : En chantant me veul complaindre (PM 56)
-        <cp> 24rBa1 </cp>
+        <cp> 24rBa1 </cp> <firstcp/>
         <dc>E</dc>En chantant me veul complaindre
         A vous, dame seigneurie,
       </p>
@@ -7780,7 +7780,7 @@
 
       <p id="25vRef4_t">
         Refrain 13 :
-        <cp> 26rRef1 </cp>
+        <cp> 26rRef1 </cp> <firstcp/>
         <dc>J</dc>J'atendrai ainssi, ai mi !
       </p>
 
@@ -8978,7 +8978,7 @@
 
     <p id="28brLa1_t">
       Lai de Vénus : Pour recouvrer alegiance (PM 64)
-      <cp>28bvLa1</cp> <cp>28trLa1</cp> <cp>28tvLa1</cp>
+      <cp>28bvLa1</cp> <cp>28trLa1</cp> <cp>28tvLa1</cp> <firstcp/>
       <dc>P</dc>Pour recouvrer alegiance
       Des maus que je trai,
       En tant que fais elloingnance
@@ -11214,7 +11214,7 @@
 
       <p id="34vLa1_t">
         Lay des Hellequines (PM 90)
-        <cp> 35rLa1 </cp> <cp> 35vLa1 </cp> <cp> 36rLa1 </cp> <cp> 36vLa1 </cp>
+        <cp> 35rLa1 </cp> <cp> 35vLa1 </cp> <cp> 36rLa1 </cp> <cp> 36vLa1 </cp> <firstcp/>
         <dc>E</dc>En ce dous temps d'esté, tout droit ou mois de may
         Qu'amours met par pensé maint cuer en grant esmay,
         Firent les herlequines ce descort dous et gay.
@@ -11643,7 +11643,7 @@
 
       <p id="37rSe1_t">
         Sequence: Virgines egregie (PM 93)
-        <cp> 37vSe1 </cp>
+        <cp> 37vSe1 </cp> <firstcp/>
         <dc>V</dc>Virgines egregie,
         Virgines sacrate,
         Coram vestri facie
@@ -13025,7 +13025,7 @@
 
       <p id="41vMo1_t">
         Motet : Tribum que non abhorruit (PM 120)
-        <cp>42rMo1</cp>
+        <cp>42rMo1</cp> <firstcp/>
         <nv> 3 </nv>
         <v>
           <cp></cp>
@@ -13322,7 +13322,7 @@
 
       <p id="43rMo2_t">
         Motet: Firmissime fidem (PM 124)
-        <cp>43vMo1</cp>
+        <cp>43vMo1</cp> <firstcp/>
         <nv> 3 </nv>
         <v part="triplum">
           <vcp/>
