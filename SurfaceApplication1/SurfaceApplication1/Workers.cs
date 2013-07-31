@@ -16,28 +16,60 @@ namespace SurfaceApplication1
         public bool largeRectoLoaded, largeVersoLoaded;
         public int slideInt;
 
-        public BackgroundWorker versoGhostBoxes;
-        public BackgroundWorker rectoGhostBoxes;
-        public BackgroundWorker versoTranslations;
-        public BackgroundWorker rectoTranslations;
         public BackgroundWorker slideImageChange;
         public BackgroundWorker versoImageChange;
         public BackgroundWorker rectoImageChange;
 
         public void updateTranslations()
         {
-            if (!versoTranslations.IsBusy)
-                versoTranslations.RunWorkerAsync();
-            if (!rectoTranslations.IsBusy)
-                rectoTranslations.RunWorkerAsync();
+            var translationDispatcher = tab._canvas.Dispatcher.BeginInvoke(new Action(() =>
+            {
+                tab._translationBoxesV = Translate.getTranslationOverlay(PageNamer.getOnePageText(tab._page), SurfaceWindow1.xml, SurfaceWindow1.modFrXml, SurfaceWindow1.engXml, SurfaceWindow1.layoutXml);
+                tab._textBlocksV = new List<TextBlock>();
+                tab._translationBoxesR = Translate.getTranslationOverlay(PageNamer.getOnePageText(tab._page + 1), SurfaceWindow1.xml, SurfaceWindow1.modFrXml, SurfaceWindow1.engXml, SurfaceWindow1.layoutXml);
+                tab._textBlocksR = new List<TextBlock>();
+            }));
+            translationDispatcher.Completed += (s, e) =>
+            {
+                foreach (TranslationBox tb in tab._translationBoxesV)
+                {
+                    TextBlock t = new TextBlock();
+                    Grid g = Translate.getGrid(tb, t);
+                    tab._textBlocksV.Add(t);
+                    tab._vTranslationGrid.Children.Add(g);
+                }
+                foreach (TranslationBox tb in tab._translationBoxesR)
+                {
+                    TextBlock t = new TextBlock();
+                    Grid g = Translate.getGrid(tb, t);
+                    tab._textBlocksR.Add(t);
+                    tab._rTranslationGrid.Children.Add(g);
+                }
+                setTranslateTextRecto(SurfaceWindow1.currentLanguage);
+                setTranslateTextVerso(SurfaceWindow1.currentLanguage);
+            };
         }
 
         public void updateGhostBoxes()
         {
-            if (!versoGhostBoxes.IsBusy)
-                versoGhostBoxes.RunWorkerAsync();
-            if (!rectoGhostBoxes.IsBusy)
-                rectoGhostBoxes.RunWorkerAsync();
+            var ghostBoxDispatcher = tab._canvas.Dispatcher.BeginInvoke(new Action(() =>
+            {
+                tab._vGhostBoxes = Translate.getGhostBoxes(PageNamer.getOnePageText(tab._page), SurfaceWindow1.layoutXml);
+                tab._rGhostBoxes = Translate.getGhostBoxes(PageNamer.getOnePageText(tab._page + 1), SurfaceWindow1.layoutXml);
+            }));
+            ghostBoxDispatcher.Completed += (s, e) =>
+            {
+                foreach (BoundingBox r in tab._vGhostBoxes)
+                {
+                    Grid g = Translate.getGrid(r);
+                    tab._vBoxesGrid.Children.Add(g);
+                }
+                foreach (BoundingBox r in tab._rGhostBoxes)
+                {
+                    Grid g = Translate.getGrid(r);
+                    tab._rBoxesGrid.Children.Add(g);
+                }
+            };
         }
 
         public void setTranslateText(SurfaceWindow1.language language)
@@ -109,10 +141,6 @@ namespace SurfaceApplication1
 
         public Workers(Tab newtab)
         {
-            versoGhostBoxes = new BackgroundWorker();
-            rectoGhostBoxes = new BackgroundWorker();
-            versoTranslations = new BackgroundWorker();
-            rectoTranslations = new BackgroundWorker();
             slideImageChange = new BackgroundWorker();
             versoImageChange = new BackgroundWorker();
             rectoImageChange = new BackgroundWorker();
@@ -121,127 +149,10 @@ namespace SurfaceApplication1
             largeVersoLoaded = false;
             largeRectoLoaded = false;
 
-            rectoGhostBoxes.WorkerSupportsCancellation = true;
-            versoGhostBoxes.WorkerSupportsCancellation = true;
             versoImageChange.WorkerSupportsCancellation = true;
             rectoImageChange.WorkerSupportsCancellation = true;
             slideImageChange.WorkerSupportsCancellation = true;
-            versoTranslations.WorkerSupportsCancellation = true;
-            rectoTranslations.WorkerSupportsCancellation = true;
-
-            versoGhostBoxes.DoWork += (s, e) =>
-            {
-                e.Result = tab._page;
-                tab._vGhostBoxes = Translate.getGhostBoxes(PageNamer.getOnePageText(tab._page), SurfaceWindow1.layoutXml);
-            };
-            versoGhostBoxes.RunWorkerCompleted += (s, e) =>
-            {
-                if ((int)(e.Result) == tab._page)
-                {
-                    foreach (BoundingBox r in tab._vGhostBoxes)
-                    {
-                        /*Grid g = Translate.getGrid(r.X, r.Y, r.Width, r.Height, null, 0);
-                        tab._vBoxesGrid.Children.Add(g);*/
-                    }
-                }
-                else
-                {
-                    versoGhostBoxes.Dispose();
-                    versoGhostBoxes.RunWorkerAsync();
-                }
-            };
-
-            rectoGhostBoxes.DoWork += (s, e) =>
-            {
-                e.Result = tab._page + 1;
-                tab._rGhostBoxes = Translate.getGhostBoxes(PageNamer.getOnePageText(tab._page + 1), SurfaceWindow1.layoutXml);
-            };
-            rectoGhostBoxes.RunWorkerCompleted += (s, e) =>
-            {
-                if ((int)(e.Result) == tab._page + 1)
-                {
-                    foreach (BoundingBox r in tab._rGhostBoxes)
-                    {
-                        Grid g = Translate.getGrid(r.X, r.Y, r.Width, r.Height, null, 0);
-                        tab._rBoxesGrid.Children.Add(g);
-                    }
-                }
-                else
-                {
-                    rectoGhostBoxes.Dispose();
-                    rectoGhostBoxes.RunWorkerAsync();
-                }
-            };
             
-            versoTranslations.DoWork += (s, e) =>
-            {
-                e.Result = tab._page;
-                tab._translationBoxesV = Translate.getTranslationOverlay(PageNamer.getOnePageText(tab._page), SurfaceWindow1.xml, SurfaceWindow1.modFrXml, SurfaceWindow1.engXml, SurfaceWindow1.layoutXml);
-                tab._textBlocksV = new List<TextBlock>();
-            };
-            versoTranslations.RunWorkerCompleted += (s, e) =>
-            {
-                if ((int)(e.Result) == tab._page)
-                {
-                    foreach (TranslationBox tb in tab._translationBoxesV)
-                    {
-                        double width, x, y, height;
-                        x = tb.getTopLeft().X;
-                        y = tb.getTopLeft().Y;
-                        width = (tb.getBottomRight().X - tb.getTopLeft().X);
-                        height = (tb.getBottomRight().Y - tb.getTopLeft().Y);
-
-                        TextBlock t = new TextBlock();
-                        Grid g = Translate.getGrid(x, y, width, height, t, tb.lines);
-                        t.Foreground = Translate.textBrush;
-                        t.Background = Translate.backBrush;
-                        tab._textBlocksV.Add(t);
-                        tab._vTranslationGrid.Children.Add(g);
-                    }
-                    setTranslateTextVerso(SurfaceWindow1.currentLanguage);
-                    versoImageChange.Dispose();
-                } else {
-                    versoImageChange.Dispose();
-                    if(!versoImageChange.IsBusy)
-                        versoImageChange.RunWorkerAsync();
-                }
-            };
-
-
-            rectoTranslations.DoWork += (s, e) =>
-            {
-                e.Result = tab._page + 1;
-                tab._translationBoxesR = Translate.getTranslationOverlay(PageNamer.getOnePageText(tab._page + 1), SurfaceWindow1.xml, SurfaceWindow1.modFrXml, SurfaceWindow1.engXml, SurfaceWindow1.layoutXml);
-                tab._textBlocksR = new List<TextBlock>();
-            };
-            rectoTranslations.RunWorkerCompleted += (s, e) =>
-            {
-                if ((int)(e.Result) == tab._page + 1)
-                {
-                    foreach (TranslationBox tb in tab._translationBoxesR)
-                    {
-                        double width, x, y, height;
-                        x = tb.getTopLeft().X;
-                        y = tb.getTopLeft().Y;
-                        width = (tb.getBottomRight().X - tb.getTopLeft().X);
-                        height = (tb.getBottomRight().Y - tb.getTopLeft().Y);
-
-                        TextBlock t = new TextBlock();
-                        Grid g = Translate.getGrid(x, y, width, height, t, tb.lines);
-                        t.Foreground = Translate.textBrush;
-                        t.Background = Translate.backBrush;
-                        tab._textBlocksR.Add(t);
-                        tab._rTranslationGrid.Children.Add(g);
-                    }
-                    setTranslateTextRecto(SurfaceWindow1.currentLanguage);
-                    rectoImageChange.Dispose();
-                } else {
-                    rectoImageChange.Dispose();
-                    if(!rectoImageChange.IsBusy)
-                        rectoImageChange.RunWorkerAsync();
-                }
-            };
-
             versoImageChange.DoWork += (s, e) =>
             {
                 e.Result = null;

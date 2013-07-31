@@ -85,8 +85,14 @@ namespace SurfaceApplication1
 
 
 
-        public static Grid getGrid(double x, double y, double width, double height, TextBlock t, int lines)
+        public static Grid getGrid(TranslationBox tb, TextBlock t)
         {
+            double width, x, y, height;
+            x = tb.getTopLeft().X;
+            y = tb.getTopLeft().Y;
+            width = (tb.getBottomRight().X - tb.getTopLeft().X);
+            height = (tb.getBottomRight().Y - tb.getTopLeft().Y);
+
             Grid g = new Grid();
             ColumnDefinition c1 = new ColumnDefinition();
             c1.Width = new GridLength(x, GridUnitType.Star);
@@ -108,27 +114,66 @@ namespace SurfaceApplication1
             g.RowDefinitions.Add(r2);
             g.RowDefinitions.Add(r3);
 
-            if (t != null)
-            {
-                t.FontSize = 2;
-                t.TextWrapping = TextWrapping.NoWrap;
-                Grid.SetRow(t, 1);
-                Grid.SetColumn(t, 1);
-                g.Children.Add(t);
-                t.LineHeight = (height * SurfaceWindow1.minPageHeight / SurfaceWindow1.maxPageHeight) / lines;
-            }
-            else
-            {
-                Border B = new Border();
-                B.BorderBrush = blockBrush;
-                B.BorderThickness = new Thickness(2);
-                Grid filla = new Grid();
-                Grid.SetRow(B, 1);
-                Grid.SetColumn(B, 1);
-                g.Children.Add(B);
-                B.Child = filla;
-                filla.Background = blockFillerBrush;
-            }
+            t.Foreground = textBrush;
+            t.Background = backBrush;
+            t.FontSize = 2;
+            t.TextWrapping = TextWrapping.NoWrap;
+            Grid.SetRow(t, 1);
+            Grid.SetColumn(t, 1);
+            g.Children.Add(t);
+            t.LineHeight = (height * SurfaceWindow1.minPageHeight / SurfaceWindow1.maxPageHeight) / tb.lines;
+            
+            Border B = new Border();
+            B.BorderBrush = blockBrush;
+            B.BorderThickness = new Thickness(2);
+            Grid filla = new Grid();
+            Grid.SetRow(B, 1);
+            Grid.SetColumn(B, 1);
+            g.Children.Add(B);
+            B.Child = filla;
+            filla.Background = blockFillerBrush;
+
+            return g;
+        }
+
+        public static Grid getGrid(BoundingBox bb)
+        {
+            double width, x, y, height;
+            x = bb.topL.X;
+            y = bb.topL.Y;
+            width = (bb.bottomR.X - bb.topL.X);
+            height = (bb.bottomR.Y - bb.topL.Y);
+
+            Grid g = new Grid();
+            ColumnDefinition c1 = new ColumnDefinition();
+            c1.Width = new GridLength(x, GridUnitType.Star);
+            ColumnDefinition c2 = new ColumnDefinition();
+            c2.Width = new GridLength(width, GridUnitType.Star);
+            ColumnDefinition c3 = new ColumnDefinition();
+            c3.Width = new GridLength(SurfaceWindow1.maxPageWidth - x - width, GridUnitType.Star);
+            RowDefinition r1 = new RowDefinition();
+            r1.Height = new GridLength(y, GridUnitType.Star);
+            RowDefinition r2 = new RowDefinition();
+            r2.Height = new GridLength(height, GridUnitType.Star);
+            RowDefinition r3 = new RowDefinition();
+            r3.Height = new GridLength(SurfaceWindow1.maxPageHeight - y - height, GridUnitType.Star);
+
+            g.ColumnDefinitions.Add(c1);
+            g.ColumnDefinitions.Add(c2);
+            g.ColumnDefinitions.Add(c3);
+            g.RowDefinitions.Add(r1);
+            g.RowDefinitions.Add(r2);
+            g.RowDefinitions.Add(r3);
+
+            Border B = new Border();
+            B.BorderBrush = blockBrush;
+            B.BorderThickness = new Thickness(2);
+            Grid filla = new Grid();
+            Grid.SetRow(B, 1);
+            Grid.SetColumn(B, 1);
+            g.Children.Add(B);
+            B.Child = filla;
+            filla.Background = blockFillerBrush;
 
             return g;
         }

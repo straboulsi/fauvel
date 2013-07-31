@@ -24,6 +24,7 @@ using System.Diagnostics;
 using System.Xml;
 using System.Xml.Schema;
 using System.Xml.XPath;
+using System.Windows.Threading;
 
 namespace SurfaceApplication1
 {
@@ -207,7 +208,6 @@ namespace SurfaceApplication1
             else
                 currentTab()._rBoxesGrid.Visibility = System.Windows.Visibility.Visible;
 
-
             if (currentTab()._vBoxesGrid.Visibility == System.Windows.Visibility.Visible)
                 currentTab()._vBoxesGrid.Visibility = System.Windows.Visibility.Hidden;
             else
@@ -236,7 +236,7 @@ namespace SurfaceApplication1
             tab._page = page;
             if (page > maxPage)
             {
-                    tab._page = maxPage - 1;
+                tab._page = maxPage - 1;
             }
             if (tab._page < minPage)
                 tab._page = minPage;
@@ -246,16 +246,6 @@ namespace SurfaceApplication1
         private void loadPage()
         {
             Tab currentTab = this.currentTab();
-            
-            currentTab._vTranslationGrid.Children.Clear();
-            currentTab._rTranslationGrid.Children.Clear();
-
-            //currentTab._worker.updateTranslations(); 
-            
-            currentTab._vBoxesGrid.Children.Clear();
-            currentTab._rBoxesGrid.Children.Clear();
-
-            //currentTab._worker.updateGhostBoxes(); 
             
             currentTab._SVI.Width = currentTab._SVI.MinWidth;
             currentTab._SVI.Height = currentTab._SVI.MinHeight;
@@ -281,6 +271,15 @@ namespace SurfaceApplication1
 
             currentTab._worker.updateVersoImage(false);
             currentTab._worker.updateRectoImage(false);
+
+            currentTab._vTranslationGrid.Children.Clear();
+            currentTab._rTranslationGrid.Children.Clear();
+            currentTab._vBoxesGrid.Children.Clear();
+            currentTab._rBoxesGrid.Children.Clear();
+
+            currentTab._worker.updateGhostBoxes();
+
+            currentTab._worker.updateTranslations();
 
             String pageText = PageNamer.getPageText(currentTab._page);
             pageNumberText.Text = pageText;
@@ -320,6 +319,7 @@ namespace SurfaceApplication1
             Grid vSwipeHolderGrid = new Grid();
             Grid rSwipeHolderGrid = new Grid();
             Canvas can = new Canvas();
+            can.ClipToBounds = true;
             Image verso = new Image();
             Image recto = new Image();
             verso.Stretch = Stretch.UniformToFill;
@@ -440,14 +440,17 @@ namespace SurfaceApplication1
             tabBar.Items.Insert(tabArray.Count - 1, tab);
             tabBar.SelectedIndex = tabArray.Count - 1;
 
+            loadPage();
+
             return tab;
         }
 
         private void wheelIt(object sender, MouseWheelEventArgs e)
         {
+            loadPage();
             int d = e.Delta;
             ScatterViewItem item = (ScatterViewItem)sender;
-            double width = item.Width + d;
+            double width = item.Width + 2 * d;
             double height = item.Height + d * 1.4;
             if (height > item.MaxHeight)
                 height = item.MaxHeight;
@@ -478,7 +481,7 @@ namespace SurfaceApplication1
 
             if (tab != null && tab.Header != null && tab.Header.Equals("+"))
             {
-                TabItem newTab = createTab(1);
+                TabItem newTab = createTab(currentTab()._page);
             }
 
             tabArray[tabNumber]._delButton.Visibility = System.Windows.Visibility.Collapsed;
@@ -489,8 +492,6 @@ namespace SurfaceApplication1
                     tabNumber = i;
             }
             tabArray[tabNumber]._delButton.Visibility = System.Windows.Visibility.Visible;
-
-            loadPage();
         }
 
         private void btnDelete_Touch(object sender, TouchEventArgs e)
