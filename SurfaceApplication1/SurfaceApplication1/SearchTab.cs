@@ -92,7 +92,7 @@ namespace SurfaceApplication1
             tabHeaderGrid.Width = 100;
             tabHeaderGrid.Height = 40;
             tabHeaderImage = new Image();
-            tabHeaderImage.Source = new BitmapImage(new Uri(@"/magnifyingglass.png", UriKind.Relative));
+            tabHeaderImage.Source = new BitmapImage(new Uri(@"..\..\icons\magnifyingglass.png", UriKind.Relative));
             tabHeaderImage.Opacity = 0.3;
             searchTabHeader.HorizontalAlignment = HorizontalAlignment.Center;
             searchTabHeader.VerticalAlignment = VerticalAlignment.Center;
