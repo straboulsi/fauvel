@@ -267,6 +267,7 @@ namespace SurfaceApplication1
             //poetryScroll.Foreground = Brushes.Tomato;
             poetryScroll.VerticalScrollBarVisibility = ScrollBarVisibility.Visible;
             poetryScroll.HorizontalScrollBarVisibility = ScrollBarVisibility.Disabled;
+            poetryScroll.PanningMode = PanningMode.VerticalOnly;
 
             poetryPanel.Orientation = Orientation.Horizontal;
             poetryPanel.Height = 300;
@@ -286,6 +287,7 @@ namespace SurfaceApplication1
             lyricsScroll.Background = Brushes.LightGray;
             lyricsScroll.VerticalScrollBarVisibility = ScrollBarVisibility.Visible;
             lyricsScroll.HorizontalScrollBarVisibility = ScrollBarVisibility.Disabled;
+            lyricsScroll.PanningMode = PanningMode.VerticalOnly;
             lyricsPanel.Orientation = Orientation.Horizontal;
             lyricsPanel.Height = 300;
             lyricsPanel.Width = 478;
@@ -303,6 +305,7 @@ namespace SurfaceApplication1
             imagesScroll.Background = Brushes.LightGray;
             imagesScroll.HorizontalScrollBarVisibility = ScrollBarVisibility.Disabled;
             imagesScroll.VerticalScrollBarVisibility = ScrollBarVisibility.Visible;
+            imagesScroll.PanningMode = PanningMode.VerticalOnly;
             imagesPanel.Orientation = Orientation.Horizontal;
             imagesPanel.Height = 300;
             imagesPanel.Width = 478;

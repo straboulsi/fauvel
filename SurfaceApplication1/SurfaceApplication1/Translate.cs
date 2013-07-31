@@ -70,12 +70,13 @@ namespace SurfaceApplication1
 
             t.Foreground = textBrush;
             t.Background = backBrush;
-            t.FontSize = 8;
+            t.FontSize = TranslationBox.minFontSize;
             t.TextWrapping = TextWrapping.NoWrap;
+            t.LineStackingStrategy = LineStackingStrategy.BlockLineHeight;
             Grid.SetRow(t, 1);
             Grid.SetColumn(t, 1);
             g.Children.Add(t);
-            t.LineHeight = (height * SurfaceWindow1.minPageHeight / SurfaceWindow1.maxPageHeight) / tb.lines;
+            t.LineHeight = tb.lineHeight;
             
             return g;
         }

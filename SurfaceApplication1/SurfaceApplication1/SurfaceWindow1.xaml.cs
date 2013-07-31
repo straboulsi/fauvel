@@ -585,30 +585,25 @@ namespace SurfaceApplication1
          */
         private void limitScatter(ScatterViewItem i)
         {
-            /*int rCount, vCount;
-            rCount = currentTab()._textBlocksR.Count;
-            vCount = currentTab()._textBlocksV.Count;
+            Tab tab = currentTab();
+            int rCount, vCount;
+            rCount = tab._textBlocksR.Count;
+            vCount = tab._textBlocksV.Count;
 
             double ratio = i.Height / minPageHeight;
 
             for (int j = 0; j < vCount; j++)
             {
-                TextBlock tb = currentTab()._textBlocksV[j];
-                tb.FontSize = 10 * ratio;
-                double lines = tb.ActualHeight / tb.LineHeight;
-                double heightRestriction = currentTab()._translationBoxesV[j].height * i.Height / i.MaxHeight;
-                double diff = heightRestriction - tb.ActualHeight;
-                tb.LineHeight += diff / lines;
+                TextBlock tb = tab._textBlocksV[j];
+                tb.FontSize = TranslationBox.minFontSize * ratio;
+                tb.LineHeight = tab._translationBoxesV[j].lineHeight * ratio;
             }
             for(int j = 0; j < rCount; j++)
             {
-                TextBlock tb = currentTab()._textBlocksR[j];
-                tb.FontSize = 10 * ratio;
-                double lines = tb.ActualHeight / tb.LineHeight;
-                double heightRestriction = currentTab()._translationBoxesR[j].height * i.Height / i.MaxHeight;
-                double diff = heightRestriction - tb.ActualHeight;
-                tb.LineHeight += diff / lines;
-            }*/
+                TextBlock tb = tab._textBlocksR[j];
+                tb.FontSize = TranslationBox.minFontSize * ratio;
+                tb.LineHeight = tab._translationBoxesR[j].lineHeight * ratio;
+            }
 
             double x, y, w, h;
             bool fullscreen = false;

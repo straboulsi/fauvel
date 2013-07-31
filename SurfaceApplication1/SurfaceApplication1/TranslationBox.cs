@@ -6,14 +6,14 @@ namespace SurfaceApplication1
 {
     public class TranslationBox
     {
-
+        public static double minFontSize = 10;
         public String tag = "";
         String oldFr = "";
         String modFr = "";
         String eng = "";
         public Point topL = new Point(0, 0);
         public Point bottomR = new Point(0, 0);
-        public double width, height;
+        public double width, height, lineHeight;
         public int lines;
 
         // Has string (contents) and coordinates
@@ -29,6 +29,9 @@ namespace SurfaceApplication1
             width = bottomR.X - topL.X;
             height = bottomR.Y - topL.Y;
             lines = oldFr.Length - oldFr.Replace(Environment.NewLine, string.Empty).Length;
+            lineHeight = 2 * (height * SurfaceWindow1.minPageHeight / SurfaceWindow1.maxPageHeight) / lines;
+            if (lineHeight < 1)
+                lineHeight = 1;
         }
 
         public TranslationBox(String aTag, String someOldFr, Point aTopL, Point aBottomR)
