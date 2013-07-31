@@ -53,6 +53,7 @@
                     <Setter Property="FontFamily" Value="Cambria"/>
                     <Setter Property="Width" Value="480"/>
                     <Setter Property="Background" Value="White"/>
+                    <Setter Property="ScrollViewer.PanningMode" Value="Both"/>
                 </Style>
 
                 <!--This one is not being reached...-->

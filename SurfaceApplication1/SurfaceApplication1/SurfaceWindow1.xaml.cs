@@ -1166,6 +1166,7 @@ namespace SurfaceApplication1
                     poetryResults = Translate.searchEngPoetry(searchQuery, caseType, wordType, xml, engXml, layoutXml);
 
                 SurfaceListBox poetryLB = new SurfaceListBox();
+                
                 poetryLB.Style = tabDynamic.FindResource("SearchResultSurfaceListBox") as Style;
                 poetryLB.SetValue(ScrollViewer.HorizontalScrollBarVisibilityProperty, ScrollBarVisibility.Disabled);
                 poetryLB.SetValue(ScrollViewer.VerticalScrollBarVisibilityProperty, ScrollBarVisibility.Visible);
