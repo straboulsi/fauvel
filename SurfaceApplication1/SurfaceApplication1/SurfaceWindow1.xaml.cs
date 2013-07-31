@@ -318,7 +318,7 @@ namespace SurfaceApplication1
             Grid rSwipeGrid = new Grid();
             Grid vSwipeHolderGrid = new Grid();
             Grid rSwipeHolderGrid = new Grid();
-            Canvas can = new Canvas();
+            Grid can = new Grid();
             can.ClipToBounds = true;
             Image verso = new Image();
             Image recto = new Image();
@@ -361,6 +361,9 @@ namespace SurfaceApplication1
             Grid rTranslationGrid = new Grid();
             Grid vBoxesGrid = new Grid();
             Grid rBoxesGrid = new Grid();
+
+            rBoxesGrid.Visibility = System.Windows.Visibility.Hidden;
+            vBoxesGrid.Visibility = System.Windows.Visibility.Hidden;
 
             ScatterItem.Content = ScatterGrid;
             ColumnDefinition col1 = new ColumnDefinition();
@@ -459,7 +462,6 @@ namespace SurfaceApplication1
 
         private void wheelIt(object sender, MouseWheelEventArgs e)
         {
-            createTab(currentTab()._page + 2);
             int d = e.Delta;
             ScatterViewItem item = (ScatterViewItem)sender;
             double width = item.Width + 2 * d;
@@ -1389,17 +1391,13 @@ namespace SurfaceApplication1
             if (MessageBox.Show(string.Format("Open a new tab to this folio?"),
               "Go to Folio", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
             {
-                createTab(2);
-                Tab tab = currentTab();
-
                 if (pageToFind.StartsWith("Fo"))
                     pageToFind = pageToFind.Substring(2);
                 String imageName = Thumbnailer.getImageName(pageToFind, layoutXml);
                 int pageNum = Convert.ToInt32(imageName.Substring(0, imageName.IndexOf(".jpg")));
                 if (pageNum % 2 == 1) // If odd, meaning it's a Fo_r, we want to aim for the previous page.
                     pageNum--;
-                goToPage(pageNum - 10);
-                loadPage();
+                createTab(pageNum - 10);
             }
         }
 

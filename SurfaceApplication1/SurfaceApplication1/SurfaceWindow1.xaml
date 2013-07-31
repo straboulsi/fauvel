@@ -8,7 +8,7 @@
     WindowStartupLocation="CenterScreen" WindowState="Maximized"
     >
     <Canvas x:Name="mother" Background="White">
-        <TabControl x:Name="tabBar" SelectionChanged="tabBar_SelectionChanged" Height="980" Width="1310" VerticalContentAlignment="Center" VerticalAlignment="Center" HorizontalAlignment="Center" TabStripPlacement="Top">
+        <TabControl x:Name="tabBar" SelectionChanged="tabBar_SelectionChanged" Height="960" Width="1310" VerticalContentAlignment="Center" VerticalAlignment="Center" HorizontalAlignment="Center" TabStripPlacement="Top">
             <TabControl.Resources>
                 <DataTemplate x:Key="TabHeader" DataType="TabItem">
                     <DockPanel>
@@ -22,7 +22,7 @@
                 </DataTemplate>
             </TabControl.Resources>
         </TabControl>
-        <TabControl x:Name="tabDynamic" ItemsSource="{Binding}" Canvas.Left="1310" Height="980" Width="610" SelectionChanged="searchTabDynamic_SelectionChanged" 
+        <TabControl x:Name="tabDynamic" ItemsSource="{Binding}" Canvas.Left="1310" Height="970" Width="610" SelectionChanged="searchTabDynamic_SelectionChanged" 
                     VerticalContentAlignment="Center" VerticalAlignment="Center" HorizontalAlignment="Center" TabStripPlacement="Top" FontFamily="Cambria">
 
             <TabControl.Resources>
@@ -121,7 +121,7 @@
 
             </TabControl.Resources>
         </TabControl>
-        <Canvas x:Name="toolbar" Height="100" Width="1920" Margin="0" Background="Gray" Canvas.Top="980" d:LayoutOverrides="Width">
+        <Canvas x:Name="toolbar" Height="100" Width="1310" Margin="0" Background="Gray" Canvas.Top="980" d:LayoutOverrides="Width">
             <Button x:Name="prev" Height="84" Canvas.Left="640" Width="100" Canvas.Top="8" VerticalAlignment="Top" TouchDown="prev_Click" Click="prev_Click">
                 <Image Source="icons/leftArrow.png" Stretch="Uniform"/>
             </Button>
@@ -130,12 +130,13 @@
             </Button>
             <TextBlock x:Name="pageNumberText" Height="48" TextWrapping="Wrap" Text="1" Canvas.Left="850" Canvas.Top="10"  Width="220" FontSize="30" HorizontalAlignment="Center" TextAlignment="Center"/>
             <s:SurfaceSlider x:Name="pageSlider" PreviewTouchUp="pageSlider_PreviewTouchUp" PreviewTouchDown="pageSlider_PreviewTouchDown" Minimum="0" Maximum="47" Width="430" Canvas.Left="745" Canvas.Top="50" TickFrequency="1" IsSnapToTickEnabled="True" s:SurfaceThumb.PreviewFlicked="pageSliderFlicked"></s:SurfaceSlider>
-            <s:SurfaceButton x:Name="prevlanguageButton" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Canvas.Left="20" Canvas.Top="50" Width="40" Height="40" PreviewTouchDown="languagePrevious">
+            <s:SurfaceButton x:Name="prevlanguageButton" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Canvas.Left="10" Canvas.Top="50" Width="40" Height="40" PreviewTouchDown="languagePrevious">
                 <Image Source="icons/prev.png" />
             </s:SurfaceButton>
-            <s:SurfaceButton x:Name="languageButton" Content="None" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Canvas.Left="70" Canvas.Top="50" Width="150" Height="40" PreviewTouchDown="languageVisibility"/>
-            <ListBox x:Name="languageBox" Visibility="Collapsed" Canvas.Left="20" Canvas.Top="-70" Width="200" SelectionChanged="languageChanged">
-                <ListBoxItem x:Name="language1" Height="40" ClipToBounds="True" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Content="None" />
+            <TextBlock Width="200" Height="30" Canvas.Top="10" Canvas.Left="10" Text=".-----  Translation  -----." FontSize="18" Foreground="Black" TextAlignment="Center"/>
+            <s:SurfaceButton x:Name="languageButton" Content="None" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Canvas.Left="60" Canvas.Top="50" Width="150" Height="40" PreviewTouchDown="languageVisibility"/>
+            <ListBox x:Name="languageBox" Visibility="Collapsed" Canvas.Left="60" Canvas.Top="-70" Width="200" SelectionChanged="languageChanged">
+                <ListBoxItem x:Name="language1" Height="40" ClipToBounds="True" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Content="None"/>
                 <ListBoxItem x:Name="language2" Height="40" ClipToBounds="True" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Content="Old French" />
                 <ListBoxItem x:Name="language3" Height="40" ClipToBounds="True" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Content="French" />
                 <ListBoxItem x:Name="language4" Height="40" ClipToBounds="True" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Content="English" />

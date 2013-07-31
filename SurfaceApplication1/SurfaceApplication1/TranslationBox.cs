@@ -28,7 +28,7 @@ namespace SurfaceApplication1
             bottomR = aBottomR;
             width = bottomR.X - topL.X;
             height = bottomR.Y - topL.Y;
-            lines = Regex.Matches(oldFr, "/n").Count + 1;
+            lines = oldFr.Length - oldFr.Replace(Environment.NewLine, string.Empty).Length;
         }
 
         public TranslationBox(String aTag, String someOldFr, Point aTopL, Point aBottomR)

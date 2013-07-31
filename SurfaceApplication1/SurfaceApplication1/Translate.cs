@@ -39,9 +39,6 @@ namespace SurfaceApplication1
         public static Brush blockFillerBrush = (Brush)(new BrushConverter().ConvertFrom("#33000000"));
         public static CompareInfo myComp = CultureInfo.InvariantCulture.CompareInfo;
 
-
-
-
         public static Grid getGrid(TranslationBox tb, TextBlock t)
         {
             double width, x, y, height;
@@ -73,23 +70,13 @@ namespace SurfaceApplication1
 
             t.Foreground = textBrush;
             t.Background = backBrush;
-            t.FontSize = 2;
+            t.FontSize = 8;
             t.TextWrapping = TextWrapping.NoWrap;
             Grid.SetRow(t, 1);
             Grid.SetColumn(t, 1);
             g.Children.Add(t);
             t.LineHeight = (height * SurfaceWindow1.minPageHeight / SurfaceWindow1.maxPageHeight) / tb.lines;
             
-            Border B = new Border();
-            B.BorderBrush = blockBrush;
-            B.BorderThickness = new Thickness(2);
-            Grid filla = new Grid();
-            Grid.SetRow(B, 1);
-            Grid.SetColumn(B, 1);
-            g.Children.Add(B);
-            B.Child = filla;
-            filla.Background = blockFillerBrush;
-
             return g;
         }
 

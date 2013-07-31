@@ -15,7 +15,7 @@ namespace SurfaceApplication1
         public int _page;
         public TabItem _tab;
         public Image _verso, _recto;
-        public Canvas _canvas;
+        public Grid _canvas;
         public ScatterViewItem _SVI;
         public int numFingersVerso, numFingersRecto;
         public List<Point> fingerPos;
@@ -30,7 +30,7 @@ namespace SurfaceApplication1
         public Workers _worker;
         public List<BoundingBox> _rGhostBoxes, _vGhostBoxes;
 
-        public Tab(int page, TabItem newTab, Image newVerso, Image newRecto, Canvas canvas, Grid vGrid, Grid rGrid, Button delBtn, ScatterView SV, ScatterViewItem si, Grid vSwipeGrid, Grid rSwipeGrid, Grid vTranslationGrid, Grid rTranslationGrid, Grid vBoxesGrid, Grid rBoxesGrid, TextBlock headerText)
+        public Tab(int page, TabItem newTab, Image newVerso, Image newRecto, Grid canvas, Grid vGrid, Grid rGrid, Button delBtn, ScatterView SV, ScatterViewItem si, Grid vSwipeGrid, Grid rSwipeGrid, Grid vTranslationGrid, Grid rTranslationGrid, Grid vBoxesGrid, Grid rBoxesGrid, TextBlock headerText)
         {
             _page = page;
             _tab = newTab;
