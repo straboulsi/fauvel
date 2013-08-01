@@ -518,7 +518,8 @@ namespace SurfaceApplication1
                         newResult.excerpt3 = str2 + "\r\n" + getOldFrPoetry(newResult.lineNum + 1, newResult.lineNum + 4, xml) + lineInfo;
                         newResult.text1 = xn.InnerText.Trim();
                         newResult.text2 = getEnglish(newResult.lineNum, newResult.lineNum, engXml);
-                        newResult.thumbnail = convertImage(Thumbnailer.cropImage(Thumbnailer.getImage(newResult.folio, layoutXml), Thumbnailer.getLineRect(lineNum, layoutXml)));
+                        //newResult.thumbnail = convertImage(Thumbnailer.cropImage(Thumbnailer.getImage(newResult.folio, layoutXml), Thumbnailer.getLineRect(lineNum, layoutXml)));
+                        newResult.thumbnail = convertImage(Thumbnailer.getThumbnail(getTagByLineNum(newResult.lineNum, layoutXml)));
                         results.Add(newResult);
                     }
                 }
@@ -574,8 +575,9 @@ namespace SurfaceApplication1
                         newResult.excerpt3 = str2 + "\r\n" + getOldFrPoetry(newResult.lineNum + 1, newResult.lineNum + 3, modFrXml) + lineInfo;
                         newResult.text1 = xn.InnerText.Trim();
                         newResult.text2 = getEnglish(newResult.lineNum, newResult.lineNum, engXml);
-                        newResult.thumbnail = convertImage(Thumbnailer.cropImage(Thumbnailer.getImage(newResult.folio, layoutXml), Thumbnailer.getLineRect(lineNum, layoutXml)));
-
+                        //newResult.thumbnail = convertImage(Thumbnailer.cropImage(Thumbnailer.getImage(newResult.folio, layoutXml), Thumbnailer.getLineRect(lineNum, layoutXml)));
+                        newResult.thumbnail = convertImage(Thumbnailer.getThumbnail(getTagByLineNum(newResult.lineNum, layoutXml)));
+                        
                         results.Add(newResult);
                     }
                 }
@@ -621,8 +623,8 @@ namespace SurfaceApplication1
                         newResult.excerpt1 = getEnglish(newResult.lineNum - 4, newResult.lineNum - 1, xml) + "\r\n" + str1;
                         newResult.excerpt2 = search;
                         newResult.excerpt3 = str2 + "\r\n" + getEnglish(newResult.lineNum + 1, newResult.lineNum + 4, xml) + lineInfo;
-                        newResult.thumbnail = convertImage(Thumbnailer.cropImage(Thumbnailer.getImage(newResult.folio, layoutXml), Thumbnailer.getLineRect(lineNum, layoutXml)));
-
+                        //newResult.thumbnail = convertImage(Thumbnailer.cropImage(Thumbnailer.getImage(newResult.folio, layoutXml), Thumbnailer.getLineRect(lineNum, layoutXml)));
+                        newResult.thumbnail = convertImage(Thumbnailer.getThumbnail(getTagByLineNum(newResult.lineNum, layoutXml)));
                         results.Add(newResult);
                     }
                 }
@@ -635,6 +637,25 @@ namespace SurfaceApplication1
             }
 
             return results;
+        }
+
+        public static String getTagByLineNum(int lineNum, XmlDocument layoutXml)
+        {
+            String tag = "";
+
+            try
+            {
+                XmlNode xn = layoutXml.DocumentElement.SelectSingleNode("//zone/l[@n="+lineNum+"]");
+                tag = xn.ParentNode.Attributes["id"].Value;
+                Console.Write("lineNum: " + lineNum + " tag: " + tag);
+            }
+            catch (Exception e)
+            {
+                Console.Write(e.StackTrace);
+                Console.Read();
+            }
+
+            return tag;
         }
 
 
@@ -754,7 +775,8 @@ namespace SurfaceApplication1
                         newResult.folio = "Fo" + (xn.ParentNode.Attributes["facs"].Value).Substring(1);
                         newResult.resultType = 2;
                         String tag = newResult.tag.Substring(0, newResult.tag.Length - 2);
-                        newResult.thumbnail = convertImage(Thumbnailer.cropImage(Thumbnailer.getImage(newResult.folio, layoutXml), Thumbnailer.getRect(tag, layoutXml)));
+                        //newResult.thumbnail = convertImage(Thumbnailer.cropImage(Thumbnailer.getImage(newResult.folio, layoutXml), Thumbnailer.getRect(tag, layoutXml)));
+                        newResult.thumbnail = convertImage(Thumbnailer.getThumbnail(newResult.tag));
                         results.Add(newResult);
                     }
 
@@ -773,23 +795,6 @@ namespace SurfaceApplication1
         }
 
 
-
-        public static System.Windows.Controls.Image convertImage(System.Drawing.Image gdiImg)
-        {
-
-            System.Windows.Controls.Image img = new System.Windows.Controls.Image();
-
-            //convert System.Drawing.Image to WPF image
-            System.Drawing.Bitmap bmp = new System.Drawing.Bitmap(gdiImg);
-            IntPtr hBitmap = bmp.GetHbitmap();
-            System.Windows.Media.ImageSource WpfBitmap = System.Windows.Interop.Imaging.CreateBitmapSourceFromHBitmap(hBitmap, IntPtr.Zero, Int32Rect.Empty, BitmapSizeOptions.FromEmptyOptions());
-
-            img.Source = WpfBitmap;
-            img.Width = 500;
-            img.Height = 600;
-            img.Stretch = System.Windows.Media.Stretch.Fill;
-            return img;
-        }
 
 
 
@@ -866,7 +871,8 @@ namespace SurfaceApplication1
                         newResult.excerpt3 = str2;
                         newResult.tag = xn.Attributes["id"].Value;
                         newResult.folio = "Fo" + (xn.ParentNode.Attributes["facs"].Value).Substring(1);
-                        newResult.thumbnail = convertImage(Thumbnailer.cropImage(Thumbnailer.getImage(newResult.folio, layoutXml), Thumbnailer.getRect(newResult.tag, layoutXml)));
+                        //newResult.thumbnail = convertImage(Thumbnailer.cropImage(Thumbnailer.getImage(newResult.folio, layoutXml), Thumbnailer.getRect(newResult.tag, layoutXml)));
+                        newResult.thumbnail = convertImage(Thumbnailer.getThumbnail(newResult.tag));
                         newResult.thumbnail.Width = 100;
                         newResult.thumbnail.Height = 100;
                         results.Add(newResult);
@@ -898,6 +904,24 @@ namespace SurfaceApplication1
             }
 
             Console.Read();
+        }
+
+
+        public static System.Windows.Controls.Image convertImage(System.Drawing.Image gdiImg)
+        {
+
+            System.Windows.Controls.Image img = new System.Windows.Controls.Image();
+
+            //convert System.Drawing.Image to WPF image
+            System.Drawing.Bitmap bmp = new System.Drawing.Bitmap(gdiImg);
+            IntPtr hBitmap = bmp.GetHbitmap();
+            System.Windows.Media.ImageSource WpfBitmap = System.Windows.Interop.Imaging.CreateBitmapSourceFromHBitmap(hBitmap, IntPtr.Zero, Int32Rect.Empty, BitmapSizeOptions.FromEmptyOptions());
+
+            img.Source = WpfBitmap;
+            img.Width = 500;
+            img.Height = 600;
+            img.Stretch = System.Windows.Media.Stretch.Fill;
+            return img;
         }
     }
 }

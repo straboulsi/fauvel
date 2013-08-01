@@ -6,7 +6,7 @@
     <ProductVersion>8.0.30703</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{F66E2D8E-243A-4A44-A2BE-2C1912E26A17}</ProjectGuid>
-    <OutputType>WinExe</OutputType>
+    <OutputType>Exe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>SurfaceApplication1</RootNamespace>
     <AssemblyName>SurfaceApplication1</AssemblyName>
@@ -152,13 +152,17 @@
     <Resource Include="icons\save.png" />
     <Resource Include="icons\zoom.png" />
     <Resource Include="icons\magnifyingglass.png" />
-    <SplashScreen Include="Resources\splashImage.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </SplashScreen>
-    <Content Include="XML\ModernFrenchXML.xml">
+    <Resource Include="XML\LayoutXML.xml" />
+    <Content Include="thumbnails\1rIm1.jpg">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="XML\LayoutXML.xml">
+    <Content Include="thumbnails\1rIm2.jpg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="thumbnails\1vMo1.jpg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="XML\ModernFrenchXML.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Resource Include="upArrow.png" />

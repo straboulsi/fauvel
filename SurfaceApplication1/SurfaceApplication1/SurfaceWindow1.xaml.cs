@@ -184,7 +184,6 @@ namespace SurfaceApplication1
                 Console.Write(e.StackTrace);
             }
 
-            
 
             // slider actions
             pageSlider.AddHandler(UIElement.ManipulationDeltaEvent, new EventHandler<ManipulationDeltaEventArgs>(slider_ManipulationDelta), true);
@@ -1409,13 +1408,22 @@ namespace SurfaceApplication1
         }
 
 
+        public static String getImageName(String folio, XmlDocument layoutXml)
+        {
+            String imageName = "";
+            XmlNode node = layoutXml.DocumentElement.SelectSingleNode("//surface[@id='" + folio + "']");
+            imageName = node.FirstChild.SelectSingleNode("graphic").Attributes["url"].Value;
+
+            return imageName;
+        }
+
         private void goToFolio(object sender, TouchEventArgs e)
         {
             if (pageToFind != previousPageToFind)
             {
                 if (pageToFind.StartsWith("Fo"))
                     pageToFind = pageToFind.Substring(2);
-                String imageName = Thumbnailer.getImageName(pageToFind, layoutXml);
+                String imageName = getImageName(pageToFind, layoutXml);
                 int pageNum = Convert.ToInt32(imageName.Substring(0, imageName.IndexOf(".jpg")));
                 if (pageNum % 2 == 1) // If odd, meaning it's a Fo_r, we want to aim for the previous page.
                     pageNum--;
