@@ -14,11 +14,16 @@ using System.Windows.Shapes;
 
 namespace SurfaceApplication1
 {
+    /**
+     * This class represents a SearchResult created in Translate.cs.
+     * The search methods in Translate.cs each return a List of SearchResults.
+     * Many elements of SearchResults are then transferred to ResultBoxItems for result display.
+     * */
     public class SearchResult
     {
         public String folio, text1, text2, excerpt1, excerpt2, excerpt3, tag;
         public int lineNum;
-        public Image thumbnail;
+        public Image thumbnail, minithumbnail;
         public int resultType; // 1 = poetry, 2 = music, 3 = image
 
         public SearchResult()

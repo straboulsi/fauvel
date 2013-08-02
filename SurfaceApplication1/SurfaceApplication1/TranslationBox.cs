@@ -4,6 +4,12 @@ using System.Text.RegularExpressions;
 
 namespace SurfaceApplication1
 {
+
+    /**
+     * The TranslationBox object holds all poetry translations, for translation overlay functions.
+     * It has Strings for each language's translation of the original.
+     * In cases where some lines are longer, the font size and spacing are adjusted to display on the page in a true-to-original style.
+     * */
     public class TranslationBox
     {
         public static double minFontSize = 10;

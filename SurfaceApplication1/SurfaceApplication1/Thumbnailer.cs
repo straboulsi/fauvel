@@ -12,18 +12,33 @@ using System.Xml.XPath;
 
 namespace SurfaceApplication1
 {
+
+    /**
+     * This class fetches thumbnails from the thumbnails folder for search results.
+     * */ 
     static class Thumbnailer
     {
 
+        /**
+         * Returns the image when given the tag of a chunk of poetry, music object, or image.
+         * For music lyric results, starts by removing the _t at end of tag (which meant text).
+         * */
         public static Image getThumbnail(String tag)
         {
-            checkForCounterparts(tag);
+            if (tag.EndsWith("_t"))
+                tag = tag.Substring(0, tag.Length - 2);
+
+            tag = checkForCounterparts(tag);
 
             Image thumbnail = Image.FromFile(@"..\..\thumbnails\" + tag + ".jpg", true);
 
             return thumbnail;
         }
 
+        /**
+         * Checks whether a tag is referring to a non-first counterpart of a music object.
+         * Replaces the tag with the tag for the first part of that music object, if necessary.
+         * */
         public static String checkForCounterparts(String tag)
         {
             if (!tag.StartsWith("Te") && !tag.Contains("Im")) // If it's music
@@ -45,6 +60,9 @@ namespace SurfaceApplication1
 
         }
 
+        /**
+         * Sets up the Counterpart objects - one for every music object in Fauvel that has counterparts.
+         * */
         public static List<Counterpart> makeCounterpartList()
         {
             List<Counterpart> counterpartList = new List<Counterpart>();
@@ -69,84 +87,6 @@ namespace SurfaceApplication1
             return counterpartList;
         }
 
-
-
-        //public static Image cropImage(Image img, Rectangle r)
-        //{
-            
-        //    Bitmap bmpImage = new Bitmap(img);
-        //    Bitmap bmpCrop = bmpImage.Clone(r, bmpImage.PixelFormat);
-           
-        //    return (Image)(bmpCrop);
-        //}
-
-        // Assuming input of Fo1r, Fo1v, etc.
-        // Remember other types: Fo23v, Fo28br, Fo28tv
-        //public static Image getImage(String folio, XmlDocument layoutXml)
-        //{
-        //    folio = folio.Substring(2);
-        //    String imageName = getImageName(folio, layoutXml);
-        //    Image image = Image.FromFile(@"..\..\pages\" + imageName, true); 
-
-        //    return image;
-        //}
-
-        //public static String getImageName(String folio, XmlDocument layoutXml)
-        //{
-        //    String imageName = "";
-        //    XmlNode node = layoutXml.DocumentElement.SelectSingleNode("//surface[@id='" + folio + "']");
-        //    imageName = node.FirstChild.SelectSingleNode("graphic").Attributes["url"].Value;
-
-        //    return imageName;
-        //}
-
-
-
-        //public static Rectangle getRect(String tag, XmlDocument layoutXml)
-        //{
-        //    Rectangle rect = new Rectangle();
-        //    try
-        //    {
-        //        int x = (int)Translate.getPoint(tag, 1, layoutXml).X;
-        //        int y = (int)Translate.getPoint(tag, 1, layoutXml).Y;
-        //        int width = (int)Translate.getPoint(tag, 2, layoutXml).X - x;
-        //        int height = (int)Translate.getPoint(tag, 2, layoutXml).Y - y;
-
-        //        rect = new Rectangle(x, y, width, height);
-
-        //    }
-        //    catch (Exception e)
-        //    {
-        //        Console.Write(e.StackTrace);
-        //        Console.Read();
-        //    }
-
-            
-        //    return rect;
-        //}
-
-        //public static Rectangle getLineRect(String lineNum, XmlDocument layoutXml)
-        //{
-        //    Rectangle rect = new Rectangle();
-        //    try
-        //    {
-        //        int x = (int)Translate.getLinePoint(lineNum, 1, layoutXml).X;
-        //        int y = (int)Translate.getLinePoint(lineNum, 1, layoutXml).Y;
-        //        int width = (int)Translate.getLinePoint(lineNum, 2, layoutXml).X - x;
-        //        int height = (int)Translate.getLinePoint(lineNum, 2, layoutXml).Y - y;
-
-        //        rect = new Rectangle(x, y, width, height);
-
-        //    }
-        //    catch (Exception e)
-        //    {
-        //        Console.Write(e.StackTrace);
-        //        Console.Read();
-        //    }
-
-            
-        //    return rect;
-        //}
 
     }
 }

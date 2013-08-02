@@ -185,6 +185,7 @@ namespace SurfaceApplication1
             }
 
 
+
             // slider actions
             pageSlider.AddHandler(UIElement.ManipulationDeltaEvent, new EventHandler<ManipulationDeltaEventArgs>(slider_ManipulationDelta), true);
             pageSlider.AddHandler(UIElement.ManipulationCompletedEvent, new EventHandler<ManipulationCompletedEventArgs>(slider_ManipulationCompleted), true);
@@ -1161,7 +1162,6 @@ namespace SurfaceApplication1
 
             else
             {
-
                 selectedTab.searchTabHeader.Text = selectedTab.searchQueryBox.Text;
                 selectedTab.searchResults.Visibility = Visibility.Visible;
                 selectedTab.poetryTab.Content = selectedTab.poetryCanvas;
@@ -1193,6 +1193,7 @@ namespace SurfaceApplication1
                 {
                     ResultBoxItem resultRBI = new ResultBoxItem();
                     convertSearchResultToResultBoxItem(result, resultRBI);
+                    resultRBI.resultThumbnail = Translate.convertImage(Thumbnailer.getThumbnail(Translate.getTagByLineNum(result.lineNum, layoutXml)));
                     poetryLB.Items.Add(resultRBI);
                 }
 
@@ -1226,6 +1227,7 @@ namespace SurfaceApplication1
                 {
                     ResultBoxItem resultRBI = new ResultBoxItem();
                     convertSearchResultToResultBoxItem(result, resultRBI);
+                    resultRBI.resultThumbnail = Translate.convertImage(Thumbnailer.getThumbnail(result.tag));
                     lyricsLB.Items.Add(resultRBI);
                 }
 
@@ -1253,6 +1255,8 @@ namespace SurfaceApplication1
                 {
                     ResultBoxItem resultRBI = new ResultBoxItem();
                     convertSearchResultToResultBoxItem(result, resultRBI);
+                    resultRBI.miniThumbnail.Source = new BitmapImage(new Uri(@"..\..\minithumbnails\" + result.tag + ".jpg", UriKind.Relative)); 
+                    resultRBI.resultThumbnail = Translate.convertImage(Thumbnailer.getThumbnail(result.tag));
                     imagesLB.Items.Add(resultRBI);
                 }
 
@@ -1293,7 +1297,10 @@ namespace SurfaceApplication1
                     else if (lyricResults.Count != 0)
                         selectedTab.searchResults.SelectedItem = selectedTab.lyricsTab;
                 }
+
             }
+
+           
         }
 
         private void convertSearchResultToResultBoxItem(SearchResult sr, ResultBoxItem rbi)
@@ -1302,7 +1309,6 @@ namespace SurfaceApplication1
             rbi.resultType = sr.resultType;
             if(rbi.resultType == 1)
                 rbi.lineInfo.Text = Convert.ToString(sr.lineNum);
-            rbi.resultThumbnail = sr.thumbnail;
             rbi.excerpt1 = sr.excerpt1;
             rbi.excerpt2 = sr.excerpt2;
             rbi.excerpt3 = sr.excerpt3;
