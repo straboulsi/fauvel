@@ -22,7 +22,7 @@
                 </DataTemplate>
             </TabControl.Resources>
         </TabControl>
-        <TabControl x:Name="tabDynamic" ItemsSource="{Binding}" Canvas.Left="1310" Height="1080" Width="610" SelectionChanged="searchTabDynamic_SelectionChanged" 
+        <TabControl x:Name="tabDynamic" ItemsSource="{Binding}" Canvas.Left="1310" Height="1080" Width="610"
                     VerticalContentAlignment="Center" VerticalAlignment="Center" HorizontalAlignment="Center" TabStripPlacement="Top" FontFamily="Cambria">
 
             <TabControl.Resources>
@@ -134,22 +134,26 @@
             </Button>
             <TextBlock x:Name="pageNumberText" Height="48" TextWrapping="Wrap" Text="1" Canvas.Left="545" Canvas.Top="10"  Width="220" FontSize="30" HorizontalAlignment="Center" TextAlignment="Center"/>
             <s:SurfaceSlider x:Name="pageSlider" PreviewTouchUp="pageSlider_PreviewTouchUp" PreviewTouchDown="pageSlider_PreviewTouchDown" Minimum="0" Maximum="47" Width="430" Canvas.Left="440" Canvas.Top="75" TickFrequency="1" IsSnapToTickEnabled="True" s:SurfaceThumb.PreviewFlicked="pageSliderFlicked"></s:SurfaceSlider>
-            
-            <Button x:Name="prevlanguageButton" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Canvas.Left="10" Canvas.Top="60" Width="50" Height="50" PreviewTouchDown="languagePrevious">
+
+            <Button x:Name="prevlanguageButton" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Canvas.Left="10" Canvas.Top="60" Width="50" Height="50" PreviewTouchDown="languagePrevious" Click="languagePrevious">
                 <Image Source="icons/prev.png" />
             </Button>
-            <Border BorderBrush="{x:Null}" Height="40" Canvas.Top="10" Canvas.Left="10" Width="200">
-                <TextBlock Width="200" Height="40" Text=".-----  Translation  -----." VerticalAlignment="Center" FontSize="18" Foreground="Black" TextAlignment="Center"/>
+            <Image Source="icons/translationsBar.png" Canvas.Top="10" Canvas.Left="10"/>
+            <Border BorderBrush="{x:Null}" Height="40" Canvas.Top="15" Canvas.Left="10" HorizontalAlignment="Center" VerticalAlignment="Center" Width="210">
+                <TextBlock Width="210" Height="40" Text="Translation" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="22" Foreground="White" TextAlignment="Center"/>
             </Border>
-            <Button x:Name="languageButton" Content="None" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Canvas.Left="70" Canvas.Top="60" Width="150" Height="50" PreviewTouchDown="languageVisibility"/>
-            <ListBox x:Name="languageBox" Visibility="Collapsed" Canvas.Left="70" Canvas.Top="-142" Width="150" SelectionChanged="languageChanged">
+            <Button x:Name="languageButton" Content="None" FontSize="18" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Canvas.Left="70" Canvas.Top="60" Width="150" Height="50" Click="languageVisibility" PreviewTouchDown="languageVisibility"/>
+            <ListBox x:Name="languageBox" Visibility="Collapsed" FontSize="18" Canvas.Left="70" Canvas.Top="-142" Width="150" SelectionChanged="languageChanged">
                 <ListBoxItem x:Name="language1" Height="50" ClipToBounds="True" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Content="None"/>
                 <ListBoxItem x:Name="language2" Height="50" ClipToBounds="True" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Content="Old French" />
                 <ListBoxItem x:Name="language3" Height="50" ClipToBounds="True" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Content="French" />
                 <ListBoxItem x:Name="language4" Height="50" ClipToBounds="True" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Content="English" />
             </ListBox>
-            <Button x:Name="debugBoxes" Height="84" Canvas.Left="1200" Width="100" Canvas.Top="8" TouchDown="showBoxes" Click="showBoxes">
+            <Button x:Name="debugBoxes" Height="100" Canvas.Left="1200" Width="100" Canvas.Top="10" TouchDown="showBoxes" Click="showBoxes">
                 <Image Source="icons/box.jpg" Stretch="Uniform"/>
+            </Button>
+            <Button x:Name="saveButton" Height="100" Canvas.Left="1090" Width="100" Canvas.Top="10" TouchDown="savePage" Click="savePage">
+                <Image Source="icons/save.png" HorizontalAlignment="Center" VerticalAlignment="Center"/>
             </Button>
         </Canvas>
         <Canvas x:Name="SliderDisplay" Canvas.Left="-500" Width="200" Height="100" HorizontalAlignment="Center">

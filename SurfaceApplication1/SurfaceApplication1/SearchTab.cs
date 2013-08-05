@@ -19,14 +19,12 @@ using Microsoft.Surface.Presentation.Input;
 namespace SurfaceApplication1
 {
 
-    class SearchTab : TabItem
+    public class SearchTab : SideBarTab
     {
-        public Canvas searchCanvas, poetryCanvas, lyricsCanvas, imagesCanvas;
-        public Grid tabHeaderGrid;
-        public Button deleteTabButton, goSearch, selectLanguageButton;
+        public Canvas poetryCanvas, lyricsCanvas, imagesCanvas;
+        public Button goSearch, selectLanguageButton;
         public TextBlock searchPrompt, searchTabHeader;
         public TextBox searchQueryBox;
-        public Image tabHeaderImage;
         public Line topLine, bottomLine;
         public CheckBox caseSensitive, wholeWordOnly, wholePhraseOnly;
         public ScaleTransform st;
@@ -40,16 +38,8 @@ namespace SurfaceApplication1
         public Image downArrow, upArrow;
         public SurfaceScrollViewer poetryScroll, lyricsScroll, imagesScroll;
 
-        public SearchTab()
+        public SearchTab(SideBar mySideBar) : base(mySideBar)
         {
-            
-
-            searchCanvas = new Canvas();
-            tabHeaderGrid = new Grid();
-            Content = searchCanvas;
-            Header = tabHeaderGrid;
-
-            deleteTabButton = new Button();
             searchPrompt = new TextBlock();
             searchTabHeader = new TextBlock();
             searchQueryBox = new TextBox();
@@ -86,27 +76,10 @@ namespace SurfaceApplication1
             imagesScroll = new SurfaceScrollViewer(); 
             imagesPanel = new StackPanel();
 
-
-
-
-            tabHeaderGrid.Width = 100;
-            tabHeaderGrid.Height = 40;
-            tabHeaderImage = new Image();
-            tabHeaderImage.Source = new BitmapImage(new Uri(@"..\..\icons\magnifyingglass.png", UriKind.Relative));
-            tabHeaderImage.Opacity = 0.3;
+            headerImage.Source = new BitmapImage(new Uri(@"..\..\icons\magnifyingglass.png", UriKind.Relative));
             searchTabHeader.HorizontalAlignment = HorizontalAlignment.Center;
             searchTabHeader.VerticalAlignment = VerticalAlignment.Center;
             searchTabHeader.FontSize = 21;
-
-
-            deleteTabButton.Content = (string)"X";
-            deleteTabButton.FontFamily = new FontFamily("Arial");
-            deleteTabButton.FontSize = 35;
-            deleteTabButton.Width = 70;
-            deleteTabButton.Height = 40;
-            deleteTabButton.Opacity = 0.7;
-            Canvas.SetLeft(deleteTabButton, 476);
-            Canvas.SetTop(deleteTabButton, 1);
 
             searchPrompt.FontSize = 30;
             searchPrompt.Text = "Search:";
@@ -309,24 +282,15 @@ namespace SurfaceApplication1
             imagesPanel.Width = 478;
             Canvas.SetTop(imagesPanel, 331);
 
-
-
-
-
-
-
-
             /// Adding everything
 
-            tabHeaderGrid.Children.Add(tabHeaderImage);
-            tabHeaderGrid.Children.Add(searchTabHeader);
+            headerGrid.Children.Add(searchTabHeader);
 
-            searchCanvas.Children.Add(searchPrompt);
-            searchCanvas.Children.Add(searchQueryBox);
-            searchCanvas.Children.Add(goSearch);
-            searchCanvas.Children.Add(topLine);
-            searchCanvas.Children.Add(moreOptions);
-            searchCanvas.Children.Add(deleteTabButton);
+            canvas.Children.Add(searchPrompt);
+            canvas.Children.Add(searchQueryBox);
+            canvas.Children.Add(goSearch);
+            canvas.Children.Add(topLine);
+            canvas.Children.Add(moreOptions);
 
             ///searchCanvas.Children.Add(optionsCanvas);
             //optionsCanvas.Children.Add(bottomLine);
@@ -336,14 +300,14 @@ namespace SurfaceApplication1
             //optionsCanvas.Children.Add(wholePhraseOnly);
             ///optionsCanvas.Children.Add(selectLanguage);
 
-            searchCanvas.Children.Add(searchResults);
-            searchCanvas.Children.Add(caseSensitive);
-            searchCanvas.Children.Add(bottomLine);
-            searchCanvas.Children.Add(selectLanguage);
-            searchCanvas.Children.Add(selectLanguageButton);
-            searchCanvas.Children.Add(fewerOptions);
-            searchCanvas.Children.Add(wholeWordOnly);
-            searchCanvas.Children.Add(wholePhraseOnly);
+            canvas.Children.Add(searchResults);
+            canvas.Children.Add(caseSensitive);
+            canvas.Children.Add(bottomLine);
+            canvas.Children.Add(selectLanguage);
+            canvas.Children.Add(selectLanguageButton);
+            canvas.Children.Add(fewerOptions);
+            canvas.Children.Add(wholeWordOnly);
+            canvas.Children.Add(wholePhraseOnly);
             caseSensitive.Visibility = Visibility.Hidden;
             selectLanguage.Visibility = Visibility.Hidden;
             bottomLine.Visibility = Visibility.Hidden;

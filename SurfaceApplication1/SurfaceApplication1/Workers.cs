@@ -45,8 +45,8 @@ namespace SurfaceApplication1
                     tab._textBlocksR.Add(t);
                     tab._rTranslationGrid.Children.Add(g);
                 }
-                setTranslateTextRecto(SurfaceWindow1.currentLanguage);
-                setTranslateTextVerso(SurfaceWindow1.currentLanguage);
+                setTranslateTextRecto(tab._currentLanguage);
+                setTranslateTextVerso(tab._currentLanguage);
             };
         }
 

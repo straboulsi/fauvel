@@ -29,8 +29,9 @@ namespace SurfaceApplication1
         public TextBlock _headerTB;
         public Workers _worker;
         public List<BoundingBox> _rGhostBoxes, _vGhostBoxes;
+        public SurfaceWindow1.language _currentLanguage, _previousLanguage;
 
-        public Tab(int page, TabItem newTab, Image newVerso, Image newRecto, Grid canvas, Grid vGrid, Grid rGrid, Button delBtn, ScatterView SV, ScatterViewItem si, Grid vSwipeGrid, Grid rSwipeGrid, Grid vTranslationGrid, Grid rTranslationGrid, Grid vBoxesGrid, Grid rBoxesGrid, TextBlock headerText)
+        public Tab(int page, TabItem newTab, Image newVerso, Image newRecto, Grid canvas, Grid vGrid, Grid rGrid, Button delBtn, ScatterView SV, ScatterViewItem si, Grid vSwipeGrid, Grid rSwipeGrid, Grid vTranslationGrid, Grid rTranslationGrid, Grid vBoxesGrid, Grid rBoxesGrid, TextBlock headerText, SurfaceWindow1.language language)
         {
             _page = page;
             _tab = newTab;
@@ -55,6 +56,8 @@ namespace SurfaceApplication1
             _SV = SV;
             _headerTB = headerText;
             _worker = new Workers(this);
+            _currentLanguage = language;
+            _previousLanguage = _currentLanguage;
         }
 
     }

@@ -106,11 +106,15 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="BoundingBox.cs" />
+    <Compile Include="SavedPagesTab.cs" />
     <Compile Include="Counterpart.cs" />
     <Compile Include="PageNamer.cs" />
     <Compile Include="ResultBoxItem.cs" />
+    <Compile Include="SavedPage.cs" />
     <Compile Include="SearchResult.cs" />
     <Compile Include="SearchTab.cs" />
+    <Compile Include="SideBar.cs" />
+    <Compile Include="SideBarTab.cs" />
     <Compile Include="Thumbnailer.cs" />
     <Compile Include="Translate.cs" />
     <Compile Include="TranslationBox.cs" />
@@ -154,6 +158,7 @@
     <Resource Include="icons\zoom.png" />
     <Resource Include="icons\magnifyingglass.png" />
     <Resource Include="XML\LayoutXML.xml" />
+    <Resource Include="icons\translationsBar.png" />
     <Content Include="minithumbnails\10rIm1.jpg">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -386,9 +391,6 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="minithumbnails\9rIm1.jpg">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="minithumbnails\musicnote.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="thumbnails\10rAl1.jpg">
@@ -2340,9 +2342,7 @@
       <Install>true</Install>
     </BootstrapperPackage>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="bin\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

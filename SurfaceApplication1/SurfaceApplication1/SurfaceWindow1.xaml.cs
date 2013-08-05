@@ -35,7 +35,6 @@ namespace SurfaceApplication1
     {
         private bool rightSwipe = false;
         private bool leftSwipe = false;
-        private bool optionsShown = false;
         private Stopwatch rightSwipeWatch, leftSwipeWatch;
         private readonly Stopwatch doubleTapSW = new Stopwatch();
         private Point lastTapLocation;
@@ -53,119 +52,19 @@ namespace SurfaceApplication1
         int swipeLength = 25;
         int swipeHeight = 6;
         List<Tab> tabArray = new List<Tab>();
+        List<SavedPage> savedPages = new List<SavedPage>();
         public enum language { None = 0, OldFrench = 1, French = 2, English = 3};
-        public static language currentLanguage = language.None;
-        public static language previousLanguage = language.None;
         bool dtOut = false; // double tap to zoom out
 
-        private List<TabItem> SidebarTabItems;
-        private TabItem tabAdd;
-        private Boolean defaultOptionsChanged;
         public static XmlDocument xml, engXml, layoutXml, modFrXml;
-        public int veryFirstLine, veryLastLine;
-
-        public enum searchLanguage { oldFrench = 1, modernFrench = 2, English = 3 };
-        public static searchLanguage currentSearchLanguage = searchLanguage.oldFrench;
-
-        public String pageToFind; // for opening/navigating to a new tab from a search result closeup
-        public String previousPageToFind;
-
-
+        
         public SurfaceWindow1()
         {
             InitializeComponent();
 
-            //Search bar initialization
-            veryFirstLine = 1;
-            veryLastLine = 5986;
-            SidebarTabItems = new List<TabItem>();
-
             // Lots of search sidebar things
-            tabAdd = new TabItem();
-            tabAdd.Header = "  +  ";
-            tabAdd.FontSize = 25;
-            tabAdd.Height = 40;
-            tabAdd.FontFamily = new FontFamily("Cambria");
+            SideBar sideBar = new SideBar(this, tabDynamic);
 
-            Canvas newTabCanvas = new Canvas();
-            newTabCanvas.Height = 899;
-            newTabCanvas.Width = 550;
-            tabAdd.Content = newTabCanvas;
-
-            Button searchButton = new Button();
-            searchButton.Style = tabDynamic.FindResource("RoundButtonTemplate") as Style;
-            searchButton.Click += new RoutedEventHandler(SearchButton_Selected);
-            searchButton.TouchDown += new EventHandler<TouchEventArgs>(SearchButton_Selected);
-
-            Grid searchGrid = new Grid();
-
-            Image searchIm = new Image();
-            searchIm.Source = new BitmapImage(new Uri(@"..\..\icons\magnifyingglass.png", UriKind.Relative));
-            searchIm.Style = tabDynamic.FindResource("ButtonImageTemplate") as Style;
-
-            TextBlock searchText = new TextBlock();
-            searchText.Text = "SEARCH";
-            searchText.Style = tabDynamic.FindResource("ButtonTextTemplate") as Style;
-
-            searchGrid.Children.Add(searchIm);
-            searchGrid.Children.Add(searchText);
-            searchButton.Content = searchGrid;
-            Canvas.SetLeft(searchButton, 68.0);
-            Canvas.SetTop(searchButton, 350.0);
-            newTabCanvas.Children.Add(searchButton);
-
-            Button annotateButton = new Button();
-            annotateButton.Style = tabDynamic.FindResource("RoundButtonTemplate") as Style;
-            annotateButton.Click += new RoutedEventHandler(AnnotateButton_Selected);
-            annotateButton.TouchDown += new EventHandler<TouchEventArgs>(AnnotateButton_Selected);
-
-            Grid annotateGrid = new Grid();
-
-            Image annotateIm = new Image();
-            annotateIm.Source = new BitmapImage(new Uri(@"..\..\icons\pencil.jpg", UriKind.Relative));
-            annotateIm.Style = tabDynamic.FindResource("ButtonImageTemplate") as Style;
-
-            TextBlock annotateText = new TextBlock();
-            annotateText.Style = tabDynamic.FindResource("ButtonTextTemplate") as Style;
-            annotateText.Text = "ANNOTATE";
-            annotateText.Margin = new Thickness(0, 0, 0, 0);
-            annotateText.RenderTransformOrigin = new Point(0.5, 0.5);
-            annotateText.RenderTransform = new RotateTransform(45);
-            annotateText.FontSize = 22.5;
-
-            annotateGrid.Children.Add(annotateIm);
-            annotateGrid.Children.Add(annotateText);
-            annotateButton.Content = annotateGrid;
-            Canvas.SetLeft(annotateButton, 219.0);
-            Canvas.SetTop(annotateButton, 350.0);
-            newTabCanvas.Children.Add(annotateButton);
-
-            Button studyButton = new Button();
-            studyButton.Style = tabDynamic.FindResource("RoundButtonTemplate") as Style;
-            studyButton.Click += new RoutedEventHandler(StudyButton_Selected);
-            studyButton.TouchDown += new EventHandler<TouchEventArgs>(StudyButton_Selected);
-
-
-            Grid studyGrid = new Grid();
-
-            Image studyIm = new Image();
-            studyIm.Source = new BitmapImage(new Uri(@"..\..\icons\musicnote.png", UriKind.Relative));
-            studyIm.Style = tabDynamic.FindResource("ButtonImageTemplate") as Style;
-
-            TextBlock studyText = new TextBlock();
-            studyText.Style = tabDynamic.FindResource("ButtonTextTemplate") as Style;
-            studyText.Text = "STUDY";
-
-            studyGrid.Children.Add(studyIm);
-            studyGrid.Children.Add(studyText);
-            studyButton.Content = studyGrid;
-            Canvas.SetLeft(studyButton, 370.0);
-            Canvas.SetTop(studyButton, 350.0);
-            newTabCanvas.Children.Add(studyButton);
-
-            SidebarTabItems.Add(tabAdd);
-            tabDynamic.DataContext = SidebarTabItems;
-            tabDynamic.SelectedIndex = 0;
 
             try
             {
@@ -292,7 +191,7 @@ namespace SurfaceApplication1
 
         }
 
-        private TabItem createTab(int page)
+        public TabItem createTab(int page)
         {
             int buffer = scatterBuffer;
             int count = tabArray.Count;
@@ -441,7 +340,11 @@ namespace SurfaceApplication1
             can.Children.Add(ScatterView);
             ScatterView.Items.Add(ScatterItem);
 
-            tabArray.Insert(count, new Tab(page, tab, verso, recto, can, vGrid, rGrid, delBtn, ScatterView, ScatterItem, vSwipeGrid, rSwipeGrid, vTranslationGrid, rTranslationGrid, vBoxesGrid, rBoxesGrid, hedatext));
+            language lang = language.None;
+            if(tabArray.Count > tabNumber && currentTab() != null)
+                lang = currentTab()._currentLanguage;
+
+            tabArray.Insert(count, new Tab(page, tab, verso, recto, can, vGrid, rGrid, delBtn, ScatterView, ScatterItem, vSwipeGrid, rSwipeGrid, vTranslationGrid, rTranslationGrid, vBoxesGrid, rBoxesGrid, hedatext, lang));
 
             tab.Content = can;
             tabBar.Items.Insert(tabArray.Count - 1, tab);
@@ -480,6 +383,7 @@ namespace SurfaceApplication1
                 width = item.MinWidth;
             item.Height = height;
             item.Width = width;
+            limitScatter((ScatterViewItem)sender);
         }
 
         /*
@@ -508,6 +412,7 @@ namespace SurfaceApplication1
                     tabNumber = i;
             }
             tabArray[tabNumber]._delButton.Visibility = System.Windows.Visibility.Visible;
+            updateLanguageButton();
         }
 
         private void btnDelete_Touch(object sender, TouchEventArgs e)
@@ -589,22 +494,25 @@ namespace SurfaceApplication1
             ScatterViewItem i = (ScatterViewItem)sender;
             Tab tab = currentTab();
             int rCount, vCount;
-            rCount = tab._textBlocksR.Count;
-            vCount = tab._textBlocksV.Count;
-
-            double ratio = i.Height / minPageHeight;
-
-            for (int j = 0; j < vCount; j++)
+            if (tab._textBlocksR != null && tab._textBlocksV != null)
             {
-                TextBlock tb = tab._textBlocksV[j];
-                tb.FontSize = TranslationBox.minFontSize * ratio;
-                tb.LineHeight = tab._translationBoxesV[j].lineHeight * ratio;
-            }
-            for (int j = 0; j < rCount; j++)
-            {
-                TextBlock tb = tab._textBlocksR[j];
-                tb.FontSize = TranslationBox.minFontSize * ratio;
-                tb.LineHeight = tab._translationBoxesR[j].lineHeight * ratio;
+                rCount = tab._textBlocksR.Count;
+                vCount = tab._textBlocksV.Count;
+
+                double ratio = i.Height / minPageHeight;
+
+                for (int j = 0; j < vCount; j++)
+                {
+                    TextBlock tb = tab._textBlocksV[j];
+                    tb.FontSize = TranslationBox.minFontSize * ratio;
+                    tb.LineHeight = tab._translationBoxesV[j].lineHeight * ratio;
+                }
+                for (int j = 0; j < rCount; j++)
+                {
+                    TextBlock tb = tab._textBlocksR[j];
+                    tb.FontSize = TranslationBox.minFontSize * ratio;
+                    tb.LineHeight = tab._translationBoxesR[j].lineHeight * ratio;
+                }
             }
         }
 
@@ -818,32 +726,35 @@ namespace SurfaceApplication1
 
         private void languageChanged(object sender, SelectionChangedEventArgs e)
         {
+            Tab tab = currentTab();
             prevlanguageButton.IsEnabled = true;
-            previousLanguage = currentLanguage;
+            tab._previousLanguage = tab._currentLanguage;
             ListBox box = (ListBox)sender;
             if (box.SelectedIndex == 0)
-            {
-                currentLanguage = language.None;
-                languageButton.Content = "None";
-            }
+                tab._currentLanguage = language.None;
             if (box.SelectedIndex == 1)
-            {
-                currentLanguage = language.OldFrench;
-                languageButton.Content = "Old French";
-            }
+                tab._currentLanguage = language.OldFrench;
             if (box.SelectedIndex == 2)
-            {
-                currentLanguage = language.French;
-                languageButton.Content = "French";
-            }
+                tab._currentLanguage = language.French;
             if (box.SelectedIndex == 3)
-            {
-                currentLanguage = language.English;
-                languageButton.Content = "English";
-            }
-            currentTab()._worker.setTranslateText(currentLanguage);
+                tab._currentLanguage = language.English;
+            updateLanguageButton();
+            currentTab()._worker.setTranslateText(tab._currentLanguage);
 
             languageBox.Visibility = System.Windows.Visibility.Collapsed;
+        }
+
+        public void updateLanguageButton()
+        {
+            Tab tab = currentTab();
+            if (tab._currentLanguage == language.None)
+                languageButton.Content = "None";
+            if (tab._currentLanguage == language.OldFrench)
+                languageButton.Content = "Old French";
+            if (tab._currentLanguage == language.French)
+                languageButton.Content = "French";
+            if (tab._currentLanguage == language.English)
+                languageButton.Content = "English";
         }
 
         public void rightSwipeDetectionStart(object sender, TouchEventArgs e)
@@ -986,588 +897,6 @@ namespace SurfaceApplication1
             tb.Foreground = Brushes.Black;
         }
 
-
-
-
-        /// Here come all the searchsidebar functions!!
-
-        private void SearchButton_Selected(object sender, RoutedEventArgs e)
-        {
-            tabDynamic.DataContext = null;
-            TabItem newTab = this.AddSearchTabItem();
-            tabDynamic.DataContext = SidebarTabItems;
-            tabDynamic.SelectedItem = newTab;
-            
-        }
-
-        private void AnnotateButton_Selected(object sender, RoutedEventArgs e)
-        {
-            tabDynamic.DataContext = null;
-            TabItem newTab = this.AddAnnotateTabItem();
-            tabDynamic.DataContext = SidebarTabItems;
-            tabDynamic.SelectedItem = newTab;
-        }
-
-        private void StudyButton_Selected(object sender, RoutedEventArgs e)
-        {
-            tabDynamic.DataContext = null;
-            TabItem newTab = this.AddStudyTabItem();
-            tabDynamic.DataContext = SidebarTabItems;
-            tabDynamic.SelectedItem = newTab;
-        }
-
-
-        private TabItem AddSearchTabItem()
-        {
-            int count = SidebarTabItems.Count;
-
-
-            SearchTab tab = new SearchTab();
-            tab.Name = string.Format("tab{0}", count);
-
-            tab.moreOptions.Click += new RoutedEventHandler(Show_Options);
-            tab.moreOptions.TouchDown += new EventHandler<TouchEventArgs>(Show_Options);
-            tab.deleteTabButton.Click += new RoutedEventHandler(SearchbtnDelete_Click);
-            tab.deleteTabButton.TouchDown += new EventHandler<TouchEventArgs>(SearchbtnDelete_Click);
-            tab.fewerOptions.Click += new RoutedEventHandler(Hide_Options);
-            tab.fewerOptions.TouchDown += new EventHandler<TouchEventArgs>(Hide_Options);
-            tab.searchQueryBox.GotFocus += new RoutedEventHandler(Clear_SearchBox);
-            tab.searchQueryBox.TouchDown += new EventHandler<TouchEventArgs>(Clear_SearchBox);
-            tab.goSearch.Click += new RoutedEventHandler(newSearch);
-            tab.goSearch.TouchDown += new EventHandler<TouchEventArgs>(newSearch);
-            tab.searchQueryBox.PreviewKeyDown += new KeyEventHandler(Enter_Clicked);
-            tab.caseSensitive.TouchDown += new EventHandler<TouchEventArgs>(changeCheck);
-            tab.wholePhraseOnly.TouchDown += new EventHandler<TouchEventArgs>(changeCheck);
-            tab.wholeWordOnly.TouchDown += new EventHandler<TouchEventArgs>(changeCheck);
-
-            //tab.selectLanguage.TouchDown += new EventHandler<TouchEventArgs>(displaySearchLanguages);
-            //tab.selectLanguage.SelectionChanged += new SelectionChangedEventHandler(searchLanguageChanged);
-            tab.selectLanguage.Visibility = Visibility.Collapsed;
-            tab.selectLanguageButton.TouchDown += new EventHandler<TouchEventArgs>(displaySearchLanguages);
-            tab.selectLanguageButton.Click += new RoutedEventHandler(displaySearchLanguages);
-            tab.oldFrench.Selected += new RoutedEventHandler(searchLanguageChanged);
-            tab.modernFrench.Selected += new RoutedEventHandler(searchLanguageChanged);
-            tab.English.Selected += new RoutedEventHandler(searchLanguageChanged);
-
-
-            //tab.selectLanguage.Style = tabDynamic.FindResource("RoundSurfaceListBoxTemplate") as Style;
-
-            // insert tab item right before the last (+) tab item
-            SidebarTabItems.Insert(count - 1, tab);
-            return tab;
-        }
-
-        private void displaySearchLanguages(object sender, RoutedEventArgs e)
-        {
-            SearchTab selectedTab = tabDynamic.SelectedItem as SearchTab;
-            if (selectedTab.selectLanguage.Visibility == Visibility.Collapsed | selectedTab.selectLanguage.Visibility == Visibility.Hidden)
-            {
-                selectedTab.selectLanguage.Visibility = Visibility.Visible;
-                selectedTab.selectLanguageButton.Visibility = Visibility.Collapsed;
-            }
-            else
-                selectedTab.selectLanguage.Visibility = Visibility.Collapsed;
-
-        }
-
-        private void searchLanguageChanged(object sender, RoutedEventArgs e)
-        {
-            SearchTab selectedTab = tabDynamic.SelectedItem as SearchTab;
-            SurfaceListBoxItem box = (SurfaceListBoxItem)sender;
-            selectedTab.selectLanguageButton.Content = box.Content;
-            selectedTab.selectLanguage.Visibility = Visibility.Hidden;
-            selectedTab.selectLanguageButton.Visibility = Visibility.Visible;
-            if (box == selectedTab.oldFrench)
-                currentSearchLanguage = searchLanguage.oldFrench;
-            else if (box == selectedTab.modernFrench)
-                currentSearchLanguage = searchLanguage.modernFrench;
-            else if (box == selectedTab.English)
-                currentSearchLanguage = searchLanguage.English;
-        }
-
-        private void Show_Options(object sender, RoutedEventArgs e)
-        {
-            optionsShown = true;
-            SearchTab selectedTab = tabDynamic.SelectedItem as SearchTab;
-            selectedTab.topLine.Visibility = Visibility.Hidden;
-            selectedTab.caseSensitive.Visibility = Visibility.Visible;
-            selectedTab.bottomLine.Visibility = Visibility.Visible;
-            selectedTab.fewerOptions.Visibility = Visibility.Visible;
-            selectedTab.wholeWordOnly.Visibility = Visibility.Visible;
-            selectedTab.wholePhraseOnly.Visibility = Visibility.Visible;
-            selectedTab.moreOptions.Visibility = Visibility.Hidden;
-            selectedTab.selectLanguageButton.Visibility = Visibility.Visible;
-            if (selectedTab.searchResults.IsVisible)
-                compressResults();
-
-        }
-
-        private void Hide_Options(object sender, RoutedEventArgs e)
-        {
-            SearchTab selectedTab = tabDynamic.SelectedItem as SearchTab;
-            selectedTab.topLine.Visibility = Visibility.Visible;
-            selectedTab.moreOptions.Visibility = Visibility.Visible;
-            selectedTab.caseSensitive.Visibility = Visibility.Hidden;
-            selectedTab.selectLanguage.Visibility = Visibility.Hidden;
-            selectedTab.bottomLine.Visibility = Visibility.Hidden;
-            selectedTab.fewerOptions.Visibility = Visibility.Hidden;
-            selectedTab.wholeWordOnly.Visibility = Visibility.Hidden;
-            selectedTab.wholePhraseOnly.Visibility = Visibility.Hidden;
-            selectedTab.selectLanguageButton.Visibility = Visibility.Hidden;
-
-            checkForChanges();
-
-            if (defaultOptionsChanged == true)
-                selectedTab.moreOptions.Background = Brushes.MediumTurquoise;
-
-            else
-                selectedTab.moreOptions.ClearValue(Control.BackgroundProperty);
-
-            if (selectedTab.searchResults.IsVisible)
-                expandResults();
-
-            optionsShown = false;
-        }
-
-        private void changeCheck(object sender, TouchEventArgs e)
-        {
-            SearchTab selectedTab = tabDynamic.SelectedItem as SearchTab;
-            CheckBox thisbox = sender as CheckBox;
-
-            // The following if loop is accounting for the fact that all search functions are currently set to whole phrase only
-            // There is not yet a way to search for several words appearing near each other
-            // Once that function is implemented, then the "Match whole phrase only" CheckBox will function like the other CheckBoxes
-            if (thisbox == selectedTab.wholePhraseOnly)
-            {
-                MessageBox.Show(string.Format("Oops! This function has not been added yet."),
-                    "Unmark \"Match whole phrase only\"", MessageBoxButton.OK);
-            }
-            else
-            {
-                if (thisbox.IsChecked == true)
-                    thisbox.IsChecked = false;
-                else if (thisbox.IsChecked == false)
-                    thisbox.IsChecked = true;
-            }
-        }
-
-        private void newSearch(object sender, RoutedEventArgs e)
-        {
-            SearchTab selectedTab = tabDynamic.SelectedItem as SearchTab;
-            String searchQuery = selectedTab.searchQueryBox.Text;
-
-            if (searchQuery == "Enter text" || searchQuery == "")
-                MessageBox.Show(string.Format("Please enter words to search for!"),
-                    "Search", MessageBoxButton.OK);
-
-            else
-            {
-                selectedTab.searchTabHeader.Text = selectedTab.searchQueryBox.Text;
-                selectedTab.searchResults.Visibility = Visibility.Visible;
-                selectedTab.poetryTab.Content = selectedTab.poetryCanvas;
-
-                int caseType = 0;
-                int wordType = 0;
-                if (selectedTab.caseSensitive.IsChecked == true)
-                    caseType = 1;
-                if (selectedTab.wholeWordOnly.IsChecked == true)
-                    wordType = 1;
-
-                // Poetry results
-
-                List<SearchResult> poetryResults = new List<SearchResult>();
-                if (currentSearchLanguage == searchLanguage.oldFrench)
-                    poetryResults = Translate.searchOldFrPoetry(searchQuery, caseType, wordType, xml, engXml, layoutXml);
-                else if(currentSearchLanguage == searchLanguage.modernFrench)
-                    poetryResults = Translate.searchModFrPoetry(searchQuery, caseType, wordType, modFrXml, engXml, layoutXml);
-                else if (currentSearchLanguage == searchLanguage.English)
-                    poetryResults = Translate.searchEngPoetry(searchQuery, caseType, wordType, xml, engXml, layoutXml);
-
-                SurfaceListBox poetryLB = new SurfaceListBox();
-                poetryLB.Style = tabDynamic.FindResource("SearchResultSurfaceListBox") as Style;
-                poetryLB.SetValue(ScrollViewer.HorizontalScrollBarVisibilityProperty, ScrollBarVisibility.Disabled);
-                poetryLB.SetValue(ScrollViewer.VerticalScrollBarVisibilityProperty, ScrollBarVisibility.Visible);
-                selectedTab.poetryScroll.Content = poetryLB;
-
-                foreach (SearchResult result in poetryResults)
-                {
-                    ResultBoxItem resultRBI = new ResultBoxItem();
-                    convertSearchResultToResultBoxItem(result, resultRBI);
-                    resultRBI.resultThumbnail = Translate.convertImage(Thumbnailer.getThumbnail(Translate.getTagByLineNum(result.lineNum, layoutXml)));
-                    poetryLB.Items.Add(resultRBI);
-                }
-
-                selectedTab.poetryTab.Header = "Poetry (" + poetryResults.Count + ")";
-
-                if (poetryResults.Count == 0)
-                {
-                    TextBlock noResults = new TextBlock();
-                    noResults.Text = "Sorry, your search returned no poetry results.";
-                    selectedTab.poetryTab.Content = noResults;
-                }
-                else
-                    selectedTab.poetryTab.Content = selectedTab.poetryCanvas;
-
-
-
-                // Lyric results
-                List<SearchResult> lyricResults = new List<SearchResult>();
-                if (currentSearchLanguage == searchLanguage.oldFrench)
-                    lyricResults = Translate.searchLyrics(searchQuery, caseType, wordType, xml, layoutXml);
-                else if (currentSearchLanguage == searchLanguage.modernFrench)
-                    lyricResults = Translate.searchLyrics(searchQuery, caseType, wordType, modFrXml, layoutXml);
-
-                ListBox lyricsLB = new ListBox();
-                lyricsLB.Style = tabDynamic.FindResource("SearchResultSurfaceListBox") as Style;
-                lyricsLB.SetValue(ScrollViewer.HorizontalScrollBarVisibilityProperty, ScrollBarVisibility.Disabled);
-                selectedTab.lyricsScroll.Content = lyricsLB;
-
-
-                foreach (SearchResult result in lyricResults)
-                {
-                    ResultBoxItem resultRBI = new ResultBoxItem();
-                    convertSearchResultToResultBoxItem(result, resultRBI);
-                    resultRBI.resultThumbnail = Translate.convertImage(Thumbnailer.getThumbnail(result.tag));
-                    lyricsLB.Items.Add(resultRBI);
-                }
-
-                selectedTab.lyricsTab.Header = "Lyrics (" + lyricResults.Count + ")";
-
-                if (lyricResults.Count == 0)
-                {
-                    TextBlock noResults = new TextBlock();
-                    noResults.Text = "Sorry, your search returned no music lyric results.\r\n\r\nNB: Lyrics only exist in original text or Modern French - no English.";
-                    selectedTab.lyricsTab.Content = noResults;
-                }
-                else
-                    selectedTab.lyricsTab.Content = selectedTab.lyricsCanvas;
-
-
-
-                // Image results
-                List<SearchResult> imageResults = Translate.searchPicCaptions(searchQuery, caseType, wordType, xml, layoutXml);
-                ListBox imagesLB = new ListBox();
-                imagesLB.Style = tabDynamic.FindResource("SearchResultSurfaceListBox") as Style;
-                imagesLB.SetValue(ScrollViewer.HorizontalScrollBarVisibilityProperty, ScrollBarVisibility.Disabled);
-                selectedTab.imagesScroll.Content = imagesLB;
-
-                foreach (SearchResult result in imageResults)
-                {
-                    ResultBoxItem resultRBI = new ResultBoxItem();
-                    convertSearchResultToResultBoxItem(result, resultRBI);
-                    resultRBI.miniThumbnail.Source = new BitmapImage(new Uri(@"..\..\minithumbnails\" + result.tag + ".jpg", UriKind.Relative)); 
-                    resultRBI.resultThumbnail = Translate.convertImage(Thumbnailer.getThumbnail(result.tag));
-                    imagesLB.Items.Add(resultRBI);
-                }
-
-                selectedTab.imagesTab.Header = "Images (" + imageResults.Count + ")";
-
-                if (imageResults.Count == 0)
-                {
-                    TextBlock noResults = new TextBlock();
-                    noResults.Text = "Sorry, your search returned no image results.\r\n\r\nNB: Image captions exist in Modern French only; no English (yet).";
-                    selectedTab.imagesTab.Content = noResults;
-                }
-                else
-                    selectedTab.imagesTab.Content = selectedTab.imagesCanvas;
-
-                if (optionsShown == true) 
-                    compressResults();
-
-
-                // Auto flip to a tab with results if the current one has none
-                if (selectedTab.searchResults.SelectedItem == selectedTab.poetryTab && poetryResults.Count == 0)
-                {
-                    if (lyricResults.Count != 0)
-                        selectedTab.searchResults.SelectedItem = selectedTab.lyricsTab;
-                    else if (imageResults.Count != 0)
-                        selectedTab.searchResults.SelectedItem = selectedTab.imagesTab;
-                }
-                else if (selectedTab.searchResults.SelectedItem == selectedTab.lyricsTab && lyricResults.Count == 0)
-                {
-                    if (poetryResults.Count != 0)
-                        selectedTab.searchResults.SelectedItem = selectedTab.poetryTab;
-                    else if (imageResults.Count != 0)
-                        selectedTab.searchResults.SelectedItem = selectedTab.imagesTab;
-                }
-                else if (selectedTab.searchResults.SelectedItem == selectedTab.imagesTab && imageResults.Count == 0)
-                {
-                    if (poetryResults.Count != 0)
-                        selectedTab.searchResults.SelectedItem = selectedTab.poetryTab;
-                    else if (lyricResults.Count != 0)
-                        selectedTab.searchResults.SelectedItem = selectedTab.lyricsTab;
-                }
-
-            }
-
-           
-        }
-
-        private void convertSearchResultToResultBoxItem(SearchResult sr, ResultBoxItem rbi)
-        {
-            rbi.folioInfo.Text = sr.folio;
-            rbi.resultType = sr.resultType;
-            if(rbi.resultType == 1)
-                rbi.lineInfo.Text = Convert.ToString(sr.lineNum);
-            rbi.excerpt1 = sr.excerpt1;
-            rbi.excerpt2 = sr.excerpt2;
-            rbi.excerpt3 = sr.excerpt3;
-            rbi.Height = 80; // temp taller than desired, so scrollbar shows
-            rbi.HorizontalAlignment = System.Windows.HorizontalAlignment.Left;
-            rbi.Width = 430;
-            rbi.Style = tabDynamic.FindResource("SearchResultSurfaceListBoxItem") as Style; // Not sure if this works..
-            rbi.resultText.Text = sr.text1 + "\r\n" + sr.text2;
-            rbi.BorderBrush = Brushes.LightGray;
-            rbi.BorderThickness = new Thickness(1.0);
-            rbi.Selected += new RoutedEventHandler(Result_Closeup);
-        }
-
-        private void compressResults()
-        {
-            SearchTab selectedTab = tabDynamic.SelectedItem as SearchTab;
-            selectedTab.searchResults.Height = 537;
-            Canvas.SetTop(selectedTab.searchResults, 320);
-            selectedTab.poetryPanel.Height = 242;
-            Canvas.SetTop(selectedTab.poetryPanel, 220);
-            selectedTab.poetryScroll.Height = 200;
-            selectedTab.lyricsPanel.Height = 242;
-            Canvas.SetTop(selectedTab.lyricsPanel, 220);
-            selectedTab.lyricsScroll.Height = 200;
-            selectedTab.imagesPanel.Height = 242;
-            Canvas.SetTop(selectedTab.imagesPanel, 220);
-            selectedTab.imagesScroll.Height = 200;
-
-        }
-
-        private void expandResults()
-        {
-            SearchTab selectedTab = tabDynamic.SelectedItem as SearchTab;
-            selectedTab.searchResults.Height = 677;
-            Canvas.SetTop(selectedTab.searchResults, 180);
-            selectedTab.poetryPanel.Height = 300;
-            Canvas.SetTop(selectedTab.poetryPanel, 331);
-            selectedTab.poetryScroll.Height = 325;
-            selectedTab.lyricsPanel.Height = 300;
-            Canvas.SetTop(selectedTab.lyricsPanel, 331);
-            selectedTab.lyricsScroll.Height = 325;
-            selectedTab.imagesPanel.Height = 300;
-            Canvas.SetTop(selectedTab.imagesPanel, 331);
-            selectedTab.imagesScroll.Height = 325;
-        }
-
-        private void Enter_Clicked(object sender, KeyEventArgs e)
-        {
-            if (e.Key == Key.Return)
-            {
-                newSearch(sender, e);
-                e.Handled = true;
-            }
-        }
-
-        private void Result_Closeup(object sender, RoutedEventArgs e)
-        {
-            SearchTab selectedTab = tabDynamic.SelectedItem as SearchTab;
-            ResultBoxItem selectedResult = e.Source as ResultBoxItem;
-
-            Image closeupImage = new Image();
-            closeupImage.Source = selectedResult.resultThumbnail.Source;
-            closeupImage.Width = 185;
-            closeupImage.Height = 176;
-            closeupImage.Margin = new Thickness(0, 0, 10, 0);
-
-
-            TextBlock closeupText = new TextBlock();
-            closeupText.TextWrapping = TextWrapping.Wrap;
-            closeupText.FontSize = 15;
-            closeupText.Width = 275;
-            closeupText.VerticalAlignment = VerticalAlignment.Center;
-
-            if (selectedResult.resultType == 1)
-            {
-                selectedTab.poetryPanel.Children.Clear();
-                selectedTab.poetryPanel.Children.Add(closeupImage);
-                selectedTab.poetryPanel.Children.Add(closeupText);
-                selectedTab.poetryPanel.TouchDown += new EventHandler<TouchEventArgs>(goToFolio);
-            }
-
-            else if (selectedResult.resultType == 2)
-            {
-                selectedTab.lyricsPanel.Children.Clear();
-                selectedTab.lyricsPanel.Children.Add(closeupImage);
-                selectedTab.lyricsPanel.Children.Add(closeupText);
-                selectedTab.lyricsPanel.TouchDown += new EventHandler<TouchEventArgs>(goToFolio);
-            }
-
-            else if (selectedResult.resultType == 3)
-            {
-                selectedTab.imagesPanel.Children.Clear();
-                selectedTab.imagesPanel.Children.Add(closeupImage);
-                selectedTab.imagesPanel.Children.Add(closeupText);
-                selectedTab.imagesPanel.TouchDown += new EventHandler<TouchEventArgs>(goToFolio);
-            }
-
-            pageToFind = selectedResult.folioInfo.Text;
-
-            closeupText.Inlines.Add(new Run { FontFamily = new FontFamily("Cambria"), Text = selectedResult.excerpt1, FontWeight = FontWeights.Normal });
-            closeupText.Inlines.Add(new Run { FontFamily = new FontFamily("Cambria"), FontWeight = FontWeights.Bold, Text = selectedResult.excerpt2 });
-            closeupText.Inlines.Add(new Run { FontFamily = new FontFamily("Cambria"), FontWeight = FontWeights.Normal, Text = selectedResult.excerpt3 });
-        }
-
-
-        public static String getImageName(String folio, XmlDocument layoutXml)
-        {
-            String imageName = "";
-            XmlNode node = layoutXml.DocumentElement.SelectSingleNode("//surface[@id='" + folio + "']");
-            imageName = node.FirstChild.SelectSingleNode("graphic").Attributes["url"].Value;
-
-            return imageName;
-        }
-
-        private void goToFolio(object sender, TouchEventArgs e)
-        {
-            if (pageToFind != previousPageToFind)
-            {
-                if (pageToFind.StartsWith("Fo"))
-                    pageToFind = pageToFind.Substring(2);
-                String imageName = getImageName(pageToFind, layoutXml);
-                int pageNum = Convert.ToInt32(imageName.Substring(0, imageName.IndexOf(".jpg")));
-                if (pageNum % 2 == 1) // If odd, meaning it's a Fo_r, we want to aim for the previous page.
-                    pageNum--;
-
-                createTab(pageNum - 10);
-                previousPageToFind = pageToFind;
-            }
-        }
-
-
-        private Boolean checkForChanges()
-        {
-            SearchTab selectedTab = tabDynamic.SelectedItem as SearchTab;
-            if (selectedTab.caseSensitive.IsChecked == true | selectedTab.wholeWordOnly.IsChecked == true |
-                selectedTab.wholePhraseOnly.IsChecked == false | (selectedTab.selectLanguage.SelectedIndex != 0 && selectedTab.selectLanguage.SelectedIndex != 1))
-                defaultOptionsChanged = true;
-
-            else
-                defaultOptionsChanged = false;
-
-
-            return defaultOptionsChanged;
-        }
-
-        private void Clear_SearchBox(object sender, RoutedEventArgs e)
-        {
-            SearchTab selectedTab = tabDynamic.SelectedItem as SearchTab;
-            if (selectedTab.searchQueryBox.Text == "Enter text")
-            {
-                selectedTab.searchQueryBox.Foreground = Brushes.Black;
-                selectedTab.searchQueryBox.Text = "";
-            }
-            else
-                selectedTab.searchQueryBox.SelectAll();
-
-            selectedTab.searchQueryBox.Focus();
-        }
-
-
-
-        private TabItem AddAnnotateTabItem()
-        {
-            int count = SidebarTabItems.Count;
-
-            // create new tab item - eventually replace with AnnotateTab tab = new AnnotateTab();
-            // Then, add all listeners here
-            TabItem tab = new TabItem(); 
-            tab.Name = string.Format("tab{0}", count);
-            tab.HeaderTemplate = tabDynamic.FindResource("NewAnnotateTab") as DataTemplate; // can be replaced if AnnotateTab object exists
-
-
-
-            // insert tab item right before the last (+) tab item
-            SidebarTabItems.Insert(count - 1, tab);
-            return tab;
-        }
-
-        private TabItem AddLearnerTab()
-        {
-            int count = SidebarTabItems.Count;
-
-
-            TabItem tab = new TabItem();
-            tab.Name = string.Format("tab{0}", count);
-            tab.Header = "HI";
-            tab.Width = 100;
-
-            SurfaceScrollViewer ssv = new SurfaceScrollViewer();
-            ssv.Height = 500;
-            ssv.Width = 300;
-            ssv.Background = Brushes.Aquamarine;
-            Canvas.SetTop(ssv, 50);
-            Canvas.SetLeft(ssv, 100);
-
-            Canvas learnerCanvas = new Canvas();
-            tab.Content = learnerCanvas;
-            learnerCanvas.Children.Add(ssv);
-
-
-            // insert tab item right before the last (+) tab item
-            SidebarTabItems.Insert(count - 1, tab);
-            return tab;
-        }
-
-        private TabItem AddStudyTabItem()
-        {
-            int count = SidebarTabItems.Count;
-
-            // create new tab item - eventually replace with MusicTab tab = new MusicTab();
-            // Then, add all listeners here
-            TabItem tab = new TabItem();
-            tab.Name = string.Format("tab{0}", count);
-            tab.HeaderTemplate = tabDynamic.FindResource("NewStudyTab") as DataTemplate; // can be replaced if StudyTab object exists
-
-
-
-            // insert tab item right before the last (+) tab item
-            SidebarTabItems.Insert(count - 1, tab);
-            return tab;
-        }
-
-        private void searchTabDynamic_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            TabItem tab = tabDynamic.SelectedItem as TabItem;
-
-            if (tab != null && tab.Header != null)
-            {
-                if (tab.Header.Equals("+") && SidebarTabItems.Count > 2)
-                {
-
-                }
-                else
-                {
-
-                }
-            }
-        }
-
-
-        private void SearchbtnDelete_Click(object sender, RoutedEventArgs e)
-        {
-
-            if (MessageBox.Show(string.Format("Are you sure you want to remove this tab?"),
-                 "Remove Tab", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
-            {
-                TabItem selectedTab = tabDynamic.SelectedItem as TabItem;
-                tabDynamic.DataContext = null;
-
-                SidebarTabItems.Remove(selectedTab);
-                tabDynamic.DataContext = SidebarTabItems;
-                if (selectedTab == null || selectedTab.Equals(selectedTab))
-                {
-                    selectedTab = SidebarTabItems[0];
-                }
-                tabDynamic.SelectedItem = selectedTab;
-            }
-        }
-
         private void pageSlider_PreviewTouchDown(object sender, TouchEventArgs e)
         {
             SurfaceSlider slider = (SurfaceSlider)sender;
@@ -1587,10 +916,44 @@ namespace SurfaceApplication1
             else
                 languageBox.Visibility = System.Windows.Visibility.Collapsed;
         }
+        private void languageVisibility(object sender, RoutedEventArgs e)
+        {
+            languageVisibility(sender, null);
+        }
+        
 
         private void languagePrevious(object sender, TouchEventArgs e)
         {
-            languageBox.SelectedIndex = (int)previousLanguage;
+            languageBox.SelectedIndex = (int)currentTab()._previousLanguage;
+        }
+        private void languagePrevious(object sender, RoutedEventArgs e)
+        {
+            languagePrevious(sender, null);
+        }
+
+        private void savePage(object sender, TouchEventArgs e)
+        {
+            Tab tab = currentTab();
+            int pageNum = tab._page;
+            double width = tab._SVI.Width;
+            Point center = tab._SVI.Center;
+            language lang = tab._currentLanguage;
+            savedPages.Add(new SavedPage(pageNum, width, center, lang));
+        }
+        private void savePage(object sender, RoutedEventArgs e)
+        {
+            savePage(sender, null);
+        }
+
+        public void goToSavedPage(SavedPage sp)
+        {
+            Tab tab = currentTab();
+            goToPage(sp.pageNum);
+            tab._SVI.Width = sp.width;
+            tab._SVI.Height = tab._SVI.MinHeight * tab._SVI.Width / tab._SVI.MinWidth;
+            tab._previousLanguage = tab._currentLanguage;
+            tab._currentLanguage = sp.language;
+            tab._SVI.Center = sp.center;
         }
 
     }
