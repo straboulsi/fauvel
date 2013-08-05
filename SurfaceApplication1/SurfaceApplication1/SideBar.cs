@@ -365,15 +365,15 @@ namespace SurfaceApplication1
 
                 SurfaceListBox poetryLB = new SurfaceListBox();
                 poetryLB.Style = tabBar.FindResource("SearchResultSurfaceListBox") as Style;
-                poetryLB.SetValue(ScrollViewer.HorizontalScrollBarVisibilityProperty, ScrollBarVisibility.Disabled);
-                poetryLB.SetValue(ScrollViewer.VerticalScrollBarVisibilityProperty, ScrollBarVisibility.Visible);
-                selectedTab.poetryScroll.Content = poetryLB;
+                selectedTab.poetryScroll.Content = poetryLB; // NB: the scroll bar comes from the poetryScroll, not poetryLB
 
                 foreach (SearchResult result in poetryResults)
                 {
                     ResultBoxItem resultRBI = new ResultBoxItem();
                     convertSearchResultToResultBoxItem(result, resultRBI);
                     resultRBI.resultThumbnail = Translate.convertImage(Thumbnailer.getThumbnail(Translate.getTagByLineNum(result.lineNum, layoutXml)));
+                    if (((optionsShown == false) && poetryResults.Count < 4) || ((optionsShown == true) && poetryResults.Count < 2))
+                        resultRBI.Width = 480;
                     poetryLB.Items.Add(resultRBI);
                 }
 
@@ -388,7 +388,10 @@ namespace SurfaceApplication1
                 else
                     selectedTab.poetryTab.Content = selectedTab.poetryCanvas;
 
+                if (poetryResults.Count <= 4)
+                {
 
+                }
 
                 // Lyric results
                 List<SearchResult> lyricResults = new List<SearchResult>();
@@ -399,7 +402,6 @@ namespace SurfaceApplication1
 
                 ListBox lyricsLB = new ListBox();
                 lyricsLB.Style = tabBar.FindResource("SearchResultSurfaceListBox") as Style;
-                lyricsLB.SetValue(ScrollViewer.HorizontalScrollBarVisibilityProperty, ScrollBarVisibility.Disabled);
                 selectedTab.lyricsScroll.Content = lyricsLB;
 
 
@@ -428,7 +430,6 @@ namespace SurfaceApplication1
                 List<SearchResult> imageResults = Translate.searchPicCaptions(searchQuery, caseType, wordType, xml, layoutXml);
                 ListBox imagesLB = new ListBox();
                 imagesLB.Style = tabBar.FindResource("SearchResultSurfaceListBox") as Style;
-                imagesLB.SetValue(ScrollViewer.HorizontalScrollBarVisibilityProperty, ScrollBarVisibility.Disabled);
                 selectedTab.imagesScroll.Content = imagesLB;
 
                 foreach (SearchResult result in imageResults)
@@ -440,6 +441,8 @@ namespace SurfaceApplication1
                     imagesLB.Items.Add(resultRBI);
                 }
 
+                //if (selectedTab.lyricsScroll.VerticalScrollBarVisibility == ScrollBarVisibility.Visible)
+                //    selectedTab.lyricsScroll.Background = Brushes.LightGray;
                 selectedTab.imagesTab.Header = "Images (" + imageResults.Count + ")";
 
                 if (imageResults.Count == 0)
@@ -507,15 +510,15 @@ namespace SurfaceApplication1
             SearchTab selectedTab = tabBar.SelectedItem as SearchTab;
             selectedTab.searchResults.Height = 537;
             Canvas.SetTop(selectedTab.searchResults, 320);
-            selectedTab.poetryPanel.Height = 242;
-            Canvas.SetTop(selectedTab.poetryPanel, 220);
-            selectedTab.poetryScroll.Height = 200;
-            selectedTab.lyricsPanel.Height = 242;
-            Canvas.SetTop(selectedTab.lyricsPanel, 220);
-            selectedTab.lyricsScroll.Height = 200;
-            selectedTab.imagesPanel.Height = 242;
-            Canvas.SetTop(selectedTab.imagesPanel, 220);
-            selectedTab.imagesScroll.Height = 200;
+            selectedTab.poetryBorder.Height = 245;
+            Canvas.SetTop(selectedTab.poetryBorder, 240);
+            selectedTab.poetryScroll.Height = 230;
+            selectedTab.lyricsBorder.Height = 245;
+            Canvas.SetTop(selectedTab.lyricsBorder, 240);
+            selectedTab.lyricsScroll.Height = 230;
+            selectedTab.imagesBorder.Height = 245;
+            Canvas.SetTop(selectedTab.imagesBorder, 240);
+            selectedTab.imagesScroll.Height = 230;
 
         }
 
@@ -524,14 +527,14 @@ namespace SurfaceApplication1
             SearchTab selectedTab = tabBar.SelectedItem as SearchTab;
             selectedTab.searchResults.Height = 677;
             Canvas.SetTop(selectedTab.searchResults, 180);
-            selectedTab.poetryPanel.Height = 300;
-            Canvas.SetTop(selectedTab.poetryPanel, 331);
+            selectedTab.poetryBorder.Height = 294;
+            Canvas.SetTop(selectedTab.poetryBorder, 331);
             selectedTab.poetryScroll.Height = 325;
-            selectedTab.lyricsPanel.Height = 300;
-            Canvas.SetTop(selectedTab.lyricsPanel, 331);
+            selectedTab.lyricsBorder.Height = 294;
+            Canvas.SetTop(selectedTab.lyricsBorder, 331);
             selectedTab.lyricsScroll.Height = 325;
-            selectedTab.imagesPanel.Height = 300;
-            Canvas.SetTop(selectedTab.imagesPanel, 331);
+            selectedTab.imagesBorder.Height = 294;
+            Canvas.SetTop(selectedTab.imagesBorder, 331);
             selectedTab.imagesScroll.Height = 325;
         }
 
