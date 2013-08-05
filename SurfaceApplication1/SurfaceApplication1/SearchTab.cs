@@ -32,7 +32,6 @@ namespace SurfaceApplication1
         public SurfaceListBoxItem pickLanguage, oldFrench, modernFrench, English;
         public TabControl searchResults;
         public TabItem poetryTab, lyricsTab, imagesTab;
-        //public ScrollViewer poetryScroll, lyricsScroll, imagesScroll;
         public StackPanel poetryPanel, lyricsPanel, imagesPanel;
         public Button moreOptions, fewerOptions;
         public Image downArrow, upArrow;
@@ -270,7 +269,7 @@ namespace SurfaceApplication1
             lyricsCanvas.Children.Add(lyricsBorder);
             lyricsScroll.Height = 325;
             lyricsScroll.Width = 470;
-            //lyricsScroll.Background = Brushes.LightGray;
+            lyricsScroll.Background = Brushes.LightGray;
             //lyricsScroll.VerticalScrollBarVisibility = ScrollBarVisibility.Visible;
             lyricsScroll.HorizontalScrollBarVisibility = ScrollBarVisibility.Disabled;
             lyricsScroll.PanningMode = PanningMode.VerticalOnly;
@@ -294,7 +293,7 @@ namespace SurfaceApplication1
             imagesCanvas.Children.Add(imagesBorder); 
             imagesScroll.Height = 325;
             imagesScroll.Width = 470;
-            //imagesScroll.Background = Brushes.LightGray;
+            imagesScroll.Background = Brushes.LightGray;
             imagesScroll.HorizontalScrollBarVisibility = ScrollBarVisibility.Disabled;
             //imagesScroll.VerticalScrollBarVisibility = ScrollBarVisibility.Visible;
             imagesScroll.PanningMode = PanningMode.VerticalOnly;

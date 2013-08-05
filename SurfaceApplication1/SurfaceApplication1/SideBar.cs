@@ -224,7 +224,6 @@ namespace SurfaceApplication1
             tab.English.Selected += new RoutedEventHandler(searchLanguageChanged);
 
 
-            //tab.selectLanguage.Style = tabBar.FindResource("RoundSurfaceListBoxTemplate") as Style;
 
             // insert tab item right before the last (+) tab item
             tabItems.Insert(count - 1, tab);
@@ -668,31 +667,6 @@ namespace SurfaceApplication1
             return tab;
         }
 
-        private SideBarTab AddLearnerTab()
-        {
-            int count = tabItems.Count;
-
-
-            SideBarTab tab = new SideBarTab(this);
-            tab.Header = "HI";
-            tab.Width = 100;
-
-            SurfaceScrollViewer ssv = new SurfaceScrollViewer();
-            ssv.Height = 500;
-            ssv.Width = 300;
-            ssv.Background = Brushes.Aquamarine;
-            Canvas.SetTop(ssv, 50);
-            Canvas.SetLeft(ssv, 100);
-
-            Canvas learnerCanvas = new Canvas();
-            tab.Content = learnerCanvas;
-            learnerCanvas.Children.Add(ssv);
-
-
-            // insert tab item right before the last (+) tab item
-            tabItems.Insert(count - 1, tab);
-            return tab;
-        }
 
         private SideBarTab AddStudyTabItem()
         {

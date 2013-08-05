@@ -358,17 +358,6 @@ namespace SurfaceApplication1
             return tab;
         }
 
-        /* 
-         * The following method was written when tabs weren't switching via touch
-         * It may not end up being needed... We'll see.
-         */
-        //private void SearchTabItem_TouchDown(object sender, TouchEventArgs e)
-        //{
-        //    SearchTab tab = sender as SearchTab;
-        //    TabControl control = tab.Parent as TabControl;
-        //    control.SelectedItem = tab;
-        //    e.Handled = true;
-        //}
 
         private void wheelIt(object sender, MouseWheelEventArgs e)
         {
