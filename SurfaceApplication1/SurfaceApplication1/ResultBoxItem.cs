@@ -54,8 +54,6 @@ namespace SurfaceApplication1
 
             resultThumbnail = new Image();
             miniThumbnail = new Image(); // miniThumbnails are used for image results
-            miniThumbnail.Height = 50;
-            miniThumbnail.Width = 50;
             miniThumbnail.Margin = new Thickness(5);
 
             resultText = new TextBlock();

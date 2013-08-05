@@ -39,6 +39,7 @@ namespace SurfaceApplication1
         public Button moreOptions, fewerOptions;
         public Image downArrow, upArrow;
         public SurfaceScrollViewer poetryScroll, lyricsScroll, imagesScroll;
+        public Border poetryBorder, imagesBorder, lyricsBorder;
 
         public SearchTab()
         {
@@ -72,6 +73,7 @@ namespace SurfaceApplication1
             English = new SurfaceListBoxItem();
             selectLanguageButton = new Button();
 
+
             searchResults = new TabControl();
             poetryTab = new TabItem();
             lyricsTab = new TabItem();
@@ -85,7 +87,6 @@ namespace SurfaceApplication1
             imagesCanvas = new Canvas();
             imagesScroll = new SurfaceScrollViewer(); 
             imagesPanel = new StackPanel();
-
 
 
 
@@ -173,7 +174,7 @@ namespace SurfaceApplication1
 
             wholePhraseOnly.FontSize = 10;
             wholePhraseOnly.LayoutTransform = st;
-            wholePhraseOnly.Content = (string)"Match whole phrase only";
+            wholePhraseOnly.Content = (string)"Match exact phrase only";
             wholePhraseOnly.IsChecked = true; // This is default
             Canvas.SetLeft(wholePhraseOnly, 243);
             Canvas.SetTop(wholePhraseOnly, 227);
@@ -252,6 +253,14 @@ namespace SurfaceApplication1
             searchResults.Items.Add(lyricsTab);
             searchResults.Items.Add(imagesTab);
 
+
+            poetryBorder = new Border();
+            poetryBorder.BorderBrush = Brushes.DarkGray;
+            poetryBorder.BorderThickness = new Thickness(1);
+            poetryBorder.Child = poetryPanel;
+            poetryBorder.Height = 294;
+            poetryBorder.Width = 472;
+
             poetryTab.Header = "Poetry";
             poetryTab.Height = 40;
             poetryTab.Width = 159;
@@ -259,19 +268,27 @@ namespace SurfaceApplication1
 
             poetryCanvas.Height = 629;
             poetryCanvas.Children.Add(poetryScroll);
-            poetryCanvas.Children.Add(poetryPanel);
+            poetryCanvas.Children.Add(poetryBorder);
 
             poetryScroll.Height = 325;
             poetryScroll.Width = 470; 
             poetryScroll.Background = Brushes.LightGray;
-            poetryScroll.VerticalScrollBarVisibility = ScrollBarVisibility.Visible;
+            //poetryScroll.VerticalScrollBarVisibility = ScrollBarVisibility.Visible;
+            poetryScroll.VerticalScrollBarVisibility = ScrollBarVisibility.Auto;
             poetryScroll.HorizontalScrollBarVisibility = ScrollBarVisibility.Disabled;
             poetryScroll.PanningMode = PanningMode.VerticalOnly;
             poetryPanel.Orientation = Orientation.Horizontal;
-            poetryPanel.Height = 300;
-            poetryPanel.Width = 478;
-            Canvas.SetTop(poetryPanel, 331);
 
+            Canvas.SetTop(poetryBorder, 331);
+
+
+
+            lyricsBorder = new Border();
+            lyricsBorder.BorderBrush = Brushes.DarkGray;
+            lyricsBorder.BorderThickness = new Thickness(1);
+            lyricsBorder.Child = lyricsPanel;
+            lyricsBorder.Height = 294;
+            lyricsBorder.Width = 472;
 
             lyricsTab.Header = "Lyrics";
             lyricsTab.Height = 40;
@@ -279,17 +296,25 @@ namespace SurfaceApplication1
             lyricsTab.Content = lyricsCanvas;
             lyricsCanvas.Height = 629;
             lyricsCanvas.Children.Add(lyricsScroll);
-            lyricsCanvas.Children.Add(lyricsPanel);
+            lyricsCanvas.Children.Add(lyricsBorder); //
+
             lyricsScroll.Height = 325;
             lyricsScroll.Width = 470;
-            lyricsScroll.Background = Brushes.LightGray;
-            lyricsScroll.VerticalScrollBarVisibility = ScrollBarVisibility.Visible;
+            //lyricsScroll.Background = Brushes.LightGray;
+            //lyricsScroll.VerticalScrollBarVisibility = ScrollBarVisibility.Visible;
             lyricsScroll.HorizontalScrollBarVisibility = ScrollBarVisibility.Disabled;
             lyricsScroll.PanningMode = PanningMode.VerticalOnly;
             lyricsPanel.Orientation = Orientation.Horizontal;
-            lyricsPanel.Height = 300;
-            lyricsPanel.Width = 478;
-            Canvas.SetTop(lyricsPanel, 331);
+
+            Canvas.SetTop(lyricsBorder, 331);
+
+
+            imagesBorder = new Border();
+            imagesBorder.BorderBrush = Brushes.DarkGray;
+            imagesBorder.BorderThickness = new Thickness(1);
+            imagesBorder.Child = imagesPanel;
+            imagesBorder.Height = 294;
+            imagesBorder.Width = 472;
 
             imagesTab.Header = "Images";
             imagesTab.Height = 40;
@@ -297,17 +322,17 @@ namespace SurfaceApplication1
             imagesTab.Content = imagesCanvas;
             imagesCanvas.Height = 629;
             imagesCanvas.Children.Add(imagesScroll);
-            imagesCanvas.Children.Add(imagesPanel);
+            imagesCanvas.Children.Add(imagesBorder); 
+
             imagesScroll.Height = 325;
             imagesScroll.Width = 470;
-            imagesScroll.Background = Brushes.LightGray;
+            //imagesScroll.Background = Brushes.LightGray;
             imagesScroll.HorizontalScrollBarVisibility = ScrollBarVisibility.Disabled;
-            imagesScroll.VerticalScrollBarVisibility = ScrollBarVisibility.Visible;
+            //imagesScroll.VerticalScrollBarVisibility = ScrollBarVisibility.Visible;
             imagesScroll.PanningMode = PanningMode.VerticalOnly;
             imagesPanel.Orientation = Orientation.Horizontal;
-            imagesPanel.Height = 300;
-            imagesPanel.Width = 478;
-            Canvas.SetTop(imagesPanel, 331);
+
+            Canvas.SetTop(imagesBorder, 331);
 
 
 
