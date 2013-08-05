@@ -335,6 +335,7 @@ namespace SurfaceApplication1
             ScatterItem.PreviewTouchMove += new EventHandler<TouchEventArgs>(rightSwipeDetectionMove);
             ScatterItem.PreviewTouchUp += new EventHandler<TouchEventArgs>(rightSwipeDetectionStop);
             ScatterItem.MouseWheel += new System.Windows.Input.MouseWheelEventHandler(wheelIt);
+            ScatterItem.SizeChanged += new SizeChangedEventHandler(changeTextBoxSize);
 
             ScatterView.Width = 2 * minPageWidth + 2 * buffer;
             ScatterView.Height = minPageHeight + 2 * buffer;
@@ -580,11 +581,9 @@ namespace SurfaceApplication1
             limitScatter((ScatterViewItem)sender);
         }
 
-        /*
-         * Prevents the page images from showing the background of their bounding boxes.
-         */
-        private void limitScatter(ScatterViewItem i)
+        private void changeTextBoxSize(object sender, SizeChangedEventArgs e)
         {
+            ScatterViewItem i = (ScatterViewItem)sender;
             Tab tab = currentTab();
             int rCount, vCount;
             rCount = tab._textBlocksR.Count;
@@ -598,13 +597,19 @@ namespace SurfaceApplication1
                 tb.FontSize = TranslationBox.minFontSize * ratio;
                 tb.LineHeight = tab._translationBoxesV[j].lineHeight * ratio;
             }
-            for(int j = 0; j < rCount; j++)
+            for (int j = 0; j < rCount; j++)
             {
                 TextBlock tb = tab._textBlocksR[j];
                 tb.FontSize = TranslationBox.minFontSize * ratio;
                 tb.LineHeight = tab._translationBoxesR[j].lineHeight * ratio;
             }
+        }
 
+        /*
+         * Prevents the page images from showing the background of their bounding boxes.
+         */
+        private void limitScatter(ScatterViewItem i)
+        {
             double x, y, w, h;
             bool fullscreen = false;
             x = i.Center.X;
@@ -725,16 +730,11 @@ namespace SurfaceApplication1
             double w = r.Width;
             double endWidth, endHeight;
             double multiplier = 1;
-            if (sizeToHeight)
-            {
-                if (h > minPageHeight)
-                    multiplier = minPageHeight / h;
-            }
-            else
-            {
-                if (w > minPageWidth * 2)
-                    multiplier = minPageWidth * 2 / w;
-            }
+
+            if (sizeToHeight && h > minPageHeight)
+                multiplier = minPageHeight / h;
+            if (!sizeToHeight && w > minPageWidth * 2)
+                multiplier = minPageWidth * 2 / w;
 
             endWidth = s.MaxWidth * multiplier;
             endHeight = s.MaxHeight * multiplier;

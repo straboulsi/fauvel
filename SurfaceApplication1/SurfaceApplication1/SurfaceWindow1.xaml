@@ -140,7 +140,7 @@
                 <TextBlock Width="200" Height="40" Text=".-----  Translation  -----." VerticalAlignment="Center" FontSize="18" Foreground="Black" TextAlignment="Center"/>
             </Border>
             <Button x:Name="languageButton" Content="None" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Canvas.Left="70" Canvas.Top="60" Width="150" Height="50" PreviewTouchDown="languageVisibility"/>
-            <ListBox x:Name="languageBox" Visibility="Collapsed" Canvas.Left="70" Canvas.Top="-110" Width="150" SelectionChanged="languageChanged">
+            <ListBox x:Name="languageBox" Visibility="Collapsed" Canvas.Left="70" Canvas.Top="-142" Width="150" SelectionChanged="languageChanged">
                 <ListBoxItem x:Name="language1" Height="50" ClipToBounds="True" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Content="None"/>
                 <ListBoxItem x:Name="language2" Height="50" ClipToBounds="True" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Content="Old French" />
                 <ListBoxItem x:Name="language3" Height="50" ClipToBounds="True" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Content="French" />
