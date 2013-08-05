@@ -39,7 +39,6 @@ namespace SurfaceApplication1
             tabAdd = new SideBarTab(this);
             tabAdd.Header = "  +  ";
             tabAdd.FontSize = 25;
-            tabAdd.Height = 40;
             tabAdd.FontFamily = new FontFamily("Cambria");
 
             Canvas newTabCanvas = new Canvas();

@@ -94,6 +94,9 @@ namespace SurfaceApplication1
             //other initialization
             TabItem newTabButton = new TabItem();
             newTabButton.Header = "+";
+            newTabButton.Width = 50;
+            newTabButton.FontSize = 25;
+            newTabButton.FontFamily = new FontFamily("Cambria");
             tabBar.Items.Add(newTabButton);
             createTab(2);
         }
