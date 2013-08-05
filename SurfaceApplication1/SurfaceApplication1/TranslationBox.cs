@@ -34,8 +34,8 @@ namespace SurfaceApplication1
             bottomR = aBottomR;
             width = bottomR.X - topL.X;
             height = bottomR.Y - topL.Y;
-            lines = oldFr.Length - oldFr.Replace(Environment.NewLine, string.Empty).Length;
-            lineHeight = 2 * (height * SurfaceWindow1.minPageHeight / SurfaceWindow1.maxPageHeight) / lines;
+            lines = oldFr.Length - oldFr.Replace(Environment.NewLine, string.Empty).Length + 1;
+            lineHeight = ((double)2) * (height * SurfaceWindow1.minPageHeight / SurfaceWindow1.maxPageHeight) / lines;
             if (lineHeight < 1)
                 lineHeight = 1;
         }

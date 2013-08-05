@@ -711,24 +711,20 @@ namespace SurfaceApplication1
 
         public void deleteTab(object sender, RoutedEventArgs e)
         {
-            if (MessageBox.Show(string.Format("Are you sure you want to remove this tab?"),
-                 "Remove Tab", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
-            {
-                SideBarTab selectedTab = tabBar.SelectedItem as SideBarTab;
-                tabBar.DataContext = null;
+            SideBarTab selectedTab = tabBar.SelectedItem as SideBarTab;
+            tabBar.DataContext = null;
 
-                tabItems.Remove(selectedTab);
-                tabBar.DataContext = tabItems;
-                if (selectedTab == null || selectedTab.Equals(selectedTab))
-                {
-                    selectedTab = tabItems[0];
-                }
-                tabBar.SelectedItem = selectedTab;
+            tabItems.Remove(selectedTab);
+            tabBar.DataContext = tabItems;
+            if (selectedTab == null || selectedTab.Equals(selectedTab))
+            {
+                selectedTab = tabItems[0];
             }
+            tabBar.SelectedItem = selectedTab;
         }
         public void deleteTab(object sender, TouchEventArgs e)
         {
-            deleteTab(sender, null);
+            deleteTab(sender, new RoutedEventArgs());
         }
     }
 }
