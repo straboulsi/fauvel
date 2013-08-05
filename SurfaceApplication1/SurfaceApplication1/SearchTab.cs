@@ -300,7 +300,7 @@ namespace SurfaceApplication1
 
             lyricsScroll.Height = 325;
             lyricsScroll.Width = 470;
-            //lyricsScroll.Background = Brushes.LightGray;
+            lyricsScroll.Background = Brushes.LightGray;
             //lyricsScroll.VerticalScrollBarVisibility = ScrollBarVisibility.Visible;
             lyricsScroll.HorizontalScrollBarVisibility = ScrollBarVisibility.Disabled;
             lyricsScroll.PanningMode = PanningMode.VerticalOnly;
@@ -326,7 +326,7 @@ namespace SurfaceApplication1
 
             imagesScroll.Height = 325;
             imagesScroll.Width = 470;
-            //imagesScroll.Background = Brushes.LightGray;
+            imagesScroll.Background = Brushes.LightGray;
             imagesScroll.HorizontalScrollBarVisibility = ScrollBarVisibility.Disabled;
             //imagesScroll.VerticalScrollBarVisibility = ScrollBarVisibility.Visible;
             imagesScroll.PanningMode = PanningMode.VerticalOnly;
