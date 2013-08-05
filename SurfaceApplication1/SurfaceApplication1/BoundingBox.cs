@@ -8,6 +8,8 @@ namespace SurfaceApplication1
 {
     /** 
      * This Box represents a bounding box drawn for a piece of music, an image, etc.
+     * BoundingBoxes are used in Translate.getGhostBoxes to return all boxes on a given page.
+     * This is mostly needed for checking over the coordinates recorded in LayoutXML.
      **/
     public class BoundingBox
     {

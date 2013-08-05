@@ -264,11 +264,9 @@ namespace SurfaceApplication1
             poetryScroll.Height = 325;
             poetryScroll.Width = 470; 
             poetryScroll.Background = Brushes.LightGray;
-            //poetryScroll.Foreground = Brushes.Tomato;
             poetryScroll.VerticalScrollBarVisibility = ScrollBarVisibility.Visible;
             poetryScroll.HorizontalScrollBarVisibility = ScrollBarVisibility.Disabled;
             poetryScroll.PanningMode = PanningMode.VerticalOnly;
-
             poetryPanel.Orientation = Orientation.Horizontal;
             poetryPanel.Height = 300;
             poetryPanel.Width = 478;

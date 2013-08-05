@@ -68,6 +68,7 @@ namespace SurfaceApplication1
         public static searchLanguage currentSearchLanguage = searchLanguage.oldFrench;
 
         public String pageToFind; // for opening/navigating to a new tab from a search result closeup
+        public String previousPageToFind;
 
 
         public SurfaceWindow1()
@@ -82,7 +83,9 @@ namespace SurfaceApplication1
             // Lots of search sidebar things
             tabAdd = new TabItem();
             tabAdd.Header = "  +  ";
+            tabAdd.FontSize = 25;
             tabAdd.Height = 40;
+            tabAdd.FontFamily = new FontFamily("Cambria");
 
             Canvas newTabCanvas = new Canvas();
             newTabCanvas.Height = 899;
@@ -181,7 +184,7 @@ namespace SurfaceApplication1
                 Console.Write(e.StackTrace);
             }
 
-            
+
 
             // slider actions
             pageSlider.AddHandler(UIElement.ManipulationDeltaEvent, new EventHandler<ManipulationDeltaEventArgs>(slider_ManipulationDelta), true);
@@ -1159,7 +1162,6 @@ namespace SurfaceApplication1
 
             else
             {
-
                 selectedTab.searchTabHeader.Text = selectedTab.searchQueryBox.Text;
                 selectedTab.searchResults.Visibility = Visibility.Visible;
                 selectedTab.poetryTab.Content = selectedTab.poetryCanvas;
@@ -1191,6 +1193,7 @@ namespace SurfaceApplication1
                 {
                     ResultBoxItem resultRBI = new ResultBoxItem();
                     convertSearchResultToResultBoxItem(result, resultRBI);
+                    resultRBI.resultThumbnail = Translate.convertImage(Thumbnailer.getThumbnail(Translate.getTagByLineNum(result.lineNum, layoutXml)));
                     poetryLB.Items.Add(resultRBI);
                 }
 
@@ -1224,6 +1227,7 @@ namespace SurfaceApplication1
                 {
                     ResultBoxItem resultRBI = new ResultBoxItem();
                     convertSearchResultToResultBoxItem(result, resultRBI);
+                    resultRBI.resultThumbnail = Translate.convertImage(Thumbnailer.getThumbnail(result.tag));
                     lyricsLB.Items.Add(resultRBI);
                 }
 
@@ -1232,7 +1236,7 @@ namespace SurfaceApplication1
                 if (lyricResults.Count == 0)
                 {
                     TextBlock noResults = new TextBlock();
-                    noResults.Text = "Sorry, your search returned no music lyric results.";
+                    noResults.Text = "Sorry, your search returned no music lyric results.\r\n\r\nNB: Lyrics only exist in original text or Modern French - no English.";
                     selectedTab.lyricsTab.Content = noResults;
                 }
                 else
@@ -1251,6 +1255,8 @@ namespace SurfaceApplication1
                 {
                     ResultBoxItem resultRBI = new ResultBoxItem();
                     convertSearchResultToResultBoxItem(result, resultRBI);
+                    resultRBI.miniThumbnail.Source = new BitmapImage(new Uri(@"..\..\minithumbnails\" + result.tag + ".jpg", UriKind.Relative)); 
+                    resultRBI.resultThumbnail = Translate.convertImage(Thumbnailer.getThumbnail(result.tag));
                     imagesLB.Items.Add(resultRBI);
                 }
 
@@ -1259,7 +1265,7 @@ namespace SurfaceApplication1
                 if (imageResults.Count == 0)
                 {
                     TextBlock noResults = new TextBlock();
-                    noResults.Text = "Sorry, your search returned no image results.";
+                    noResults.Text = "Sorry, your search returned no image results.\r\n\r\nNB: Image captions exist in Modern French only; no English (yet).";
                     selectedTab.imagesTab.Content = noResults;
                 }
                 else
@@ -1291,7 +1297,10 @@ namespace SurfaceApplication1
                     else if (lyricResults.Count != 0)
                         selectedTab.searchResults.SelectedItem = selectedTab.lyricsTab;
                 }
+
             }
+
+           
         }
 
         private void convertSearchResultToResultBoxItem(SearchResult sr, ResultBoxItem rbi)
@@ -1300,13 +1309,16 @@ namespace SurfaceApplication1
             rbi.resultType = sr.resultType;
             if(rbi.resultType == 1)
                 rbi.lineInfo.Text = Convert.ToString(sr.lineNum);
-            rbi.resultThumbnail = sr.thumbnail;
             rbi.excerpt1 = sr.excerpt1;
             rbi.excerpt2 = sr.excerpt2;
             rbi.excerpt3 = sr.excerpt3;
             rbi.Height = 80; // temp taller than desired, so scrollbar shows
+            rbi.HorizontalAlignment = System.Windows.HorizontalAlignment.Left;
+            rbi.Width = 430;
             rbi.Style = tabDynamic.FindResource("SearchResultSurfaceListBoxItem") as Style; // Not sure if this works..
             rbi.resultText.Text = sr.text1 + "\r\n" + sr.text2;
+            rbi.BorderBrush = Brushes.LightGray;
+            rbi.BorderThickness = new Thickness(1.0);
             rbi.Selected += new RoutedEventHandler(Result_Closeup);
         }
 
@@ -1402,18 +1414,28 @@ namespace SurfaceApplication1
         }
 
 
+        public static String getImageName(String folio, XmlDocument layoutXml)
+        {
+            String imageName = "";
+            XmlNode node = layoutXml.DocumentElement.SelectSingleNode("//surface[@id='" + folio + "']");
+            imageName = node.FirstChild.SelectSingleNode("graphic").Attributes["url"].Value;
+
+            return imageName;
+        }
+
         private void goToFolio(object sender, TouchEventArgs e)
         {
-            if (MessageBox.Show(string.Format("Open a new tab to this folio?"),
-              "Go to Folio", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
+            if (pageToFind != previousPageToFind)
             {
                 if (pageToFind.StartsWith("Fo"))
                     pageToFind = pageToFind.Substring(2);
-                String imageName = Thumbnailer.getImageName(pageToFind, layoutXml);
+                String imageName = getImageName(pageToFind, layoutXml);
                 int pageNum = Convert.ToInt32(imageName.Substring(0, imageName.IndexOf(".jpg")));
                 if (pageNum % 2 == 1) // If odd, meaning it's a Fo_r, we want to aim for the previous page.
                     pageNum--;
+
                 createTab(pageNum - 10);
+                previousPageToFind = pageToFind;
             }
         }
 

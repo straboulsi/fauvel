@@ -2924,7 +2924,7 @@
                 
                 
                 <p id="10vMo2_t">Motet : Servant regem misericordia
-                    <cp> 11rMo1 </cp>
+                    <cp> 11rMo1 </cp> <firstcp/>
                     <nv> 3 </nv>
                   <v>
                     Ce qui sauve le roi c'est la miséricorde
@@ -3159,7 +3159,7 @@
                 
                 
                 <p id="11vMo1_t">Motet : Condicio Nature defuit (PM 35)
-                    <cp> 12rMo1 </cp>
+                    <cp> 12rMo1 </cp> <firstcp/>
                     <nv> 3 </nv>
                   <v>
                     Le processus habituel de la nature n'a pas participé
@@ -3343,7 +3343,7 @@
                 </notatedMusic>
                 
                 <p id="12rPr1_t">Prose : Carnalitas, Luxuria in Falvelli palacio
-                    <cp>12vPr1</cp>
+                    <cp>12vPr1</cp> <firstcp/>
                     La sensualité, la luxure
                     Dominent dans le palais de Fauvel,
                     En compagnie de l'inconstance ;
@@ -3795,7 +3795,7 @@
                 </notatedMusic>
                 
                 <p id="14rPr1_t">Prose : Inter membra singula
-                    <cp>14vPr1</cp> <cp>15rPr1</cp>
+                    <cp>14vPr1</cp> <cp>15rPr1</cp> <firstcp/>
                     Entre les membres, individuellement,
                     Au sujet de la voracité du ventre,
                     Se lève un murmure et une plainte,
@@ -4209,7 +4209,7 @@
                 
                 
                 <p id="15vMo1_t">Motet : La mesnie fauveline
-                    <cp>16rMo1</cp>
+                    <cp>16rMo1</cp> <firstcp/>
                     <nv> 3 </nv>
                   <v>
                     L'engeance fauveline
@@ -4580,7 +4580,7 @@
                 </notatedMusic>
                 
                 <p id="16vBa2_t">Ballade : Aÿ Amours tant me dure
-                    <cp>17rBa1</cp>
+                    <cp>17rBa1</cp> <firstcp/>
                     Ah ! Amour, cela fait si longtemps que j'endure
                     Le mal que j'ai à supporter
                     Et qu'il me fait souffrir au-delà de toute mesure
@@ -4697,7 +4697,7 @@
                 </notatedMusic>
                 
                 <p id="17rLa1_t">Lay de Fauvel : Talant que j'ai d'obeïr
-                    <cp> 17vLa1 </cp> <cp> 18rLa1 </cp> <cp> 18vLa1 </cp>
+                    <cp> 17vLa1 </cp> <cp> 18rLa1 </cp> <cp> 18vLa1 </cp> <firstcp/>
                     La volonté que j'ai d'obéir
                     Et de faire tout ce qui plaît
                     À celle vers qui mes désirs
@@ -5170,7 +5170,7 @@
                 </notatedMusic>
                 
                 <p id="19rLa1_t">Lai de Fortune : Je qui poair seule ai
-                    <cp> 19vLa1 </cp>
+                    <cp> 19vLa1 </cp> <firstcp/>
                     Moi qui possède toute seule le pouvoir de venir en aide
                     À tous les autres, je me retrouve sérieusement ébranlée
                     Par la faute de ce voyou à qui j'ai tant donné l'occasion de se réjouir
@@ -5318,7 +5318,7 @@
                 </notatedMusic>
                 
                 <p id="19vRo1_t">Rondeau : Fauvel est mal assegné
-                    <cp> 20rRo1 </cp>
+                    <cp> 20rRo1 </cp> <firstcp/>
                     Fauvel est mal parti
                     Pour arriver à ses fins.
                 </p>
@@ -6087,7 +6087,7 @@
                 </notatedMusic>
                 
                 <p id="22rLa1_t">Lai : Veritas, equitas, largitas corruit
-                    <cp> 22vLa1 </cp> <cp> 23rLa1 </cp>
+                    <cp> 22vLa1 </cp> <cp> 23rLa1 </cp> <firstcp/>
                     La vérité, l'équité
                     Et la largesse se sont effondrées
                     La fausseté, la dépravation
@@ -6606,7 +6606,7 @@
                 </notatedMusic>
                 
                 <p id="23vBa1_t">Ballade : En chantant me veul complaindre
-                    <cp> 24rBa1 </cp>
+                    <cp> 24rBa1 </cp> <firstcp/>
                     C'est en chantant que je veux vous adresser
                     Ma complainte, dame souveraine,
                 </p>
@@ -7374,7 +7374,7 @@
                 </notatedMusic>
                 
                 <p id="25vRef4_t">Refrain 13:
-                    <cp> 26rRef1 </cp>
+                    <cp> 26rRef1 </cp> <firstcp/>
                     J'attendrai ainsi, pauvre de moi !
                 </p>
                 
@@ -8388,7 +8388,7 @@
                 </notatedMusic>
                 
                 <p id="28brLa1_t">Lai de Vénus : Pour recouvrer alegiance
-                    <cp>28bvLa1</cp> <cp>28trLa1</cp> <cp>28tvLa1</cp>
+                    <cp>28bvLa1</cp> <cp>28trLa1</cp> <cp>28tvLa1</cp> <firstcp/>
                     Pour obtenir le soulagement
                     Des mapx que j'endure
                     Tandis que je suis éloigné
@@ -10436,7 +10436,7 @@
                 </notatedMusic>
                 
                 <p id="34vLa1_t">Lai des Hellequines
-                    <cp> 35rLa1 </cp> <cp> 35vLa1 </cp> <cp> 36rLa1 </cp> <cp> 36vLa1 </cp>
+                    <cp> 35rLa1 </cp> <cp> 35vLa1 </cp> <cp> 36rLa1 </cp> <cp> 36vLa1 </cp> <firstcp/>
                     En ce doux temps de la belle saison, en plein mois de mai,
                     Au moment où Amour met par la pensée maints cœurs en grand émoi,
                     Les Hellequines organisèrent ce débat plein de douceur et de gaieté.
@@ -10836,7 +10836,7 @@
                 </notatedMusic>
                 
                 <p id="37rSe1_t">Séquence : Virgines egregie
-                    <cp> 37vSe1 </cp>
+                    <cp> 37vSe1 </cp> <firstcp/>
                     Vierges éminentes,
                     Vierges consacrées,
                     Vous êtes couronnées
@@ -12114,7 +12114,7 @@
                 
                 
                 <p id="41vMo1_t">Motet : Tribum que non abhorruit
-                    <cp>42rMo1</cp>
+                    <cp>42rMo1</cp> <firstcp/>
                     <nv> 3 </nv>
                     <v>
                         <cp></cp>
@@ -12387,7 +12387,7 @@
                 
                 
                 <p id="43rMo2_t">Motet : Firmissime fidem
-                    <cp>43vMo1</cp>
+                    <cp>43vMo1</cp> <firstcp/>
                     <nv> 3 </nv>
                     <v part="triplum">
                         <vcp/>

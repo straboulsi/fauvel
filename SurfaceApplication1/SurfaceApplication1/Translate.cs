@@ -143,8 +143,13 @@ namespace SurfaceApplication1
             else
                 return toSearchIn.Contains(toFind);
         }
+        
 
 
+        /**
+         * Checks whether the search result is the exact word or the found word contains the search.
+         * For example, whether a search for "corn" will return "unicorn".
+         * */
         public static Boolean foundBySpecifiedWord(String toFind, String toSearchIn, int wordSensitive)
         {
             if (wordSensitive == 1) // Whole word must match  
@@ -243,7 +248,10 @@ namespace SurfaceApplication1
 
 
 
-
+        /**
+         * Returns a List of BoundingBox objects for an indicated page.
+         * Primarily used to check whether coordinates indicated in the LayoutXML are accurate.
+         * */
         public static List<BoundingBox> getGhostBoxes(String page, XmlDocument layoutXml)
         {
             List<BoundingBox> boxes = new List<BoundingBox>();
@@ -312,6 +320,12 @@ namespace SurfaceApplication1
             return TL;
         }
 
+
+        /**
+         * Fetches Points from LayoutXML coordinates. 
+         * Similar to getPoint, but specially designed to work with poetry lines.
+         * For poetry, coordinates are not recorded for every line, but only for each poetry chunk.
+         * */
         public static Point getLinePoint(String lineNum, int whichPt, XmlDocument layoutXml)
         {
             Point TL = new Point();
@@ -363,6 +377,10 @@ namespace SurfaceApplication1
             return toDisplay;
         }
 
+
+        /**
+         * Fetches Modern French translation for a section of poetry, given starting and ending line numbers.
+         **/
         public static String getModernFrench(int start, int end, XmlDocument modFrXml)
         {
             String toDisplay = "";
@@ -475,7 +493,9 @@ namespace SurfaceApplication1
         }
 
 
-
+        /**
+         * Fetches Old French text for a section of poetry, given starting and ending line numbers.
+         **/
         public static List<SearchResult> searchOldFrPoetry(String search, int caseSensitive, int wordSensitive, XmlDocument xml, XmlDocument engXml, XmlDocument layoutXml)
         {
 
@@ -518,7 +538,7 @@ namespace SurfaceApplication1
                         newResult.excerpt3 = str2 + "\r\n" + getOldFrPoetry(newResult.lineNum + 1, newResult.lineNum + 4, xml) + lineInfo;
                         newResult.text1 = xn.InnerText.Trim();
                         newResult.text2 = getEnglish(newResult.lineNum, newResult.lineNum, engXml);
-                        newResult.thumbnail = convertImage(Thumbnailer.cropImage(Thumbnailer.getImage(newResult.folio, layoutXml), Thumbnailer.getLineRect(lineNum, layoutXml)));
+                        //newResult.thumbnail = convertImage(Thumbnailer.getThumbnail(getTagByLineNum(newResult.lineNum, layoutXml)));
                         results.Add(newResult);
                     }
                 }
@@ -532,7 +552,10 @@ namespace SurfaceApplication1
             return results;
         }
 
-        
+
+        /**
+         * Searches for text in Modern French poetry. 
+         * */
         public static List<SearchResult> searchModFrPoetry(String search, int caseSensitive, int wordSensitive, XmlDocument modFrXml, XmlDocument engXml, XmlDocument layoutXml)
         {
 
@@ -574,8 +597,8 @@ namespace SurfaceApplication1
                         newResult.excerpt3 = str2 + "\r\n" + getOldFrPoetry(newResult.lineNum + 1, newResult.lineNum + 3, modFrXml) + lineInfo;
                         newResult.text1 = xn.InnerText.Trim();
                         newResult.text2 = getEnglish(newResult.lineNum, newResult.lineNum, engXml);
-                        newResult.thumbnail = convertImage(Thumbnailer.cropImage(Thumbnailer.getImage(newResult.folio, layoutXml), Thumbnailer.getLineRect(lineNum, layoutXml)));
-
+                        //newResult.thumbnail = convertImage(Thumbnailer.getThumbnail(getTagByLineNum(newResult.lineNum, layoutXml)));
+                        
                         results.Add(newResult);
                     }
                 }
@@ -590,6 +613,10 @@ namespace SurfaceApplication1
         }
 
 
+
+        /**
+          * Searches for text in English translation of the poetry. 
+          * */
         public static List<SearchResult> searchEngPoetry(String search, int caseSensitive, int wordSensitive, XmlDocument xml, XmlDocument engXml, XmlDocument layoutXml)
         {
             List<SearchResult> results = new List<SearchResult>();
@@ -621,8 +648,7 @@ namespace SurfaceApplication1
                         newResult.excerpt1 = getEnglish(newResult.lineNum - 4, newResult.lineNum - 1, xml) + "\r\n" + str1;
                         newResult.excerpt2 = search;
                         newResult.excerpt3 = str2 + "\r\n" + getEnglish(newResult.lineNum + 1, newResult.lineNum + 4, xml) + lineInfo;
-                        newResult.thumbnail = convertImage(Thumbnailer.cropImage(Thumbnailer.getImage(newResult.folio, layoutXml), Thumbnailer.getLineRect(lineNum, layoutXml)));
-
+                        //newResult.thumbnail = convertImage(Thumbnailer.getThumbnail(getTagByLineNum(newResult.lineNum, layoutXml)));
                         results.Add(newResult);
                     }
                 }
@@ -638,6 +664,30 @@ namespace SurfaceApplication1
         }
 
 
+        /**
+         * Returns the tag of an entire chunk of poetry when given a line number of poetry.
+         * */
+        public static String getTagByLineNum(int lineNum, XmlDocument layoutXml)
+        {
+            String tag = "";
+
+            try
+            {
+                XmlNode xn = layoutXml.DocumentElement.SelectSingleNode("//zone/l[@n="+lineNum+"]");
+                tag = xn.ParentNode.Attributes["id"].Value;
+            }
+            catch (Exception e)
+            {
+                Console.Write(e.StackTrace);
+                Console.Read();
+            }
+
+            return tag;
+        }
+
+        /**
+         * Returns the name of the page that a given line of poetry is on.
+         * */
         public static String getPageByLineNum(int lineNum, XmlDocument xml)
         {
             String folio = "Fo";
@@ -659,8 +709,10 @@ namespace SurfaceApplication1
         }
 
 
-
-        // lg, p, figure = 1, 2, 3
+        /**
+         * Returns the name of the page that a given object (found by tag) is on.
+         * lg, p, figure = 1, 2, 3
+         * */
         public static String getPageByTag(String tag, int type, XmlDocument xml)
         {
             String folio = "Fo";
@@ -691,6 +743,9 @@ namespace SurfaceApplication1
         }
 
 
+        /**
+         * Searches for text in lyrics of music.
+         * */
         public static List<SearchResult> searchLyrics(String search, int caseSensitive, int wordSensitive, XmlDocument whichXml, XmlDocument layoutXml)
         {
             List<SearchResult> results = new List<SearchResult>();
@@ -753,14 +808,10 @@ namespace SurfaceApplication1
                         newResult.tag = xn.Attributes["id"].Value;
                         newResult.folio = "Fo" + (xn.ParentNode.Attributes["facs"].Value).Substring(1);
                         newResult.resultType = 2;
-                        String tag = newResult.tag.Substring(0, newResult.tag.Length - 2);
-                        newResult.thumbnail = convertImage(Thumbnailer.cropImage(Thumbnailer.getImage(newResult.folio, layoutXml), Thumbnailer.getRect(tag, layoutXml)));
+                        
                         results.Add(newResult);
                     }
-
                 }
-
-
             }
             catch (Exception e)
             {
@@ -768,32 +819,16 @@ namespace SurfaceApplication1
                 Console.Read();
             }
 
-
             return results;
         }
 
 
 
-        public static System.Windows.Controls.Image convertImage(System.Drawing.Image gdiImg)
-        {
 
-            System.Windows.Controls.Image img = new System.Windows.Controls.Image();
-
-            //convert System.Drawing.Image to WPF image
-            System.Drawing.Bitmap bmp = new System.Drawing.Bitmap(gdiImg);
-            IntPtr hBitmap = bmp.GetHbitmap();
-            System.Windows.Media.ImageSource WpfBitmap = System.Windows.Interop.Imaging.CreateBitmapSourceFromHBitmap(hBitmap, IntPtr.Zero, Int32Rect.Empty, BitmapSizeOptions.FromEmptyOptions());
-
-            img.Source = WpfBitmap;
-            img.Width = 500;
-            img.Height = 600;
-            img.Stretch = System.Windows.Media.Stretch.Fill;
-            return img;
-        }
-
-
-
-        // Filters out all cps, dcs, nvs, etc. 
+        /**
+         * Gets rid of all the extraneous text in a node of lyrics.
+         * Filters out all cps, dcs, nvs, etc. 
+         * */
         public static XmlNode lyricsOnly(XmlNode originalNode)
         {
             XmlNodeList cps = originalNode.SelectNodes("cp");
@@ -831,12 +866,13 @@ namespace SurfaceApplication1
                 }
             }
 
-
             return originalNode;
         }
 
 
-
+        /**
+         * Searches for text in image captions.
+         * */
         public static List<SearchResult> searchPicCaptions(String search, int caseSensitive, int wordSensitive, XmlDocument xml, XmlDocument layoutXml)
         {
             List<SearchResult> results = new List<SearchResult>();
@@ -866,9 +902,6 @@ namespace SurfaceApplication1
                         newResult.excerpt3 = str2;
                         newResult.tag = xn.Attributes["id"].Value;
                         newResult.folio = "Fo" + (xn.ParentNode.Attributes["facs"].Value).Substring(1);
-                        newResult.thumbnail = convertImage(Thumbnailer.cropImage(Thumbnailer.getImage(newResult.folio, layoutXml), Thumbnailer.getRect(newResult.tag, layoutXml)));
-                        newResult.thumbnail.Width = 100;
-                        newResult.thumbnail.Height = 100;
                         results.Add(newResult);
                     }
                 }
@@ -885,7 +918,9 @@ namespace SurfaceApplication1
 
 
 
-
+        /**
+         * The beginning of music search that allows searching for a motet by number of voice.
+         * */
         public static void filterByVoice(int voiceNum, XmlDocument xml)
         {
             XmlNodeList musics = xml.DocumentElement.SelectNodes("//p[(nv)]");
@@ -898,6 +933,28 @@ namespace SurfaceApplication1
             }
 
             Console.Read();
+        }
+
+
+        /**
+         * Converts a System.Windows.Controls.Image to System.Drawing.Image.
+         * Used for thumbnailing purposes.
+         * */
+        public static System.Windows.Controls.Image convertImage(System.Drawing.Image gdiImg)
+        {
+
+            System.Windows.Controls.Image img = new System.Windows.Controls.Image();
+
+            //convert System.Drawing.Image to WPF image
+            System.Drawing.Bitmap bmp = new System.Drawing.Bitmap(gdiImg);
+            IntPtr hBitmap = bmp.GetHbitmap();
+            System.Windows.Media.ImageSource WpfBitmap = System.Windows.Interop.Imaging.CreateBitmapSourceFromHBitmap(hBitmap, IntPtr.Zero, Int32Rect.Empty, BitmapSizeOptions.FromEmptyOptions());
+
+            img.Source = WpfBitmap;
+            img.Width = 500;
+            img.Height = 600;
+            img.Stretch = System.Windows.Media.Stretch.Fill;
+            return img;
         }
     }
 }
