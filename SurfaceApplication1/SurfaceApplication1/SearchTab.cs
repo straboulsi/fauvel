@@ -32,7 +32,6 @@ namespace SurfaceApplication1
         public SurfaceListBoxItem pickLanguage, oldFrench, modernFrench, English;
         public TabControl searchResults;
         public TabItem poetryTab, lyricsTab, imagesTab;
-        //public ScrollViewer poetryScroll, lyricsScroll, imagesScroll;
         public StackPanel poetryPanel, lyricsPanel, imagesPanel;
         public Button moreOptions, fewerOptions;
         public Image downArrow, upArrow;

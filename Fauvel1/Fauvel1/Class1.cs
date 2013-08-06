@@ -64,7 +64,7 @@ namespace Fauvel1
             try
             {
                 XmlDocument xml = new XmlDocument();
-                xml.Load("XMLFinalContentFile.xml");
+                xml.Load("OriginalTextXML.xml");
 
 
                 XmlNode foundNode;

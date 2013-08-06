@@ -38,6 +38,7 @@ namespace SurfaceApplication1
         public static Brush blockBrush = (Brush)(new BrushConverter().ConvertFrom("#ccffffff"));
         public static Brush blockFillerBrush = (Brush)(new BrushConverter().ConvertFrom("#33000000"));
         public static CompareInfo myComp = CultureInfo.InvariantCulture.CompareInfo;
+        public static int veryLastLine = 5986;
 
         public static Grid getGrid(TranslationBox tb, TextBlock t)
         {
@@ -505,9 +506,6 @@ namespace SurfaceApplication1
             {
                 XmlNodeList xnl = xml.DocumentElement.SelectNodes("//lg/l");
 
-                //int numFound = 0;
-
-
                 foreach (XmlNode xn in xnl)
                 {
 
@@ -528,14 +526,21 @@ namespace SurfaceApplication1
                         pageNum = "Fo" + pageNum.Substring(1);
                         newResult.folio = pageNum;
 
+                        int startLine = newResult.lineNum - 4;
+                        if (startLine < 1)
+                            startLine = 1;
+                        int endLine = newResult.lineNum + 4;
+                        if (endLine > veryLastLine)
+                            endLine = veryLastLine;
+
                         String resultLine = getOldFrPoetry(newResult.lineNum, newResult.lineNum, xml);
                         String str1 = resultLine.Substring(0, myComp.IndexOf(resultLine, search, CompareOptions.IgnoreCase));
                         String str2 = resultLine.Substring(myComp.IndexOf(resultLine, search, CompareOptions.IgnoreCase) + search.Length);
-                        String lineInfo = "\r\n\r\nLines " + (newResult.lineNum - 4) + " to " + (newResult.lineNum + 4);
+                        String lineInfo = "\r\n\r\nLines " + startLine + " to " + endLine;
 
-                        newResult.excerpt1 = getOldFrPoetry(newResult.lineNum - 4, newResult.lineNum - 1, xml) + "\r\n" + str1;
+                        newResult.excerpt1 = getOldFrPoetry(startLine, newResult.lineNum - 1, xml) + "\r\n" + str1;
                         newResult.excerpt2 = search;
-                        newResult.excerpt3 = str2 + "\r\n" + getOldFrPoetry(newResult.lineNum + 1, newResult.lineNum + 4, xml) + lineInfo;
+                        newResult.excerpt3 = str2 + "\r\n" + getOldFrPoetry(newResult.lineNum + 1, endLine, xml) + lineInfo;
                         newResult.text1 = xn.InnerText.Trim();
                         newResult.text2 = getEnglish(newResult.lineNum, newResult.lineNum, engXml);
                         //newResult.thumbnail = convertImage(Thumbnailer.getThumbnail(getTagByLineNum(newResult.lineNum, layoutXml)));
@@ -587,17 +592,23 @@ namespace SurfaceApplication1
                         pageNum = "Fo" + pageNum.Substring(1);
                         newResult.folio = pageNum;
 
+                        int startLine = newResult.lineNum - 3;
+                        if (startLine < 1)
+                            startLine = 1;
+                        int endLine = newResult.lineNum + 3;
+                        if (endLine > veryLastLine)
+                            endLine = veryLastLine;
+
                         String resultLine = getOldFrPoetry(newResult.lineNum, newResult.lineNum, modFrXml);
                         String str1 = resultLine.Substring(0, myComp.IndexOf(resultLine, search, CompareOptions.IgnoreCase));
                         String str2 = resultLine.Substring(myComp.IndexOf(resultLine, search, CompareOptions.IgnoreCase) + search.Length);
-                        String lineInfo = "\r\n\r\nLines " + (newResult.lineNum - 3) + " to " + (newResult.lineNum + 3);
+                        String lineInfo = "\r\n\r\nLines " + startLine + " to " + endLine;
 
-                        newResult.excerpt1 = getOldFrPoetry(newResult.lineNum - 3, newResult.lineNum - 1, modFrXml) + "\r\n" + str1;
+                        newResult.excerpt1 = getOldFrPoetry(startLine, newResult.lineNum - 1, modFrXml) + "\r\n" + str1;
                         newResult.excerpt2 = search;
-                        newResult.excerpt3 = str2 + "\r\n" + getOldFrPoetry(newResult.lineNum + 1, newResult.lineNum + 3, modFrXml) + lineInfo;
+                        newResult.excerpt3 = str2 + "\r\n" + getOldFrPoetry(newResult.lineNum + 1, endLine, modFrXml) + lineInfo;
                         newResult.text1 = xn.InnerText.Trim();
                         newResult.text2 = getEnglish(newResult.lineNum, newResult.lineNum, engXml);
-                        //newResult.thumbnail = convertImage(Thumbnailer.getThumbnail(getTagByLineNum(newResult.lineNum, layoutXml)));
                         
                         results.Add(newResult);
                     }
@@ -640,15 +651,24 @@ namespace SurfaceApplication1
                         newResult.text1 = xn.InnerText.Trim();
                         newResult.text2 = getOldFrPoetry(newResult.lineNum, newResult.lineNum, xml);
                         newResult.folio = getPageByLineNum(newResult.lineNum, xml);
+
+                        int startLine = newResult.lineNum - 4;
+                        if (startLine < 1)
+                            startLine = 1;
+                        int endLine = newResult.lineNum + 4;
+                        if (endLine > veryLastLine)
+                            endLine = veryLastLine;
+                        
                         String resultLine = getEnglish(newResult.lineNum, newResult.lineNum, engXml);
                         String str1 = resultLine.Substring(0, myComp.IndexOf(resultLine, search, CompareOptions.IgnoreCase));
                         String str2 = resultLine.Substring(myComp.IndexOf(resultLine, search, CompareOptions.IgnoreCase) + search.Length);
-                        String lineInfo = "\r\n\r\nLines " + (newResult.lineNum - 4) + " to " + (newResult.lineNum + 4);
+                        String lineInfo = "\r\n\r\nLines " + startLine + " to " + endLine;
 
-                        newResult.excerpt1 = getEnglish(newResult.lineNum - 4, newResult.lineNum - 1, xml) + "\r\n" + str1;
+
+                        newResult.excerpt1 = getEnglish(startLine, newResult.lineNum - 1, engXml) + "\r\n" + str1;
                         newResult.excerpt2 = search;
-                        newResult.excerpt3 = str2 + "\r\n" + getEnglish(newResult.lineNum + 1, newResult.lineNum + 4, xml) + lineInfo;
-                        //newResult.thumbnail = convertImage(Thumbnailer.getThumbnail(getTagByLineNum(newResult.lineNum, layoutXml)));
+                        newResult.excerpt3 = str2 + "\r\n" + getEnglish(newResult.lineNum + 1, endLine, engXml) + lineInfo;
+                        
                         results.Add(newResult);
                     }
                 }
