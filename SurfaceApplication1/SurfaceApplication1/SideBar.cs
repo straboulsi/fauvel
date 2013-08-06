@@ -211,7 +211,7 @@ namespace SurfaceApplication1
             tab.goSearch.TouchDown += new EventHandler<TouchEventArgs>(newSearch);
             tab.searchQueryBox.PreviewKeyDown += new KeyEventHandler(Enter_Clicked);
             tab.caseSensitive.TouchDown += new EventHandler<TouchEventArgs>(changeCheck);
-            tab.wholePhraseOnly.TouchDown += new EventHandler<TouchEventArgs>(changeCheck);
+            tab.exactPhraseOnly.TouchDown += new EventHandler<TouchEventArgs>(changeCheck);
             tab.wholeWordOnly.TouchDown += new EventHandler<TouchEventArgs>(changeCheck);
 
             //tab.selectLanguage.TouchDown += new EventHandler<TouchEventArgs>(displaySearchLanguages);
@@ -267,7 +267,7 @@ namespace SurfaceApplication1
             selectedTab.bottomLine.Visibility = Visibility.Visible;
             selectedTab.fewerOptions.Visibility = Visibility.Visible;
             selectedTab.wholeWordOnly.Visibility = Visibility.Visible;
-            selectedTab.wholePhraseOnly.Visibility = Visibility.Visible;
+            selectedTab.exactPhraseOnly.Visibility = Visibility.Visible;
             selectedTab.moreOptions.Visibility = Visibility.Hidden;
             selectedTab.selectLanguageButton.Visibility = Visibility.Visible;
             if (selectedTab.searchResults.IsVisible)
@@ -285,7 +285,7 @@ namespace SurfaceApplication1
             selectedTab.bottomLine.Visibility = Visibility.Hidden;
             selectedTab.fewerOptions.Visibility = Visibility.Hidden;
             selectedTab.wholeWordOnly.Visibility = Visibility.Hidden;
-            selectedTab.wholePhraseOnly.Visibility = Visibility.Hidden;
+            selectedTab.exactPhraseOnly.Visibility = Visibility.Hidden;
             selectedTab.selectLanguageButton.Visibility = Visibility.Hidden;
 
             checkForChanges();
@@ -307,25 +307,27 @@ namespace SurfaceApplication1
             SearchTab selectedTab = tabBar.SelectedItem as SearchTab;
             CheckBox thisbox = sender as CheckBox;
 
-            // The following if loop is accounting for the fact that all search functions are currently set to whole phrase only
-            // There is not yet a way to search for several words appearing near each other
-            // Once that function is implemented, then the "Match whole phrase only" CheckBox will function like the other CheckBoxes
-            if (thisbox == selectedTab.wholePhraseOnly)
-            {
-                MessageBox.Show(string.Format("Oops! This function has not been added yet."),
-                    "Unmark \"Match whole phrase only\"", MessageBoxButton.OK);
-            }
-            else
-            {
-                if (thisbox.IsChecked == true)
-                    thisbox.IsChecked = false;
-                else if (thisbox.IsChecked == false)
-                    thisbox.IsChecked = true;
-            }
+            if (thisbox.IsChecked == true)
+                thisbox.IsChecked = false;
+            else if (thisbox.IsChecked == false)
+                thisbox.IsChecked = true;
+        }
+
+        private void showSearchMan()
+        {
+            SearchTab selectedTab = tabBar.SelectedItem as SearchTab;
+            selectedTab.searchMan.Visibility = Visibility.Visible;
+        }
+
+        private void hideSearchMan()
+        {
+            SearchTab selectedTab = tabBar.SelectedItem as SearchTab;
+            selectedTab.searchMan.Visibility = Visibility.Hidden;
         }
 
         private void newSearch(object sender, RoutedEventArgs e)
         {
+
             XmlDocument xml = SurfaceWindow1.xml;
             XmlDocument engXml = SurfaceWindow1.engXml;
             XmlDocument layoutXml = SurfaceWindow1.layoutXml;
@@ -354,12 +356,24 @@ namespace SurfaceApplication1
                 // Poetry results
 
                 List<SearchResult> poetryResults = new List<SearchResult>();
-                if (currentSearchLanguage == searchLanguage.oldFrench)
-                    poetryResults = Translate.searchOldFrPoetry(searchQuery, caseType, wordType,xml, engXml, layoutXml);
-                else if (currentSearchLanguage == searchLanguage.modernFrench)
-                    poetryResults = Translate.searchModFrPoetry(searchQuery, caseType, wordType, modFrXml, engXml, layoutXml);
-                else if (currentSearchLanguage == searchLanguage.English)
-                    poetryResults = Translate.searchEngPoetry(searchQuery, caseType, wordType, xml, engXml, layoutXml);
+                if (selectedTab.exactPhraseOnly.IsChecked == false)
+                {
+                    if (currentSearchLanguage == searchLanguage.oldFrench)
+                        poetryResults = Translate.searchMultipleWordsPoetry(searchQuery, caseType, wordType, 0);
+                    else if (currentSearchLanguage == searchLanguage.modernFrench)
+                        poetryResults = Translate.searchMultipleWordsPoetry(searchQuery, caseType, wordType, 1);
+                    else if (currentSearchLanguage == searchLanguage.English)
+                        poetryResults = Translate.searchMultipleWordsPoetry(searchQuery, caseType, wordType, 2);
+                }
+                else
+                {
+                    if (currentSearchLanguage == searchLanguage.oldFrench)
+                        poetryResults = Translate.searchOldFrPoetry(searchQuery, caseType, wordType, xml, engXml);
+                    else if (currentSearchLanguage == searchLanguage.modernFrench)
+                        poetryResults = Translate.searchModFrPoetry(searchQuery, caseType, wordType, modFrXml, engXml);
+                    else if (currentSearchLanguage == searchLanguage.English)
+                        poetryResults = Translate.searchEngPoetry(searchQuery, caseType, wordType, xml, engXml);
+                }
 
                 SurfaceListBox poetryLB = new SurfaceListBox();
                 poetryLB.Style = tabBar.FindResource("SearchResultSurfaceListBox") as Style;
@@ -489,10 +503,8 @@ namespace SurfaceApplication1
             rbi.folioInfo.Text = sr.folio;
             rbi.resultType = sr.resultType;
             if (rbi.resultType == 1)
-                rbi.lineInfo.Text = Convert.ToString(sr.lineNum);
-            rbi.excerpt1 = sr.excerpt1;
-            rbi.excerpt2 = sr.excerpt2;
-            rbi.excerpt3 = sr.excerpt3;
+                rbi.lineInfo.Text = Convert.ToString(sr.lineNum) + sr.lineRange; // Assuming only one will be filled out
+            rbi.excerpts = sr.excerpts;
             rbi.Height = 80; // temp taller than desired, so scrollbar shows
             rbi.HorizontalAlignment = System.Windows.HorizontalAlignment.Left;
             rbi.Width = 430;
@@ -589,9 +601,14 @@ namespace SurfaceApplication1
 
             pageToFind = selectedResult.folioInfo.Text;
 
-            closeupText.Inlines.Add(new Run { FontFamily = new FontFamily("Cambria"), Text = selectedResult.excerpt1, FontWeight = FontWeights.Normal });
-            closeupText.Inlines.Add(new Run { FontFamily = new FontFamily("Cambria"), FontWeight = FontWeights.Bold, Text = selectedResult.excerpt2 });
-            closeupText.Inlines.Add(new Run { FontFamily = new FontFamily("Cambria"), FontWeight = FontWeights.Normal, Text = selectedResult.excerpt3 });
+            foreach (SpecialString ss in selectedResult.excerpts)
+            {
+                if(ss.isStyled == 1)
+                    closeupText.Inlines.Add(new Run { FontFamily = new FontFamily("Cambria"), Text = ss.str, FontWeight = FontWeights.Bold });
+                else 
+                    closeupText.Inlines.Add(new Run { FontFamily = new FontFamily("Cambria"), Text = ss.str, FontWeight = FontWeights.Normal });
+            }
+
         }
 
 
@@ -627,7 +644,7 @@ namespace SurfaceApplication1
         {
             SearchTab selectedTab = tabBar.SelectedItem as SearchTab;
             if (selectedTab.caseSensitive.IsChecked == true | selectedTab.wholeWordOnly.IsChecked == true |
-                selectedTab.wholePhraseOnly.IsChecked == false | (selectedTab.selectLanguage.SelectedIndex != 0 && selectedTab.selectLanguage.SelectedIndex != 1))
+                selectedTab.exactPhraseOnly.IsChecked == false | (selectedTab.selectLanguage.SelectedIndex != 0 && selectedTab.selectLanguage.SelectedIndex != 1))
                 defaultOptionsChanged = true;
 
             else

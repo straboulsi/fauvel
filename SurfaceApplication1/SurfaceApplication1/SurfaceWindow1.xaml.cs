@@ -62,7 +62,6 @@ namespace SurfaceApplication1
         {
             InitializeComponent();
 
-            // Lots of search sidebar things
             SideBar sideBar = new SideBar(this, tabDynamic);
 
 
