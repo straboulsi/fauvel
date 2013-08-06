@@ -24,7 +24,21 @@ namespace SurfaceApplication1
 
         public SavedPagesTab(SideBar mySideBar) : base(mySideBar)
         {
+            int x = 0;
+            int y = 50;
+            foreach (SavedPage s in mySideBar.savedPages)
+            {
+                canvas.Children.Add(s.button);
+                Canvas.SetLeft(s.button, x);
+                Canvas.SetTop(s.button, y);
 
+                x += 180;
+                if (x >= 500)
+                {
+                    x = 0;
+                    y += 129;
+                }
+            }
         }
 
     }

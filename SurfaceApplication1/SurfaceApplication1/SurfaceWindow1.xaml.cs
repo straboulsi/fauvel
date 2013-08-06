@@ -51,8 +51,8 @@ namespace SurfaceApplication1
         int scatterBuffer = 5000;
         int swipeLength = 25;
         int swipeHeight = 6;
+        SideBar sideBar;
         List<Tab> tabArray = new List<Tab>();
-        List<SavedPage> savedPages = new List<SavedPage>();
         public enum language { None = 0, OldFrench = 1, French = 2, English = 3};
         bool dtOut = false; // double tap to zoom out
 
@@ -63,7 +63,7 @@ namespace SurfaceApplication1
             InitializeComponent();
 
             // Lots of search sidebar things
-            SideBar sideBar = new SideBar(this, tabDynamic);
+            sideBar = new SideBar(this, tabDynamic);
 
 
             try
@@ -138,6 +138,31 @@ namespace SurfaceApplication1
         private void goToPage(int page)
         {
             Tab tab = currentTab();
+            /*tab._rGrid
+
+            Storyboard stb = new Storyboard();
+            DoubleAnimation moveWidth = new DoubleAnimation();
+            DoubleAnimation moveMargin = new DoubleAnimation();
+
+            moveWidth.From = s.ActualWidth;
+            moveWidth.To = endWidth;
+            moveWidth.Duration = new Duration(TimeSpan.FromMilliseconds(150));
+            moveMargin.Duration = new Duration(TimeSpan.FromMilliseconds(150));
+            moveWidth.FillBehavior = FillBehavior.Stop;
+            moveMargin.FillBehavior = FillBehavior.Stop;
+            stb.Children.Add(moveMargin);
+            stb.Children.Add(moveWidth);
+            Storyboard.SetTarget(moveCenter, s);
+            Storyboard.SetTarget(moveWidth, s);
+            Storyboard.SetTarget(moveHeight, s);
+            Storyboard.SetTargetProperty(moveCenter, new PropertyPath(ScatterViewItem.CenterProperty));
+            Storyboard.SetTargetProperty(moveWidth, new PropertyPath(ScatterViewItem.WidthProperty));
+            Storyboard.SetTargetProperty(moveHeight, new PropertyPath(ScatterViewItem.HeightProperty));
+            s.Width = endWidth;
+            s.Height = endHeight;
+            s.Center = endPoint;
+            stb.Begin(this);*/
+
             tab._page = page;
             if (page > maxPage)
             {
@@ -249,6 +274,7 @@ namespace SurfaceApplication1
             ScatterItem.AddHandler(UIElement.ManipulationDeltaEvent, new EventHandler<ManipulationDeltaEventArgs>(scatter_ManipulationDelta), true);
             ScatterItem.AddHandler(UIElement.ManipulationCompletedEvent, new EventHandler<ManipulationCompletedEventArgs>(scatter_ManipulationCompleted), true);
 
+            ScatterItem.Background = Brushes.Aqua;
             ScatterItem.Width = minPageWidth * 2;
             ScatterItem.Height = minPageHeight;
             ScatterItem.MaxWidth = maxPageWidth * 2;
@@ -372,6 +398,8 @@ namespace SurfaceApplication1
 
         private void wheelIt(object sender, MouseWheelEventArgs e)
         {
+            ScatterViewItem svi = (ScatterViewItem)sender;
+            Point mPos = e.MouseDevice.GetPosition(svi);
             int d = e.Delta;
             ScatterViewItem item = (ScatterViewItem)sender;
             double width = item.Width + 2 * d;
@@ -386,7 +414,7 @@ namespace SurfaceApplication1
                 width = item.MinWidth;
             item.Height = height;
             item.Width = width;
-            limitScatter((ScatterViewItem)sender);
+            limitScatter(svi);
         }
 
         /*
@@ -941,7 +969,8 @@ namespace SurfaceApplication1
             double width = tab._SVI.Width;
             Point center = tab._SVI.Center;
             language lang = tab._currentLanguage;
-            savedPages.Add(new SavedPage(pageNum, width, center, lang));
+            sideBar.savePage(pageNum, width, center, lang);
+            pageNumberText.Text = sideBar.savedPages.Count.ToString();
         }
         private void savePage(object sender, RoutedEventArgs e)
         {

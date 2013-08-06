@@ -23,12 +23,15 @@ namespace SurfaceApplication1
         public enum searchLanguage { oldFrench = 1, modernFrench = 2, English = 3 };
         public searchLanguage currentSearchLanguage = searchLanguage.oldFrench;
         public int veryFirstLine, veryLastLine;
-        public String pageToFind; // for opening/navigating to a new tab from a search result closeup
+        public String pageToFind;
         public String previousPageToFind;
         private SurfaceWindow1 SurfaceWindow;
+        public List<SavedPage> savedPages;
 
         public SideBar(SurfaceWindow1 SurfaceWindow, TabControl tabBar)
         {
+            savedPages = new List<SavedPage>();
+
             this.SurfaceWindow = SurfaceWindow;
             this.tabBar = tabBar;
             tabItems = new List<SideBarTab>();
@@ -175,15 +178,15 @@ namespace SurfaceApplication1
         private void SavedPagesButton_Selected(object sender, RoutedEventArgs e)
         {
             tabBar.DataContext = null;
-            SideBarTab newTab = this.AddSavedPagesTabItem();
+            SavedPagesTab newTab = this.AddSavedPagesTabItem();
             tabBar.DataContext = tabItems;
             tabBar.SelectedItem = newTab;
         }
 
-        private SideBarTab AddSavedPagesTabItem()
+        private SavedPagesTab AddSavedPagesTabItem()
         {
             int count = tabItems.Count;
-            SideBarTab tab = new SideBarTab(this);
+            SavedPagesTab tab = new SavedPagesTab(this);
             tab.Header = "Saved Pages";
             tab.Width = 100;
 
@@ -724,6 +727,11 @@ namespace SurfaceApplication1
         public void deleteTab(object sender, TouchEventArgs e)
         {
             deleteTab(sender, new RoutedEventArgs());
+        }
+
+        public void savePage(int pageNum, double width, Point center, SurfaceWindow1.language lang)
+        {
+            savedPages.Add(new SavedPage(pageNum, width, center, lang, SurfaceWindow));
         }
     }
 }
