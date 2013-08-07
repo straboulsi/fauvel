@@ -23,9 +23,14 @@ namespace SurfaceApplication1
         public TabControl tabBar;
         private List<SideBarTab> tabItems;
         private SideBarTab tabAdd;
+        private bool optionsShown = false;
+        public enum searchLanguage { oldFrench = 0, modernFrench = 1, English = 2 };
+        public searchLanguage currentSearchLanguage = searchLanguage.oldFrench;
         public int veryFirstLine, veryLastLine;
-        private SurfaceWindow1 surfaceWindow;
+        public SurfaceWindow1 surfaceWindow;
         public List<SavedPage> savedPages;
+        private Boolean defaultOptionsChanged;
+        private ResultBoxItem lastCloseupRBI;
 
         public SideBar(SurfaceWindow1 surfaceWindow, TabControl tabBar)
         {
@@ -189,8 +194,6 @@ namespace SurfaceApplication1
             tab.Header = "Saved Pages";
             tab.Width = 100;
 
-
-
             // insert tab item right before the last (+) tab item
             tabItems.Insert(count - 1, tab);
             return tab;
@@ -206,6 +209,8 @@ namespace SurfaceApplication1
             tabItems.Insert(count - 1, tab);
             return tab;
         }
+
+
 
         private SideBarTab AddAnnotateTabItem()
         {

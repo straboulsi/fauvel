@@ -48,7 +48,7 @@ namespace SurfaceApplication1
         public searchLanguage currentSearchLanguage = searchLanguage.oldFrench;
         public Border poetryBorder, imagesBorder, lyricsBorder;
         private bool optionsShown = false;
-        public String pageToFind;
+        public String pageToFind, previousPageToFind;
         private SurfaceWindow1 surfaceWindow;
         private Boolean defaultOptionsChanged;
         private SideBar sideBar;
@@ -56,7 +56,6 @@ namespace SurfaceApplication1
         public delegate void UpdateTextCallback(string message);
         private int unreturnedResults;
         public bool? exactPhr;
-        public ResultBoxItem lastCloseupRBI;
 
         public SearchTab(SideBar mySideBar, SurfaceWindow1 surfaceWindow) : base(mySideBar)
         {
@@ -273,7 +272,7 @@ namespace SurfaceApplication1
 
             poetryScroll.Height = 325;
             poetryScroll.Width = 470;
-            //poetryScroll.Background = Brushes.LightGray;
+            poetryScroll.Background = Brushes.LightGray;
             //poetryScroll.VerticalScrollBarVisibility = ScrollBarVisibility.Visible;
             poetryScroll.VerticalScrollBarVisibility = ScrollBarVisibility.Auto;
             poetryScroll.HorizontalScrollBarVisibility = ScrollBarVisibility.Disabled;
@@ -299,7 +298,7 @@ namespace SurfaceApplication1
             lyricsCanvas.Children.Add(lyricsBorder);
             lyricsScroll.Height = 325;
             lyricsScroll.Width = 470;
-            //lyricsScroll.Background = Brushes.LightGray;
+            lyricsScroll.Background = Brushes.LightGray;
             //lyricsScroll.VerticalScrollBarVisibility = ScrollBarVisibility.Visible;
             lyricsScroll.HorizontalScrollBarVisibility = ScrollBarVisibility.Disabled;
             lyricsScroll.PanningMode = PanningMode.VerticalOnly;
@@ -323,7 +322,7 @@ namespace SurfaceApplication1
             imagesCanvas.Children.Add(imagesBorder); 
             imagesScroll.Height = 325;
             imagesScroll.Width = 470;
-            //imagesScroll.Background = Brushes.LightGray;
+            imagesScroll.Background = Brushes.LightGray;
             imagesScroll.HorizontalScrollBarVisibility = ScrollBarVisibility.Disabled;
             //imagesScroll.VerticalScrollBarVisibility = ScrollBarVisibility.Visible;
             imagesScroll.PanningMode = PanningMode.VerticalOnly;
@@ -460,6 +459,16 @@ namespace SurfaceApplication1
                 thisbox.IsChecked = true;
         }
 
+        private void showSearchMan()
+        {
+            searchMan.Visibility = Visibility.Visible;
+        }
+
+        private void hideSearchMan()
+        {
+            searchMan.Visibility = Visibility.Hidden;
+        }
+
         private void runSearch()
         {
             String searchQuery = searchQueryBox.Text;
@@ -474,28 +483,19 @@ namespace SurfaceApplication1
                 caseType = 1;
             if (wholeWordOnly.IsChecked == true)
                 wordType = 1;
-                
-	        exactPhr = exactPhraseOnly.IsChecked;
 
-            if (optionsShown == true)
-                compressResults();
+<<<<<<< HEAD
+            poetryTab.Header = "Searching Poetry";
+            lyricsTab.Header = "Searching Lyrics";
+            imagesTab.Header = "Searching Images";
+=======
+            exactPhr = exactPhraseOnly.IsChecked;
 
-            poetryTab.Header = "Poetry (...)";
-            lyricsTab.Header = "Lyrics (...)";
-            imagesTab.Header = "Images (...)";
+>>>>>>> ddc81a66c25dcb3ca9a72fb14aa4fe00d18c8142
             searchQueryBox.IsEnabled = false;
-            goSearch.Content = "...";
+            goSearch.Content = "Searching";
             goSearch.IsEnabled = false;
             unreturnedResults = 3;
-
-            poetryScroll.ScrollToTop();
-            lyricsScroll.ScrollToTop();
-            imagesScroll.ScrollToTop();
-            poetryPanel.Children.Clear();
-            lyricsPanel.Children.Clear();
-            imagesPanel.Children.Clear();
-
-
 
             // Poetry results //
             poetryResults = new List<SearchResult>();
@@ -503,6 +503,8 @@ namespace SurfaceApplication1
             Action poetryResultAction = delegate
             {
                 BackgroundWorker worker = new BackgroundWorker();
+
+                
 
                 worker.DoWork += delegate 
                 {
@@ -540,8 +542,6 @@ namespace SurfaceApplication1
                     }
                     else
                         poetryTab.Content = poetryCanvas;
-
-                    poetryScroll.Background = Brushes.LightGray;
 
                     returnAResult();
                 };
@@ -593,8 +593,6 @@ namespace SurfaceApplication1
                     else
                         lyricsTab.Content = lyricsCanvas;
 
-                    lyricsScroll.Background = Brushes.LightGray;
-
                     returnAResult();
                 };
                 worker.RunWorkerAsync();
@@ -609,12 +607,8 @@ namespace SurfaceApplication1
             {
                 BackgroundWorker worker = new BackgroundWorker();
                 worker.DoWork += delegate
-                {
-                    
-                    if (exactPhr == false)
-                        imageResults = Translate.searchMultipleWordsPicCaptions(searchQuery, caseType, wordType, Translate.whichXml((int) currentSearchLanguage));
-                    else
-                        imageResults = Translate.searchExactPicCaptions(searchQuery, caseType, wordType, Translate.whichXml((int)currentSearchLanguage));
+                { // Add if loops here
+                    imageResults = Translate.searchPicCaptions(searchQuery, caseType, wordType, SurfaceWindow1.xml);
                 };
                 worker.RunWorkerCompleted += delegate
                 {
@@ -627,8 +621,6 @@ namespace SurfaceApplication1
                         ResultBoxItem resultRBI = new ResultBoxItem();
                         convertSearchResultToResultBoxItem(result, resultRBI);
                         resultRBI.miniThumbnail.Source = new BitmapImage(new Uri(@"..\..\minithumbnails\" + result.tag + ".jpg", UriKind.Relative));
-                        resultRBI.miniThumbnail.Width = 50;
-                        resultRBI.miniThumbnail.Height = 50;
                         resultRBI.resultThumbnail.Source = Thumbnailer.getThumbnail(result.tag);
                         imagesLB.Items.Add(resultRBI);
                     }
@@ -638,13 +630,14 @@ namespace SurfaceApplication1
                     if (imageResults.Count == 0)
                     {
                         TextBlock noResults = new TextBlock();
-                        noResults.Text = "Sorry, your search returned no image results.\r\n\r\nNB: Image captions don't exist in English yet!";
+                        noResults.Text = "Sorry, your search returned no image results.\r\n\r\nNB: Image captions exist in Modern French only; no English (yet).";
                         imagesTab.Content = noResults;
                     }
                     else
                         imagesTab.Content = imagesCanvas;
 
-                    imagesScroll.Background = Brushes.LightGray;
+                    if (optionsShown == true)
+                        compressResults();
                     
                     returnAResult();
                 };
@@ -663,7 +656,7 @@ namespace SurfaceApplication1
                 goSearch.Content = "Go!";
                 goSearch.IsEnabled = true;
 
-                //Auto flip to a tab with results if the current one has none
+                /*Auto flip to a tab with results if the current one has none
                 if (searchResults.SelectedItem == poetryTab && poetryResults.Count == 0)
                 {
                     if (lyricResults.Count != 0)
@@ -684,7 +677,7 @@ namespace SurfaceApplication1
                         searchResults.SelectedItem = poetryTab;
                     else if (lyricResults.Count != 0)
                         searchResults.SelectedItem = lyricsTab;
-                }
+                }*/
             }
         }
 
@@ -704,8 +697,6 @@ namespace SurfaceApplication1
         private void convertSearchResultToResultBoxItem(SearchResult sr, ResultBoxItem rbi)
         {
             rbi.folioInfo.Text = sr.folio;
-            rbi.topL = sr.topL;
-            rbi.bottomR = sr.bottomR;
             rbi.resultType = sr.resultType;
             if (rbi.resultType == 1)
                 rbi.lineInfo.Text = Convert.ToString(sr.lineNum) + sr.lineRange; // Assuming only one will be filled out
@@ -762,7 +753,6 @@ namespace SurfaceApplication1
         private void Result_Closeup(object sender, RoutedEventArgs e)
         {
             ResultBoxItem selectedResult = e.Source as ResultBoxItem;
-            lastCloseupRBI = selectedResult;  // For later reference in goToFolio
 
             Image closeupImage = new Image();
             closeupImage.Source = selectedResult.resultThumbnail.Source;
@@ -824,24 +814,27 @@ namespace SurfaceApplication1
 
         private void goToFolio(object sender, TouchEventArgs e)
         {
-            
-            if (lastCloseupRBI.folioInfo.Text.StartsWith("Fo"))
-                lastCloseupRBI.folioInfo.Text = lastCloseupRBI.folioInfo.Text.Substring(2);
-            String imageName = getImageName(lastCloseupRBI.folioInfo.Text, SurfaceWindow1.layoutXml);
-            int pageNum = Convert.ToInt32(imageName.Substring(0, imageName.IndexOf(".jpg")));
-            if (pageNum % 2 == 1) // If odd, meaning it's a Fo_r, we want to aim for the previous page.
-                pageNum--;
+            XmlDocument layoutXml = SurfaceWindow1.layoutXml;
 
-            // Get coordinates from lastCloseupRBI.topL and lastCloseupRBI.bottomR
+            if (pageToFind != previousPageToFind)
+            {
+                if (pageToFind.StartsWith("Fo"))
+                    pageToFind = pageToFind.Substring(2);
+                String imageName = getImageName(pageToFind, layoutXml);
+                int pageNum = Convert.ToInt32(imageName.Substring(0, imageName.IndexOf(".jpg")));
+                if (pageNum % 2 == 1) // If odd, meaning it's a Fo_r, we want to aim for the previous page.
+                    pageNum--;
 
-            surfaceWindow.createTab(pageNum - 10);
+                surfaceWindow.createTab(pageNum - 10);
+                previousPageToFind = pageToFind;
+            }
         }
 
 
         private Boolean checkForChanges()
         {
             if (caseSensitive.IsChecked == true | wholeWordOnly.IsChecked == true |
-                exactPhraseOnly.IsChecked == true | (selectLanguage.SelectedIndex != 0 && selectLanguage.SelectedIndex != 1))
+                exactPhraseOnly.IsChecked == false | (selectLanguage.SelectedIndex != 0 && selectLanguage.SelectedIndex != 1))
                 defaultOptionsChanged = true;
 
             else
