@@ -43,7 +43,7 @@ namespace SurfaceApplication1
         public Button moreOptions, fewerOptions;
         public Image downArrow, upArrow, searchMan;
         public SurfaceScrollViewer poetryScroll, lyricsScroll, imagesScroll;
-        public enum searchLanguage { oldFrench = 1, modernFrench = 2, English = 3 };
+        public enum searchLanguage { oldFrench = 0, modernFrench = 1, English = 2 };
         public searchLanguage currentSearchLanguage = searchLanguage.oldFrench;
         public Border poetryBorder, imagesBorder, lyricsBorder;
         private bool optionsShown = false;
@@ -475,10 +475,6 @@ namespace SurfaceApplication1
         private void runSearch()
         {
             String searchQuery = searchQueryBox.Text;
-            XmlDocument xml = SurfaceWindow1.xml;
-            XmlDocument engXml = SurfaceWindow1.engXml;
-            XmlDocument layoutXml = SurfaceWindow1.layoutXml;
-            XmlDocument modFrXml = SurfaceWindow1.modFrXml;
 
             searchTabHeader.Text = searchQueryBox.Text;
             searchResults.Visibility = Visibility.Visible;
@@ -497,7 +493,7 @@ namespace SurfaceApplication1
             unreturnedResults = 3;
 
             // Poetry results //
-            List<SearchResult> poetryResults = new List<SearchResult>();
+            poetryResults = new List<SearchResult>();
 
             Action poetryResultAction = delegate
             {
@@ -558,10 +554,7 @@ namespace SurfaceApplication1
                 BackgroundWorker worker = new BackgroundWorker();
                 worker.DoWork += delegate
                 {
-                    if (currentSearchLanguage == searchLanguage.oldFrench)
-                        lyricResults = Translate.searchLyrics(searchQuery, caseType, wordType, xml);
-                    else if (currentSearchLanguage == searchLanguage.modernFrench)
-                        lyricResults = Translate.searchLyrics(searchQuery, caseType, wordType, modFrXml);
+                    lyricResults = Translate.searchLyrics(searchQuery, caseType, wordType, Translate.whichXml((int)currentSearchLanguage));
                 };
                 worker.RunWorkerCompleted += delegate
                 {
@@ -603,7 +596,7 @@ namespace SurfaceApplication1
                 BackgroundWorker worker = new BackgroundWorker();
                 worker.DoWork += delegate
                 {
-                    imageResults = Translate.searchPicCaptions(searchQuery, caseType, wordType, xml);
+                    imageResults = Translate.searchPicCaptions(searchQuery, caseType, wordType, SurfaceWindow1.xml);
                 };
                 worker.RunWorkerCompleted += delegate
                 {
