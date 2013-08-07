@@ -18,7 +18,11 @@ using Microsoft.Surface.Presentation.Input;
 
 namespace SurfaceApplication1
 {
-
+    /**
+     * This class defines a Search Tab, opened from the side bar using the "Search" app button. 
+     * It creates a default tab with a variety of search options, and it also sets up a hidden result section that will appear once a newSearch (see SideBar.cs) is conducted.
+     * Primary Coder: Alison Y. Chang
+     * */
     public class SearchTab : SideBarTab
     {
         public Canvas poetryCanvas, lyricsCanvas, imagesCanvas;

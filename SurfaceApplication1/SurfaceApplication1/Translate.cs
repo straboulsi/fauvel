@@ -30,6 +30,7 @@ namespace SurfaceApplication1
      * It can search for a section of poetry, music lyrics, or image description by tag id.
      * It can also return specific lines of poetry by line number, both in Old French and in English.
      * This class also makes an ArrayList of TranslationBoxes when given a page of Fauvel.
+     * Primary Coder: Alison Y. Chang
      **/
     public static class Translate
     {

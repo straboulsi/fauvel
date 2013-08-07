@@ -18,6 +18,7 @@ namespace SurfaceApplication1
      * This class represents a SearchResult created in Translate.cs.
      * The search methods in Translate.cs each return a List of SearchResults.
      * Many elements of SearchResults are then transferred to ResultBoxItems for result display.
+     * Primary Coder: Alison Y. Chang
      * */
     public class SearchResult
     {

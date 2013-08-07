@@ -15,7 +15,8 @@ namespace SurfaceApplication1
 
     /**
      * This class fetches thumbnails from the thumbnails folder for search results.
-     * */ 
+     * Primary Coder: Alison Y. Chang
+     * */
     static class Thumbnailer
     {
 

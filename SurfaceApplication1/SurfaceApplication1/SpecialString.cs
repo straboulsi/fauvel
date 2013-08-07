@@ -9,6 +9,8 @@ namespace SurfaceApplication1
     /**
      * This SpecialString object is used in the searchMultipleWords function of Translate.cs.
      * It is used when every search word in the overall string must be found.
+     * The constructors that take 2 arguments allow for information to be linked to a String - i.e. whether it should be styled (bold vs. normal) or if it has been found in a larger String.
+     * Primary Coder: Alison Y. Chang
      * */
     public class SpecialString : IComparable
     {

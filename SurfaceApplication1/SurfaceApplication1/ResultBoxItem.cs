@@ -25,6 +25,7 @@ namespace SurfaceApplication1
      * ResultBoxItem is a specialized SurfaceListBoxItem. 
      * It takes many elements from SearchResult objects created in Translate.cs.
      * Each ResultBoxItem is then displayed in a ListBox in the search result tabs.
+     * Primary Coder: Alison Y. Chang
      **/
     class ResultBoxItem : SurfaceListBoxItem
     {

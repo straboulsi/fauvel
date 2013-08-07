@@ -5,6 +5,9 @@ using System.Text;
 
 namespace SurfaceApplication1
 {
+    /**
+     * Primary Coder: Brendan Chou
+     * */
     public static class PageNamer
     {
         private static String[] pageNames = {"blank" ,"index","0v","1r" ,"1v",
