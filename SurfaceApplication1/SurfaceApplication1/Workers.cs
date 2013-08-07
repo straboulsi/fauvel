@@ -28,9 +28,9 @@ namespace SurfaceApplication1
         {
             var translationDispatcher = tab._canvas.Dispatcher.BeginInvoke(new Action(() =>
             {
-                tab._translationBoxesV = Translate.getTranslationOverlay(PageNamer.getOnePageText(tab._page));
+                tab._translationBoxesV = Search.getTranslationOverlay(PageNamer.getOnePageText(tab._page));
                 tab._textBlocksV = new List<TextBlock>();
-                tab._translationBoxesR = Translate.getTranslationOverlay(PageNamer.getOnePageText(tab._page + 1));
+                tab._translationBoxesR = Search.getTranslationOverlay(PageNamer.getOnePageText(tab._page + 1));
                 tab._textBlocksR = new List<TextBlock>();
             }));
             translationDispatcher.Completed += (s, e) =>
@@ -38,14 +38,14 @@ namespace SurfaceApplication1
                 foreach (TranslationBox tb in tab._translationBoxesV)
                 {
                     TextBlock t = new TextBlock();
-                    Grid g = Translate.getGrid(tb, t);
+                    Grid g = Search.getGrid(tb, t);
                     tab._textBlocksV.Add(t);
                     tab._vTranslationGrid.Children.Add(g);
                 }
                 foreach (TranslationBox tb in tab._translationBoxesR)
                 {
                     TextBlock t = new TextBlock();
-                    Grid g = Translate.getGrid(tb, t);
+                    Grid g = Search.getGrid(tb, t);
                     tab._textBlocksR.Add(t);
                     tab._rTranslationGrid.Children.Add(g);
                 }
@@ -58,19 +58,19 @@ namespace SurfaceApplication1
         {
             var ghostBoxDispatcher = tab._canvas.Dispatcher.BeginInvoke(new Action(() =>
             {
-                tab._vGhostBoxes = Translate.getGhostBoxes(PageNamer.getOnePageText(tab._page));
-                tab._rGhostBoxes = Translate.getGhostBoxes(PageNamer.getOnePageText(tab._page + 1));
+                tab._vGhostBoxes = Search.getGhostBoxes(PageNamer.getOnePageText(tab._page));
+                tab._rGhostBoxes = Search.getGhostBoxes(PageNamer.getOnePageText(tab._page + 1));
             }));
             ghostBoxDispatcher.Completed += (s, e) =>
             {
                 foreach (BoundingBox r in tab._vGhostBoxes)
                 {
-                    Grid g = Translate.getGrid(r);
+                    Grid g = Search.getGrid(r);
                     tab._vBoxesGrid.Children.Add(g);
                 }
                 foreach (BoundingBox r in tab._rGhostBoxes)
                 {
-                    Grid g = Translate.getGrid(r);
+                    Grid g = Search.getGrid(r);
                     tab._rBoxesGrid.Children.Add(g);
                 }
             };

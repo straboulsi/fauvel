@@ -21,6 +21,11 @@ using System.ComponentModel;
 
 namespace SurfaceApplication1
 {
+
+    /**
+     * This class defines the methods used in the "Study" (Music) app from the SideBar.
+     * Primary Coder: Jamie Chong
+     * */
     class StudyTab : SideBarTab
     {
         public TextBlock studyTabHeader;

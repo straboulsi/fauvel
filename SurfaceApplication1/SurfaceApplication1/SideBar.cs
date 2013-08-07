@@ -23,15 +23,10 @@ namespace SurfaceApplication1
         public TabControl tabBar;
         private List<SideBarTab> tabItems;
         private SideBarTab tabAdd;
-        private bool optionsShown = false;
-        public enum searchLanguage { oldFrench = 0, modernFrench = 1, English = 2 };
-        public searchLanguage currentSearchLanguage = searchLanguage.oldFrench;
-        public int veryFirstLine, veryLastLine;
         public SurfaceWindow1 surfaceWindow;
         public List<SavedPage> savedPages;
-        private Boolean defaultOptionsChanged;
-        private ResultBoxItem lastCloseupRBI;
 
+        // This constructor defines the look of the "new tab", which displays all apps for a user to choose from.
         public SideBar(SurfaceWindow1 surfaceWindow, TabControl tabBar)
         {
             savedPages = new List<SavedPage>();
@@ -40,8 +35,6 @@ namespace SurfaceApplication1
             this.tabBar = tabBar;
             tabItems = new List<SideBarTab>();
 
-            veryFirstLine = 1;
-            veryLastLine = 5986;
 
             tabAdd = new SideBarTab(this);
             tabAdd.Header = "  +  ";
@@ -54,6 +47,7 @@ namespace SurfaceApplication1
             tabAdd.Content = newTabCanvas;
 
 
+            // Search button, which triggers new SearchTab
             Button searchButton = new Button();
             searchButton.Style = tabBar.FindResource("RoundButtonTemplate") as Style;
             searchButton.Click += new RoutedEventHandler(SearchButton_Selected);
@@ -77,6 +71,8 @@ namespace SurfaceApplication1
             newTabCanvas.Children.Add(searchButton);
 
 
+
+            // Annotate button, which triggers new AnnotateTab 
             Button annotateButton = new Button();
             annotateButton.Style = tabBar.FindResource("RoundButtonTemplate") as Style;
             annotateButton.Click += new RoutedEventHandler(AnnotateButton_Selected);
@@ -104,6 +100,8 @@ namespace SurfaceApplication1
             newTabCanvas.Children.Add(annotateButton);
 
 
+
+            // Saved pages button, which triggers new SavedPagesTab
             Button savedPagesButton = new Button();
             savedPagesButton.Style = tabBar.FindResource("RoundButtonTemplate") as Style;
             savedPagesButton.Click += new RoutedEventHandler(SavedPagesButton_Selected);
@@ -127,6 +125,8 @@ namespace SurfaceApplication1
             newTabCanvas.Children.Add(savedPagesButton);
 
 
+
+            // Study button, which triggers a new StudyTab 
             Button studyButton = new Button();
             studyButton.Style = tabBar.FindResource("RoundButtonTemplate") as Style;
             studyButton.Click += new RoutedEventHandler(StudyButton_Selected);
@@ -174,9 +174,15 @@ namespace SurfaceApplication1
         private void StudyButton_Selected(object sender, RoutedEventArgs e)
         {
             tabBar.DataContext = null;
-            StudyTab newTab = this.AddStudyTabItem();
+
+            int count = tabItems.Count;
+            StudyTab newTab = new StudyTab(this, surfaceWindow);
+            newTab.HeaderTemplate = tabBar.FindResource("NewStudyTab") as DataTemplate;
+            tabItems.Insert(count - 1, newTab);
+
             tabBar.DataContext = tabItems;
             tabBar.SelectedItem = newTab;
+
         }
 
         private void SavedPagesButton_Selected(object sender, RoutedEventArgs e)
@@ -217,7 +223,6 @@ namespace SurfaceApplication1
             int count = tabItems.Count;
 
             // create new tab item - eventually replace with AnnotateTab tab = new AnnotateTab();
-            // Then, add all listeners here
             SideBarTab tab = new SideBarTab(this);
             tab.HeaderTemplate = tabBar.FindResource("NewAnnotateTab") as DataTemplate; // can be replaced if AnnotateTab object exists
 
@@ -227,19 +232,15 @@ namespace SurfaceApplication1
         }
 
 
-        private StudyTab AddStudyTabItem()
-        {
-            int count = tabItems.Count;
+        //private StudyTab AddStudyTabItem()
+        //{
+        //    int count = tabItems.Count;
+        //    StudyTab tab = new StudyTab(this, surfaceWindow);
+        //    //tab.HeaderTemplate = tabBar.FindResource("NewStudyTab") as DataTemplate; // can be replaced if StudyTab object exists
 
-            // create new tab item - eventually replace with MusicTab tab = new MusicTab();
-            // Then, add all listeners here
-            StudyTab tab = new StudyTab(this, surfaceWindow);
-            //tab.HeaderTemplate = tabBar.FindResource("NewStudyTab") as DataTemplate; // can be replaced if StudyTab object exists
-
-            // insert tab item right before the last (+) tab item
-            tabItems.Insert(count - 1, tab);
-            return tab;
-        }
+        //    tabItems.Insert(count - 1, tab);
+        //    return tab;
+        //}
 
         public void deleteTab(object sender, RoutedEventArgs e)
         {
@@ -248,16 +249,13 @@ namespace SurfaceApplication1
 
             tabItems.Remove(selectedTab);
             tabBar.DataContext = tabItems;
+
             if (selectedTab == null || selectedTab.Equals(selectedTab))
-            {
                 selectedTab = tabItems[0];
-            }
+            
             tabBar.SelectedItem = selectedTab;
         }
-        public void deleteTab(object sender, TouchEventArgs e)
-        {
-            deleteTab(sender, new RoutedEventArgs());
-        }
+
 
         public void savePage(int pageNum, double width, Point center, SurfaceWindow1.language lang)
         {

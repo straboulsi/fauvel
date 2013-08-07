@@ -25,6 +25,8 @@ namespace SurfaceApplication1
     /**
      * This class defines a Search Tab, opened from the side bar using the "Search" app button. 
      * It creates a default tab with a variety of search options, and it also sets up a hidden result section that will appear once a newSearch (see SideBar.cs) is conducted.
+     * The methods in this class support the front end (visual) aspects of the SearchTab and Search app.
+     * For the back end methods, see Search.cs.
      * Primary Coder: Alison Y. Chang
      * */
     public class SearchTab : SideBarTab
@@ -42,7 +44,7 @@ namespace SurfaceApplication1
         public TabItem poetryTab, lyricsTab, imagesTab;
         public StackPanel poetryPanel, lyricsPanel, imagesPanel;
         public Button moreOptions, fewerOptions;
-        public Image downArrow, upArrow, searchMan;
+        public Image downArrow, upArrow;
         public SurfaceScrollViewer poetryScroll, lyricsScroll, imagesScroll;
         public enum searchLanguage { oldFrench = 0, modernFrench = 1, English = 2 };
         public searchLanguage currentSearchLanguage = searchLanguage.oldFrench;
@@ -147,14 +149,6 @@ namespace SurfaceApplication1
             topLine.Y2 = 163;
             topLine.Stroke = Brushes.Black;
             topLine.StrokeThickness = 2;
-
-            searchMan = new Image();
-            searchMan.Source = new BitmapImage(new Uri(@"..\..\icons\searchMan.jpg", UriKind.Relative));
-            searchMan.Height = 100;
-            searchMan.Width = 100;
-            Canvas.SetTop(searchMan, 300);
-            Canvas.SetLeft(searchMan, 300);
-            searchMan.Visibility = Visibility.Hidden;
             
 
 
@@ -340,7 +334,6 @@ namespace SurfaceApplication1
             canvas.Children.Add(goSearch);
             canvas.Children.Add(topLine);
             canvas.Children.Add(moreOptions);
-            canvas.Children.Add(searchMan);
 
 
 
@@ -507,9 +500,9 @@ namespace SurfaceApplication1
                 worker.DoWork += delegate 
                 {
                     if (exactPhr == false)
-                        poetryResults = Translate.searchMultipleWordsPoetry(searchQuery, caseType, wordType, (int)currentSearchLanguage);
+                        poetryResults = Search.searchMultipleWordsPoetry(searchQuery, caseType, wordType, (int)currentSearchLanguage);
                     else
-                        poetryResults = Translate.searchExactPoetry(searchQuery, caseType, wordType, (int)currentSearchLanguage);
+                        poetryResults = Search.searchExactPoetry(searchQuery, caseType, wordType, (int)currentSearchLanguage);
                 };
 
                 worker.RunWorkerCompleted += delegate
@@ -560,9 +553,9 @@ namespace SurfaceApplication1
                 worker.DoWork += delegate 
                 {
                     if (exactPhr == false)
-                        lyricResults = Translate.searchMultipleWordsLyrics(searchQuery, caseType, wordType, (int) currentSearchLanguage);
+                        lyricResults = Search.searchMultipleWordsLyrics(searchQuery, caseType, wordType, (int) currentSearchLanguage);
                     else
-                        lyricResults = Translate.searchExactLyrics(searchQuery, caseType, wordType, Translate.whichXml((int)currentSearchLanguage));
+                        lyricResults = Search.searchExactLyrics(searchQuery, caseType, wordType, Search.whichXml((int)currentSearchLanguage));
                 };
 
 
@@ -612,9 +605,9 @@ namespace SurfaceApplication1
                 {
                     
                     if (exactPhr == false)
-                        imageResults = Translate.searchMultipleWordsPicCaptions(searchQuery, caseType, wordType, Translate.whichXml((int) currentSearchLanguage));
+                        imageResults = Search.searchMultipleWordsPicCaptions(searchQuery, caseType, wordType, Search.whichXml((int) currentSearchLanguage));
                     else
-                        imageResults = Translate.searchExactPicCaptions(searchQuery, caseType, wordType, Translate.whichXml((int)currentSearchLanguage));
+                        imageResults = Search.searchExactPicCaptions(searchQuery, caseType, wordType, Search.whichXml((int)currentSearchLanguage));
                 };
                 worker.RunWorkerCompleted += delegate
                 {
@@ -706,6 +699,7 @@ namespace SurfaceApplication1
             rbi.folioInfo.Text = sr.folio;
             rbi.topL = sr.topL;
             rbi.bottomR = sr.bottomR;
+            rbi.matchStrength = sr.matchStrength;
             rbi.resultType = sr.resultType;
             if (rbi.resultType == 1)
                 rbi.lineInfo.Text = Convert.ToString(sr.lineNum) + sr.lineRange; // Assuming only one will be filled out
