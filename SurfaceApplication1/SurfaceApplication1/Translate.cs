@@ -816,7 +816,7 @@ namespace SurfaceApplication1
         /**
          * Searches for text in lyrics of music.
          * */
-        public static List<SearchResult> searchLyrics(String search, int caseSensitive, int wordSensitive, XmlDocument whichXml)
+        public static List<SearchResult> searchExactLyrics(String search, int caseSensitive, int wordSensitive, XmlDocument whichXml)
         {
             List<SearchResult> results = new List<SearchResult>();
 

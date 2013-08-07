@@ -54,6 +54,7 @@ namespace SurfaceApplication1
         private List<SearchResult> poetryResults, lyricResults, imageResults;
         public delegate void UpdateTextCallback(string message);
         private int unreturnedResults;
+        public bool? exactPhr;
 
         public SearchTab(SideBar mySideBar, SurfaceWindow1 surfaceWindow) : base(mySideBar)
         {
@@ -487,6 +488,8 @@ namespace SurfaceApplication1
             if (wholeWordOnly.IsChecked == true)
                 wordType = 1;
 
+            exactPhr = exactPhraseOnly.IsChecked;
+
             searchQueryBox.IsEnabled = false;
             goSearch.Content = "Searching";
             goSearch.IsEnabled = false;
@@ -498,20 +501,17 @@ namespace SurfaceApplication1
             Action poetryResultAction = delegate
             {
                 BackgroundWorker worker = new BackgroundWorker();
-                if (exactPhraseOnly.IsChecked == false)
+
+                
+
+                worker.DoWork += delegate 
                 {
-                    worker.DoWork += delegate
-                    {
+                    if (exactPhr == false)
                         poetryResults = Translate.searchMultipleWordsPoetry(searchQuery, caseType, wordType, (int)currentSearchLanguage);
-                    };
-                }
-                else
-                {
-                    worker.DoWork += delegate
-                    {
+                    else
                         poetryResults = Translate.searchExactPoetry(searchQuery, caseType, wordType, (int)currentSearchLanguage);
-                    };
-                }
+                };
+
                 worker.RunWorkerCompleted += delegate
                 {
                     SurfaceListBox poetryLB = new SurfaceListBox();
@@ -552,10 +552,16 @@ namespace SurfaceApplication1
             Action lyricResultAction = delegate
             {
                 BackgroundWorker worker = new BackgroundWorker();
-                worker.DoWork += delegate
+
+                worker.DoWork += delegate 
                 {
-                    lyricResults = Translate.searchLyrics(searchQuery, caseType, wordType, Translate.whichXml((int)currentSearchLanguage));
+                    if (exactPhr == false)
+                        lyricResults = Translate.searchMultipleWordsLyrics(searchQuery, caseType, wordType, (int) currentSearchLanguage);
+                    else
+                        lyricResults = Translate.searchExactLyrics(searchQuery, caseType, wordType, Translate.whichXml((int)currentSearchLanguage));
                 };
+
+
                 worker.RunWorkerCompleted += delegate
                 {
                     ListBox lyricsLB = new ListBox();
@@ -595,7 +601,7 @@ namespace SurfaceApplication1
             {
                 BackgroundWorker worker = new BackgroundWorker();
                 worker.DoWork += delegate
-                {
+                { // Add if loops here
                     imageResults = Translate.searchPicCaptions(searchQuery, caseType, wordType, SurfaceWindow1.xml);
                 };
                 worker.RunWorkerCompleted += delegate
