@@ -375,7 +375,7 @@ namespace SurfaceApplication1
                 if (selectedTab.exactPhraseOnly.IsChecked == false)
                     lyricResults = Translate.searchMultipleWordsLyrics(searchQuery, caseType, wordType, (int)currentSearchLanguage);
                 else
-                    lyricResults = Translate.searchLyrics(searchQuery, caseType, wordType, Translate.whichXml((int)currentSearchLanguage));
+                    lyricResults = Translate.searchExactLyrics(searchQuery, caseType, wordType, Translate.whichXml((int)currentSearchLanguage));
 
                 ListBox lyricsLB = new ListBox();
                 lyricsLB.Style = tabBar.FindResource("SearchResultSurfaceListBox") as Style;

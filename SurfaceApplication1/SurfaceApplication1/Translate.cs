@@ -466,6 +466,7 @@ namespace SurfaceApplication1
                         newResult.excerpts.Add(new SpecialString(search, 1));
                         newResult.excerpts.Add(new SpecialString((str2 + "\r\n" + getPoetry(newResult.lineNum + 1, endLine, thisXml) + lineInfo), 0));
 
+                        newResult.tag = getTagByLineNum(newResult.lineNum);
                         newResult.text1 = xn.InnerText.Trim();
 
                         if(language == 2) // For English, the secondary text is original text
@@ -566,6 +567,7 @@ namespace SurfaceApplication1
                                 newResult.lineRange = "-" + endLine;
                             newResult.resultType = 1;
                             newResult.text1 = getPoetry(lineNum, lineNum, thisXml);
+                            newResult.tag = getTagByLineNum(startLine);
 
                             if (language == 2) // For English, the secondary text is original text
                                 newResult.text2 = getPoetry(lineNum, lineNum, SurfaceWindow1.xml);
