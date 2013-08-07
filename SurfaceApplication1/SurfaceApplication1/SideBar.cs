@@ -13,6 +13,11 @@ using System.Windows.Documents;
 
 namespace SurfaceApplication1
 {
+    /**
+     * This class defines the SideBar that is on the right side of the Surface. 
+     * It is initially set to a "new tab" screen that allows users to select an app - i.e. Search, Listen, Annotate, Save.
+     * Primary Coder: Alison Y. Chang
+     * */
     public class SideBar
     {
         public TabControl tabBar;

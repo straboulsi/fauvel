@@ -366,7 +366,7 @@ namespace SurfaceApplication1
             goSearch.TouchDown += new EventHandler<TouchEventArgs>(newSearch);
             searchQueryBox.PreviewKeyDown += new KeyEventHandler(Enter_Clicked);
             caseSensitive.TouchDown += new EventHandler<TouchEventArgs>(changeCheck);
-            wholePhraseOnly.TouchDown += new EventHandler<TouchEventArgs>(changeCheck);
+            exactPhraseOnly.TouchDown += new EventHandler<TouchEventArgs>(changeCheck);
             wholeWordOnly.TouchDown += new EventHandler<TouchEventArgs>(changeCheck);
 
             //selectLanguage.TouchDown += new EventHandler<TouchEventArgs>(displaySearchLanguages);
@@ -413,7 +413,7 @@ namespace SurfaceApplication1
             bottomLine.Visibility = Visibility.Visible;
             fewerOptions.Visibility = Visibility.Visible;
             wholeWordOnly.Visibility = Visibility.Visible;
-            wholePhraseOnly.Visibility = Visibility.Visible;
+            exactPhraseOnly.Visibility = Visibility.Visible;
             moreOptions.Visibility = Visibility.Hidden;
             selectLanguageButton.Visibility = Visibility.Visible;
             if (searchResults.IsVisible)
@@ -430,7 +430,7 @@ namespace SurfaceApplication1
             bottomLine.Visibility = Visibility.Hidden;
             fewerOptions.Visibility = Visibility.Hidden;
             wholeWordOnly.Visibility = Visibility.Hidden;
-            wholePhraseOnly.Visibility = Visibility.Hidden;
+            exactPhraseOnly.Visibility = Visibility.Hidden;
             selectLanguageButton.Visibility = Visibility.Hidden;
 
             checkForChanges();
@@ -456,21 +456,20 @@ namespace SurfaceApplication1
         {
             CheckBox thisbox = sender as CheckBox;
 
-            // The following if loop is accounting for the fact that all search functions are currently set to whole phrase only
-            // There is not yet a way to search for several words appearing near each other
-            // Once that function is implemented, then the "Match whole phrase only" CheckBox will function like the other CheckBoxes
-            if (thisbox == wholePhraseOnly)
-            {
-                MessageBox.Show(string.Format("Oops! This function has not been added yet."),
-                    "Unmark \"Match whole phrase only\"", MessageBoxButton.OK);
-            }
-            else
-            {
-                if (thisbox.IsChecked == true)
-                    thisbox.IsChecked = false;
-                else if (thisbox.IsChecked == false)
-                    thisbox.IsChecked = true;
-            }
+            if (thisbox.IsChecked == true)
+                thisbox.IsChecked = false;
+            else if (thisbox.IsChecked == false)
+                thisbox.IsChecked = true;
+        }
+
+        private void showSearchMan()
+        {
+            searchMan.Visibility = Visibility.Visible;
+        }
+
+        private void hideSearchMan()
+        {
+            searchMan.Visibility = Visibility.Hidden;
         }
 
         private void runSearch()
@@ -503,15 +502,30 @@ namespace SurfaceApplication1
             Action poetryResultAction = delegate
             {
                 BackgroundWorker worker = new BackgroundWorker();
-                worker.DoWork += delegate
+                if (exactPhraseOnly.IsChecked == false)
                 {
-                    if (currentSearchLanguage == searchLanguage.oldFrench)
-                        poetryResults = Translate.searchOldFrPoetry(searchQuery, caseType, wordType, xml, engXml, layoutXml);
-                    else if (currentSearchLanguage == searchLanguage.modernFrench)
-                        poetryResults = Translate.searchModFrPoetry(searchQuery, caseType, wordType, modFrXml, engXml, layoutXml);
-                    else if (currentSearchLanguage == searchLanguage.English)
-                        poetryResults = Translate.searchEngPoetry(searchQuery, caseType, wordType, xml, engXml, layoutXml);
-                };
+                    worker.DoWork += delegate
+                    {
+                        if (currentSearchLanguage == searchLanguage.oldFrench)
+                            poetryResults = Translate.searchOldFrPoetry(searchQuery, caseType, wordType);
+                        else if (currentSearchLanguage == searchLanguage.modernFrench)
+                            poetryResults = Translate.searchModFrPoetry(searchQuery, caseType, wordType);
+                        else if (currentSearchLanguage == searchLanguage.English)
+                            poetryResults = Translate.searchEngPoetry(searchQuery, caseType, wordType);
+                    };
+                }
+                else
+                {
+                    worker.DoWork += delegate
+                    {
+                        if (currentSearchLanguage == searchLanguage.oldFrench)
+                            poetryResults = Translate.searchOldFrPoetry(searchQuery, caseType, wordType);
+                        else if (currentSearchLanguage == searchLanguage.modernFrench)
+                            poetryResults = Translate.searchModFrPoetry(searchQuery, caseType, wordType);
+                        else if (currentSearchLanguage == searchLanguage.English)
+                            poetryResults = Translate.searchEngPoetry(searchQuery, caseType, wordType);
+                    };
+                }
                 worker.RunWorkerCompleted += delegate
                 {
                     SurfaceListBox poetryLB = new SurfaceListBox();
@@ -522,7 +536,7 @@ namespace SurfaceApplication1
                     {
                         ResultBoxItem resultRBI = new ResultBoxItem();
                         convertSearchResultToResultBoxItem(result, resultRBI);
-                        resultRBI.resultThumbnail = Translate.convertImage(Thumbnailer.getThumbnail(Translate.getTagByLineNum(result.lineNum, layoutXml)));
+                        resultRBI.resultThumbnail = Translate.convertImage(Thumbnailer.getThumbnail(Translate.getTagByLineNum(result.lineNum)));
                         if (((optionsShown == false) && poetryResults.Count < 4) || ((optionsShown == true) && poetryResults.Count < 2))
                             resultRBI.Width = 480;
                         poetryLB.Items.Add(resultRBI);
@@ -555,9 +569,9 @@ namespace SurfaceApplication1
                 worker.DoWork += delegate
                 {
                     if (currentSearchLanguage == searchLanguage.oldFrench)
-                        lyricResults = Translate.searchLyrics(searchQuery, caseType, wordType, xml, layoutXml);
+                        lyricResults = Translate.searchLyrics(searchQuery, caseType, wordType, xml);
                     else if (currentSearchLanguage == searchLanguage.modernFrench)
-                        lyricResults = Translate.searchLyrics(searchQuery, caseType, wordType, modFrXml, layoutXml);
+                        lyricResults = Translate.searchLyrics(searchQuery, caseType, wordType, modFrXml);
                 };
                 worker.RunWorkerCompleted += delegate
                 {
@@ -599,7 +613,7 @@ namespace SurfaceApplication1
                 BackgroundWorker worker = new BackgroundWorker();
                 worker.DoWork += delegate
                 {
-                    imageResults = Translate.searchPicCaptions(searchQuery, caseType, wordType, xml, layoutXml);
+                    imageResults = Translate.searchPicCaptions(searchQuery, caseType, wordType, xml);
                 };
                 worker.RunWorkerCompleted += delegate
                 {
@@ -690,10 +704,8 @@ namespace SurfaceApplication1
             rbi.folioInfo.Text = sr.folio;
             rbi.resultType = sr.resultType;
             if (rbi.resultType == 1)
-                rbi.lineInfo.Text = Convert.ToString(sr.lineNum);
-            rbi.excerpt1 = sr.excerpt1;
-            rbi.excerpt2 = sr.excerpt2;
-            rbi.excerpt3 = sr.excerpt3;
+                rbi.lineInfo.Text = Convert.ToString(sr.lineNum) + sr.lineRange; // Assuming only one will be filled out
+            rbi.excerpts = sr.excerpts;
             rbi.Height = 80; // temp taller than desired, so scrollbar shows
             rbi.HorizontalAlignment = System.Windows.HorizontalAlignment.Left;
             rbi.Width = 430;
@@ -786,9 +798,13 @@ namespace SurfaceApplication1
 
             pageToFind = selectedResult.folioInfo.Text;
 
-            closeupText.Inlines.Add(new Run { FontFamily = new FontFamily("Cambria"), Text = selectedResult.excerpt1, FontWeight = FontWeights.Normal });
-            closeupText.Inlines.Add(new Run { FontFamily = new FontFamily("Cambria"), FontWeight = FontWeights.Bold, Text = selectedResult.excerpt2 });
-            closeupText.Inlines.Add(new Run { FontFamily = new FontFamily("Cambria"), FontWeight = FontWeights.Normal, Text = selectedResult.excerpt3 });
+            foreach (SpecialString ss in selectedResult.excerpts)
+            {
+                if (ss.isStyled == 1)
+                    closeupText.Inlines.Add(new Run { FontFamily = new FontFamily("Cambria"), Text = ss.str, FontWeight = FontWeights.Bold });
+                else
+                    closeupText.Inlines.Add(new Run { FontFamily = new FontFamily("Cambria"), Text = ss.str, FontWeight = FontWeights.Normal });
+            }
         }
 
 
@@ -823,7 +839,7 @@ namespace SurfaceApplication1
         private Boolean checkForChanges()
         {
             if (caseSensitive.IsChecked == true | wholeWordOnly.IsChecked == true |
-                wholePhraseOnly.IsChecked == false | (selectLanguage.SelectedIndex != 0 && selectLanguage.SelectedIndex != 1))
+                exactPhraseOnly.IsChecked == false | (selectLanguage.SelectedIndex != 0 && selectLanguage.SelectedIndex != 1))
                 defaultOptionsChanged = true;
 
             else
