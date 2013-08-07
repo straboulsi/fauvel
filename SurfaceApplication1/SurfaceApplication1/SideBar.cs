@@ -30,7 +30,7 @@ namespace SurfaceApplication1
         public SurfaceWindow1 surfaceWindow;
         public List<SavedPage> savedPages;
         private Boolean defaultOptionsChanged;
-        public String pageToFind, previousPageToFind;
+        private ResultBoxItem lastCloseupRBI;
 
         public SideBar(SurfaceWindow1 surfaceWindow, TabControl tabBar)
         {
@@ -232,6 +232,18 @@ namespace SurfaceApplication1
             SearchTab selectedTab = tabBar.SelectedItem as SearchTab;
             selectedTab.searchMan.Visibility = Visibility.Hidden;
         }
+
+
+            if (lastCloseupRBI.folioInfo.Text.StartsWith("Fo"))
+                lastCloseupRBI.folioInfo.Text = lastCloseupRBI.folioInfo.Text.Substring(2);
+            String imageName = getImageName(lastCloseupRBI.folioInfo.Text, SurfaceWindow1.layoutXml);
+            int pageNum = Convert.ToInt32(imageName.Substring(0, imageName.IndexOf(".jpg")));
+            if (pageNum % 2 == 1) // If odd, meaning it's a Fo_r, we want to aim for the previous page.
+                pageNum--;
+            // Get coordinates from lastCloseupRBI.topL and lastCloseupRBI.bottomR
+
+            surfaceWindow.createTab(pageNum - 10);
+            
 
         private SideBarTab AddAnnotateTabItem()
         {
