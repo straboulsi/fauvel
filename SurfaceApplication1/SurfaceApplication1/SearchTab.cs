@@ -507,9 +507,9 @@ namespace SurfaceApplication1
                 worker.DoWork += delegate 
                 {
                     if (exactPhr == false)
-                        poetryResults = Translate.searchMultipleWordsPoetry(searchQuery, caseType, wordType, (int)currentSearchLanguage);
+                        poetryResults = Search.searchMultipleWordsPoetry(searchQuery, caseType, wordType, (int)currentSearchLanguage);
                     else
-                        poetryResults = Translate.searchExactPoetry(searchQuery, caseType, wordType, (int)currentSearchLanguage);
+                        poetryResults = Search.searchExactPoetry(searchQuery, caseType, wordType, (int)currentSearchLanguage);
                 };
 
                 worker.RunWorkerCompleted += delegate
@@ -560,9 +560,9 @@ namespace SurfaceApplication1
                 worker.DoWork += delegate 
                 {
                     if (exactPhr == false)
-                        lyricResults = Translate.searchMultipleWordsLyrics(searchQuery, caseType, wordType, (int) currentSearchLanguage);
+                        lyricResults = Search.searchMultipleWordsLyrics(searchQuery, caseType, wordType, (int) currentSearchLanguage);
                     else
-                        lyricResults = Translate.searchExactLyrics(searchQuery, caseType, wordType, Translate.whichXml((int)currentSearchLanguage));
+                        lyricResults = Search.searchExactLyrics(searchQuery, caseType, wordType, Search.whichXml((int)currentSearchLanguage));
                 };
 
 
@@ -612,9 +612,9 @@ namespace SurfaceApplication1
                 {
                     
                     if (exactPhr == false)
-                        imageResults = Translate.searchMultipleWordsPicCaptions(searchQuery, caseType, wordType, Translate.whichXml((int) currentSearchLanguage));
+                        imageResults = Search.searchMultipleWordsPicCaptions(searchQuery, caseType, wordType, Search.whichXml((int) currentSearchLanguage));
                     else
-                        imageResults = Translate.searchExactPicCaptions(searchQuery, caseType, wordType, Translate.whichXml((int)currentSearchLanguage));
+                        imageResults = Search.searchExactPicCaptions(searchQuery, caseType, wordType, Search.whichXml((int)currentSearchLanguage));
                 };
                 worker.RunWorkerCompleted += delegate
                 {
@@ -706,6 +706,7 @@ namespace SurfaceApplication1
             rbi.folioInfo.Text = sr.folio;
             rbi.topL = sr.topL;
             rbi.bottomR = sr.bottomR;
+            rbi.matchStrength = sr.matchStrength;
             rbi.resultType = sr.resultType;
             if (rbi.resultType == 1)
                 rbi.lineInfo.Text = Convert.ToString(sr.lineNum) + sr.lineRange; // Assuming only one will be filled out

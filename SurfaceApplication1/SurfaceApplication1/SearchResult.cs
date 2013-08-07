@@ -28,6 +28,7 @@ namespace SurfaceApplication1
         public Image thumbnail, minithumbnail;
         public int resultType; // 1 = poetry, 2 = music, 3 = image
         public Point topL, bottomR;
+        public double matchStrength; // Used to indicate how strongly the result matches the search specifications
 
         public SearchResult()
         {
