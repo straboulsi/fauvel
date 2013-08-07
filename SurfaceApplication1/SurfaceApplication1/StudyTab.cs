@@ -31,6 +31,7 @@ namespace SurfaceApplication1
         public TextBlock studyTabHeader;
         public TextBlock studyPrompt;
         public Button mono, poly;
+        public TextBlock musicTitle;
 
         public StudyTab(SideBar mySideBar, SurfaceWindow1 surfaceWindow) : base(mySideBar)
         {
@@ -74,10 +75,18 @@ namespace SurfaceApplication1
 
         private void study_Mono(object sender, RoutedEventArgs e)
         {
-            studyPrompt.Text = "Conductus : Heu ! Quo progreditur (PM 6)";
+            canvas.Children.Remove(studyPrompt);
             canvas.Children.Remove(mono);
 
+            musicTitle = new TextBlock();
+            Canvas.SetLeft(musicTitle, 32);
+            Canvas.SetTop(musicTitle, 45);
+            //musicTitle.Height = 40;
+            //musicTitle.Width = 500;
+            musicTitle.Text = "Conductus : Heu ! Quo progreditur (PM 6)";
+            musicTitle.FontSize = 30;
 
+            canvas.Children.Add(musicTitle);
         }
     }
 }
