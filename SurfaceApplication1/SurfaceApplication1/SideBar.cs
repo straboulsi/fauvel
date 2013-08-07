@@ -205,16 +205,16 @@ namespace SurfaceApplication1
             return tab;
         }
 
-        //private SideBarTab AddSearchTabItem()
-        //{
-        //    int count = tabItems.Count;
+        private SideBarTab AddSearchTabItem()
+        {
+            int count = tabItems.Count;
 
-        //    SearchTab tab = new SearchTab(this, surfaceWindow);
+            SearchTab tab = new SearchTab(this, surfaceWindow);
 
-        //    // insert tab item right before the last (+) tab item
-        //    tabItems.Insert(count - 1, tab);
-        //    return tab;
-        //}
+            // insert tab item right before the last (+) tab item
+            tabItems.Insert(count - 1, tab);
+            return tab;
+        }
 
 
 
@@ -232,15 +232,15 @@ namespace SurfaceApplication1
         }
 
 
-        private StudyTab AddStudyTabItem()
-        {
-            int count = tabItems.Count;
-            StudyTab tab = new StudyTab(this, surfaceWindow);
-            //tab.HeaderTemplate = tabBar.FindResource("NewStudyTab") as DataTemplate; // can be replaced if StudyTab object exists
+        //private StudyTab AddStudyTabItem()
+        //{
+        //    int count = tabItems.Count;
+        //    StudyTab tab = new StudyTab(this, surfaceWindow);
+        //    //tab.HeaderTemplate = tabBar.FindResource("NewStudyTab") as DataTemplate; // can be replaced if StudyTab object exists
 
-            tabItems.Insert(count - 1, tab);
-            return tab;
-        }
+        //    tabItems.Insert(count - 1, tab);
+        //    return tab;
+        //}
 
         public void deleteTab(object sender, RoutedEventArgs e)
         {
