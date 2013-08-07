@@ -26,9 +26,14 @@ namespace SurfaceApplication1
 {
 
     /**
-     * This class fetches information from the various XML files.
-     * It can search for a section of poetry, music lyrics, or image description by tag id.
-     * It can also return specific lines of poetry by line number, both in Old French and in English.
+     * This class contains all major methods used in the SearchTab.
+     * It includes search capabilities, taking into consideration the preferences marked (case sensitive, whole word, exact phrase, language).
+     * Accessing the appropriate XML file, the search methods then return a list of search results.
+     * This class also includes all helper methods - i.e. getting various info (folio, page) by other info (line number, object tag).
+     * Other methods include specialized forms of search, trimming of extraneous text from lyrics, etc.
+     * 
+     * This class contains the back end methods for SearchTab functionality.
+     * For front end (UI) methods and properties, see SearchTab.cs.
      * Primary Coder: Alison Y. Chang
      **/
     public static class Search

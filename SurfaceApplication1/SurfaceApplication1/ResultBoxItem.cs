@@ -24,6 +24,7 @@ namespace SurfaceApplication1
      * ResultBoxItem is a specialized SurfaceListBoxItem. 
      * It takes many elements from SearchResult objects created in Translate.cs.
      * Each ResultBoxItem is then displayed in a ListBox in the search result tabs.
+     * The class implements IComparable so results may be sorted from most to least relevant, if search becomes more lenient.
      * Primary Coder: Alison Y. Chang
      **/
     public class ResultBoxItem : SurfaceListBoxItem, IComparable

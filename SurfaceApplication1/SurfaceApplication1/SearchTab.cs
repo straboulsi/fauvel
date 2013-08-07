@@ -25,6 +25,8 @@ namespace SurfaceApplication1
     /**
      * This class defines a Search Tab, opened from the side bar using the "Search" app button. 
      * It creates a default tab with a variety of search options, and it also sets up a hidden result section that will appear once a newSearch (see SideBar.cs) is conducted.
+     * The methods in this class support the front end (visual) aspects of the SearchTab and Search app.
+     * For the back end methods, see Search.cs.
      * Primary Coder: Alison Y. Chang
      * */
     public class SearchTab : SideBarTab
