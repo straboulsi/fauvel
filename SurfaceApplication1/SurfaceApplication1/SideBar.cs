@@ -27,7 +27,7 @@ namespace SurfaceApplication1
         public enum searchLanguage { oldFrench = 0, modernFrench = 1, English = 2 };
         public searchLanguage currentSearchLanguage = searchLanguage.oldFrench;
         public int veryFirstLine, veryLastLine;
-        private SurfaceWindow1 surfaceWindow;
+        public SurfaceWindow1 surfaceWindow;
         public List<SavedPage> savedPages;
         private Boolean defaultOptionsChanged;
         private ResultBoxItem lastCloseupRBI;
@@ -351,7 +351,7 @@ namespace SurfaceApplication1
                 {
                     ResultBoxItem resultRBI = new ResultBoxItem();
                     convertSearchResultToResultBoxItem(result, resultRBI);
-                    resultRBI.resultThumbnail = Translate.convertImage(Thumbnailer.getThumbnail(Translate.getTagByLineNum(result.lineNum)));
+                    resultRBI.resultThumbnail.Source = Thumbnailer.getThumbnail(result.tag);
                     if (((optionsShown == false) && poetryResults.Count < 4) || ((optionsShown == true) && poetryResults.Count < 2))
                         resultRBI.Width = 480;
                     poetryLB.Items.Add(resultRBI);
@@ -386,7 +386,7 @@ namespace SurfaceApplication1
                 {
                     ResultBoxItem resultRBI = new ResultBoxItem();
                     convertSearchResultToResultBoxItem(result, resultRBI);
-                    resultRBI.resultThumbnail = Translate.convertImage(Thumbnailer.getThumbnail(result.tag));
+                    resultRBI.resultThumbnail.Source = Thumbnailer.getThumbnail(result.tag);
                     lyricsLB.Items.Add(resultRBI);
                 }
 
@@ -414,7 +414,7 @@ namespace SurfaceApplication1
                     ResultBoxItem resultRBI = new ResultBoxItem();
                     convertSearchResultToResultBoxItem(result, resultRBI);
                     resultRBI.miniThumbnail.Source = new BitmapImage(new Uri(@"..\..\minithumbnails\" + result.tag + ".jpg", UriKind.Relative));
-                    resultRBI.resultThumbnail = Translate.convertImage(Thumbnailer.getThumbnail(result.tag));
+                    resultRBI.resultThumbnail.Source = Thumbnailer.getThumbnail(result.tag);
                     imagesLB.Items.Add(resultRBI);
                 }
 
