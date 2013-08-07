@@ -8,6 +8,7 @@ using System.Threading;
 using System.Xml;
 using System.Xml.Schema;
 using System.Xml.XPath;
+using System.Windows.Media.Imaging;
 
 
 namespace SurfaceApplication1
@@ -20,20 +21,26 @@ namespace SurfaceApplication1
     static class Thumbnailer
     {
 
+        static List<Counterpart> counterpartList;
+
         /**
          * Returns the image when given the tag of a chunk of poetry, music object, or image.
          * For music lyric results, starts by removing the _t at end of tag (which meant text).
          * */
-        public static Image getThumbnail(String tag)
+        public static BitmapImage getThumbnail(String tag)
         {
             if (tag.EndsWith("_t"))
                 tag = tag.Substring(0, tag.Length - 2);
 
             tag = checkForCounterparts(tag);
 
-            Image thumbnail = Image.FromFile(@"..\..\thumbnails\" + tag + ".jpg", true);
+            BitmapImage image = new BitmapImage();
+            image.BeginInit();
+            image.UriSource = new Uri("thumbnails/" + tag + ".jpg", UriKind.Relative);
+            image.EndInit();
+            image.Freeze();
 
-            return thumbnail;
+            return image;
         }
 
         /**
@@ -44,18 +51,11 @@ namespace SurfaceApplication1
         {
             if (!tag.StartsWith("Te") && !tag.Contains("Im")) // If it's music
             {
-                foreach (Counterpart c in makeCounterpartList())
-                {
+                foreach (Counterpart c in counterpartList)
                     foreach (String s in c.otherNames)
-                    {
                         if (tag == s)
-                        {
-                            tag = c.name;
-                            break;
-                        }
-                    }
-                }
-                
+                            return c.name;
+
             }
             return tag;
 
@@ -64,9 +64,9 @@ namespace SurfaceApplication1
         /**
          * Sets up the Counterpart objects - one for every music object in Fauvel that has counterparts.
          * */
-        public static List<Counterpart> makeCounterpartList()
+        public static void makeCounterpartList()
         {
-            List<Counterpart> counterpartList = new List<Counterpart>();
+            counterpartList = new List<Counterpart>();
             counterpartList.Add(new Counterpart("10vMo2", new List<String>(new String[] { "11rMo1" })));
             counterpartList.Add(new Counterpart("11vMo1", new List<String>(new String[] { "12rMo1" })));
             counterpartList.Add(new Counterpart("12rPr1", new List<String>(new String[] { "12vPr1" })));
@@ -84,10 +84,7 @@ namespace SurfaceApplication1
             counterpartList.Add(new Counterpart("37rSe1", new List<String>(new String[] { "37vSe1" })));
             counterpartList.Add(new Counterpart("41vMo1", new List<String>(new String[] { "42rMo1" })));
             counterpartList.Add(new Counterpart("43rMo2", new List<String>(new String[] { "43vMo1" })));
-
-            return counterpartList;
         }
-
 
     }
 }

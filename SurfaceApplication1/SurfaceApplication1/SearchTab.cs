@@ -18,6 +18,7 @@ using Microsoft.Surface.Presentation.Input;
 using System.Xml;
 using System.Windows.Threading;
 using System.ComponentModel;
+using System.Diagnostics;
 
 namespace SurfaceApplication1
 {
@@ -447,11 +448,6 @@ namespace SurfaceApplication1
             optionsShown = false;
         }
 
-        private void UpdateText(string message)
-        {
-            //update ui
-        }
-
         private void changeCheck(object sender, TouchEventArgs e)
         {
             CheckBox thisbox = sender as CheckBox;
@@ -491,13 +487,16 @@ namespace SurfaceApplication1
             if (wholeWordOnly.IsChecked == true)
                 wordType = 1;
 
+            poetryTab.Header = "Searching Poetry";
+            lyricsTab.Header = "Searching Lyrics";
+            imagesTab.Header = "Searching Images";
             searchQueryBox.IsEnabled = false;
             goSearch.Content = "Searching";
             goSearch.IsEnabled = false;
             unreturnedResults = 3;
 
             // Poetry results //
-            List<SearchResult> poetryResults = new List<SearchResult>();
+            poetryResults = new List<SearchResult>();
 
             Action poetryResultAction = delegate
             {
@@ -528,15 +527,17 @@ namespace SurfaceApplication1
                 }
                 worker.RunWorkerCompleted += delegate
                 {
+                    
                     SurfaceListBox poetryLB = new SurfaceListBox();
                     poetryLB.Style = sideBar.tabBar.FindResource("SearchResultSurfaceListBox") as Style;
                     poetryScroll.Content = poetryLB; // NB: the scroll bar comes from the poetryScroll, not poetryLB
 
+                    
                     foreach (SearchResult result in poetryResults)
                     {
                         ResultBoxItem resultRBI = new ResultBoxItem();
                         convertSearchResultToResultBoxItem(result, resultRBI);
-                        resultRBI.resultThumbnail = Translate.convertImage(Thumbnailer.getThumbnail(Translate.getTagByLineNum(result.lineNum)));
+                        resultRBI.resultThumbnail.Source = Thumbnailer.getThumbnail(result.tag);
                         if (((optionsShown == false) && poetryResults.Count < 4) || ((optionsShown == true) && poetryResults.Count < 2))
                             resultRBI.Width = 480;
                         poetryLB.Items.Add(resultRBI);
@@ -581,10 +582,12 @@ namespace SurfaceApplication1
                     {
                         ResultBoxItem resultRBI = new ResultBoxItem();
                         convertSearchResultToResultBoxItem(result, resultRBI);
-                        resultRBI.resultThumbnail = Translate.convertImage(Thumbnailer.getThumbnail(result.tag));
+                        resultRBI.resultThumbnail.Source = Thumbnailer.getThumbnail(result.tag);
                         lyricsLB.Items.Add(resultRBI);
                     }
+
                     lyricsLB.Style = sideBar.tabBar.FindResource("SearchResultSurfaceListBox") as Style;
+
                     lyricsScroll.Content = lyricsLB;
 
                     lyricsTab.Header = "Lyrics (" + lyricResults.Count + ")";
@@ -626,7 +629,7 @@ namespace SurfaceApplication1
                         ResultBoxItem resultRBI = new ResultBoxItem();
                         convertSearchResultToResultBoxItem(result, resultRBI);
                         resultRBI.miniThumbnail.Source = new BitmapImage(new Uri(@"..\..\minithumbnails\" + result.tag + ".jpg", UriKind.Relative));
-                        resultRBI.resultThumbnail = Translate.convertImage(Thumbnailer.getThumbnail(result.tag));
+                        resultRBI.resultThumbnail.Source = Thumbnailer.getThumbnail(result.tag);
                         imagesLB.Items.Add(resultRBI);
                     }
 

@@ -20,7 +20,6 @@ using Microsoft.Surface.Presentation.Input;
 
 namespace SurfaceApplication1
 {
-
     /**
      * ResultBoxItem is a specialized SurfaceListBoxItem. 
      * It takes many elements from SearchResult objects created in Translate.cs.

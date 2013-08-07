@@ -24,7 +24,7 @@ namespace SurfaceApplication1
         private List<SideBarTab> tabItems;
         private SideBarTab tabAdd;
         public int veryFirstLine, veryLastLine;
-        private SurfaceWindow1 surfaceWindow;
+        public SurfaceWindow1 surfaceWindow;
         public List<SavedPage> savedPages;
 
         public SideBar(SurfaceWindow1 surfaceWindow, TabControl tabBar)

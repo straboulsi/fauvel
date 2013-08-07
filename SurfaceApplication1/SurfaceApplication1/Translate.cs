@@ -1007,28 +1007,5 @@ namespace SurfaceApplication1
             }
 
         }
-
-
-        /**
-         * Converts a System.Windows.Controls.Image to System.Drawing.Image.
-         * Used for thumbnailing purposes.
-         * This method was adopted from somewhere on the internet.
-         * */
-        public static System.Windows.Controls.Image convertImage(System.Drawing.Image gdiImg)
-        {
-
-            System.Windows.Controls.Image img = new System.Windows.Controls.Image();
-
-            //convert System.Drawing.Image to WPF image
-            System.Drawing.Bitmap bmp = new System.Drawing.Bitmap(gdiImg);
-            IntPtr hBitmap = bmp.GetHbitmap();
-            System.Windows.Media.ImageSource WpfBitmap = System.Windows.Interop.Imaging.CreateBitmapSourceFromHBitmap(hBitmap, IntPtr.Zero, Int32Rect.Empty, BitmapSizeOptions.FromEmptyOptions());
-
-            img.Source = WpfBitmap;
-            img.Width = 500;
-            img.Height = 600;
-            img.Stretch = System.Windows.Media.Stretch.Fill;
-            return img;
-        }
     }
 }
