@@ -9,6 +9,7 @@ namespace SurfaceApplication1
      * The TranslationBox object holds all poetry translations, for translation overlay functions.
      * It has Strings for each language's translation of the original.
      * In cases where some lines are longer, the font size and spacing are adjusted to display on the page in a true-to-original style.
+     * Primary Coder: Alison Y. Chang
      * */
     public class TranslationBox
     {
@@ -23,7 +24,7 @@ namespace SurfaceApplication1
         public int lines;
 
         // Has string (contents) and coordinates
-        // Class1 should take in page number and output array of translation boxes
+        // Takes in page number and output array of translation boxes
         public TranslationBox(String aTag, String someOldFr, String someModFr, String someEng, Point aTopL, Point aBottomR)
         {
             tag = aTag;

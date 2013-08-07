@@ -10,6 +10,11 @@ using System.Windows.Input;
 
 namespace SurfaceApplication1
 {
+    /**
+     * This class defines the basic format of a SideBarTab.
+     * Each specialized tab (search tabs, annotation tabs, etc) extends this SideBarTab to add more methods and properties.
+     * Primary Coders: Alison Y. Chang and Brendan Chou
+     * */
     public class SideBarTab : TabItem
     {
         public Grid headerGrid;

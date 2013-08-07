@@ -18,7 +18,9 @@ using Microsoft.Surface.Presentation.Input;
 
 namespace SurfaceApplication1
 {
-
+    /**
+     * Primary Coder: Brendan Chou
+     * */
     public class SavedPagesTab : SideBarTab
     {
 

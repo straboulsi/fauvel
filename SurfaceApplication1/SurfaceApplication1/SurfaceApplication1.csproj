@@ -115,6 +115,7 @@
     <Compile Include="SearchTab.cs" />
     <Compile Include="SideBar.cs" />
     <Compile Include="SideBarTab.cs" />
+    <Compile Include="SpecialString.cs" />
     <Compile Include="Thumbnailer.cs" />
     <Compile Include="Translate.cs" />
     <Compile Include="TranslationBox.cs" />
@@ -159,6 +160,7 @@
     <Resource Include="icons\magnifyingglass.png" />
     <Resource Include="XML\LayoutXML.xml" />
     <Resource Include="icons\translationsBar.png" />
+    <Resource Include="icons\searchMan.jpg" />
     <Content Include="minithumbnails\10rIm1.jpg">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>

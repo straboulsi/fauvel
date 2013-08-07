@@ -21,7 +21,11 @@ using System.ComponentModel;
 
 namespace SurfaceApplication1
 {
-
+    /**
+     * This class defines a Search Tab, opened from the side bar using the "Search" app button. 
+     * It creates a default tab with a variety of search options, and it also sets up a hidden result section that will appear once a newSearch (see SideBar.cs) is conducted.
+     * Primary Coder: Alison Y. Chang
+     * */
     public class SearchTab : SideBarTab
     {
         public Canvas poetryCanvas, lyricsCanvas, imagesCanvas;
@@ -29,7 +33,7 @@ namespace SurfaceApplication1
         public TextBlock searchPrompt, searchTabHeader;
         public TextBox searchQueryBox;
         public Line topLine, bottomLine;
-        public CheckBox caseSensitive, wholeWordOnly, wholePhraseOnly;
+        public CheckBox caseSensitive, wholeWordOnly, exactPhraseOnly;
         public ScaleTransform st;
         public SurfaceListBox selectLanguage;
         public SurfaceListBoxItem pickLanguage, oldFrench, modernFrench, English;
@@ -37,7 +41,7 @@ namespace SurfaceApplication1
         public TabItem poetryTab, lyricsTab, imagesTab;
         public StackPanel poetryPanel, lyricsPanel, imagesPanel;
         public Button moreOptions, fewerOptions;
-        public Image downArrow, upArrow;
+        public Image downArrow, upArrow, searchMan;
         public SurfaceScrollViewer poetryScroll, lyricsScroll, imagesScroll;
         public enum searchLanguage { oldFrench = 1, modernFrench = 2, English = 3 };
         public searchLanguage currentSearchLanguage = searchLanguage.oldFrench;
@@ -67,7 +71,7 @@ namespace SurfaceApplication1
             upArrow = new Image();
             caseSensitive = new CheckBox();
             wholeWordOnly = new CheckBox();
-            wholePhraseOnly = new CheckBox();
+            exactPhraseOnly = new CheckBox();
             st = new ScaleTransform();
             bottomLine = new Line();
 
@@ -140,6 +144,14 @@ namespace SurfaceApplication1
             topLine.Y2 = 163;
             topLine.Stroke = Brushes.Black;
             topLine.StrokeThickness = 2;
+
+            searchMan = new Image();
+            searchMan.Source = new BitmapImage(new Uri(@"..\..\icons\searchMan.jpg", UriKind.Relative));
+            searchMan.Height = 100;
+            searchMan.Width = 100;
+            Canvas.SetTop(searchMan, 300);
+            Canvas.SetLeft(searchMan, 300);
+            searchMan.Visibility = Visibility.Hidden;
             
 
 
@@ -160,12 +172,11 @@ namespace SurfaceApplication1
             Canvas.SetLeft(wholeWordOnly, 243);
             Canvas.SetTop(wholeWordOnly, 170);
 
-            wholePhraseOnly.FontSize = 10;
-            wholePhraseOnly.LayoutTransform = st;
-            wholePhraseOnly.Content = (string)"Match exact phrase only";
-            wholePhraseOnly.IsChecked = true; // This is default
-            Canvas.SetLeft(wholePhraseOnly, 243);
-            Canvas.SetTop(wholePhraseOnly, 227);
+            exactPhraseOnly.FontSize = 10;
+            exactPhraseOnly.LayoutTransform = st;
+            exactPhraseOnly.Content = (string)"Match exact phrase only";
+            Canvas.SetLeft(exactPhraseOnly, 243);
+            Canvas.SetTop(exactPhraseOnly, 227);
 
             selectLanguage.Background = Brushes.LightGray;
             selectLanguage.Visibility = Visibility.Collapsed;
@@ -326,14 +337,9 @@ namespace SurfaceApplication1
             canvas.Children.Add(goSearch);
             canvas.Children.Add(topLine);
             canvas.Children.Add(moreOptions);
+            canvas.Children.Add(searchMan);
 
-            ///searchCanvas.Children.Add(optionsCanvas);
-            //optionsCanvas.Children.Add(bottomLine);
-            //optionsCanvas.Children.Add(fewerOptions);
-            ///optionsCanvas.Children.Add(caseSensitive);
-            //optionsCanvas.Children.Add(wholeWordOnly);
-            //optionsCanvas.Children.Add(wholePhraseOnly);
-            ///optionsCanvas.Children.Add(selectLanguage);
+
 
             canvas.Children.Add(searchResults);
             canvas.Children.Add(caseSensitive);
@@ -342,13 +348,13 @@ namespace SurfaceApplication1
             canvas.Children.Add(selectLanguageButton);
             canvas.Children.Add(fewerOptions);
             canvas.Children.Add(wholeWordOnly);
-            canvas.Children.Add(wholePhraseOnly);
+            canvas.Children.Add(exactPhraseOnly);
             caseSensitive.Visibility = Visibility.Hidden;
             selectLanguage.Visibility = Visibility.Hidden;
             bottomLine.Visibility = Visibility.Hidden;
             fewerOptions.Visibility = Visibility.Hidden;
             wholeWordOnly.Visibility = Visibility.Hidden;
-            wholePhraseOnly.Visibility = Visibility.Hidden;
+            exactPhraseOnly.Visibility = Visibility.Hidden;
 
             moreOptions.Click += new RoutedEventHandler(Show_Options);
             moreOptions.TouchDown += new EventHandler<TouchEventArgs>(Show_Options);

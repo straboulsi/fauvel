@@ -10,6 +10,10 @@ using System.Windows.Threading;
 
 namespace SurfaceApplication1
 {
+    /**
+     * This class sets up the background workers for the application.
+     * Primary Coder: Brendan Chou
+     * */
     class Workers
     {
         private Tab tab;

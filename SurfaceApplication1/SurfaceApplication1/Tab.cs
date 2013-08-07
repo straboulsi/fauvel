@@ -10,6 +10,10 @@ using Microsoft.Surface.Presentation.Controls;
 
 namespace SurfaceApplication1
 {
+    /**
+     * This class defines a new main tab that displays an opening of Fauvel.
+     * Primary Coder: Brendan Chou
+     * */
     class Tab
     {
         public int _page;

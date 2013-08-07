@@ -7,6 +7,9 @@ using System.Windows.Controls;
 
 namespace SurfaceApplication1
 {
+    /**
+     * Primary Coder: Brendan Chou
+     * */
     public class SavedPage
     {
         public Point center;

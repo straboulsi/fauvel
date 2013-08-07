@@ -10,6 +10,7 @@ namespace SurfaceApplication1
      * The first string "name" is the first tag for that object.
      * The other strings in "otherNames" are tags for all other counterparts.
      * Counterpart objects are used in Thumbnailer.cs to help with Thumbnail returns.
+     * Primary Coder: Alison Y. Chang
      **/
     class Counterpart
     {
