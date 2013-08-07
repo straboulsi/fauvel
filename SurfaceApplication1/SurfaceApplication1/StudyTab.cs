@@ -23,7 +23,9 @@ namespace SurfaceApplication1
 {
     class StudyTab : SideBarTab
     {
-        public TextBlock studyTabHeader, studyPrompt;
+        public TextBlock studyTabHeader;
+        public TextBlock studyPrompt;
+        public Button mono, poly;
 
         public StudyTab(SideBar mySideBar, SurfaceWindow1 surfaceWindow) : base(mySideBar)
         {
@@ -37,12 +39,40 @@ namespace SurfaceApplication1
 
             studyPrompt.FontSize = 30;
             studyPrompt.Text = "Please select a piece of music.";
+            //studyPrompt.Height = 40;
+            //studyPrompt.Width = 500;
             Canvas.SetLeft(studyPrompt, 32);
-            Canvas.SetTop(studyPrompt, 26);
+            Canvas.SetTop(studyPrompt, 45);
+
+            mono = new Button();
+            poly = new Button();
+
+            mono.Height = 50;
+            mono.Width = 200;
+            mono.Content = "study 2rCon1";
+            mono.FontSize = 20;
+            Canvas.SetLeft(mono, 100);
+            Canvas.SetTop(mono, 100);
+
+            // Add stuff.
 
             headerGrid.Children.Add(studyTabHeader);
 
             canvas.Children.Add(studyPrompt);
+            canvas.Children.Add(mono);
+
+            // Add click handlers.
+
+            mono.Click += new RoutedEventHandler(study_Mono);
+            mono.TouchDown += new EventHandler<TouchEventArgs>(study_Mono);
+        }
+
+        private void study_Mono(object sender, RoutedEventArgs e)
+        {
+            studyPrompt.Text = "Conductus : Heu ! Quo progreditur (PM 6)";
+            canvas.Children.Remove(mono);
+
+
         }
     }
 }
