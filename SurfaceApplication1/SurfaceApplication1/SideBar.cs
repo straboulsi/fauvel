@@ -233,18 +233,6 @@ namespace SurfaceApplication1
             selectedTab.searchMan.Visibility = Visibility.Hidden;
         }
 
-
-            if (lastCloseupRBI.folioInfo.Text.StartsWith("Fo"))
-                lastCloseupRBI.folioInfo.Text = lastCloseupRBI.folioInfo.Text.Substring(2);
-            String imageName = getImageName(lastCloseupRBI.folioInfo.Text, SurfaceWindow1.layoutXml);
-            int pageNum = Convert.ToInt32(imageName.Substring(0, imageName.IndexOf(".jpg")));
-            if (pageNum % 2 == 1) // If odd, meaning it's a Fo_r, we want to aim for the previous page.
-                pageNum--;
-            // Get coordinates from lastCloseupRBI.topL and lastCloseupRBI.bottomR
-
-            surfaceWindow.createTab(pageNum - 10);
-            
-
         private SideBarTab AddAnnotateTabItem()
         {
             int count = tabItems.Count;
