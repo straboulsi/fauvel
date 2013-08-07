@@ -174,7 +174,7 @@ namespace SurfaceApplication1
         private void StudyButton_Selected(object sender, RoutedEventArgs e)
         {
             tabBar.DataContext = null;
-            SideBarTab newTab = this.AddStudyTabItem();
+            StudyTab newTab = this.AddStudyTabItem();
             tabBar.DataContext = tabItems;
             tabBar.SelectedItem = newTab;
         }
@@ -227,14 +227,14 @@ namespace SurfaceApplication1
         }
 
 
-        private SideBarTab AddStudyTabItem()
+        private StudyTab AddStudyTabItem()
         {
             int count = tabItems.Count;
 
             // create new tab item - eventually replace with MusicTab tab = new MusicTab();
             // Then, add all listeners here
-            SideBarTab tab = new SideBarTab(this);
-            tab.HeaderTemplate = tabBar.FindResource("NewStudyTab") as DataTemplate; // can be replaced if StudyTab object exists
+            StudyTab tab = new StudyTab(this, surfaceWindow);
+            //tab.HeaderTemplate = tabBar.FindResource("NewStudyTab") as DataTemplate; // can be replaced if StudyTab object exists
 
             // insert tab item right before the last (+) tab item
             tabItems.Insert(count - 1, tab);

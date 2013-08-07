@@ -116,6 +116,7 @@
     <Compile Include="SideBar.cs" />
     <Compile Include="SideBarTab.cs" />
     <Compile Include="SpecialString.cs" />
+    <Compile Include="StudyTab.cs" />
     <Compile Include="Thumbnailer.cs" />
     <Compile Include="Translate.cs" />
     <Compile Include="TranslationBox.cs" />
