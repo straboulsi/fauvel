@@ -42,7 +42,7 @@ namespace SurfaceApplication1
         public TabItem poetryTab, lyricsTab, imagesTab;
         public StackPanel poetryPanel, lyricsPanel, imagesPanel;
         public Button moreOptions, fewerOptions;
-        public Image downArrow, upArrow, searchMan;
+        public Image downArrow, upArrow;
         public SurfaceScrollViewer poetryScroll, lyricsScroll, imagesScroll;
         public enum searchLanguage { oldFrench = 0, modernFrench = 1, English = 2 };
         public searchLanguage currentSearchLanguage = searchLanguage.oldFrench;
@@ -147,14 +147,6 @@ namespace SurfaceApplication1
             topLine.Y2 = 163;
             topLine.Stroke = Brushes.Black;
             topLine.StrokeThickness = 2;
-
-            searchMan = new Image();
-            searchMan.Source = new BitmapImage(new Uri(@"..\..\icons\searchMan.jpg", UriKind.Relative));
-            searchMan.Height = 100;
-            searchMan.Width = 100;
-            Canvas.SetTop(searchMan, 300);
-            Canvas.SetLeft(searchMan, 300);
-            searchMan.Visibility = Visibility.Hidden;
             
 
 
@@ -340,7 +332,6 @@ namespace SurfaceApplication1
             canvas.Children.Add(goSearch);
             canvas.Children.Add(topLine);
             canvas.Children.Add(moreOptions);
-            canvas.Children.Add(searchMan);
 
 
 
