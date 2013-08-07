@@ -32,6 +32,8 @@ namespace SurfaceApplication1
         public TextBlock studyPrompt;
         public Button mono, poly;
         public TextBlock musicTitle;
+        public Button playpause_1, stop_1, playpause_2, stop_2;
+        public TabControl display;
 
         public StudyTab(SideBar mySideBar, SurfaceWindow1 surfaceWindow) : base(mySideBar)
         {
@@ -86,7 +88,27 @@ namespace SurfaceApplication1
             musicTitle.Text = "Conductus : Heu ! Quo progreditur (PM 6)";
             musicTitle.FontSize = 30;
 
+            playpause_1 = new Button();
+            stop_1 = new Button();
+            Canvas.SetLeft(playpause_1, 32);
+            Canvas.SetTop(playpause_1, 90);
+            Canvas.SetLeft(stop_1, 82);
+            Canvas.SetTop(stop_1, 90);
+            playpause_1.Height = 50;
+            playpause_1.Width = 50;
+            stop_1.Height = 50;
+            stop_1.Width = 50;
+            playpause_1.Content = "►";
+            stop_1.Content = "■";
+            playpause_1.FontSize = 30;
+            stop_1.FontSize = 30;
+
+            display = new TabControl();
+
+
             canvas.Children.Add(musicTitle);
+            canvas.Children.Add(playpause_1);
+            canvas.Children.Add(stop_1);
         }
     }
 }
