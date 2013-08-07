@@ -404,7 +404,7 @@ namespace SurfaceApplication1
 
 
                 // Image results
-                List<SearchResult> imageResults = Translate.searchPicCaptions(searchQuery, caseType, wordType, SurfaceWindow1.xml);
+                List<SearchResult> imageResults = Translate.searchExactPicCaptions(searchQuery, caseType, wordType, SurfaceWindow1.xml);
                 ListBox imagesLB = new ListBox();
                 imagesLB.Style = tabBar.FindResource("SearchResultSurfaceListBox") as Style;
                 selectedTab.imagesScroll.Content = imagesLB;

@@ -997,6 +997,90 @@ namespace SurfaceApplication1
             return results;
         }
 
+        public static List<SearchResult> searchMultipleWordsPicCaptions(String searchStr, int caseSensitive, int wordSensitive, XmlDocument whichXml)
+        {
+            List<SearchResult> results = new List<SearchResult>();
+            List<SpecialString> searchStrings = new List<SpecialString>();
+
+            // Picks a certain language XML based on language int
+            XmlDocument thisXml = whichXml; // Allow change based on language once multiple language captions available
+
+            String[] search = searchStr.Trim().Split(new String[] { " " }, StringSplitOptions.None); // To search for each word independently
+
+            foreach (String s in search)
+                searchStrings.Add(new SpecialString(s, false)); // See SpecialString class
+
+
+            try
+            {
+                XmlNodeList xnl = whichXml.DocumentElement.SelectNodes("//figure"); // Selects images
+
+                foreach (XmlNode xn in xnl)
+                {
+                    // If the first word has been found
+                    if (foundBySpecifiedCase(searchStrings[0].str, xn.InnerText, caseSensitive) && foundBySpecifiedWord(searchStrings[0].str, xn.InnerText, wordSensitive))
+                    {
+                        String resultText = xn.InnerText.Trim();
+
+                        foreach (SpecialString ss in searchStrings)
+                        {
+                            if (foundBySpecifiedCase(ss.str, resultText, caseSensitive) && foundBySpecifiedWord(ss.str, resultText, wordSensitive))
+                            {
+                                ss.isFound = true; // Keep in mind that this will stay true until set again otherwise!
+                                ss.spotInResult = myComp.IndexOf(resultText, ss.str, CompareOptions.IgnoreCase);
+                            }
+                            else
+                                ss.isFound = false; // Make sure to set this for each new result
+                        }
+
+                        Boolean foundAll = true;
+                        foreach (SpecialString ss in searchStrings)
+                        {
+                            if (ss.isFound == false)
+                                foundAll = false;
+                        }
+
+
+                        // If all criteria met, create a new SearchResult
+                        if (foundAll == true)
+                        {
+
+                            SearchResult newResult = new SearchResult();
+                            newResult.resultType = 3;
+                            int index = resultText.IndexOf("(");
+                            newResult.text1 = resultText.Substring(0, index).Trim(); // "Miniature __"
+                            newResult.text2 = resultText.Substring(index).Trim(); // "(Image description)"
+                            newResult.tag = xn.Attributes["id"].Value;
+                            newResult.topL = getPoint(newResult.tag, 1);
+                            newResult.bottomR = getPoint(newResult.tag, 2);
+                            newResult.folio = getPageByTag(newResult.tag, 3);
+
+                            searchStrings.Sort();
+
+                            foreach (SpecialString ss in searchStrings)
+                            {
+                                newResult.excerpts.Add(new SpecialString(resultText.Substring(0, myComp.IndexOf(resultText, ss.str, CompareOptions.IgnoreCase)), 0));
+                                newResult.excerpts.Add(new SpecialString(resultText.Substring(myComp.IndexOf(resultText, ss.str, CompareOptions.IgnoreCase), ss.str.Length), 1));
+                                resultText = resultText.Substring(myComp.IndexOf(resultText, ss.str, CompareOptions.IgnoreCase) + ss.str.Length);
+                            }
+                            newResult.excerpts.Add(new SpecialString(resultText, 0)); // Adding the rest of the resultText, from after the end of the last search word
+
+
+                            results.Add(newResult);
+
+                        }
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                Console.Write(e.StackTrace);
+                Console.Read();
+            }
+
+            return results;
+        }
+
 
 
         /**

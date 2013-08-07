@@ -273,7 +273,7 @@ namespace SurfaceApplication1
 
             poetryScroll.Height = 325;
             poetryScroll.Width = 470;
-            poetryScroll.Background = Brushes.LightGray;
+            //poetryScroll.Background = Brushes.LightGray;
             //poetryScroll.VerticalScrollBarVisibility = ScrollBarVisibility.Visible;
             poetryScroll.VerticalScrollBarVisibility = ScrollBarVisibility.Auto;
             poetryScroll.HorizontalScrollBarVisibility = ScrollBarVisibility.Disabled;
@@ -299,7 +299,7 @@ namespace SurfaceApplication1
             lyricsCanvas.Children.Add(lyricsBorder);
             lyricsScroll.Height = 325;
             lyricsScroll.Width = 470;
-            lyricsScroll.Background = Brushes.LightGray;
+            //lyricsScroll.Background = Brushes.LightGray;
             //lyricsScroll.VerticalScrollBarVisibility = ScrollBarVisibility.Visible;
             lyricsScroll.HorizontalScrollBarVisibility = ScrollBarVisibility.Disabled;
             lyricsScroll.PanningMode = PanningMode.VerticalOnly;
@@ -323,7 +323,7 @@ namespace SurfaceApplication1
             imagesCanvas.Children.Add(imagesBorder); 
             imagesScroll.Height = 325;
             imagesScroll.Width = 470;
-            imagesScroll.Background = Brushes.LightGray;
+            //imagesScroll.Background = Brushes.LightGray;
             imagesScroll.HorizontalScrollBarVisibility = ScrollBarVisibility.Disabled;
             //imagesScroll.VerticalScrollBarVisibility = ScrollBarVisibility.Visible;
             imagesScroll.PanningMode = PanningMode.VerticalOnly;
@@ -485,14 +485,27 @@ namespace SurfaceApplication1
             if (wholeWordOnly.IsChecked == true)
                 wordType = 1;
                 
-	    exactPhr = exactPhraseOnly.IsChecked;
-            poetryTab.Header = "Searching Poetry";
-            lyricsTab.Header = "Searching Lyrics";
-            imagesTab.Header = "Searching Images";
+	        exactPhr = exactPhraseOnly.IsChecked;
+
+            if (optionsShown == true)
+                compressResults();
+
+            poetryTab.Header = "Poetry...";
+            lyricsTab.Header = "Lyrics...";
+            imagesTab.Header = "Images...";
             searchQueryBox.IsEnabled = false;
             goSearch.Content = "Searching";
             goSearch.IsEnabled = false;
             unreturnedResults = 3;
+
+            poetryScroll.ScrollToTop();
+            lyricsScroll.ScrollToTop();
+            imagesScroll.ScrollToTop();
+            poetryPanel.Children.Clear();
+            lyricsPanel.Children.Clear();
+            imagesPanel.Children.Clear();
+
+
 
             // Poetry results //
             poetryResults = new List<SearchResult>();
@@ -539,6 +552,8 @@ namespace SurfaceApplication1
                     }
                     else
                         poetryTab.Content = poetryCanvas;
+
+                    poetryScroll.Background = Brushes.LightGray;
 
                     returnAResult();
                 };
@@ -590,6 +605,8 @@ namespace SurfaceApplication1
                     else
                         lyricsTab.Content = lyricsCanvas;
 
+                    lyricsScroll.Background = Brushes.LightGray;
+
                     returnAResult();
                 };
                 worker.RunWorkerAsync();
@@ -604,8 +621,12 @@ namespace SurfaceApplication1
             {
                 BackgroundWorker worker = new BackgroundWorker();
                 worker.DoWork += delegate
-                { // Add if loops here
-                    imageResults = Translate.searchExactPicCaptions(searchQuery, caseType, wordType, SurfaceWindow1.xml);
+                {
+                    
+                    if (exactPhr == false)
+                        imageResults = Translate.searchMultipleWordsPicCaptions(searchQuery, caseType, wordType, Translate.whichXml((int) currentSearchLanguage));
+                    else
+                        imageResults = Translate.searchExactPicCaptions(searchQuery, caseType, wordType, Translate.whichXml((int)currentSearchLanguage));
                 };
                 worker.RunWorkerCompleted += delegate
                 {
@@ -618,6 +639,8 @@ namespace SurfaceApplication1
                         ResultBoxItem resultRBI = new ResultBoxItem();
                         convertSearchResultToResultBoxItem(result, resultRBI);
                         resultRBI.miniThumbnail.Source = new BitmapImage(new Uri(@"..\..\minithumbnails\" + result.tag + ".jpg", UriKind.Relative));
+                        resultRBI.miniThumbnail.Width = 50;
+                        resultRBI.miniThumbnail.Height = 50;
                         resultRBI.resultThumbnail.Source = Thumbnailer.getThumbnail(result.tag);
                         imagesLB.Items.Add(resultRBI);
                     }
@@ -627,14 +650,13 @@ namespace SurfaceApplication1
                     if (imageResults.Count == 0)
                     {
                         TextBlock noResults = new TextBlock();
-                        noResults.Text = "Sorry, your search returned no image results.\r\n\r\nNB: Image captions exist in Modern French only; no English (yet).";
+                        noResults.Text = "Sorry, your search returned no image results.\r\n\r\nNB: Image captions don't exist in English yet!";
                         imagesTab.Content = noResults;
                     }
                     else
                         imagesTab.Content = imagesCanvas;
 
-                    if (optionsShown == true)
-                        compressResults();
+                    imagesScroll.Background = Brushes.LightGray;
                     
                     returnAResult();
                 };
@@ -653,7 +675,7 @@ namespace SurfaceApplication1
                 goSearch.Content = "Go!";
                 goSearch.IsEnabled = true;
 
-                /*Auto flip to a tab with results if the current one has none
+                //Auto flip to a tab with results if the current one has none
                 if (searchResults.SelectedItem == poetryTab && poetryResults.Count == 0)
                 {
                     if (lyricResults.Count != 0)
@@ -674,7 +696,7 @@ namespace SurfaceApplication1
                         searchResults.SelectedItem = poetryTab;
                     else if (lyricResults.Count != 0)
                         searchResults.SelectedItem = lyricsTab;
-                }*/
+                }
             }
         }
 
