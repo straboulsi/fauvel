@@ -163,16 +163,13 @@ namespace SurfaceApplication1
 
 
 
-
-
-
         /**
          * Creates an ArrayList of TranslationBox objects when given a folio page.
          * Consults the Content (Old French), Layout, and English XML files. 
          * Calls on other methods in this class to fetch English, French, or coordinates.
          * Expects folio without the "Fo" - i.e. 1v, 35r, 28tr
          **/
-        public static List<TranslationBox> getTranslationOverlay(String page, XmlDocument xml, XmlDocument modFrXml, XmlDocument engXml, XmlDocument layoutXml)
+        public static List<TranslationBox> getTranslationOverlay(String page)
         {
 
             List<TranslationBox> boxes = new List<TranslationBox>();
@@ -181,7 +178,7 @@ namespace SurfaceApplication1
             {
 
                 // Looks for each poetry object indicated in the layoutXML on a given page
-                XmlNodeList foundNode = layoutXml.DocumentElement.SelectNodes("//surface[@id='" + page + "']/zone");
+                XmlNodeList foundNode = SurfaceWindow1.layoutXml.DocumentElement.SelectNodes("//surface[@id='" + page + "']/zone");
 
                 foreach (XmlNode xn in foundNode)
                 {
@@ -198,7 +195,8 @@ namespace SurfaceApplication1
                             int end = Convert.ToInt32(s.Substring(mid + 1)); // Last line number in the range
 
                             // Gets translations in every available language
-                            boxes.Add(new TranslationBox(s, getPoetry(start, end, xml), getPoetry(start, end, modFrXml), getPoetry(start, end, engXml), getPoint(s, 1, layoutXml), getPoint(s, 2, layoutXml)));
+                            boxes.Add(new TranslationBox(s, getPoetry(start, end, SurfaceWindow1.xml), getPoetry(start, end, SurfaceWindow1.modFrXml),
+                                getPoetry(start, end, SurfaceWindow1.engXml), getPoint(s, 1), getPoint(s, 2)));
                         }
                     }
                 }
@@ -219,14 +217,14 @@ namespace SurfaceApplication1
          * Returns a List of BoundingBox objects for an indicated page.
          * Primarily used to check whether coordinates indicated in the LayoutXML are accurate.
          * */
-        public static List<BoundingBox> getGhostBoxes(String page, XmlDocument layoutXml)
+        public static List<BoundingBox> getGhostBoxes(String page)
         {
             List<BoundingBox> boxes = new List<BoundingBox>();
 
             try
             {
                 // Looks at every box in layoutXml 
-                XmlNodeList foundNodes = layoutXml.DocumentElement.SelectNodes("//surface[@id='" + page + "']/zone/box");
+                XmlNodeList foundNodes = SurfaceWindow1.layoutXml.DocumentElement.SelectNodes("//surface[@id='" + page + "']/zone/box");
                 foreach (XmlNode node in foundNodes)
                 {
                     String tag = node.ParentNode.Attributes["id"].Value;
@@ -253,7 +251,7 @@ namespace SurfaceApplication1
          * Fetches top left and bottom right coordinates from Layout XML file when given tag id of object.
          * The int whichPt should = 1 if you want top left point and 2 if you want bottom right.
          **/
-        public static Point getPoint(String tag, int whichPt, XmlDocument layoutXml)
+        public static Point getPoint(String tag, int whichPt)
         {
             Point pt = new Point();
 
@@ -263,7 +261,7 @@ namespace SurfaceApplication1
 
                 if (tag.StartsWith("Te")) // Poetry object
                 {
-                    xn = layoutXml.DocumentElement.SelectSingleNode("//surface/zone/box[@id='" + tag + "']");
+                    xn = SurfaceWindow1.layoutXml.DocumentElement.SelectSingleNode("//surface/zone/box[@id='" + tag + "']");
                     if (whichPt == 1) // Top left
                         pt = new Point(Convert.ToInt32(xn.Attributes["ulx"].Value), Convert.ToInt32(xn.Attributes["uly"].Value));
                     else if (whichPt == 2) // Lower right
@@ -271,7 +269,7 @@ namespace SurfaceApplication1
                 }
                 else // Music or image
                 {
-                    xn = layoutXml.DocumentElement.SelectSingleNode("//surface/zone[@id='" + tag + "']");
+                    xn = SurfaceWindow1.layoutXml.DocumentElement.SelectSingleNode("//surface/zone[@id='" + tag + "']");
 
                     if (whichPt == 1) //  Top left
                         pt = new Point(Convert.ToInt32(xn.FirstChild.Attributes["ulx"].Value), Convert.ToInt32(xn.FirstChild.Attributes["uly"].Value));
@@ -294,14 +292,14 @@ namespace SurfaceApplication1
          * Similar to getPoint, but specially designed to work with poetry lines.
          * For poetry, coordinates are not recorded for every line, but only for each poetry chunk.
          * */
-        public static Point getLinePoint(String lineNum, int whichPt, XmlDocument layoutXml)
+        public static Point getLinePoint(String lineNum, int whichPt)
         {
             Point pt = new Point();
 
             try
             {
 
-                XmlNode xn = layoutXml.DocumentElement.SelectSingleNode("//l[@n='" + lineNum + "']");
+                XmlNode xn = SurfaceWindow1.layoutXml.DocumentElement.SelectSingleNode("//l[@n='" + lineNum + "']");
                 XmlNode section = xn.ParentNode; // Finds which section of poetry has this line
 
                 if (whichPt == 1) // Top left
@@ -368,7 +366,7 @@ namespace SurfaceApplication1
          *  Searching Fo1v or some other page gives you all contents of that page.
          *  <param name="str">The value of the id</param>
         **/
-        public static String getByTag(String str, XmlDocument xml)
+        public static String getByTag(String str, XmlDocument whichXml)
         {
             String toDisplay = "";
             try
@@ -377,12 +375,12 @@ namespace SurfaceApplication1
 
                 if (str.Contains("Im"))
                 {
-                    foundNode = xml.DocumentElement.SelectSingleNode("//figure[@id='" + str + "']");
+                    foundNode = whichXml.DocumentElement.SelectSingleNode("//figure[@id='" + str + "']");
                     toDisplay += foundNode.InnerText.Trim();
                 }
                 else if (str.StartsWith("Te"))
                 {
-                    foundNode = xml.DocumentElement.SelectSingleNode("//lg[@id='" + str + "']");
+                    foundNode = whichXml.DocumentElement.SelectSingleNode("//lg[@id='" + str + "']");
                     XmlNodeList lineByLine = foundNode.SelectNodes("l");
                     foreach (XmlNode x in lineByLine)
                     {
@@ -393,14 +391,14 @@ namespace SurfaceApplication1
                 else if (str.StartsWith("Fo"))
                 {
                     String page = str.Substring(2);
-                    foundNode = xml.DocumentElement.SelectSingleNode("//pb[@facs='#" + page + "']");
+                    foundNode = whichXml.DocumentElement.SelectSingleNode("//pb[@facs='#" + page + "']");
                     toDisplay += foundNode.InnerXml;
                 }
                 else // Select music objects
                 {
 
                     /// Note: To select voices that don't have <dc>, add second level and select ("//v[not(dc)]")
-                    foundNode = xml.DocumentElement.SelectSingleNode("//p[@id='" + str + "']");
+                    foundNode = whichXml.DocumentElement.SelectSingleNode("//p[@id='" + str + "']");
                     XmlNodeList tbRemoved;
 
                     tbRemoved = foundNode.SelectNodes("cp");
@@ -450,14 +448,14 @@ namespace SurfaceApplication1
         /**
          * Fetches Old French text for a section of poetry, given starting and ending line numbers.
          **/
-        public static List<SearchResult> searchOldFrPoetry(String search, int caseSensitive, int wordSensitive, XmlDocument xml, XmlDocument engXml)
+        public static List<SearchResult> searchOldFrPoetry(String search, int caseSensitive, int wordSensitive)
         {
 
             List<SearchResult> results = new List<SearchResult>();
 
             try
             {
-                XmlNodeList xnl = xml.DocumentElement.SelectNodes("//lg/l");
+                XmlNodeList xnl = SurfaceWindow1.xml.DocumentElement.SelectNodes("//lg/l");
 
                 foreach (XmlNode xn in xnl)
                 {
@@ -485,17 +483,17 @@ namespace SurfaceApplication1
                         if (endLine > veryLastLine)
                             endLine = veryLastLine;
 
-                        String resultLine = getPoetry(newResult.lineNum, newResult.lineNum, xml);
+                        String resultLine = getPoetry(newResult.lineNum, newResult.lineNum, SurfaceWindow1.xml);
                         String str1 = resultLine.Substring(0, myComp.IndexOf(resultLine, search, CompareOptions.IgnoreCase));
                         String str2 = resultLine.Substring(myComp.IndexOf(resultLine, search, CompareOptions.IgnoreCase) + search.Length);
                         String lineInfo = "\r\n\r\nLines " + startLine + " to " + endLine;
 
-                        newResult.excerpts.Add(new SpecialString((getPoetry(startLine, newResult.lineNum - 1, xml) + "\r\n" + str1), 0));
+                        newResult.excerpts.Add(new SpecialString((getPoetry(startLine, newResult.lineNum - 1, SurfaceWindow1.xml) + "\r\n" + str1), 0));
                         newResult.excerpts.Add(new SpecialString(search, 1));
-                        newResult.excerpts.Add(new SpecialString((str2 + "\r\n" + getPoetry(newResult.lineNum + 1, endLine, xml) + lineInfo), 0));
+                        newResult.excerpts.Add(new SpecialString((str2 + "\r\n" + getPoetry(newResult.lineNum + 1, endLine, SurfaceWindow1.xml) + lineInfo), 0));
 
                         newResult.text1 = xn.InnerText.Trim();
-                        newResult.text2 = getPoetry(newResult.lineNum, newResult.lineNum, engXml);
+                        newResult.text2 = getPoetry(newResult.lineNum, newResult.lineNum, SurfaceWindow1.engXml);
                         results.Add(newResult);
                     }
                 }
@@ -513,14 +511,14 @@ namespace SurfaceApplication1
         /**
          * Searches for text in Modern French poetry. 
          * */
-        public static List<SearchResult> searchModFrPoetry(String search, int caseSensitive, int wordSensitive, XmlDocument modFrXml, XmlDocument engXml)
+        public static List<SearchResult> searchModFrPoetry(String search, int caseSensitive, int wordSensitive)
         {
 
             List<SearchResult> results = new List<SearchResult>();
 
             try
             {
-                XmlNodeList xnl = modFrXml.DocumentElement.SelectNodes("//lg/l");
+                XmlNodeList xnl = SurfaceWindow1.modFrXml.DocumentElement.SelectNodes("//lg/l");
 
 
                 foreach (XmlNode xn in xnl)
@@ -549,17 +547,17 @@ namespace SurfaceApplication1
                         if (endLine > veryLastLine)
                             endLine = veryLastLine;
 
-                        String resultLine = getPoetry(newResult.lineNum, newResult.lineNum, modFrXml);
+                        String resultLine = getPoetry(newResult.lineNum, newResult.lineNum, SurfaceWindow1.modFrXml);
                         String str1 = resultLine.Substring(0, myComp.IndexOf(resultLine, search, CompareOptions.IgnoreCase));
                         String str2 = resultLine.Substring(myComp.IndexOf(resultLine, search, CompareOptions.IgnoreCase) + search.Length);
                         String lineInfo = "\r\n\r\nLines " + startLine + " to " + endLine;
 
-                        newResult.excerpts.Add(new SpecialString((getPoetry(startLine, newResult.lineNum - 1, modFrXml) + "\r\n" + str1), 0));
+                        newResult.excerpts.Add(new SpecialString((getPoetry(startLine, newResult.lineNum - 1, SurfaceWindow1.modFrXml) + "\r\n" + str1), 0));
                         newResult.excerpts.Add(new SpecialString(search, 1));
-                        newResult.excerpts.Add(new SpecialString((str2 + "\r\n" + getPoetry(newResult.lineNum + 1, endLine, modFrXml) + lineInfo), 0));
+                        newResult.excerpts.Add(new SpecialString((str2 + "\r\n" + getPoetry(newResult.lineNum + 1, endLine, SurfaceWindow1.modFrXml) + lineInfo), 0));
 
                         newResult.text1 = xn.InnerText.Trim();
-                        newResult.text2 = getPoetry(newResult.lineNum, newResult.lineNum, engXml);
+                        newResult.text2 = getPoetry(newResult.lineNum, newResult.lineNum, SurfaceWindow1.engXml);
                         
                         results.Add(newResult);
                     }
@@ -579,13 +577,13 @@ namespace SurfaceApplication1
         /**
           * Searches for text in English translation of the poetry. 
           * */
-        public static List<SearchResult> searchEngPoetry(String search, int caseSensitive, int wordSensitive, XmlDocument xml, XmlDocument engXml)
+        public static List<SearchResult> searchEngPoetry(String search, int caseSensitive, int wordSensitive)
         {
             List<SearchResult> results = new List<SearchResult>();
 
             try
             {
-                XmlNodeList xnl = engXml.DocumentElement.SelectNodes("//lg/l");
+                XmlNodeList xnl = SurfaceWindow1.engXml.DocumentElement.SelectNodes("//lg/l");
 
                 foreach (XmlNode xn in xnl)
                 {
@@ -597,8 +595,8 @@ namespace SurfaceApplication1
                         newResult.lineNum = Convert.ToInt32(lineNum);
                         newResult.resultType = 1;
                         newResult.text1 = xn.InnerText.Trim();
-                        newResult.text2 = getPoetry(newResult.lineNum, newResult.lineNum, xml);
-                        newResult.folio = getPageByLineNum(newResult.lineNum, xml);
+                        newResult.text2 = getPoetry(newResult.lineNum, newResult.lineNum, SurfaceWindow1.xml);
+                        newResult.folio = getPageByLineNum(newResult.lineNum);
 
                         int startLine = newResult.lineNum - 4;
                         if (startLine < 1)
@@ -607,15 +605,15 @@ namespace SurfaceApplication1
                         if (endLine > veryLastLine)
                             endLine = veryLastLine;
 
-                        String resultLine = getPoetry(newResult.lineNum, newResult.lineNum, engXml);
+                        String resultLine = getPoetry(newResult.lineNum, newResult.lineNum, SurfaceWindow1.engXml);
                         String str1 = resultLine.Substring(0, myComp.IndexOf(resultLine, search, CompareOptions.IgnoreCase));
                         String str2 = resultLine.Substring(myComp.IndexOf(resultLine, search, CompareOptions.IgnoreCase) + search.Length);
                         String lineInfo = "\r\n\r\nLines " + startLine + " to " + endLine;
 
 
-                        newResult.excerpts.Add(new SpecialString((getPoetry(startLine, newResult.lineNum - 1, engXml) + "\r\n" + str1), 0));
+                        newResult.excerpts.Add(new SpecialString((getPoetry(startLine, newResult.lineNum - 1, SurfaceWindow1.engXml) + "\r\n" + str1), 0));
                         newResult.excerpts.Add(new SpecialString(search, 1));
-                        newResult.excerpts.Add(new SpecialString((str2 + "\r\n" + getPoetry(newResult.lineNum + 1, endLine, engXml) + lineInfo), 0));
+                        newResult.excerpts.Add(new SpecialString((str2 + "\r\n" + getPoetry(newResult.lineNum + 1, endLine, SurfaceWindow1.engXml) + lineInfo), 0));
                         
                         results.Add(newResult);
                     }
@@ -705,7 +703,7 @@ namespace SurfaceApplication1
                                 newResult.lineRange = "-" + endLine;
                             newResult.resultType = 1;
                             newResult.text1 = resultText;
-                            newResult.folio = getPageByLineNum(lineNum, SurfaceWindow1.xml);
+                            newResult.folio = getPageByLineNum(lineNum);
 
 
                             searchStrings.Sort(); // Sorts the search words by the order they show up in these few lines
@@ -745,13 +743,13 @@ namespace SurfaceApplication1
         /**
          * Returns the tag of an entire chunk of poetry when given a line number of poetry.
          * */
-        public static String getTagByLineNum(int lineNum, XmlDocument layoutXml)
+        public static String getTagByLineNum(int lineNum)
         {
             String tag = "";
 
             try
             {
-                XmlNode xn = layoutXml.DocumentElement.SelectSingleNode("//zone/l[@n="+lineNum+"]");
+                XmlNode xn = SurfaceWindow1.layoutXml.DocumentElement.SelectSingleNode("//zone/l[@n=" + lineNum + "]");
                 tag = xn.ParentNode.Attributes["id"].Value; // Gets tag one level up
             }
             catch (Exception e)
@@ -764,15 +762,15 @@ namespace SurfaceApplication1
         }
 
         /**
-         * Returns the name of the page that a given line of poetry is on.
+         * Returns the name of the page that a given line of poetry is on, using the original text Xml.
          * */
-        public static String getPageByLineNum(int lineNum, XmlDocument xml)
+        public static String getPageByLineNum(int lineNum)
         {
             String folio = "Fo";
 
             try
             {
-                XmlNode xnl = xml.DocumentElement.SelectSingleNode("//lg/l[@n=" + lineNum + "]");
+                XmlNode xnl = SurfaceWindow1.xml.DocumentElement.SelectSingleNode("//lg/l[@n=" + lineNum + "]");
                 String folioTemp = xnl.ParentNode.ParentNode.Attributes["facs"].Value;
                 folioTemp = folioTemp.Substring(1);
                 folio += folioTemp;
@@ -791,7 +789,7 @@ namespace SurfaceApplication1
          * Returns the name of the page that a given object (found by tag) is on.
          * lg, p, figure = 1, 2, 3
          * */
-        public static String getPageByTag(String tag, int type, XmlDocument xml)
+        public static String getPageByTag(String tag, int type)
         {
             String folio = "Fo";
             String tagType = "";
@@ -804,7 +802,7 @@ namespace SurfaceApplication1
 
             try
             {
-                XmlNode xnl = xml.DocumentElement.SelectSingleNode("//" + tagType + "[@id='" + tag + "']");
+                XmlNode xnl = SurfaceWindow1.xml.DocumentElement.SelectSingleNode("//" + tagType + "[@id='" + tag + "']");
                 String folioTemp = xnl.ParentNode.Attributes["facs"].Value;
                 folioTemp = folioTemp.Substring(1); // Removes the #
                 folio += folioTemp;
@@ -824,7 +822,7 @@ namespace SurfaceApplication1
         /**
          * Searches for text in lyrics of music.
          * */
-        public static List<SearchResult> searchLyrics(String search, int caseSensitive, int wordSensitive, XmlDocument whichXml, XmlDocument layoutXml)
+        public static List<SearchResult> searchLyrics(String search, int caseSensitive, int wordSensitive, XmlDocument whichXml)
         {
             List<SearchResult> results = new List<SearchResult>();
 
@@ -951,13 +949,13 @@ namespace SurfaceApplication1
         /**
          * Searches for text in image captions.
          * */
-        public static List<SearchResult> searchPicCaptions(String search, int caseSensitive, int wordSensitive, XmlDocument xml, XmlDocument layoutXml)
+        public static List<SearchResult> searchPicCaptions(String search, int caseSensitive, int wordSensitive, XmlDocument whichXml)
         {
             List<SearchResult> results = new List<SearchResult>();
 
             try
             {
-                XmlNodeList xnl = xml.DocumentElement.SelectNodes("//figure"); // Selects images
+                XmlNodeList xnl = whichXml.DocumentElement.SelectNodes("//figure"); // Selects images
 
                 foreach (XmlNode xn in xnl)
                 {
@@ -997,9 +995,9 @@ namespace SurfaceApplication1
          * The beginning of music search that allows searching for a motet by number of voice.
          * This method is not fully developed, nor has it been called.
          * */
-        public static void filterByVoice(int voiceNum, XmlDocument xml)
+        public static void filterByVoice(int voiceNum)
         {
-            XmlNodeList musics = xml.DocumentElement.SelectNodes("//p[(nv)]");
+            XmlNodeList musics = SurfaceWindow1.xml.DocumentElement.SelectNodes("//p[(nv)]");
 
             foreach (XmlNode xn in musics)
             {
