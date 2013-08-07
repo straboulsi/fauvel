@@ -25,7 +25,7 @@ namespace SurfaceApplication1
         private Boolean defaultOptionsChanged;
         private SideBarTab tabAdd;
         private bool optionsShown = false;
-        public enum searchLanguage { oldFrench = 1, modernFrench = 2, English = 3 };
+        public enum searchLanguage { oldFrench = 0, modernFrench = 1, English = 2 };
         public searchLanguage currentSearchLanguage = searchLanguage.oldFrench;
         public int veryFirstLine, veryLastLine;
         public String pageToFind;
@@ -336,11 +336,6 @@ namespace SurfaceApplication1
         private void newSearch(object sender, RoutedEventArgs e)
         {
 
-            XmlDocument xml = SurfaceWindow1.xml;
-            XmlDocument engXml = SurfaceWindow1.engXml;
-            XmlDocument layoutXml = SurfaceWindow1.layoutXml;
-            XmlDocument modFrXml = SurfaceWindow1.modFrXml;
-
             SearchTab selectedTab = tabBar.SelectedItem as SearchTab;
             String searchQuery = selectedTab.searchQueryBox.Text;
 
@@ -350,6 +345,11 @@ namespace SurfaceApplication1
 
             else
             {
+                selectedTab.poetryPanel.Children.Clear();
+                selectedTab.lyricsPanel.Children.Clear();
+                selectedTab.imagesPanel.Children.Clear();
+
+
                 selectedTab.searchTabHeader.Text = selectedTab.searchQueryBox.Text;
                 selectedTab.searchResults.Visibility = Visibility.Visible;
                 selectedTab.poetryTab.Content = selectedTab.poetryCanvas;
@@ -365,23 +365,9 @@ namespace SurfaceApplication1
 
                 List<SearchResult> poetryResults = new List<SearchResult>();
                 if (selectedTab.exactPhraseOnly.IsChecked == false)
-                {
-                    if (currentSearchLanguage == searchLanguage.oldFrench)
-                        poetryResults = Translate.searchMultipleWordsPoetry(searchQuery, caseType, wordType, 0);
-                    else if (currentSearchLanguage == searchLanguage.modernFrench)
-                        poetryResults = Translate.searchMultipleWordsPoetry(searchQuery, caseType, wordType, 1);
-                    else if (currentSearchLanguage == searchLanguage.English)
-                        poetryResults = Translate.searchMultipleWordsPoetry(searchQuery, caseType, wordType, 2);
-                }
+                    poetryResults = Translate.searchMultipleWordsPoetry(searchQuery, caseType, wordType, (int) currentSearchLanguage);
                 else
-                {
-                    if (currentSearchLanguage == searchLanguage.oldFrench)
-                        poetryResults = Translate.searchOldFrPoetry(searchQuery, caseType, wordType);
-                    else if (currentSearchLanguage == searchLanguage.modernFrench)
-                        poetryResults = Translate.searchModFrPoetry(searchQuery, caseType, wordType);
-                    else if (currentSearchLanguage == searchLanguage.English)
-                        poetryResults = Translate.searchEngPoetry(searchQuery, caseType, wordType);
-                }
+                    poetryResults = Translate.searchExactPoetry(searchQuery, caseType, wordType, (int) currentSearchLanguage);
 
                 SurfaceListBox poetryLB = new SurfaceListBox();
                 poetryLB.Style = tabBar.FindResource("SearchResultSurfaceListBox") as Style;
@@ -408,17 +394,14 @@ namespace SurfaceApplication1
                 else
                     selectedTab.poetryTab.Content = selectedTab.poetryCanvas;
 
-                if (poetryResults.Count <= 4)
-                {
-
-                }
 
                 // Lyric results
                 List<SearchResult> lyricResults = new List<SearchResult>();
-                if (currentSearchLanguage == searchLanguage.oldFrench)
-                    lyricResults = Translate.searchLyrics(searchQuery, caseType, wordType, xml);
-                else if (currentSearchLanguage == searchLanguage.modernFrench)
-                    lyricResults = Translate.searchLyrics(searchQuery, caseType, wordType, modFrXml);
+
+                if (selectedTab.exactPhraseOnly.IsChecked == false)
+                    lyricResults = Translate.searchMultipleWordsLyrics(searchQuery, caseType, wordType, (int)currentSearchLanguage);
+                else
+                    lyricResults = Translate.searchLyrics(searchQuery, caseType, wordType, Translate.whichXml((int)currentSearchLanguage));
 
                 ListBox lyricsLB = new ListBox();
                 lyricsLB.Style = tabBar.FindResource("SearchResultSurfaceListBox") as Style;
@@ -447,7 +430,7 @@ namespace SurfaceApplication1
 
 
                 // Image results
-                List<SearchResult> imageResults = Translate.searchPicCaptions(searchQuery, caseType, wordType, xml);
+                List<SearchResult> imageResults = Translate.searchPicCaptions(searchQuery, caseType, wordType, SurfaceWindow1.xml);
                 ListBox imagesLB = new ListBox();
                 imagesLB.Style = tabBar.FindResource("SearchResultSurfaceListBox") as Style;
                 selectedTab.imagesScroll.Content = imagesLB;
