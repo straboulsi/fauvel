@@ -15,6 +15,9 @@ using Microsoft.Surface;
 using Microsoft.Surface.Presentation;
 using Microsoft.Surface.Presentation.Controls;
 using Microsoft.Surface.Presentation.Input;
+using System.Xml;
+using System.Windows.Threading;
+using System.ComponentModel;
 
 namespace SurfaceApplication1
 {
@@ -40,10 +43,23 @@ namespace SurfaceApplication1
         public Button moreOptions, fewerOptions;
         public Image downArrow, upArrow, searchMan;
         public SurfaceScrollViewer poetryScroll, lyricsScroll, imagesScroll;
+        public enum searchLanguage { oldFrench = 1, modernFrench = 2, English = 3 };
+        public searchLanguage currentSearchLanguage = searchLanguage.oldFrench;
         public Border poetryBorder, imagesBorder, lyricsBorder;
+        private bool optionsShown = false;
+        public String pageToFind, previousPageToFind;
+        private SurfaceWindow1 surfaceWindow;
+        private Boolean defaultOptionsChanged;
+        private SideBar sideBar;
+        private List<SearchResult> poetryResults, lyricResults, imageResults;
+        public delegate void UpdateTextCallback(string message);
+        private int unreturnedResults;
 
-        public SearchTab(SideBar mySideBar) : base(mySideBar)
+        public SearchTab(SideBar mySideBar, SurfaceWindow1 surfaceWindow) : base(mySideBar)
         {
+            unreturnedResults = 0;
+            sideBar = mySideBar;
+            this.surfaceWindow = surfaceWindow;
             searchPrompt = new TextBlock();
             searchTabHeader = new TextBlock();
             searchQueryBox = new TextBox();
@@ -101,7 +117,7 @@ namespace SurfaceApplication1
             goSearch.Height = 40;
             goSearch.Width = 95;
             goSearch.FontSize = 21;
-            goSearch.Content = (string)"Go!";
+            goSearch.Content = "Go!";
             Canvas.SetLeft(goSearch, 378);
             Canvas.SetTop(goSearch, 90);
 
@@ -340,8 +356,500 @@ namespace SurfaceApplication1
             wholeWordOnly.Visibility = Visibility.Hidden;
             exactPhraseOnly.Visibility = Visibility.Hidden;
 
+            moreOptions.Click += new RoutedEventHandler(Show_Options);
+            moreOptions.TouchDown += new EventHandler<TouchEventArgs>(Show_Options);
+            fewerOptions.Click += new RoutedEventHandler(Hide_Options);
+            fewerOptions.TouchDown += new EventHandler<TouchEventArgs>(Hide_Options);
+            searchQueryBox.GotFocus += new RoutedEventHandler(Clear_SearchBox);
+            searchQueryBox.TouchDown += new EventHandler<TouchEventArgs>(Clear_SearchBox);
+            goSearch.Click += new RoutedEventHandler(newSearch);
+            goSearch.TouchDown += new EventHandler<TouchEventArgs>(newSearch);
+            searchQueryBox.PreviewKeyDown += new KeyEventHandler(Enter_Clicked);
+            caseSensitive.TouchDown += new EventHandler<TouchEventArgs>(changeCheck);
+            exactPhraseOnly.TouchDown += new EventHandler<TouchEventArgs>(changeCheck);
+            wholeWordOnly.TouchDown += new EventHandler<TouchEventArgs>(changeCheck);
+
+            //selectLanguage.TouchDown += new EventHandler<TouchEventArgs>(displaySearchLanguages);
+            //selectLanguage.SelectionChanged += new SelectionChangedEventHandler(searchLanguageChanged);
+            selectLanguage.Visibility = Visibility.Collapsed;
+            selectLanguageButton.TouchDown += new EventHandler<TouchEventArgs>(displaySearchLanguages);
+            selectLanguageButton.Click += new RoutedEventHandler(displaySearchLanguages);
+            oldFrench.Selected += new RoutedEventHandler(searchLanguageChanged);
+            modernFrench.Selected += new RoutedEventHandler(searchLanguageChanged);
+            English.Selected += new RoutedEventHandler(searchLanguageChanged);
+        }
+
+        private void displaySearchLanguages(object sender, RoutedEventArgs e)
+        {
+            if (selectLanguage.Visibility == Visibility.Collapsed | selectLanguage.Visibility == Visibility.Hidden)
+            {
+                selectLanguage.Visibility = Visibility.Visible;
+                selectLanguageButton.Visibility = Visibility.Collapsed;
+            }
+            else
+                selectLanguage.Visibility = Visibility.Collapsed;
+
+        }
+
+        private void searchLanguageChanged(object sender, RoutedEventArgs e)
+        {
+            SurfaceListBoxItem box = (SurfaceListBoxItem)sender;
+            selectLanguageButton.Content = box.Content;
+            selectLanguage.Visibility = Visibility.Hidden;
+            selectLanguageButton.Visibility = Visibility.Visible;
+            if (box == oldFrench)
+                currentSearchLanguage = searchLanguage.oldFrench;
+            else if (box == modernFrench)
+                currentSearchLanguage = searchLanguage.modernFrench;
+            else if (box == English)
+                currentSearchLanguage = searchLanguage.English;
+        }
+
+        private void Show_Options(object sender, RoutedEventArgs e)
+        {
+            optionsShown = true;
+            topLine.Visibility = Visibility.Hidden;
+            caseSensitive.Visibility = Visibility.Visible;
+            bottomLine.Visibility = Visibility.Visible;
+            fewerOptions.Visibility = Visibility.Visible;
+            wholeWordOnly.Visibility = Visibility.Visible;
+            exactPhraseOnly.Visibility = Visibility.Visible;
+            moreOptions.Visibility = Visibility.Hidden;
+            selectLanguageButton.Visibility = Visibility.Visible;
+            if (searchResults.IsVisible)
+                compressResults();
+
+        }
+
+        private void Hide_Options(object sender, RoutedEventArgs e)
+        {
+            topLine.Visibility = Visibility.Visible;
+            moreOptions.Visibility = Visibility.Visible;
+            caseSensitive.Visibility = Visibility.Hidden;
+            selectLanguage.Visibility = Visibility.Hidden;
+            bottomLine.Visibility = Visibility.Hidden;
+            fewerOptions.Visibility = Visibility.Hidden;
+            wholeWordOnly.Visibility = Visibility.Hidden;
+            exactPhraseOnly.Visibility = Visibility.Hidden;
+            selectLanguageButton.Visibility = Visibility.Hidden;
+
+            checkForChanges();
+
+            if (defaultOptionsChanged == true)
+                moreOptions.Background = Brushes.MediumTurquoise;
+
+            else
+                moreOptions.ClearValue(Control.BackgroundProperty);
+
+            if (searchResults.IsVisible)
+                expandResults();
+
+            optionsShown = false;
+        }
+
+        private void UpdateText(string message)
+        {
+            //update ui
+        }
+
+        private void changeCheck(object sender, TouchEventArgs e)
+        {
+            CheckBox thisbox = sender as CheckBox;
+
+            if (thisbox.IsChecked == true)
+                thisbox.IsChecked = false;
+            else if (thisbox.IsChecked == false)
+                thisbox.IsChecked = true;
+        }
+
+        private void showSearchMan()
+        {
+            searchMan.Visibility = Visibility.Visible;
+        }
+
+        private void hideSearchMan()
+        {
+            searchMan.Visibility = Visibility.Hidden;
+        }
+
+        private void runSearch()
+        {
+            String searchQuery = searchQueryBox.Text;
+            XmlDocument xml = SurfaceWindow1.xml;
+            XmlDocument engXml = SurfaceWindow1.engXml;
+            XmlDocument layoutXml = SurfaceWindow1.layoutXml;
+            XmlDocument modFrXml = SurfaceWindow1.modFrXml;
+
+            searchTabHeader.Text = searchQueryBox.Text;
+            searchResults.Visibility = Visibility.Visible;
+            poetryTab.Content = poetryCanvas;
+
+            int caseType = 0;
+            int wordType = 0;
+            if (caseSensitive.IsChecked == true)
+                caseType = 1;
+            if (wholeWordOnly.IsChecked == true)
+                wordType = 1;
+
+            searchQueryBox.IsEnabled = false;
+            goSearch.Content = "Searching";
+            goSearch.IsEnabled = false;
+            unreturnedResults = 3;
+
+            // Poetry results //
+            List<SearchResult> poetryResults = new List<SearchResult>();
+
+            Action poetryResultAction = delegate
+            {
+                BackgroundWorker worker = new BackgroundWorker();
+                if (exactPhraseOnly.IsChecked == false)
+                {
+                    worker.DoWork += delegate
+                    {
+                        poetryResults = Translate.searchMultipleWordsPoetry(searchQuery, caseType, wordType, (int)currentSearchLanguage);
+                    };
+                }
+                else
+                {
+                    worker.DoWork += delegate
+                    {
+                        poetryResults = Translate.searchExactPoetry(searchQuery, caseType, wordType, (int)currentSearchLanguage);
+                    };
+                }
+                worker.RunWorkerCompleted += delegate
+                {
+                    SurfaceListBox poetryLB = new SurfaceListBox();
+                    poetryLB.Style = sideBar.tabBar.FindResource("SearchResultSurfaceListBox") as Style;
+                    poetryScroll.Content = poetryLB; // NB: the scroll bar comes from the poetryScroll, not poetryLB
+
+                    foreach (SearchResult result in poetryResults)
+                    {
+                        ResultBoxItem resultRBI = new ResultBoxItem();
+                        convertSearchResultToResultBoxItem(result, resultRBI);
+                        resultRBI.resultThumbnail = Translate.convertImage(Thumbnailer.getThumbnail(Translate.getTagByLineNum(result.lineNum)));
+                        if (((optionsShown == false) && poetryResults.Count < 4) || ((optionsShown == true) && poetryResults.Count < 2))
+                            resultRBI.Width = 480;
+                        poetryLB.Items.Add(resultRBI);
+                    }
+
+                    poetryTab.Header = "Poetry (" + poetryResults.Count + ")";
+
+                    if (poetryResults.Count == 0)
+                    {
+                        TextBlock noResults = new TextBlock();
+                        noResults.Text = "Sorry, your search returned no poetry results.";
+                        poetryTab.Content = noResults;
+                    }
+                    else
+                        poetryTab.Content = poetryCanvas;
+
+                    returnAResult();
+                };
+                worker.RunWorkerAsync();
+            };
+            this.Dispatcher.BeginInvoke(DispatcherPriority.Background, poetryResultAction);
 
 
+            // Lyric results //
+            lyricResults = new List<SearchResult>();
+
+            Action lyricResultAction = delegate
+            {
+                BackgroundWorker worker = new BackgroundWorker();
+                worker.DoWork += delegate
+                {
+                    if (currentSearchLanguage == searchLanguage.oldFrench)
+                        lyricResults = Translate.searchLyrics(searchQuery, caseType, wordType, xml);
+                    else if (currentSearchLanguage == searchLanguage.modernFrench)
+                        lyricResults = Translate.searchLyrics(searchQuery, caseType, wordType, modFrXml);
+                };
+                worker.RunWorkerCompleted += delegate
+                {
+                    ListBox lyricsLB = new ListBox();
+
+                    foreach (SearchResult result in lyricResults)
+                    {
+                        ResultBoxItem resultRBI = new ResultBoxItem();
+                        convertSearchResultToResultBoxItem(result, resultRBI);
+                        resultRBI.resultThumbnail = Translate.convertImage(Thumbnailer.getThumbnail(result.tag));
+                        lyricsLB.Items.Add(resultRBI);
+                    }
+                    lyricsLB.Style = sideBar.tabBar.FindResource("SearchResultSurfaceListBox") as Style;
+                    lyricsScroll.Content = lyricsLB;
+
+                    lyricsTab.Header = "Lyrics (" + lyricResults.Count + ")";
+
+                    if (lyricResults.Count == 0)
+                    {
+                        TextBlock noResults = new TextBlock();
+                        noResults.Text = "Sorry, your search returned no music lyric results.\r\n\r\nNB: Lyrics only exist in original text or Modern French - no English.";
+                        lyricsTab.Content = noResults;
+                    }
+                    else
+                        lyricsTab.Content = lyricsCanvas;
+
+                    returnAResult();
+                };
+                worker.RunWorkerAsync();
+            };
+            this.Dispatcher.BeginInvoke(DispatcherPriority.Background, lyricResultAction);
+            
+
+            // Image results //
+            imageResults = new List<SearchResult>();
+
+            Action imageResultAction = delegate
+            {
+                BackgroundWorker worker = new BackgroundWorker();
+                worker.DoWork += delegate
+                {
+                    imageResults = Translate.searchPicCaptions(searchQuery, caseType, wordType, xml);
+                };
+                worker.RunWorkerCompleted += delegate
+                {
+                    ListBox imagesLB = new ListBox();
+                    imagesLB.Style = sideBar.tabBar.FindResource("SearchResultSurfaceListBox") as Style;
+                    imagesScroll.Content = imagesLB;
+
+                    foreach (SearchResult result in imageResults)
+                    {
+                        ResultBoxItem resultRBI = new ResultBoxItem();
+                        convertSearchResultToResultBoxItem(result, resultRBI);
+                        resultRBI.miniThumbnail.Source = new BitmapImage(new Uri(@"..\..\minithumbnails\" + result.tag + ".jpg", UriKind.Relative));
+                        resultRBI.resultThumbnail = Translate.convertImage(Thumbnailer.getThumbnail(result.tag));
+                        imagesLB.Items.Add(resultRBI);
+                    }
+
+                    imagesTab.Header = "Images (" + imageResults.Count + ")";
+
+                    if (imageResults.Count == 0)
+                    {
+                        TextBlock noResults = new TextBlock();
+                        noResults.Text = "Sorry, your search returned no image results.\r\n\r\nNB: Image captions exist in Modern French only; no English (yet).";
+                        imagesTab.Content = noResults;
+                    }
+                    else
+                        imagesTab.Content = imagesCanvas;
+
+                    if (optionsShown == true)
+                        compressResults();
+                    
+                    returnAResult();
+                };
+                worker.RunWorkerAsync();
+            };
+            this.Dispatcher.BeginInvoke(DispatcherPriority.Background, imageResultAction);
+            
+        }
+
+        private void returnAResult()
+        {
+            unreturnedResults--;
+            if (unreturnedResults == 0)
+            {
+                searchQueryBox.IsEnabled = true;
+                goSearch.Content = "Go!";
+                goSearch.IsEnabled = true;
+
+                /*Auto flip to a tab with results if the current one has none
+                if (searchResults.SelectedItem == poetryTab && poetryResults.Count == 0)
+                {
+                    if (lyricResults.Count != 0)
+                        searchResults.SelectedItem = lyricsTab;
+                    else if (imageResults.Count != 0)
+                        searchResults.SelectedItem = imagesTab;
+                }
+                else if (searchResults.SelectedItem == lyricsTab && lyricResults.Count == 0)
+                {
+                    if (poetryResults.Count != 0)
+                        searchResults.SelectedItem = poetryTab;
+                    else if (imageResults.Count != 0)
+                        searchResults.SelectedItem = imagesTab;
+                }
+                else if (searchResults.SelectedItem == imagesTab && imageResults.Count == 0)
+                {
+                    if (poetryResults.Count != 0)
+                        searchResults.SelectedItem = poetryTab;
+                    else if (lyricResults.Count != 0)
+                        searchResults.SelectedItem = lyricsTab;
+                }*/
+            }
+        }
+
+        private void newSearch(object sender, RoutedEventArgs e)
+        {
+            String searchQuery = searchQueryBox.Text;
+
+            if (searchQuery == "Enter text" || searchQuery == "")
+                MessageBox.Show(string.Format("Please enter words to search for!"),
+                    "Search", MessageBoxButton.OK);
+
+            else
+                runSearch();
+
+        }
+
+        private void convertSearchResultToResultBoxItem(SearchResult sr, ResultBoxItem rbi)
+        {
+            rbi.folioInfo.Text = sr.folio;
+            rbi.resultType = sr.resultType;
+            if (rbi.resultType == 1)
+                rbi.lineInfo.Text = Convert.ToString(sr.lineNum) + sr.lineRange; // Assuming only one will be filled out
+            rbi.excerpts = sr.excerpts;
+            rbi.Height = 80; // temp taller than desired, so scrollbar shows
+            rbi.HorizontalAlignment = System.Windows.HorizontalAlignment.Left;
+            rbi.Width = 430;
+            rbi.Style = sideBar.tabBar.FindResource("SearchResultSurfaceListBoxItem") as Style; // Not sure if this works..
+            rbi.resultText.Text = sr.text1 + "\r\n" + sr.text2;
+            rbi.BorderBrush = Brushes.LightGray;
+            rbi.BorderThickness = new Thickness(1.0);
+            rbi.Selected += new RoutedEventHandler(Result_Closeup);
+        }
+
+        private void compressResults()
+        {
+            searchResults.Height = 537;
+            Canvas.SetTop(searchResults, 320);
+            poetryBorder.Height = 245;
+            Canvas.SetTop(poetryBorder, 240);
+            poetryScroll.Height = 230;
+            lyricsBorder.Height = 245;
+            Canvas.SetTop(lyricsBorder, 240);
+            lyricsScroll.Height = 230;
+            imagesBorder.Height = 245;
+            Canvas.SetTop(imagesBorder, 240);
+            imagesScroll.Height = 230;
+        }
+
+        private void expandResults()
+        {
+            searchResults.Height = 677;
+            Canvas.SetTop(searchResults, 180);
+            poetryBorder.Height = 294;
+            Canvas.SetTop(poetryBorder, 331);
+            poetryScroll.Height = 325;
+            lyricsBorder.Height = 294;
+            Canvas.SetTop(lyricsBorder, 331);
+            lyricsScroll.Height = 325;
+            imagesBorder.Height = 294;
+            Canvas.SetTop(imagesBorder, 331);
+            imagesScroll.Height = 325;
+        }
+
+        private void Enter_Clicked(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.Return)
+            {
+                newSearch(sender, e);
+                e.Handled = true;
+            }
+        }
+
+        private void Result_Closeup(object sender, RoutedEventArgs e)
+        {
+            ResultBoxItem selectedResult = e.Source as ResultBoxItem;
+
+            Image closeupImage = new Image();
+            closeupImage.Source = selectedResult.resultThumbnail.Source;
+            closeupImage.Width = 185;
+            closeupImage.Height = 176;
+            closeupImage.Margin = new Thickness(0, 0, 10, 0);
+
+
+            TextBlock closeupText = new TextBlock();
+            closeupText.TextWrapping = TextWrapping.Wrap;
+            closeupText.FontSize = 15;
+            closeupText.Width = 275;
+            closeupText.VerticalAlignment = VerticalAlignment.Center;
+
+            if (selectedResult.resultType == 1)
+            {
+                poetryPanel.Children.Clear();
+                poetryPanel.Children.Add(closeupImage);
+                poetryPanel.Children.Add(closeupText);
+                poetryPanel.TouchDown += new EventHandler<TouchEventArgs>(goToFolio);
+            }
+
+            else if (selectedResult.resultType == 2)
+            {
+                lyricsPanel.Children.Clear();
+                lyricsPanel.Children.Add(closeupImage);
+                lyricsPanel.Children.Add(closeupText);
+                lyricsPanel.TouchDown += new EventHandler<TouchEventArgs>(goToFolio);
+            }
+
+            else if (selectedResult.resultType == 3)
+            {
+                imagesPanel.Children.Clear();
+                imagesPanel.Children.Add(closeupImage);
+                imagesPanel.Children.Add(closeupText);
+                imagesPanel.TouchDown += new EventHandler<TouchEventArgs>(goToFolio);
+            }
+
+            pageToFind = selectedResult.folioInfo.Text;
+
+            foreach (SpecialString ss in selectedResult.excerpts)
+            {
+                if (ss.isStyled == 1)
+                    closeupText.Inlines.Add(new Run { FontFamily = new FontFamily("Cambria"), Text = ss.str, FontWeight = FontWeights.Bold });
+                else
+                    closeupText.Inlines.Add(new Run { FontFamily = new FontFamily("Cambria"), Text = ss.str, FontWeight = FontWeights.Normal });
+            }
+        }
+
+
+        public static String getImageName(String folio, XmlDocument layoutXml)
+        {
+            String imageName = "";
+            XmlNode node = layoutXml.DocumentElement.SelectSingleNode("//surface[@id='" + folio + "']");
+            imageName = node.FirstChild.SelectSingleNode("graphic").Attributes["url"].Value;
+
+            return imageName;
+        }
+
+        private void goToFolio(object sender, TouchEventArgs e)
+        {
+            XmlDocument layoutXml = SurfaceWindow1.layoutXml;
+
+            if (pageToFind != previousPageToFind)
+            {
+                if (pageToFind.StartsWith("Fo"))
+                    pageToFind = pageToFind.Substring(2);
+                String imageName = getImageName(pageToFind, layoutXml);
+                int pageNum = Convert.ToInt32(imageName.Substring(0, imageName.IndexOf(".jpg")));
+                if (pageNum % 2 == 1) // If odd, meaning it's a Fo_r, we want to aim for the previous page.
+                    pageNum--;
+
+                surfaceWindow.createTab(pageNum - 10);
+                previousPageToFind = pageToFind;
+            }
+        }
+
+
+        private Boolean checkForChanges()
+        {
+            if (caseSensitive.IsChecked == true | wholeWordOnly.IsChecked == true |
+                exactPhraseOnly.IsChecked == false | (selectLanguage.SelectedIndex != 0 && selectLanguage.SelectedIndex != 1))
+                defaultOptionsChanged = true;
+
+            else
+                defaultOptionsChanged = false;
+
+
+            return defaultOptionsChanged;
+        }
+
+        private void Clear_SearchBox(object sender, RoutedEventArgs e)
+        {
+            if (searchQueryBox.Text == "Enter text")
+            {
+                searchQueryBox.Foreground = Brushes.Black;
+                searchQueryBox.Text = "";
+            }
+            else
+                searchQueryBox.SelectAll();
+
+            searchQueryBox.Focus();
         }
 
     }

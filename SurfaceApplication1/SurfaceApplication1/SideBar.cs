@@ -22,22 +22,21 @@ namespace SurfaceApplication1
     {
         public TabControl tabBar;
         private List<SideBarTab> tabItems;
-        private Boolean defaultOptionsChanged;
         private SideBarTab tabAdd;
         private bool optionsShown = false;
         public enum searchLanguage { oldFrench = 0, modernFrench = 1, English = 2 };
         public searchLanguage currentSearchLanguage = searchLanguage.oldFrench;
         public int veryFirstLine, veryLastLine;
-        public String pageToFind;
-        public String previousPageToFind;
-        private SurfaceWindow1 SurfaceWindow;
+        private SurfaceWindow1 surfaceWindow;
         public List<SavedPage> savedPages;
+        private Boolean defaultOptionsChanged;
+        public String pageToFind, previousPageToFind;
 
-        public SideBar(SurfaceWindow1 SurfaceWindow, TabControl tabBar)
+        public SideBar(SurfaceWindow1 surfaceWindow, TabControl tabBar)
         {
             savedPages = new List<SavedPage>();
 
-            this.SurfaceWindow = SurfaceWindow;
+            this.surfaceWindow = surfaceWindow;
             this.tabBar = tabBar;
             tabItems = new List<SideBarTab>();
 
@@ -206,32 +205,7 @@ namespace SurfaceApplication1
         {
             int count = tabItems.Count;
 
-
-            SearchTab tab = new SearchTab(this);
-
-            tab.moreOptions.Click += new RoutedEventHandler(Show_Options);
-            tab.moreOptions.TouchDown += new EventHandler<TouchEventArgs>(Show_Options);
-            tab.fewerOptions.Click += new RoutedEventHandler(Hide_Options);
-            tab.fewerOptions.TouchDown += new EventHandler<TouchEventArgs>(Hide_Options);
-            tab.searchQueryBox.GotFocus += new RoutedEventHandler(Clear_SearchBox);
-            tab.searchQueryBox.TouchDown += new EventHandler<TouchEventArgs>(Clear_SearchBox);
-            tab.goSearch.Click += new RoutedEventHandler(newSearch);
-            tab.goSearch.TouchDown += new EventHandler<TouchEventArgs>(newSearch);
-            tab.searchQueryBox.PreviewKeyDown += new KeyEventHandler(Enter_Clicked);
-            tab.caseSensitive.TouchDown += new EventHandler<TouchEventArgs>(changeCheck);
-            tab.exactPhraseOnly.TouchDown += new EventHandler<TouchEventArgs>(changeCheck);
-            tab.wholeWordOnly.TouchDown += new EventHandler<TouchEventArgs>(changeCheck);
-
-            //tab.selectLanguage.TouchDown += new EventHandler<TouchEventArgs>(displaySearchLanguages);
-            //tab.selectLanguage.SelectionChanged += new SelectionChangedEventHandler(searchLanguageChanged);
-            tab.selectLanguage.Visibility = Visibility.Collapsed;
-            tab.selectLanguageButton.TouchDown += new EventHandler<TouchEventArgs>(displaySearchLanguages);
-            tab.selectLanguageButton.Click += new RoutedEventHandler(displaySearchLanguages);
-            tab.oldFrench.Selected += new RoutedEventHandler(searchLanguageChanged);
-            tab.modernFrench.Selected += new RoutedEventHandler(searchLanguageChanged);
-            tab.English.Selected += new RoutedEventHandler(searchLanguageChanged);
-
-
+            SearchTab tab = new SearchTab(this, surfaceWindow);
 
             // insert tab item right before the last (+) tab item
             tabItems.Insert(count - 1, tab);
@@ -625,7 +599,7 @@ namespace SurfaceApplication1
                 if (pageNum % 2 == 1) // If odd, meaning it's a Fo_r, we want to aim for the previous page.
                     pageNum--;
 
-                SurfaceWindow.createTab(pageNum - 10);
+                surfaceWindow.createTab(pageNum - 10);
                 previousPageToFind = pageToFind;
             }
         }
@@ -658,7 +632,6 @@ namespace SurfaceApplication1
 
             selectedTab.searchQueryBox.Focus();
         }
-
 
 
         private SideBarTab AddAnnotateTabItem()
@@ -710,7 +683,7 @@ namespace SurfaceApplication1
 
         public void savePage(int pageNum, double width, Point center, SurfaceWindow1.language lang)
         {
-            savedPages.Add(new SavedPage(pageNum, width, center, lang, SurfaceWindow));
+            savedPages.Add(new SavedPage(pageNum, width, center, lang, surfaceWindow));
         }
     }
 }
