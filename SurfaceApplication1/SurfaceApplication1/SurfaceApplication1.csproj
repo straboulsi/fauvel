@@ -106,11 +106,13 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="BoundingBox.cs" />
+    <Compile Include="Overlay.cs" />
     <Compile Include="SavedPagesTab.cs" />
     <Compile Include="Counterpart.cs" />
     <Compile Include="PageNamer.cs" />
     <Compile Include="ResultBoxItem.cs" />
     <Compile Include="SavedPage.cs" />
+    <Compile Include="Search.cs" />
     <Compile Include="SearchResult.cs" />
     <Compile Include="SearchTab.cs" />
     <Compile Include="SideBar.cs" />
@@ -118,7 +120,6 @@
     <Compile Include="SpecialString.cs" />
     <Compile Include="StudyTab.cs" />
     <Compile Include="Thumbnailer.cs" />
-    <Compile Include="Translate.cs" />
     <Compile Include="TranslationBox.cs" />
     <Compile Include="Workers.cs" />
     <Compile Include="Tab.cs" />
@@ -161,7 +162,6 @@
     <Resource Include="icons\magnifyingglass.png" />
     <Resource Include="XML\LayoutXML.xml" />
     <Resource Include="icons\translationsBar.png" />
-    <Resource Include="icons\searchMan.jpg" />
     <Content Include="minithumbnails\10rIm1.jpg">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
