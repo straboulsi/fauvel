@@ -605,7 +605,7 @@ namespace SurfaceApplication1
                 BackgroundWorker worker = new BackgroundWorker();
                 worker.DoWork += delegate
                 { // Add if loops here
-                    imageResults = Translate.searchPicCaptions(searchQuery, caseType, wordType, SurfaceWindow1.xml);
+                    imageResults = Translate.searchExactPicCaptions(searchQuery, caseType, wordType, SurfaceWindow1.xml);
                 };
                 worker.RunWorkerCompleted += delegate
                 {
@@ -831,7 +831,7 @@ namespace SurfaceApplication1
         private Boolean checkForChanges()
         {
             if (caseSensitive.IsChecked == true | wholeWordOnly.IsChecked == true |
-                exactPhraseOnly.IsChecked == false | (selectLanguage.SelectedIndex != 0 && selectLanguage.SelectedIndex != 1))
+                exactPhraseOnly.IsChecked == true | (selectLanguage.SelectedIndex != 0 && selectLanguage.SelectedIndex != 1))
                 defaultOptionsChanged = true;
 
             else

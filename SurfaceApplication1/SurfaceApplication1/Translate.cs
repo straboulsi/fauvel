@@ -955,7 +955,7 @@ namespace SurfaceApplication1
         /**
          * Searches for text in image captions.
          * */
-        public static List<SearchResult> searchPicCaptions(String search, int caseSensitive, int wordSensitive, XmlDocument whichXml)
+        public static List<SearchResult> searchExactPicCaptions(String search, int caseSensitive, int wordSensitive, XmlDocument whichXml)
         {
             List<SearchResult> results = new List<SearchResult>();
 
