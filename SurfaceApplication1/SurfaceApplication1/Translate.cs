@@ -41,6 +41,8 @@ namespace SurfaceApplication1
         public static CompareInfo myComp = CultureInfo.InvariantCulture.CompareInfo; // Used in the Contains method
         public static int veryLastLine = 5986; // The maximum line number of the Fauvel poem
 
+
+
         public static Grid getGrid(TranslationBox tb, TextBlock t)
         {
             double width, x, y, height;
@@ -399,36 +401,8 @@ namespace SurfaceApplication1
 
                     /// Note: To select voices that don't have <dc>, add second level and select ("//v[not(dc)]")
                     foundNode = whichXml.DocumentElement.SelectSingleNode("//p[@id='" + str + "']");
-                    XmlNodeList tbRemoved;
 
-                    tbRemoved = foundNode.SelectNodes("cp");
-                    foreach (XmlNode xn in tbRemoved)
-                        foundNode.RemoveChild(xn);
-
-                    tbRemoved = foundNode.SelectNodes("nv");
-                    foreach (XmlNode xn in tbRemoved)
-                        foundNode.RemoveChild(xn);
-
-
-                    if (str.Substring(2, 2).Equals("Mo"))
-                    {
-                        XmlNodeList voices = foundNode.SelectNodes("v");
-                        foreach (XmlNode voice in voices)
-                        {
-                            tbRemoved = voice.SelectNodes("dc");
-                            foreach (XmlNode xn in tbRemoved)
-                                voice.RemoveChild(xn);
-                        }
-                    }
-
-                    else
-                    {
-                        tbRemoved = foundNode.SelectNodes("dc");
-                        foreach (XmlNode xn in tbRemoved)
-                            foundNode.RemoveChild(xn);
-                    }
-
-                    toDisplay += foundNode.InnerText.Trim();
+                    toDisplay += lyricsOnly(foundNode).InnerText.Trim();
                 }
 
 
@@ -446,16 +420,19 @@ namespace SurfaceApplication1
 
 
         /**
-         * Fetches Old French text for a section of poetry, given starting and ending line numbers.
+         * Searches for text in Fauvel poetry.
+         * Last two parameters are language-specific - 0 is Old Fr, 1 is Mod Fr, 2 is Eng
          **/
-        public static List<SearchResult> searchOldFrPoetry(String search, int caseSensitive, int wordSensitive)
+        public static List<SearchResult> searchExactPoetry(String search, int caseSensitive, int wordSensitive, int language)
         {
 
             List<SearchResult> results = new List<SearchResult>();
 
+            XmlDocument thisXml = whichXml(language);
+
             try
             {
-                XmlNodeList xnl = SurfaceWindow1.xml.DocumentElement.SelectNodes("//lg/l");
+                XmlNodeList xnl = thisXml.DocumentElement.SelectNodes("//lg/l");
 
                 foreach (XmlNode xn in xnl)
                 {
@@ -465,100 +442,38 @@ namespace SurfaceApplication1
                         SearchResult newResult = new SearchResult();
 
                         // Gets rid of drop caps
-                        if (xn.ChildNodes.Count > 1)
+                        if (xn.ChildNodes.Count > 1) // Originally written for OldFr; make sure this doesn't mess up Mod Fr or Eng!
                             xn.RemoveChild(xn.FirstChild);
                         
-                        String lineNum = xn.Attributes["n"].Value;
-                        newResult.lineNum = Convert.ToInt32(lineNum);
+                        newResult.lineNum = Convert.ToInt32(xn.Attributes["n"].Value);
                         newResult.resultType = 1;
-                        XmlNode page = xn.ParentNode.ParentNode;
-                        String pageNum = page.Attributes["facs"].Value;
-                        pageNum = "Fo" + pageNum.Substring(1);
-                        newResult.folio = pageNum;
+                        newResult.folio = getPageByLineNum(newResult.lineNum);
 
-                        int startLine = newResult.lineNum - 4;
-                        if (startLine < 1)
-                            startLine = 1;
-                        int endLine = newResult.lineNum + 4;
-                        if (endLine > veryLastLine)
-                            endLine = veryLastLine;
-
-                        String resultLine = getPoetry(newResult.lineNum, newResult.lineNum, SurfaceWindow1.xml);
-                        String str1 = resultLine.Substring(0, myComp.IndexOf(resultLine, search, CompareOptions.IgnoreCase));
-                        String str2 = resultLine.Substring(myComp.IndexOf(resultLine, search, CompareOptions.IgnoreCase) + search.Length);
-                        String lineInfo = "\r\n\r\nLines " + startLine + " to " + endLine;
-
-                        newResult.excerpts.Add(new SpecialString((getPoetry(startLine, newResult.lineNum - 1, SurfaceWindow1.xml) + "\r\n" + str1), 0));
-                        newResult.excerpts.Add(new SpecialString(search, 1));
-                        newResult.excerpts.Add(new SpecialString((str2 + "\r\n" + getPoetry(newResult.lineNum + 1, endLine, SurfaceWindow1.xml) + lineInfo), 0));
-
-                        newResult.text1 = xn.InnerText.Trim();
-                        newResult.text2 = getPoetry(newResult.lineNum, newResult.lineNum, SurfaceWindow1.engXml);
-                        results.Add(newResult);
-                    }
-                }
-            }
-            catch (Exception e)
-            {
-                Console.Write(e.StackTrace);
-                Console.Read();
-            }
-
-            return results;
-        }
-
-
-        /**
-         * Searches for text in Modern French poetry. 
-         * */
-        public static List<SearchResult> searchModFrPoetry(String search, int caseSensitive, int wordSensitive)
-        {
-
-            List<SearchResult> results = new List<SearchResult>();
-
-            try
-            {
-                XmlNodeList xnl = SurfaceWindow1.modFrXml.DocumentElement.SelectNodes("//lg/l");
-
-
-                foreach (XmlNode xn in xnl)
-                {
-
-                    if (foundBySpecifiedCase(search, xn.InnerText, caseSensitive) && foundBySpecifiedWord(search, xn.InnerText, wordSensitive))
-                    {
-                        SearchResult newResult = new SearchResult();
-
-                        // Gets rid of drop caps
-                        if (xn.ChildNodes.Count > 1)
-                            xn.RemoveChild(xn.FirstChild);
-                        
-                        String lineNum = xn.Attributes["n"].Value;
-                        newResult.lineNum = Convert.ToInt32(lineNum);
-                        newResult.resultType = 1;
-                        XmlNode page = xn.ParentNode.ParentNode;
-                        String pageNum = page.Attributes["facs"].Value;
-                        pageNum = "Fo" + pageNum.Substring(1);
-                        newResult.folio = pageNum;
-
-                        int startLine = newResult.lineNum - 3;
+                        int startLine = newResult.lineNum - 3; 
                         if (startLine < 1)
                             startLine = 1;
                         int endLine = newResult.lineNum + 3;
                         if (endLine > veryLastLine)
                             endLine = veryLastLine;
 
-                        String resultLine = getPoetry(newResult.lineNum, newResult.lineNum, SurfaceWindow1.modFrXml);
+
+                        String resultLine = getPoetry(newResult.lineNum, newResult.lineNum, thisXml); 
                         String str1 = resultLine.Substring(0, myComp.IndexOf(resultLine, search, CompareOptions.IgnoreCase));
                         String str2 = resultLine.Substring(myComp.IndexOf(resultLine, search, CompareOptions.IgnoreCase) + search.Length);
                         String lineInfo = "\r\n\r\nLines " + startLine + " to " + endLine;
 
-                        newResult.excerpts.Add(new SpecialString((getPoetry(startLine, newResult.lineNum - 1, SurfaceWindow1.modFrXml) + "\r\n" + str1), 0));
+                        newResult.excerpts.Add(new SpecialString((getPoetry(startLine, newResult.lineNum - 1, thisXml) + "\r\n" + str1), 0)); // Same xml as above
                         newResult.excerpts.Add(new SpecialString(search, 1));
-                        newResult.excerpts.Add(new SpecialString((str2 + "\r\n" + getPoetry(newResult.lineNum + 1, endLine, SurfaceWindow1.modFrXml) + lineInfo), 0));
+                        newResult.excerpts.Add(new SpecialString((str2 + "\r\n" + getPoetry(newResult.lineNum + 1, endLine, thisXml) + lineInfo), 0));
 
+                        newResult.tag = getTagByLineNum(newResult.lineNum);
                         newResult.text1 = xn.InnerText.Trim();
-                        newResult.text2 = getPoetry(newResult.lineNum, newResult.lineNum, SurfaceWindow1.engXml);
-                        
+
+                        if(language == 2) // For English, the secondary text is original text
+                            newResult.text2 = getPoetry(newResult.lineNum, newResult.lineNum, SurfaceWindow1.xml);
+                        else // For all other languages, the secondary text is the English
+                            newResult.text2 = getPoetry(newResult.lineNum, newResult.lineNum, SurfaceWindow1.engXml); 
+
                         results.Add(newResult);
                     }
                 }
@@ -572,62 +487,16 @@ namespace SurfaceApplication1
             return results;
         }
 
-
-
-        /**
-          * Searches for text in English translation of the poetry. 
-          * */
-        public static List<SearchResult> searchEngPoetry(String search, int caseSensitive, int wordSensitive)
+        public static XmlDocument whichXml(int language)
         {
-            List<SearchResult> results = new List<SearchResult>();
-
-            try
-            {
-                XmlNodeList xnl = SurfaceWindow1.engXml.DocumentElement.SelectNodes("//lg/l");
-
-                foreach (XmlNode xn in xnl)
-                {
-
-                    if (foundBySpecifiedCase(search, xn.InnerText, caseSensitive) && foundBySpecifiedWord(search, xn.InnerText, wordSensitive))
-                    {
-                        SearchResult newResult = new SearchResult();
-                        String lineNum = xn.Attributes["n"].Value;
-                        newResult.lineNum = Convert.ToInt32(lineNum);
-                        newResult.resultType = 1;
-                        newResult.text1 = xn.InnerText.Trim();
-                        newResult.text2 = getPoetry(newResult.lineNum, newResult.lineNum, SurfaceWindow1.xml);
-                        newResult.folio = getPageByLineNum(newResult.lineNum);
-
-                        int startLine = newResult.lineNum - 4;
-                        if (startLine < 1)
-                            startLine = 1;
-                        int endLine = newResult.lineNum + 4;
-                        if (endLine > veryLastLine)
-                            endLine = veryLastLine;
-
-                        String resultLine = getPoetry(newResult.lineNum, newResult.lineNum, SurfaceWindow1.engXml);
-                        String str1 = resultLine.Substring(0, myComp.IndexOf(resultLine, search, CompareOptions.IgnoreCase));
-                        String str2 = resultLine.Substring(myComp.IndexOf(resultLine, search, CompareOptions.IgnoreCase) + search.Length);
-                        String lineInfo = "\r\n\r\nLines " + startLine + " to " + endLine;
-
-
-                        newResult.excerpts.Add(new SpecialString((getPoetry(startLine, newResult.lineNum - 1, SurfaceWindow1.engXml) + "\r\n" + str1), 0));
-                        newResult.excerpts.Add(new SpecialString(search, 1));
-                        newResult.excerpts.Add(new SpecialString((str2 + "\r\n" + getPoetry(newResult.lineNum + 1, endLine, SurfaceWindow1.engXml) + lineInfo), 0));
-                        
-                        results.Add(newResult);
-                    }
-                }
-
-            }
-            catch (Exception e)
-            {
-                Console.Write(e.StackTrace);
-                Console.Read();
-            }
-
-            return results;
+            if (language == 1)
+                return SurfaceWindow1.modFrXml;
+            else if (language == 2)
+                return SurfaceWindow1.engXml;
+            else // i.e. if 0
+                return SurfaceWindow1.xml; // This can be our default
         }
+    
 
 
         /**
@@ -640,13 +509,7 @@ namespace SurfaceApplication1
             List<SpecialString> searchStrings = new List<SpecialString>();
 
             // Picks a certain language XML based on language int
-            XmlDocument thisXml = new XmlDocument(); 
-            if (language == 0) 
-                thisXml = SurfaceWindow1.xml;
-            else if (language == 1)
-                thisXml = SurfaceWindow1.modFrXml;
-            else if (language == 2)
-                thisXml = SurfaceWindow1.engXml;
+            XmlDocument thisXml = whichXml(language);
 
             String[] search = searchStr.Trim().Split(new String[] { " " }, StringSplitOptions.None); // To search for each word independently
 
@@ -656,6 +519,7 @@ namespace SurfaceApplication1
             try
             {
                 XmlNodeList xnl = thisXml.DocumentElement.SelectNodes("//lg/l"); // Poetry lines only
+                
 
                 foreach (XmlNode xn in xnl)
                 {
@@ -702,7 +566,14 @@ namespace SurfaceApplication1
                             if(startLine != endLine)
                                 newResult.lineRange = "-" + endLine;
                             newResult.resultType = 1;
-                            newResult.text1 = resultText;
+                            newResult.text1 = getPoetry(lineNum, lineNum, thisXml);
+                            newResult.tag = getTagByLineNum(startLine);
+
+                            if (language == 2) // For English, the secondary text is original text
+                                newResult.text2 = getPoetry(lineNum, lineNum, SurfaceWindow1.xml);
+                            else // For all other languages, the secondary text is the English
+                                newResult.text2 = getPoetry(lineNum, lineNum, SurfaceWindow1.engXml); 
+
                             newResult.folio = getPageByLineNum(lineNum);
 
 
@@ -721,6 +592,130 @@ namespace SurfaceApplication1
 
                             newResult.excerpts.Add(new SpecialString(resultText, 0)); // Adding the rest of the resultText, from after the end of the last search word
                             newResult.excerpts.Add(new SpecialString("\r\n\r\nLines " + startLine + " to " + endLine, 0));
+
+                            results.Add(newResult);
+                        }
+
+                    }
+                }
+
+            }
+            catch (Exception e)
+            {
+                Console.Write(e.StackTrace);
+                Console.Read();
+            }
+
+
+            return results;
+        }
+
+
+        /**
+         * Searches for multiple words (not necessarily adjacent) in lyrics.
+         * Takes in 0 for old french and 1 for modern french.
+         * */
+        public static List<SearchResult> searchMultipleWordsLyrics(String searchStr, int caseSensitive, int wordSensitive, int language)
+        {
+            List<SearchResult> results = new List<SearchResult>();
+            List<SpecialString> searchStrings = new List<SpecialString>();
+
+            // Picks a certain language XML based on language int
+            XmlDocument thisXml = whichXml(language);
+
+            String[] search = searchStr.Trim().Split(new String[] { " " }, StringSplitOptions.None); // To search for each word independently
+
+            foreach (String s in search)
+                searchStrings.Add(new SpecialString(s, false)); // See SpecialString class
+
+            try
+            {
+                XmlNodeList xnl = thisXml.DocumentElement.SelectNodes("//p"); // Music lines only
+
+
+                foreach (XmlNode xn in xnl)
+                {
+                    // Start by finding the first word
+                    if (foundBySpecifiedCase(searchStrings[0].str, xn.InnerText, caseSensitive) && foundBySpecifiedWord(searchStrings[0].str, xn.InnerText, wordSensitive))
+                    {
+                        XmlNode node = lyricsOnly(xn);
+                        String[] allLyrics = node.InnerText.Trim().Split(new String[] { "\r\n", "\n" }, StringSplitOptions.None);
+
+                        int lyricLineNum = -5; // a random negative number to distinguish from actual result
+                        for (int i = 0; i < allLyrics.Length; i++)
+                        {
+                            if (foundBySpecifiedCase(searchStrings[0].str, allLyrics[i], caseSensitive) && foundBySpecifiedWord(searchStrings[0].str, allLyrics[i], wordSensitive))
+                            {
+                                lyricLineNum = i; // Finds the lyric line that the word appears in
+                                break;
+                            }
+                        }
+
+                        String resultText = ""; // Creating a range of text to find the other words in
+                        int startLine = lyricLineNum - 3;
+                        int endLine = lyricLineNum + 3;
+                        if (startLine < 0)
+                            startLine = 0;
+                        if (endLine >= allLyrics.Length)
+                            endLine = allLyrics.Length - 1;
+
+                        for (int i = startLine; i <= endLine; i++)
+                        {
+                            if (!allLyrics[i].Trim().StartsWith("#")) // Ignoring comments
+                                resultText += allLyrics[i].Trim() + "\r\n";
+                        }
+
+
+                        // Makes sure every word shows up in this excerpt
+                        // This criteria can be tweaked if we decide to be more lenient - i.e. include half or more
+                        foreach (SpecialString ss in searchStrings)
+                        {
+                            if (foundBySpecifiedCase(ss.str, resultText, caseSensitive) && foundBySpecifiedWord(ss.str, resultText, wordSensitive))
+                            {
+                                ss.isFound = true; // Keep in mind that this will stay true until set again otherwise!
+                                ss.spotInResult = myComp.IndexOf(resultText, ss.str, CompareOptions.IgnoreCase);
+                            }
+                            else
+                                ss.isFound = false; // Make sure to set this for each new result
+                        }
+
+                        Boolean foundAll = true;
+                        foreach (SpecialString ss in searchStrings)
+                        {
+                            if (ss.isFound == false)
+                                foundAll = false;
+                        }
+
+
+                        // If all criteria met, create a new SearchResult
+                        if (foundAll == true)
+                        {
+                            SearchResult newResult = new SearchResult();
+                            newResult.resultType = 2;
+                            newResult.text1 = allLyrics[0];
+                            newResult.tag = xn.Attributes["id"].Value;
+                            newResult.folio = getPageByTag(newResult.tag, 2);
+
+                            if (startLine > 1)
+                                resultText = "...\r\n" + resultText;
+                            if (endLine < allLyrics.Count())
+                                resultText += "...";
+
+
+                            searchStrings.Sort(); // Sorts the search words by the order they show up in these few lines
+
+                            // Now, check format of each piece of the text - search words bold.
+                            // See SpecialString class for more info.
+                            // resultText is substringed on each pass bc otherwise it will reenter all of the text from the very beginning.
+                            foreach (SpecialString ss in searchStrings)
+                            {
+                                newResult.excerpts.Add(new SpecialString(resultText.Substring(0, myComp.IndexOf(resultText, ss.str, CompareOptions.IgnoreCase)), 0));
+                                newResult.excerpts.Add(new SpecialString(resultText.Substring(myComp.IndexOf(resultText, ss.str, CompareOptions.IgnoreCase), ss.str.Length), 1));
+                                resultText = resultText.Substring(myComp.IndexOf(resultText, ss.str, CompareOptions.IgnoreCase) + ss.str.Length);
+                            }
+
+
+                            newResult.excerpts.Add(new SpecialString(resultText, 0)); // Adding the rest of the resultText, from after the end of the last search word
 
                             results.Add(newResult);
                         }
@@ -763,6 +758,7 @@ namespace SurfaceApplication1
 
         /**
          * Returns the name of the page that a given line of poetry is on, using the original text Xml.
+         * Folio is returned as "Fo__"
          * */
         public static String getPageByLineNum(int lineNum)
         {
@@ -822,7 +818,7 @@ namespace SurfaceApplication1
         /**
          * Searches for text in lyrics of music.
          * */
-        public static List<SearchResult> searchLyrics(String search, int caseSensitive, int wordSensitive, XmlDocument whichXml)
+        public static List<SearchResult> searchExactLyrics(String search, int caseSensitive, int wordSensitive, XmlDocument whichXml)
         {
             List<SearchResult> results = new List<SearchResult>();
 
@@ -845,7 +841,6 @@ namespace SurfaceApplication1
                         int lyricLineNum = -5; // a random negative number to distinguish from actual result
                         for (int i = 0; i < allLyrics.Length; i++)
                         {
-                            String thisLine = allLyrics[i];
                             if (foundBySpecifiedCase(search, allLyrics[i], caseSensitive) && foundBySpecifiedWord(search, allLyrics[i], wordSensitive))
                             {
                                 lyricLineNum = i;
@@ -880,7 +875,7 @@ namespace SurfaceApplication1
                         newResult.excerpts.Add(new SpecialString(search, 1));
                         newResult.excerpts.Add(new SpecialString(excerpt.Substring(myComp.IndexOf(excerpt, search, CompareOptions.IgnoreCase) + search.Length), 0));
 
-                        newResult.text1 = allLyrics[0];
+                        newResult.text1 = allLyrics[0]; // Should this be allLyrics[lyricLineNum]? 
                         newResult.tag = xn.Attributes["id"].Value;
                         newResult.folio = "Fo" + (xn.ParentNode.Attributes["facs"].Value).Substring(1);
                         newResult.resultType = 2;

@@ -44,7 +44,7 @@ namespace SurfaceApplication1
         public Button moreOptions, fewerOptions;
         public Image downArrow, upArrow, searchMan;
         public SurfaceScrollViewer poetryScroll, lyricsScroll, imagesScroll;
-        public enum searchLanguage { oldFrench = 1, modernFrench = 2, English = 3 };
+        public enum searchLanguage { oldFrench = 0, modernFrench = 1, English = 2 };
         public searchLanguage currentSearchLanguage = searchLanguage.oldFrench;
         public Border poetryBorder, imagesBorder, lyricsBorder;
         private bool optionsShown = false;
@@ -55,6 +55,7 @@ namespace SurfaceApplication1
         private List<SearchResult> poetryResults, lyricResults, imageResults;
         public delegate void UpdateTextCallback(string message);
         private int unreturnedResults;
+        public bool? exactPhr;
 
         public SearchTab(SideBar mySideBar, SurfaceWindow1 surfaceWindow) : base(mySideBar)
         {
@@ -471,10 +472,6 @@ namespace SurfaceApplication1
         private void runSearch()
         {
             String searchQuery = searchQueryBox.Text;
-            XmlDocument xml = SurfaceWindow1.xml;
-            XmlDocument engXml = SurfaceWindow1.engXml;
-            XmlDocument layoutXml = SurfaceWindow1.layoutXml;
-            XmlDocument modFrXml = SurfaceWindow1.modFrXml;
 
             searchTabHeader.Text = searchQueryBox.Text;
             searchResults.Visibility = Visibility.Visible;
@@ -486,7 +483,8 @@ namespace SurfaceApplication1
                 caseType = 1;
             if (wholeWordOnly.IsChecked == true)
                 wordType = 1;
-
+                
+	    exactPhr = exactPhraseOnly.IsChecked;
             poetryTab.Header = "Searching Poetry";
             lyricsTab.Header = "Searching Lyrics";
             imagesTab.Header = "Searching Images";
@@ -501,30 +499,17 @@ namespace SurfaceApplication1
             Action poetryResultAction = delegate
             {
                 BackgroundWorker worker = new BackgroundWorker();
-                if (exactPhraseOnly.IsChecked == false)
+
+                
+
+                worker.DoWork += delegate 
                 {
-                    worker.DoWork += delegate
-                    {
-                        if (currentSearchLanguage == searchLanguage.oldFrench)
-                            poetryResults = Translate.searchOldFrPoetry(searchQuery, caseType, wordType);
-                        else if (currentSearchLanguage == searchLanguage.modernFrench)
-                            poetryResults = Translate.searchModFrPoetry(searchQuery, caseType, wordType);
-                        else if (currentSearchLanguage == searchLanguage.English)
-                            poetryResults = Translate.searchEngPoetry(searchQuery, caseType, wordType);
-                    };
-                }
-                else
-                {
-                    worker.DoWork += delegate
-                    {
-                        if (currentSearchLanguage == searchLanguage.oldFrench)
-                            poetryResults = Translate.searchOldFrPoetry(searchQuery, caseType, wordType);
-                        else if (currentSearchLanguage == searchLanguage.modernFrench)
-                            poetryResults = Translate.searchModFrPoetry(searchQuery, caseType, wordType);
-                        else if (currentSearchLanguage == searchLanguage.English)
-                            poetryResults = Translate.searchEngPoetry(searchQuery, caseType, wordType);
-                    };
-                }
+                    if (exactPhr == false)
+                        poetryResults = Translate.searchMultipleWordsPoetry(searchQuery, caseType, wordType, (int)currentSearchLanguage);
+                    else
+                        poetryResults = Translate.searchExactPoetry(searchQuery, caseType, wordType, (int)currentSearchLanguage);
+                };
+
                 worker.RunWorkerCompleted += delegate
                 {
                     
@@ -567,13 +552,16 @@ namespace SurfaceApplication1
             Action lyricResultAction = delegate
             {
                 BackgroundWorker worker = new BackgroundWorker();
-                worker.DoWork += delegate
+
+                worker.DoWork += delegate 
                 {
-                    if (currentSearchLanguage == searchLanguage.oldFrench)
-                        lyricResults = Translate.searchLyrics(searchQuery, caseType, wordType, xml);
-                    else if (currentSearchLanguage == searchLanguage.modernFrench)
-                        lyricResults = Translate.searchLyrics(searchQuery, caseType, wordType, modFrXml);
+                    if (exactPhr == false)
+                        lyricResults = Translate.searchMultipleWordsLyrics(searchQuery, caseType, wordType, (int) currentSearchLanguage);
+                    else
+                        lyricResults = Translate.searchExactLyrics(searchQuery, caseType, wordType, Translate.whichXml((int)currentSearchLanguage));
                 };
+
+
                 worker.RunWorkerCompleted += delegate
                 {
                     ListBox lyricsLB = new ListBox();
@@ -615,8 +603,8 @@ namespace SurfaceApplication1
             {
                 BackgroundWorker worker = new BackgroundWorker();
                 worker.DoWork += delegate
-                {
-                    imageResults = Translate.searchPicCaptions(searchQuery, caseType, wordType, xml);
+                { // Add if loops here
+                    imageResults = Translate.searchPicCaptions(searchQuery, caseType, wordType, SurfaceWindow1.xml);
                 };
                 worker.RunWorkerCompleted += delegate
                 {
