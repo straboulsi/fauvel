@@ -376,11 +376,11 @@ namespace SurfaceApplication1
                 else
                 {
                     if (currentSearchLanguage == searchLanguage.oldFrench)
-                        poetryResults = Translate.searchOldFrPoetry(searchQuery, caseType, wordType, xml, engXml);
+                        poetryResults = Translate.searchOldFrPoetry(searchQuery, caseType, wordType);
                     else if (currentSearchLanguage == searchLanguage.modernFrench)
-                        poetryResults = Translate.searchModFrPoetry(searchQuery, caseType, wordType, modFrXml, engXml);
+                        poetryResults = Translate.searchModFrPoetry(searchQuery, caseType, wordType);
                     else if (currentSearchLanguage == searchLanguage.English)
-                        poetryResults = Translate.searchEngPoetry(searchQuery, caseType, wordType, xml, engXml);
+                        poetryResults = Translate.searchEngPoetry(searchQuery, caseType, wordType);
                 }
 
                 SurfaceListBox poetryLB = new SurfaceListBox();
@@ -391,7 +391,7 @@ namespace SurfaceApplication1
                 {
                     ResultBoxItem resultRBI = new ResultBoxItem();
                     convertSearchResultToResultBoxItem(result, resultRBI);
-                    resultRBI.resultThumbnail = Translate.convertImage(Thumbnailer.getThumbnail(Translate.getTagByLineNum(result.lineNum, layoutXml)));
+                    resultRBI.resultThumbnail = Translate.convertImage(Thumbnailer.getThumbnail(Translate.getTagByLineNum(result.lineNum)));
                     if (((optionsShown == false) && poetryResults.Count < 4) || ((optionsShown == true) && poetryResults.Count < 2))
                         resultRBI.Width = 480;
                     poetryLB.Items.Add(resultRBI);
@@ -416,9 +416,9 @@ namespace SurfaceApplication1
                 // Lyric results
                 List<SearchResult> lyricResults = new List<SearchResult>();
                 if (currentSearchLanguage == searchLanguage.oldFrench)
-                    lyricResults = Translate.searchLyrics(searchQuery, caseType, wordType, xml, layoutXml);
+                    lyricResults = Translate.searchLyrics(searchQuery, caseType, wordType, xml);
                 else if (currentSearchLanguage == searchLanguage.modernFrench)
-                    lyricResults = Translate.searchLyrics(searchQuery, caseType, wordType, modFrXml, layoutXml);
+                    lyricResults = Translate.searchLyrics(searchQuery, caseType, wordType, modFrXml);
 
                 ListBox lyricsLB = new ListBox();
                 lyricsLB.Style = tabBar.FindResource("SearchResultSurfaceListBox") as Style;
@@ -447,7 +447,7 @@ namespace SurfaceApplication1
 
 
                 // Image results
-                List<SearchResult> imageResults = Translate.searchPicCaptions(searchQuery, caseType, wordType, xml, layoutXml);
+                List<SearchResult> imageResults = Translate.searchPicCaptions(searchQuery, caseType, wordType, xml);
                 ListBox imagesLB = new ListBox();
                 imagesLB.Style = tabBar.FindResource("SearchResultSurfaceListBox") as Style;
                 selectedTab.imagesScroll.Content = imagesLB;

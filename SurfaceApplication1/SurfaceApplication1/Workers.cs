@@ -28,9 +28,9 @@ namespace SurfaceApplication1
         {
             var translationDispatcher = tab._canvas.Dispatcher.BeginInvoke(new Action(() =>
             {
-                tab._translationBoxesV = Translate.getTranslationOverlay(PageNamer.getOnePageText(tab._page), SurfaceWindow1.xml, SurfaceWindow1.modFrXml, SurfaceWindow1.engXml, SurfaceWindow1.layoutXml);
+                tab._translationBoxesV = Translate.getTranslationOverlay(PageNamer.getOnePageText(tab._page));
                 tab._textBlocksV = new List<TextBlock>();
-                tab._translationBoxesR = Translate.getTranslationOverlay(PageNamer.getOnePageText(tab._page + 1), SurfaceWindow1.xml, SurfaceWindow1.modFrXml, SurfaceWindow1.engXml, SurfaceWindow1.layoutXml);
+                tab._translationBoxesR = Translate.getTranslationOverlay(PageNamer.getOnePageText(tab._page + 1));
                 tab._textBlocksR = new List<TextBlock>();
             }));
             translationDispatcher.Completed += (s, e) =>
@@ -58,8 +58,8 @@ namespace SurfaceApplication1
         {
             var ghostBoxDispatcher = tab._canvas.Dispatcher.BeginInvoke(new Action(() =>
             {
-                tab._vGhostBoxes = Translate.getGhostBoxes(PageNamer.getOnePageText(tab._page), SurfaceWindow1.layoutXml);
-                tab._rGhostBoxes = Translate.getGhostBoxes(PageNamer.getOnePageText(tab._page + 1), SurfaceWindow1.layoutXml);
+                tab._vGhostBoxes = Translate.getGhostBoxes(PageNamer.getOnePageText(tab._page));
+                tab._rGhostBoxes = Translate.getGhostBoxes(PageNamer.getOnePageText(tab._page + 1));
             }));
             ghostBoxDispatcher.Completed += (s, e) =>
             {
