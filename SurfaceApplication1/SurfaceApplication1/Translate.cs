@@ -293,15 +293,18 @@ namespace SurfaceApplication1
          * Fetches Points from LayoutXML coordinates. 
          * Similar to getPoint, but specially designed to work with poetry lines.
          * For poetry, coordinates are not recorded for every line, but only for each poetry chunk.
+         * Takes in 1 as top left and 2 as lower right.
          * */
-        public static Point getLinePoint(String lineNum, int whichPt)
+        public static Point getLinePoint(int lineNum, int whichPt)
         {
             Point pt = new Point();
+
+            String lineNumStr = Convert.ToString(lineNum);
 
             try
             {
 
-                XmlNode xn = SurfaceWindow1.layoutXml.DocumentElement.SelectSingleNode("//l[@n='" + lineNum + "']");
+                XmlNode xn = SurfaceWindow1.layoutXml.DocumentElement.SelectSingleNode("//l[@n='" + lineNumStr + "']");
                 XmlNode section = xn.ParentNode; // Finds which section of poetry has this line
 
                 if (whichPt == 1) // Top left
@@ -468,6 +471,8 @@ namespace SurfaceApplication1
 
                         newResult.tag = getTagByLineNum(newResult.lineNum);
                         newResult.text1 = xn.InnerText.Trim();
+                        newResult.topL = getLinePoint(newResult.lineNum, 1);
+                        newResult.bottomR = getLinePoint(newResult.lineNum, 2);
 
                         if(language == 2) // For English, the secondary text is original text
                             newResult.text2 = getPoetry(newResult.lineNum, newResult.lineNum, SurfaceWindow1.xml);
@@ -568,6 +573,8 @@ namespace SurfaceApplication1
                             newResult.resultType = 1;
                             newResult.text1 = getPoetry(lineNum, lineNum, thisXml);
                             newResult.tag = getTagByLineNum(startLine);
+                            newResult.topL = getLinePoint(newResult.lineNum, 1);
+                            newResult.bottomR = getLinePoint(newResult.lineNum, 2);
 
                             if (language == 2) // For English, the secondary text is original text
                                 newResult.text2 = getPoetry(lineNum, lineNum, SurfaceWindow1.xml);
@@ -694,6 +701,8 @@ namespace SurfaceApplication1
                             newResult.resultType = 2;
                             newResult.text1 = allLyrics[0];
                             newResult.tag = xn.Attributes["id"].Value;
+                            newResult.topL = getPoint(newResult.tag, 1);
+                            newResult.bottomR = getPoint(newResult.tag, 2);
                             newResult.folio = getPageByTag(newResult.tag, 2);
 
                             if (startLine > 1)
@@ -877,6 +886,8 @@ namespace SurfaceApplication1
 
                         newResult.text1 = allLyrics[0]; // Should this be allLyrics[lyricLineNum]? 
                         newResult.tag = xn.Attributes["id"].Value;
+                        newResult.topL = getPoint(newResult.tag, 1);
+                        newResult.bottomR = getPoint(newResult.tag, 2);
                         newResult.folio = "Fo" + (xn.ParentNode.Attributes["facs"].Value).Substring(1);
                         newResult.resultType = 2;
                         
@@ -970,6 +981,8 @@ namespace SurfaceApplication1
                         newResult.excerpts.Add(new SpecialString(search, 1));
                         newResult.excerpts.Add(new SpecialString(str2, 0));
                         newResult.tag = xn.Attributes["id"].Value;
+                        newResult.topL = getPoint(newResult.tag, 1);
+                        newResult.bottomR = getPoint(newResult.tag, 2);
                         newResult.folio = "Fo" + (xn.ParentNode.Attributes["facs"].Value).Substring(1); // Gets rid of # 
                         results.Add(newResult);
                     }

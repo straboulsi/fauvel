@@ -27,6 +27,7 @@ namespace SurfaceApplication1
         public int lineNum;
         public Image thumbnail, minithumbnail;
         public int resultType; // 1 = poetry, 2 = music, 3 = image
+        public Point topL, bottomR;
 
         public SearchResult()
         {

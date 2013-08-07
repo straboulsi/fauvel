@@ -47,7 +47,7 @@ namespace SurfaceApplication1
         public searchLanguage currentSearchLanguage = searchLanguage.oldFrench;
         public Border poetryBorder, imagesBorder, lyricsBorder;
         private bool optionsShown = false;
-        public String pageToFind, previousPageToFind;
+        public String pageToFind;
         private SurfaceWindow1 surfaceWindow;
         private Boolean defaultOptionsChanged;
         private SideBar sideBar;
@@ -55,6 +55,7 @@ namespace SurfaceApplication1
         public delegate void UpdateTextCallback(string message);
         private int unreturnedResults;
         public bool? exactPhr;
+        public ResultBoxItem lastCloseupRBI;
 
         public SearchTab(SideBar mySideBar, SurfaceWindow1 surfaceWindow) : base(mySideBar)
         {
@@ -691,6 +692,8 @@ namespace SurfaceApplication1
         private void convertSearchResultToResultBoxItem(SearchResult sr, ResultBoxItem rbi)
         {
             rbi.folioInfo.Text = sr.folio;
+            rbi.topL = sr.topL;
+            rbi.bottomR = sr.bottomR;
             rbi.resultType = sr.resultType;
             if (rbi.resultType == 1)
                 rbi.lineInfo.Text = Convert.ToString(sr.lineNum) + sr.lineRange; // Assuming only one will be filled out
@@ -747,6 +750,7 @@ namespace SurfaceApplication1
         private void Result_Closeup(object sender, RoutedEventArgs e)
         {
             ResultBoxItem selectedResult = e.Source as ResultBoxItem;
+            lastCloseupRBI = selectedResult;  // For later reference in goToFolio
 
             Image closeupImage = new Image();
             closeupImage.Source = selectedResult.resultThumbnail.Source;
@@ -808,20 +812,17 @@ namespace SurfaceApplication1
 
         private void goToFolio(object sender, TouchEventArgs e)
         {
-            XmlDocument layoutXml = SurfaceWindow1.layoutXml;
+            
+            if (lastCloseupRBI.folioInfo.Text.StartsWith("Fo"))
+                lastCloseupRBI.folioInfo.Text = lastCloseupRBI.folioInfo.Text.Substring(2);
+            String imageName = getImageName(lastCloseupRBI.folioInfo.Text, SurfaceWindow1.layoutXml);
+            int pageNum = Convert.ToInt32(imageName.Substring(0, imageName.IndexOf(".jpg")));
+            if (pageNum % 2 == 1) // If odd, meaning it's a Fo_r, we want to aim for the previous page.
+                pageNum--;
 
-            if (pageToFind != previousPageToFind)
-            {
-                if (pageToFind.StartsWith("Fo"))
-                    pageToFind = pageToFind.Substring(2);
-                String imageName = getImageName(pageToFind, layoutXml);
-                int pageNum = Convert.ToInt32(imageName.Substring(0, imageName.IndexOf(".jpg")));
-                if (pageNum % 2 == 1) // If odd, meaning it's a Fo_r, we want to aim for the previous page.
-                    pageNum--;
+            // Get coordinates from lastCloseupRBI.topL and lastCloseupRBI.bottomR
 
-                surfaceWindow.createTab(pageNum - 10);
-                previousPageToFind = pageToFind;
-            }
+            surfaceWindow.createTab(pageNum - 10);
         }
 
 
