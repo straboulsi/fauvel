@@ -158,7 +158,9 @@ namespace SurfaceApplication1
         private void SearchButton_Selected(object sender, RoutedEventArgs e)
         {
             tabBar.DataContext = null;
-            SideBarTab newTab = this.AddSearchTabItem();
+            SearchTab newTab = new SearchTab(this, surfaceWindow);
+            int count = tabItems.Count;
+            tabItems.Insert(count - 1, newTab);
             tabBar.DataContext = tabItems;
             tabBar.SelectedItem = newTab;
         }
@@ -166,20 +168,22 @@ namespace SurfaceApplication1
         private void AnnotateButton_Selected(object sender, RoutedEventArgs e)
         {
             tabBar.DataContext = null;
-            SideBarTab newTab = this.AddAnnotateTabItem();
+            SideBarTab newTab = new SideBarTab(this);
+            int count = tabItems.Count;
+            newTab.HeaderTemplate = tabBar.FindResource("NewAnnotateTab") as DataTemplate;
+            tabItems.Insert(count - 1, newTab);
             tabBar.DataContext = tabItems;
             tabBar.SelectedItem = newTab;
         }
 
+
         private void StudyButton_Selected(object sender, RoutedEventArgs e)
         {
             tabBar.DataContext = null;
-
             int count = tabItems.Count;
             StudyTab newTab = new StudyTab(this, surfaceWindow);
             newTab.HeaderTemplate = tabBar.FindResource("NewStudyTab") as DataTemplate;
             tabItems.Insert(count - 1, newTab);
-
             tabBar.DataContext = tabItems;
             tabBar.SelectedItem = newTab;
 
@@ -187,60 +191,17 @@ namespace SurfaceApplication1
 
         private void SavedPagesButton_Selected(object sender, RoutedEventArgs e)
         {
+            int count = tabItems.Count;
             tabBar.DataContext = null;
-            SavedPagesTab newTab = this.AddSavedPagesTabItem();
+            SavedPagesTab newTab = new SavedPagesTab(this);
+            newTab.Header = "Saved Pages";
+            newTab.Width = 100;
+            tabItems.Insert(count - 1, newTab);
             tabBar.DataContext = tabItems;
             tabBar.SelectedItem = newTab;
         }
 
-        private SavedPagesTab AddSavedPagesTabItem()
-        {
-            int count = tabItems.Count;
-            SavedPagesTab tab = new SavedPagesTab(this);
-            tab.Header = "Saved Pages";
-            tab.Width = 100;
 
-            // insert tab item right before the last (+) tab item
-            tabItems.Insert(count - 1, tab);
-            return tab;
-        }
-
-        private SideBarTab AddSearchTabItem()
-        {
-            int count = tabItems.Count;
-
-            SearchTab tab = new SearchTab(this, surfaceWindow);
-
-            // insert tab item right before the last (+) tab item
-            tabItems.Insert(count - 1, tab);
-            return tab;
-        }
-
-
-
-        private SideBarTab AddAnnotateTabItem()
-        {
-            int count = tabItems.Count;
-
-            // create new tab item - eventually replace with AnnotateTab tab = new AnnotateTab();
-            SideBarTab tab = new SideBarTab(this);
-            tab.HeaderTemplate = tabBar.FindResource("NewAnnotateTab") as DataTemplate; // can be replaced if AnnotateTab object exists
-
-            // insert tab item right before the last (+) tab item
-            tabItems.Insert(count - 1, tab);
-            return tab;
-        }
-
-
-        //private StudyTab AddStudyTabItem()
-        //{
-        //    int count = tabItems.Count;
-        //    StudyTab tab = new StudyTab(this, surfaceWindow);
-        //    //tab.HeaderTemplate = tabBar.FindResource("NewStudyTab") as DataTemplate; // can be replaced if StudyTab object exists
-
-        //    tabItems.Insert(count - 1, tab);
-        //    return tab;
-        //}
 
         public void deleteTab(object sender, RoutedEventArgs e)
         {
