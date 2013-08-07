@@ -484,12 +484,12 @@ namespace SurfaceApplication1
             if (wholeWordOnly.IsChecked == true)
                 wordType = 1;
                 
-	    exactPhr = exactPhraseOnly.IsChecked;
-            poetryTab.Header = "Searching Poetry";
-            lyricsTab.Header = "Searching Lyrics";
-            imagesTab.Header = "Searching Images";
+	        exactPhr = exactPhraseOnly.IsChecked;
+            poetryTab.Header = "Poetry (...)";
+            lyricsTab.Header = "Lyrics (...)";
+            imagesTab.Header = "Images (...)";
             searchQueryBox.IsEnabled = false;
-            goSearch.Content = "Searching";
+            goSearch.Content = "...";
             goSearch.IsEnabled = false;
             unreturnedResults = 3;
 
@@ -499,8 +499,6 @@ namespace SurfaceApplication1
             Action poetryResultAction = delegate
             {
                 BackgroundWorker worker = new BackgroundWorker();
-
-                
 
                 worker.DoWork += delegate 
                 {
