@@ -24,6 +24,7 @@ namespace SurfaceApplication1
 
     /**
      * This class defines the methods used in the "Study" (Music) app from the SideBar.
+     * It focuses on the front-end visual aspects, while the back-end code is in Study.cs.
      * Primary Coder: Jamie Chong
      * */
     class StudyTab : SideBarTab

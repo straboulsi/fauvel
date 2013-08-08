@@ -444,7 +444,6 @@ namespace SurfaceApplication1
                 Console.Read();
             }
 
-
             return results;
         }
 
@@ -476,6 +475,7 @@ namespace SurfaceApplication1
                     // Start by finding the first word
                     if (foundBySpecifiedCase(searchStrings[0].str, xn.InnerText, caseSensitive) && foundBySpecifiedWord(searchStrings[0].str, xn.InnerText, wordSensitive))
                     {
+                        String tempTitle = xn.SelectSingleNode("title").InnerText;
                         XmlNode node = lyricsOnly(xn);
                         String[] allLyrics = node.InnerText.Trim().Split(new String[] { "\r\n", "\n" }, StringSplitOptions.None); // Splits lyrics line by line
 
@@ -530,7 +530,9 @@ namespace SurfaceApplication1
                         {
                             SearchResult newResult = new SearchResult();
                             newResult.resultType = 2;
-                            newResult.text1 = allLyrics[0];
+                            newResult.text1 = tempTitle; 
+                            if (lyricLineNum != 0) // If the search result isn't in the title
+                                newResult.text2 = allLyrics[lyricLineNum].Trim();
                             newResult.tag = xn.Attributes["id"].Value;
                             newResult.topL = getPoint(newResult.tag, 1);
                             newResult.bottomR = getPoint(newResult.tag, 2);
@@ -554,23 +556,18 @@ namespace SurfaceApplication1
                                 resultText = resultText.Substring(myComp.IndexOf(resultText, ss.str, CompareOptions.IgnoreCase) + ss.str.Length);
                             }
 
-
                             newResult.excerpts.Add(new SpecialString(resultText, 0)); // Adding the rest of the resultText, from after the end of the last search word
 
                             results.Add(newResult);
                         }
-
                     }
                 }
-
             }
             catch (Exception e)
             {
                 Console.Write(e.StackTrace);
                 Console.Read();
             }
-
-
             return results;
         }
 
@@ -670,8 +667,9 @@ namespace SurfaceApplication1
                 {
                     if (foundBySpecifiedCase(search, node.InnerText, caseSensitive) && foundBySpecifiedWord(search, node.InnerText, wordSensitive))
                     {
+                        String tempTitle = node.SelectSingleNode("title").InnerText;
                         XmlNode xn = lyricsOnly(node);
-
+                        
                         SearchResult newResult = new SearchResult();
                         newResult.resultType = 2; // resultType for music
                         String str = xn.InnerText;
@@ -715,7 +713,9 @@ namespace SurfaceApplication1
                         newResult.excerpts.Add(new SpecialString(search, 1));
                         newResult.excerpts.Add(new SpecialString(excerpt.Substring(myComp.IndexOf(excerpt, search, CompareOptions.IgnoreCase) + search.Length), 0));
 
-                        newResult.text1 = allLyrics[0]; // Should this be allLyrics[lyricLineNum]? 
+                        newResult.text1 = tempTitle; 
+                        if(lyricLineNum != 0) // If the search result isn't in the title
+                            newResult.text2 = allLyrics[lyricLineNum].Trim();
                         newResult.tag = xn.Attributes["id"].Value;
                         newResult.topL = getPoint(newResult.tag, 1);
                         newResult.bottomR = getPoint(newResult.tag, 2);
@@ -741,9 +741,11 @@ namespace SurfaceApplication1
         /**
          * Gets rid of all the extraneous text in a node of lyrics.
          * Filters out all cps, dcs, nvs, etc. 
+         * NOTE: This leaves the title in! But the title node can be removed otherwise quite easily.
          * */
         public static XmlNode lyricsOnly(XmlNode originalNode)
         {
+
             XmlNodeList cps = originalNode.SelectNodes("cp");
             if (cps.Count != 0)
             {
