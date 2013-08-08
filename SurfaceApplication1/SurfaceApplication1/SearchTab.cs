@@ -853,7 +853,9 @@ namespace SurfaceApplication1
 
         }
 
-
+        /**
+         * Checks whether the default search settings 
+         * */
         private Boolean checkForChanges()
         {
             if (caseSensitive.IsChecked == true | wholeWordOnly.IsChecked == true |

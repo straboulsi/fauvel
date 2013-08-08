@@ -1,4 +1,3 @@
-SurfaceApplication1/SurfaceApplication1/pages/
 .DS_Store
 .DS_Store?
 *.class
@@ -8,14 +7,12 @@ SurfaceApplication1/SurfaceApplication1/pages/
 Icon?
 ehthumbs.db
 Thumbs.db
-XMLFinalContentFile*
 SurfaceApplication1/SurfaceApplication1/smallpages/
+SurfaceApplication1/SurfaceApplication1/XML/
+SurfaceApplication1/SurfaceApplication1/musicz/
+SurfaceApplication1/SurfaceApplication1/pages/
 SurfaceApplication1/SurfaceApplication1/obj/
 SurfaceApplication1/SurfaceApplication1/bin/
 SurfaceApplication1/SurfaceApplication1.suo
-<<<<<<< HEAD
 Fauvel1/Fauvel1/bin/
 Fauvel1/Fauvel1/obj/
-=======
-SurfaceApplication1/SurfaceApplication1/smallpages
->>>>>>> 2ad6f50a62c75b439f5f04633b20e5c9468148fa
