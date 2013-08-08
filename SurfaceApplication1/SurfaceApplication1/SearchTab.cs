@@ -32,7 +32,7 @@ namespace SurfaceApplication1
     public class SearchTab : SideBarTab
     {
         public Canvas poetryCanvas, lyricsCanvas, imagesCanvas;
-        public Button goSearch, selectLanguageButton;
+        public Button moreOptions, fewerOptions, goSearch, selectLanguageButton;
         public TextBlock searchPrompt, searchTabHeader;
         public TextBox searchQueryBox;
         public Line topLine, bottomLine;
@@ -43,7 +43,6 @@ namespace SurfaceApplication1
         public TabControl searchResults;
         public TabItem poetryTab, lyricsTab, imagesTab;
         public StackPanel poetryPanel, lyricsPanel, imagesPanel;
-        public Button moreOptions, fewerOptions;
         public Image downArrow, upArrow;
         public SurfaceScrollViewer poetryScroll, lyricsScroll, imagesScroll;
         public enum searchLanguage { oldFrench = 0, modernFrench = 1, English = 2 };
