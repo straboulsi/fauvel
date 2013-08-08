@@ -34,6 +34,11 @@ namespace SurfaceApplication1
         public TextBlock musicTitle;
         public Button playpause_1, stop_1, playpause_2, stop_2;
         public TabControl display;
+        public TabItem notesTab, mod_frenchTab, engTab;
+        public Canvas notesCanvas;
+        public Image musicImg;
+        public Grid musicGrid;
+        public TextBox mod_frenchText, engText;
 
         public StudyTab(SideBar mySideBar, SurfaceWindow1 surfaceWindow) : base(mySideBar)
         {
@@ -104,11 +109,48 @@ namespace SurfaceApplication1
             stop_1.FontSize = 30;
 
             display = new TabControl();
+            Canvas.SetLeft(display, 32);
+            Canvas.SetTop(display, 150);
+            display.Height = 860;
+            display.Width = 560;
 
+            notesTab = new TabItem();
+            notesTab.Header = "Modern Notation";
+            notesTab.Height = 50;
+            notesTab.Width = 200;
+            notesTab.FontSize = 20;
+
+            notesCanvas = new Canvas();
+            notesTab.Content = notesCanvas;
+            musicImg = new Image();
+            musicGrid.Width = 560;
+            musicImg.Source = new BitmapImage(new Uri(@"..\..\musicz\2rCo1.png", UriKind.Relative));
+
+            mod_frenchTab = new TabItem();
+            mod_frenchTab.Header = "Modern French";
+            mod_frenchTab.Height = 50;
+            mod_frenchTab.Width = 175;
+            mod_frenchTab.FontSize = 20;
+
+           // mod_frenchText = new TextBox();
+           // mod_frenchTab.Content = mod_frenchText;
+           // mod_frenchText.IsReadOnly = true;
+
+
+            engTab = new TabItem();
+            engTab.Header = "English";
+            engTab.Height = 50;
+            engTab.Width = 175;
+            engTab.FontSize = 20;
+
+            display.Items.Add(notesTab);
+            display.Items.Add(mod_frenchTab);
+            display.Items.Add(engTab);
 
             canvas.Children.Add(musicTitle);
             canvas.Children.Add(playpause_1);
             canvas.Children.Add(stop_1);
+            canvas.Children.Add(display);
         }
     }
 }
