@@ -210,12 +210,12 @@ namespace SurfaceApplication1
             {
                 XmlNode foundNode;
 
-                if (str.Contains("Im"))
+                if (str.Contains("Im")) // Image
                 {
                     foundNode = whichXml.DocumentElement.SelectSingleNode("//figure[@id='" + str + "']");
                     toDisplay += foundNode.InnerText.Trim();
                 }
-                else if (str.StartsWith("Te"))
+                else if (str.StartsWith("Te")) // Poetry
                 {
                     foundNode = whichXml.DocumentElement.SelectSingleNode("//lg[@id='" + str + "']");
                     XmlNodeList lineByLine = foundNode.SelectNodes("l");
@@ -225,16 +225,15 @@ namespace SurfaceApplication1
                         toDisplay += newX.InnerText.Trim() + "\r\n";
                     }
                 }
-                else if (str.StartsWith("Fo"))
+                else if (str.StartsWith("Fo")) // Entire page
                 {
                     String page = str.Substring(2);
                     foundNode = whichXml.DocumentElement.SelectSingleNode("//pb[@facs='#" + page + "']");
                     toDisplay += foundNode.InnerXml;
                 }
-                else // Select music objects
+                else // Music
                 {
-
-                    /// Note: To select voices that don't have <dc>, add second level and select ("//v[not(dc)]")
+                    // Note: To select voices that don't have <dc>, add second level and select ("//v[not(dc)]")
                     foundNode = whichXml.DocumentElement.SelectSingleNode("//p[@id='" + str + "']");
 
                     toDisplay += lyricsOnly(foundNode).InnerText.Trim();
@@ -267,7 +266,7 @@ namespace SurfaceApplication1
 
             try
             {
-                XmlNodeList xnl = thisXml.DocumentElement.SelectNodes("//lg/l");
+                XmlNodeList xnl = thisXml.DocumentElement.SelectNodes("//lg/l"); // Selects poetry nodes 
 
                 foreach (XmlNode xn in xnl)
                 {
@@ -478,7 +477,7 @@ namespace SurfaceApplication1
                     if (foundBySpecifiedCase(searchStrings[0].str, xn.InnerText, caseSensitive) && foundBySpecifiedWord(searchStrings[0].str, xn.InnerText, wordSensitive))
                     {
                         XmlNode node = lyricsOnly(xn);
-                        String[] allLyrics = node.InnerText.Trim().Split(new String[] { "\r\n", "\n" }, StringSplitOptions.None);
+                        String[] allLyrics = node.InnerText.Trim().Split(new String[] { "\r\n", "\n" }, StringSplitOptions.None); // Splits lyrics line by line
 
                         int lyricLineNum = -5; // a random negative number to distinguish from actual result
                         for (int i = 0; i < allLyrics.Length; i++)
@@ -915,21 +914,5 @@ namespace SurfaceApplication1
 
 
 
-        /**
-         * The beginning of music search that allows searching for a motet by number of voice.
-         * This method is not fully developed, nor has it been called.
-         * */
-        public static void filterByVoice(int voiceNum)
-        {
-            XmlNodeList musics = SurfaceWindow1.xml.DocumentElement.SelectNodes("//p[(nv)]");
-
-            foreach (XmlNode xn in musics)
-            {
-                XmlNode testNode = xn.SelectSingleNode("nv"); 
-                String str = testNode.InnerText;
-                int intVoiceCount = Convert.ToInt32(str);
-            }
-
-        }
     }
 }
