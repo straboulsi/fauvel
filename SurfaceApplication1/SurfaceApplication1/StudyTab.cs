@@ -39,6 +39,7 @@ namespace SurfaceApplication1
         public Image musicImg;
         public TextBlock mod_frenchText, engText;
         public SurfaceScrollViewer noteScroll;
+        public MediaPlayer play_2rCon1, play_2rMo2_v1, play_2rMo2_tenor;
 
         public StudyTab(SideBar mySideBar, SurfaceWindow1 surfaceWindow) : base(mySideBar)
         {
@@ -156,6 +157,7 @@ namespace SurfaceApplication1
             mod_frenchTab.Width = 175;
             mod_frenchTab.FontSize = 20;
 
+            // Fetch the modern french lyrics from Alison's handy method.
             mod_frenchText = new TextBlock();
             mod_frenchTab.Content = mod_frenchText;
             mod_frenchText.Text = Search.getByTag("2rCon1_t", SurfaceWindow1.modFrXml);
@@ -165,7 +167,8 @@ namespace SurfaceApplication1
             engTab.Height = 50;
             engTab.Width = 175;
             engTab.FontSize = 20;
-
+            
+            // This one is hardcoded in because we don't have any English lyrics in an XML file yet.
             engText = new TextBlock();
             engTab.Content = engText;
             engText.Text = "Oh, how far transgression\nis spreading!\nVirtue is dislodged\nfrom the sanctuary.\nNow Christ is dragged\nto a new tribunal,\nwith Peter using\nthe sword of Pilate.\nRelying on the counsel\nof Fauvel,\none comes to grief;\nthe celestial legion\njustly complains.\nTherefore it begs\nthe Father and the Son\nthat for a remedy\nfor all this\nimmediately\nthe fostering Spirit provide.";
@@ -174,10 +177,50 @@ namespace SurfaceApplication1
             display.Items.Add(mod_frenchTab);
             display.Items.Add(engTab);
 
+            // Create mediaplayer for audio playback.
+            play_2rCon1 = new MediaPlayer();
+            play_2rCon1.Open(new Uri(@"..\..\musicz\2rCo1.wma", UriKind.Relative));
+            play_2rCon1.MediaEnded += new EventHandler(play_2rCon1_MediaEnded);
+
+            // Add to this canvas.
             canvas.Children.Add(musicTitle);
             canvas.Children.Add(playpause_1);
             canvas.Children.Add(stop_1);
             canvas.Children.Add(display);
+
+            // Add listeners.
+            playpause_1.Click += new RoutedEventHandler(playpause_1_Click);
+            stop_1.Click += new RoutedEventHandler(stop_1_Click);
+        }
+
+        
+        void playpause_1_Click(object sender, RoutedEventArgs e)
+        {
+            if ((string)playpause_1.Content == "ll")
+            {
+                playpause_1.Content = "►";
+
+                if (play_2rCon1.CanPause)
+                    play_2rCon1.Pause();
+            }
+            else if ((string)playpause_1.Content == "►")
+            {
+                playpause_1.Content = "ll";
+
+                play_2rCon1.Play();
+            }
+        }
+
+        void stop_1_Click(object sender, RoutedEventArgs e)
+        {
+            playpause_1.Content = "►";
+            play_2rCon1.Stop();
+        }
+
+        void play_2rCon1_MediaEnded(object sender, EventArgs e)
+        {
+            playpause_1.Content = "►";
+            play_2rCon1.Stop();
         }
     }
 }
