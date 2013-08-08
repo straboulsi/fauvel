@@ -37,8 +37,7 @@ namespace SurfaceApplication1
         public TabItem notesTab, mod_frenchTab, engTab;
         public Canvas notesCanvas;
         public Image musicImg;
-        public Grid musicGrid;
-        public TextBox mod_frenchText, engText;
+        public TextBlock mod_frenchText, engText;
 
         public StudyTab(SideBar mySideBar, SurfaceWindow1 surfaceWindow) : base(mySideBar)
         {
@@ -67,12 +66,20 @@ namespace SurfaceApplication1
             Canvas.SetLeft(mono, 100);
             Canvas.SetTop(mono, 100);
 
+            poly.Height = 50;
+            poly.Width = 200;
+            poly.Content = "study 2vMo2";
+            poly.FontSize = 20;
+            Canvas.SetLeft(poly, 100);
+            Canvas.SetTop(poly, 300);
+
             // Add stuff.
 
             headerGrid.Children.Add(studyTabHeader);
 
             canvas.Children.Add(studyPrompt);
             canvas.Children.Add(mono);
+            canvas.Children.Add(poly);
 
             // Add click handlers.
 
@@ -92,6 +99,7 @@ namespace SurfaceApplication1
             //musicTitle.Width = 500;
             musicTitle.Text = "Conductus : Heu ! Quo progreditur (PM 6)";
             musicTitle.FontSize = 30;
+            studyTabHeader.Text = "2rCon1";
 
             playpause_1 = new Button();
             stop_1 = new Button();
@@ -123,7 +131,6 @@ namespace SurfaceApplication1
             notesCanvas = new Canvas();
             notesTab.Content = notesCanvas;
             musicImg = new Image();
-            musicGrid.Width = 560;
             musicImg.Source = new BitmapImage(new Uri(@"..\..\musicz\2rCo1.png", UriKind.Relative));
 
             mod_frenchTab = new TabItem();
@@ -132,16 +139,19 @@ namespace SurfaceApplication1
             mod_frenchTab.Width = 175;
             mod_frenchTab.FontSize = 20;
 
-           // mod_frenchText = new TextBox();
-           // mod_frenchTab.Content = mod_frenchText;
-           // mod_frenchText.IsReadOnly = true;
-
+            mod_frenchText = new TextBlock();
+            mod_frenchTab.Content = mod_frenchText;
+            mod_frenchText.Text = Search.getByTag("2rCon1_t", SurfaceWindow1.modFrXml);
 
             engTab = new TabItem();
             engTab.Header = "English";
             engTab.Height = 50;
             engTab.Width = 175;
             engTab.FontSize = 20;
+
+            engText = new TextBlock();
+            engTab.Content = engText;
+            engText.Text = "Oh, how far transgression\nis spreading!\nVirtue is dislodged\nfrom the sanctuary.\nNow Christ is dragged\nto a new tribunal,\nwith Peter using\nthe sword of Pilate.\nRelying on the counsel\nof Fauvel,\none comes to grief;\nthe celestial legion\njustly complains.\nTherefore it begs\nthe Father and the Son\nthat for a remedy\nfor all this\nimmediately\nthe fostering Spirit provide.";
 
             display.Items.Add(notesTab);
             display.Items.Add(mod_frenchTab);
