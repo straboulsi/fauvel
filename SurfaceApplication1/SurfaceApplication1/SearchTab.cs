@@ -816,19 +816,41 @@ namespace SurfaceApplication1
             return imageName;
         }
 
+
+        /**
+         * Navigates from a search result closeup to a new tab open to that result's page.
+         * Refers to the last ResultBoxItem selected for closeup.
+         * */
         private void goToFolio(object sender, TouchEventArgs e)
         {
-            
-            if (lastCloseupRBI.folioInfo.Text.StartsWith("Fo"))
-                lastCloseupRBI.folioInfo.Text = lastCloseupRBI.folioInfo.Text.Substring(2);
-            String imageName = getImageName(lastCloseupRBI.folioInfo.Text, SurfaceWindow1.layoutXml);
+            String folioStr = lastCloseupRBI.folioInfo.Text;
+            if (folioStr.StartsWith("Fo"))
+                folioStr = folioStr.Substring(2);
+            String imageName = getImageName(folioStr, SurfaceWindow1.layoutXml);
             int pageNum = Convert.ToInt32(imageName.Substring(0, imageName.IndexOf(".jpg")));
             if (pageNum % 2 == 1) // If odd, meaning it's a Fo_r, we want to aim for the previous page.
                 pageNum--;
 
+            editCoordinates(lastCloseupRBI); // Adds width of a page to coordinates from a recto (right side) of an opening
+
             // Get coordinates from lastCloseupRBI.topL and lastCloseupRBI.bottomR
 
             surfaceWindow.createTab(pageNum - 10);
+        }
+        
+
+        /**
+         * This method checks if the target page in goToFolio is a "recto", on the right side.
+         * If it is, since each opening of 2 pages is stored as a single combined image, each of the X coordinates must be adjusted accordingly by adding 5250 (width of a page).
+         * */
+        private void editCoordinates(ResultBoxItem rbi)
+        {
+            if (rbi.folioInfo.Text.EndsWith("r"))
+            {
+                rbi.topL.X += 5250;
+                rbi.bottomR.X += 5250;
+            }
+
         }
 
 
