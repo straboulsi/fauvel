@@ -35,9 +35,10 @@ namespace SurfaceApplication1
         public Button playpause_1, stop_1, playpause_2, stop_2;
         public TabControl display;
         public TabItem notesTab, mod_frenchTab, engTab;
-        public Canvas notesCanvas;
+        public Canvas notesCanvas, notesTabCanvas;
         public Image musicImg;
         public TextBlock mod_frenchText, engText;
+        public SurfaceScrollViewer noteScroll;
 
         public StudyTab(SideBar mySideBar, SurfaceWindow1 surfaceWindow) : base(mySideBar)
         {
@@ -128,8 +129,24 @@ namespace SurfaceApplication1
             notesTab.Width = 200;
             notesTab.FontSize = 20;
 
+            notesTabCanvas = new Canvas();
+            notesTab.Content = notesTabCanvas;
+            noteScroll = new SurfaceScrollViewer();
+            notesTabCanvas.Children.Add(noteScroll);
+            noteScroll.Height = 800;
+            noteScroll.Width = 560;
+            noteScroll.VerticalScrollBarVisibility = ScrollBarVisibility.Auto;
+            noteScroll.HorizontalScrollBarVisibility = ScrollBarVisibility.Auto;
+            noteScroll.PanningMode = PanningMode.VerticalOnly;
+
+            musicImg = new Image();
+            musicImg.Source = new BitmapImage(new Uri(@"..\..\musicz\2rCo1.png", UriKind.Relative));
+            musicImg.Width = 560;
+
             notesCanvas = new Canvas();
-            notesTab.Content = notesCanvas;
+            noteScroll.Content = notesCanvas;
+            notesCanvas.Children.Add(musicImg);
+
             musicImg = new Image();
             musicImg.Source = new BitmapImage(new Uri(@"..\..\musicz\2rCo1.png", UriKind.Relative));
 
