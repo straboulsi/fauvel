@@ -64,10 +64,10 @@ namespace SurfaceApplication1
             resultText = new TextBlock();
             resultText.Width = 350;
             resultText.TextTrimming = TextTrimming.WordEllipsis;
+            resultText.VerticalAlignment = System.Windows.VerticalAlignment.Center;
 
             infoStack.Margin = new Thickness(0, 0, 15, 0);
             infoStack.VerticalAlignment = System.Windows.VerticalAlignment.Center;
-            resultText.VerticalAlignment = System.Windows.VerticalAlignment.Center;
 
             resultStack.Children.Add(infoStack);
             resultStack.Children.Add(miniThumbnail); // for image results

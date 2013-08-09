@@ -33,7 +33,7 @@ namespace SurfaceApplication1
         
         public SearchResult()
         {
-
+            
 
 
         }
