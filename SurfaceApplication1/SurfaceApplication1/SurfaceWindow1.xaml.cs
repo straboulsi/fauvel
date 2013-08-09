@@ -33,30 +33,21 @@ namespace SurfaceApplication1
     /// </summary>
     public partial class SurfaceWindow1 : SurfaceWindow
     {
-        private bool rightSwipe = false;
-        private bool leftSwipe = false;
+        private bool rightSwipe = false, leftSwipe = false, dtOut = false; // dtOut is double tap to zoom out
+        public static System.Windows.Media.Brush glowColor = Brushes.MediumTurquoise; // Used in SearchTab to draw attention to changed search settings
+        public enum language { None = 0, OldFrench = 1, French = 2, English = 3 }; 
+        List<Tab> tabArray = new List<Tab>();
+        SideBar sideBar;
         private Stopwatch rightSwipeWatch, leftSwipeWatch;
         private readonly Stopwatch doubleTapSW = new Stopwatch();
-        private Point lastTapLocation;
-        private Point leftSwipeStart, rightSwipeStart;
-        public static int maxPageWidth = 5250;
-        public static int maxPageHeight = 7350;
-        public static int minPageWidth = 650;
-        public static int minPageHeight = 910;
-        public static int minPageLong = 1274;
-        public static int tabNumber = 0;
-        public static int minPage = 0;
-        public static int maxPage = 95;
+        private Point lastTapLocation, leftSwipeStart, rightSwipeStart;
         public static Image slideImage1, slideImage2;
-        int scatterBuffer = 5000;
-        int swipeLength = 25;
-        int swipeHeight = 6;
-        SideBar sideBar;
-        List<Tab> tabArray = new List<Tab>();
-        public enum language { None = 0, OldFrench = 1, French = 2, English = 3};
-        bool dtOut = false; // double tap to zoom out
-
+        public int scatterBuffer = 5000, swipeLength = 25, swipeHeight = 6;
+        public static int maxPageWidth = 5250, maxPageHeight = 7350, minPageWidth = 650, minPageHeight = 910, minPageLong = 1274, 
+            tabNumber = 0, minPage = 0, maxPage = 95;
         public static XmlDocument xml, engXml, layoutXml, modFrXml;
+
+
         
         public SurfaceWindow1()
         {
@@ -81,6 +72,7 @@ namespace SurfaceApplication1
             {
                 Console.Write(e.StackTrace);
             }
+
 
 
 
@@ -166,9 +158,7 @@ namespace SurfaceApplication1
 
             tab._page = page;
             if (page > maxPage)
-            {
                 tab._page = maxPage - 1;
-            }
             if (tab._page < minPage)
                 tab._page = minPage;
             loadPage();
@@ -296,8 +286,8 @@ namespace SurfaceApplication1
             Grid vBoxesGrid = new Grid();
             Grid rBoxesGrid = new Grid();
 
-            rBoxesGrid.Visibility = System.Windows.Visibility.Hidden;
-            vBoxesGrid.Visibility = System.Windows.Visibility.Hidden;
+            rBoxesGrid.Visibility = Visibility.Hidden;
+            vBoxesGrid.Visibility = Visibility.Hidden;
 
             ScatterItem.Content = ScatterGrid;
             ColumnDefinition col1 = new ColumnDefinition();
@@ -352,17 +342,17 @@ namespace SurfaceApplication1
             Grid.SetColumn(vSwipeGrid, 2);
             rSwipeHolderGrid.Children.Add(rSwipeGrid);
             vSwipeHolderGrid.Children.Add(vSwipeGrid);
-            rSwipeGrid.HorizontalAlignment = System.Windows.HorizontalAlignment.Left;
-            rSwipeGrid.VerticalAlignment = System.Windows.VerticalAlignment.Top;
-            vSwipeGrid.HorizontalAlignment = System.Windows.HorizontalAlignment.Left;
-            vSwipeGrid.VerticalAlignment = System.Windows.VerticalAlignment.Top;
+            rSwipeGrid.HorizontalAlignment = HorizontalAlignment.Left;
+            rSwipeGrid.VerticalAlignment = VerticalAlignment.Top;
+            vSwipeGrid.HorizontalAlignment = HorizontalAlignment.Left;
+            vSwipeGrid.VerticalAlignment = VerticalAlignment.Top;
 
             vSwipeGrid.Width = swipeLength;
             vSwipeGrid.Height = swipeHeight;
             rSwipeGrid.Width = swipeLength;
             rSwipeGrid.Height = swipeHeight;
-            vSwipeGrid.Visibility = System.Windows.Visibility.Hidden;
-            rSwipeGrid.Visibility = System.Windows.Visibility.Hidden;
+            vSwipeGrid.Visibility = Visibility.Hidden;
+            rSwipeGrid.Visibility = Visibility.Hidden;
             vSwipeGrid.Background = Brushes.WhiteSmoke;
             rSwipeGrid.Background = Brushes.WhiteSmoke;
             vSwipeGrid.Children.Add(new Canvas());
@@ -426,14 +416,14 @@ namespace SurfaceApplication1
                 TabItem newTab = createTab(currentTab()._page);
             }
 
-            tabArray[tabNumber]._delButton.Visibility = System.Windows.Visibility.Collapsed;
+            tabArray[tabNumber]._delButton.Visibility = Visibility.Collapsed;
 
             for (int i = 0; i < tabArray.Count; i++)
             {
                 if (tabArray[i]._tab.Equals(tab))
                     tabNumber = i;
             }
-            tabArray[tabNumber]._delButton.Visibility = System.Windows.Visibility.Visible;
+            tabArray[tabNumber]._delButton.Visibility = Visibility.Visible;
             updateLanguageButton();
         }
 
@@ -451,9 +441,8 @@ namespace SurfaceApplication1
                 if (tabNumber >= tabBar.Items.Count - 2)
                     tabBar.SelectedItem = tabArray[tabNumber - 1]._tab;
                 else
-                {
                     tabBar.SelectedItem = tabArray[tabNumber + 1]._tab;
-                }
+                
                 tabArray.Remove(ct);
                 tabBar.Items.Remove(ti);
             }
@@ -764,7 +753,7 @@ namespace SurfaceApplication1
             updateLanguageButton();
             currentTab()._worker.setTranslateText(tab._currentLanguage);
 
-            languageBox.Visibility = System.Windows.Visibility.Collapsed;
+            languageBox.Visibility = Visibility.Collapsed;
         }
 
         public void updateLanguageButton()
@@ -793,7 +782,7 @@ namespace SurfaceApplication1
             else
             {
                 rightSwipe = false;
-                currentTab()._rSwipeGrid.Visibility = System.Windows.Visibility.Hidden;
+                currentTab()._rSwipeGrid.Visibility = Visibility.Hidden;
             }
         }
         public void rightSwipeDetectionMove(object sender, TouchEventArgs e)
@@ -812,7 +801,7 @@ namespace SurfaceApplication1
                 if (y > minPageHeight)
                     y = minPageHeight;
                 Tab tab = currentTab();
-                tab._rSwipeGrid.Visibility = System.Windows.Visibility.Visible;
+                tab._rSwipeGrid.Visibility = Visibility.Visible;
                 Grid holder = (Grid)tab._rSwipeGrid.Parent;
                 holder.ColumnDefinitions[0].Width = new GridLength(x, GridUnitType.Star);
                 holder.ColumnDefinitions[1].Width = new GridLength(minPageWidth - x, GridUnitType.Star);
@@ -821,7 +810,7 @@ namespace SurfaceApplication1
                 double dist = rightSwipeStart.X - item.TouchesOver.ElementAt<TouchDevice>(0).GetPosition(item).X;
                 Canvas fill = (Canvas)tab._rSwipeGrid.Children[0];
                 fill.Background = Brushes.Orange;
-                fill.HorizontalAlignment = System.Windows.HorizontalAlignment.Right;
+                fill.HorizontalAlignment = HorizontalAlignment.Right;
                 fill.Height = swipeHeight;
                 if (dist < 0)
                     dist = 0;
@@ -843,7 +832,7 @@ namespace SurfaceApplication1
                     next_Click(null, null);
             }
             rightSwipe = false;
-            currentTab()._rSwipeGrid.Visibility = System.Windows.Visibility.Hidden;
+            currentTab()._rSwipeGrid.Visibility = Visibility.Hidden;
         }
         public void leftSwipeDetectionStart(object sender, TouchEventArgs e)
         {
@@ -858,7 +847,7 @@ namespace SurfaceApplication1
             else
             {
                 leftSwipe = false;
-                currentTab()._vSwipeGrid.Visibility = System.Windows.Visibility.Hidden;
+                currentTab()._vSwipeGrid.Visibility = Visibility.Hidden;
             }
         }
         public void leftSwipeDetectionMove(object sender, TouchEventArgs e)
@@ -877,7 +866,7 @@ namespace SurfaceApplication1
                 if (y > minPageHeight)
                     y = minPageHeight;
                 Tab tab = currentTab();
-                tab._vSwipeGrid.Visibility = System.Windows.Visibility.Visible;
+                tab._vSwipeGrid.Visibility = Visibility.Visible;
                 Grid holder = (Grid)tab._vSwipeGrid.Parent;
                 holder.ColumnDefinitions[0].Width = new GridLength(x, GridUnitType.Star);
                 holder.ColumnDefinitions[1].Width = new GridLength(minPageWidth - x, GridUnitType.Star);
@@ -886,7 +875,7 @@ namespace SurfaceApplication1
                 double dist = item.TouchesOver.ElementAt<TouchDevice>(0).GetPosition(item).X - leftSwipeStart.X;
                 Canvas fill = (Canvas)tab._vSwipeGrid.Children[0];
                 fill.Background = Brushes.Orange;
-                fill.HorizontalAlignment = System.Windows.HorizontalAlignment.Left;
+                fill.HorizontalAlignment = HorizontalAlignment.Left;
                 fill.Height = swipeHeight;
                 if (dist < 0)
                     dist = 0;
@@ -908,7 +897,7 @@ namespace SurfaceApplication1
                     prev_Click(null, null);
             }
             leftSwipe = false;
-            currentTab()._vSwipeGrid.Visibility = System.Windows.Visibility.Hidden;
+            currentTab()._vSwipeGrid.Visibility = Visibility.Hidden;
         }
 
 
@@ -934,10 +923,10 @@ namespace SurfaceApplication1
 
         private void languageVisibility(object sender, TouchEventArgs e)
         {
-            if (languageBox.Visibility == System.Windows.Visibility.Collapsed)
-                languageBox.Visibility = System.Windows.Visibility.Visible;
+            if (languageBox.Visibility == Visibility.Collapsed)
+                languageBox.Visibility = Visibility.Visible;
             else
-                languageBox.Visibility = System.Windows.Visibility.Collapsed;
+                languageBox.Visibility = Visibility.Collapsed;
         }
         private void languageVisibility(object sender, RoutedEventArgs e)
         {

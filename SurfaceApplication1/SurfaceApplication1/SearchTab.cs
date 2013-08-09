@@ -31,32 +31,35 @@ namespace SurfaceApplication1
      * */
     public class SearchTab : SideBarTab
     {
-        public Canvas poetryCanvas, lyricsCanvas, imagesCanvas;
+
+        public bool? exactPhr;
+        public Boolean defaultOptionsChanged, optionsShown;
+        public Border poetryBorder, imagesBorder, lyricsBorder;
         public Button moreOptions, fewerOptions, goSearch, selectLanguageButton;
-        public TextBlock searchPrompt, searchTabHeader;
-        public TextBox searchQueryBox;
-        public Line topLine, bottomLine;
+        public Canvas poetryCanvas, lyricsCanvas, imagesCanvas;
         public CheckBox caseSensitive, wholeWordOnly, exactPhraseOnly;
+        public Grid fewerOptGrid, optionsGrid;
+        public Image downArrow, upArrow;
+        private int unreturnedResults;
+        public Line topLine, bottomLine;
+        private List<SearchResult> poetryResults, lyricResults, imageResults;
+        public ResultBoxItem lastCloseupRBI;
         public ScaleTransform st;
+        public enum searchLanguage { oldFrench = 0, modernFrench = 1, English = 2 };
+        public searchLanguage currentSearchLanguage = searchLanguage.oldFrench, lastSearchLanguage;
+        private SideBar sideBar;
+        public StackPanel poetryPanel, lyricsPanel, imagesPanel;
+        public String newPageToOpen, lastPageToOpen;
         public SurfaceListBox selectLanguage;
         public SurfaceListBoxItem pickLanguage, oldFrench, modernFrench, English;
+        public SurfaceScrollViewer poetryScroll, lyricsScroll, imagesScroll;
+        private SurfaceWindow1 surfaceWindow;
         public TabControl searchResults;
         public TabItem poetryTab, lyricsTab, imagesTab;
-        public StackPanel poetryPanel, lyricsPanel, imagesPanel;
-        public Image downArrow, upArrow;
-        public SurfaceScrollViewer poetryScroll, lyricsScroll, imagesScroll;
-        public enum searchLanguage { oldFrench = 0, modernFrench = 1, English = 2 };
-        public searchLanguage currentSearchLanguage = searchLanguage.oldFrench;
-        public Border poetryBorder, imagesBorder, lyricsBorder;
-        private bool optionsShown = false;
-        public String pageToFind;
-        private SurfaceWindow1 surfaceWindow;
-        private Boolean defaultOptionsChanged;
-        private SideBar sideBar;
-        private List<SearchResult> poetryResults, lyricResults, imageResults;
-        private int unreturnedResults;
-        public bool? exactPhr;
-        public ResultBoxItem lastCloseupRBI;
+        public TextBlock searchPrompt, searchTabHeader, moreOptText, fewerOptText;
+        public TextBox searchQueryBox;
+
+
 
         public SearchTab(SideBar mySideBar, SurfaceWindow1 surfaceWindow) : base(mySideBar)
         {
@@ -90,7 +93,7 @@ namespace SurfaceApplication1
             lyricsTab = new TabItem();
             imagesTab = new TabItem();
             poetryCanvas = new Canvas();
-            poetryScroll = new SurfaceScrollViewer(); //
+            poetryScroll = new SurfaceScrollViewer(); 
             poetryPanel = new StackPanel();
             lyricsCanvas = new Canvas();
             lyricsScroll = new SurfaceScrollViewer(); 
@@ -129,9 +132,10 @@ namespace SurfaceApplication1
             downArrow.Source = new BitmapImage(new Uri(@"/downArrow.png", UriKind.Relative));
             downArrow.Opacity = 0.3;
             downArrow.HorizontalAlignment = HorizontalAlignment.Center;
-            TextBlock moreOptText = new TextBlock();
+            moreOptText = new TextBlock();
             moreOptText.Text = "More Options";
-            Grid optionsGrid = new Grid();
+            moreOptText.FontSize = 15; /// Might need to adjust height 
+            optionsGrid = new Grid();
             moreOptions.Content = optionsGrid;
             moreOptions.Width = 100;
             moreOptions.Height = 20;
@@ -223,14 +227,15 @@ namespace SurfaceApplication1
             upArrow.Source = new BitmapImage(new Uri(@"/upArrow.png", UriKind.Relative));
             upArrow.Opacity = 0.3;
             upArrow.HorizontalAlignment = HorizontalAlignment.Center;
-            TextBlock lessOptText = new TextBlock();
-            lessOptText.Text = "Fewer Options";
-            Grid lessOptGrid = new Grid();
-            fewerOptions.Content = lessOptGrid;
+            fewerOptText = new TextBlock();
+            fewerOptText.Text = "Fewer Options";
+            fewerOptText.FontSize = 15; /// Might need to adjust height 
+            fewerOptGrid = new Grid();
+            fewerOptions.Content = fewerOptGrid;
             fewerOptions.Width = 100;
             fewerOptions.Height = 20;
-            lessOptGrid.Children.Add(upArrow);
-            lessOptGrid.Children.Add(lessOptText);
+            fewerOptGrid.Children.Add(upArrow);
+            fewerOptGrid.Children.Add(fewerOptText);
             Canvas.SetLeft(fewerOptions, 225);
             Canvas.SetTop(fewerOptions, 285);
 
@@ -248,11 +253,12 @@ namespace SurfaceApplication1
             searchResults.Items.Add(imagesTab);
 
             poetryBorder = new Border();
-            poetryBorder.BorderBrush = Brushes.DarkGray;
-            poetryBorder.BorderThickness = new Thickness(1);
+            //poetryBorder.BorderBrush = Brushes.White; // changed to darkgray after search is run
+            //poetryBorder.BorderThickness = new Thickness(1);
             poetryBorder.Child = poetryPanel;
-            poetryBorder.Height = 294;
-            poetryBorder.Width = 472;
+            poetryBorder.Style = sideBar.tabBar.FindResource("ResultBorder") as Style;
+            //poetryBorder.Height = 294;
+            //poetryBorder.Width = 472;
 
             poetryTab.Header = "Poetry";
             poetryTab.Height = 40;
@@ -275,11 +281,12 @@ namespace SurfaceApplication1
             Canvas.SetTop(poetryBorder, 331);
 
             lyricsBorder = new Border();
-            lyricsBorder.BorderBrush = Brushes.DarkGray;
-            lyricsBorder.BorderThickness = new Thickness(1);
+            //lyricsBorder.BorderBrush = Brushes.White;
+            //lyricsBorder.BorderThickness = new Thickness(1);
             lyricsBorder.Child = lyricsPanel;
-            lyricsBorder.Height = 294;
-            lyricsBorder.Width = 472;
+            lyricsBorder.Style = sideBar.tabBar.FindResource("ResultBorder") as Style;
+            //lyricsBorder.Height = 294;
+            //lyricsBorder.Width = 472;
 
 
             lyricsTab.Header = "Lyrics";
@@ -300,11 +307,12 @@ namespace SurfaceApplication1
             Canvas.SetTop(lyricsBorder, 331);
 
             imagesBorder = new Border();
-            imagesBorder.BorderBrush = Brushes.DarkGray;
-            imagesBorder.BorderThickness = new Thickness(1);
+            //imagesBorder.BorderBrush = Brushes.White;
+            //imagesBorder.BorderThickness = new Thickness(1);
             imagesBorder.Child = imagesPanel;
-            imagesBorder.Height = 294;
-            imagesBorder.Width = 472;
+            imagesBorder.Style = sideBar.tabBar.FindResource("ResultBorder") as Style;
+            //imagesBorder.Height = 294;
+            //imagesBorder.Width = 472;
 
             imagesTab.Header = "Images";
             imagesTab.Height = 40;
@@ -333,8 +341,6 @@ namespace SurfaceApplication1
             canvas.Children.Add(topLine);
             canvas.Children.Add(moreOptions);
 
-
-
             canvas.Children.Add(searchResults);
             canvas.Children.Add(caseSensitive);
             canvas.Children.Add(bottomLine);
@@ -354,8 +360,8 @@ namespace SurfaceApplication1
             moreOptions.TouchDown += new EventHandler<TouchEventArgs>(Show_Options);
             fewerOptions.Click += new RoutedEventHandler(Hide_Options);
             fewerOptions.TouchDown += new EventHandler<TouchEventArgs>(Hide_Options);
-            searchQueryBox.GotFocus += new RoutedEventHandler(Clear_SearchBox);
-            searchQueryBox.TouchDown += new EventHandler<TouchEventArgs>(Clear_SearchBox);
+            searchQueryBox.GotFocus += new RoutedEventHandler(Focus_SearchBox);
+            searchQueryBox.TouchDown += new EventHandler<TouchEventArgs>(Focus_SearchBox);
             goSearch.Click += new RoutedEventHandler(newSearch);
             goSearch.TouchDown += new EventHandler<TouchEventArgs>(newSearch);
             searchQueryBox.PreviewKeyDown += new KeyEventHandler(Enter_Clicked);
@@ -368,11 +374,16 @@ namespace SurfaceApplication1
             selectLanguage.Visibility = Visibility.Collapsed;
             selectLanguageButton.TouchDown += new EventHandler<TouchEventArgs>(displaySearchLanguages);
             selectLanguageButton.Click += new RoutedEventHandler(displaySearchLanguages);
+            pickLanguage.Selected += new RoutedEventHandler(searchLanguageChanged);
             oldFrench.Selected += new RoutedEventHandler(searchLanguageChanged);
             modernFrench.Selected += new RoutedEventHandler(searchLanguageChanged);
             English.Selected += new RoutedEventHandler(searchLanguageChanged);
         }
 
+
+        /**
+         * Displays the language choices for search.
+         * */
         private void displaySearchLanguages(object sender, RoutedEventArgs e)
         {
             if (selectLanguage.Visibility == Visibility.Collapsed | selectLanguage.Visibility == Visibility.Hidden)
@@ -385,20 +396,32 @@ namespace SurfaceApplication1
 
         }
 
+        /**
+         * Sets a new current search language.
+         * Hides the search language options.
+         * */
         private void searchLanguageChanged(object sender, RoutedEventArgs e)
         {
             SurfaceListBoxItem box = (SurfaceListBoxItem)sender;
             selectLanguageButton.Content = box.Content;
             selectLanguage.Visibility = Visibility.Hidden;
             selectLanguageButton.Visibility = Visibility.Visible;
+
             if (box == oldFrench)
                 currentSearchLanguage = searchLanguage.oldFrench;
             else if (box == modernFrench)
                 currentSearchLanguage = searchLanguage.modernFrench;
             else if (box == English)
                 currentSearchLanguage = searchLanguage.English;
-        }
+            else if (box == pickLanguage)
+                currentSearchLanguage = lastSearchLanguage;
 
+            lastSearchLanguage = currentSearchLanguage;
+        }
+        
+        /**
+         * Shows extended search options.
+         * */
         private void Show_Options(object sender, RoutedEventArgs e)
         {
             optionsShown = true;
@@ -415,6 +438,9 @@ namespace SurfaceApplication1
 
         }
 
+        /**
+         * Hides advanced search settings.
+         * */
         private void Hide_Options(object sender, RoutedEventArgs e)
         {
             topLine.Visibility = Visibility.Visible;
@@ -430,7 +456,7 @@ namespace SurfaceApplication1
             checkForChanges();
 
             if (defaultOptionsChanged == true)
-                moreOptions.Background = Brushes.MediumTurquoise;
+                moreOptions.Background = SurfaceWindow1.glowColor; // A color used to draw attention to change
 
             else
                 moreOptions.ClearValue(Control.BackgroundProperty);
@@ -441,6 +467,9 @@ namespace SurfaceApplication1
             optionsShown = false;
         }
 
+        /**
+         * Changes a check box from checked to unchecked and vice versa.
+         * */
         private void changeCheck(object sender, TouchEventArgs e)
         {
             CheckBox thisbox = sender as CheckBox;
@@ -451,13 +480,20 @@ namespace SurfaceApplication1
                 thisbox.IsChecked = true;
         }
 
+        /**
+         * Runs a text search in Fauvel, using all specified search settings.
+         * Each type of search (poetry, music lyrics, and images) is in its own thread.
+         * */
         private void runSearch()
         {
             String searchQuery = searchQueryBox.Text;
+            SurfaceKeyboard.IsVisible = false;
 
             searchTabHeader.Text = searchQueryBox.Text;
             searchResults.Visibility = Visibility.Visible;
-            poetryTab.Content = poetryCanvas;
+
+            selectLanguage.Visibility = Visibility.Hidden;
+            selectLanguageButton.Visibility = Visibility.Visible;
 
             int caseType = 0;
             int wordType = 0;
@@ -504,7 +540,7 @@ namespace SurfaceApplication1
                 };
                 worker.RunWorkerCompleted += delegate
                 {
-                    SurfaceListBox poetryLB = new SurfaceListBox();
+                    ListBox poetryLB = new ListBox();
                     poetryLB.Style = sideBar.tabBar.FindResource("SearchResultSurfaceListBox") as Style;
                     poetryScroll.Content = poetryLB; // NB: the scroll bar comes from the poetryScroll, not poetryLB
                     
@@ -530,7 +566,7 @@ namespace SurfaceApplication1
                         poetryTab.Content = poetryCanvas;
 
                     poetryScroll.Background = Brushes.LightGray;
-
+                    poetryBorder.BorderBrush = Brushes.DarkGray;
                     returnAResult();
                 };
                 worker.RunWorkerAsync();
@@ -575,14 +611,14 @@ namespace SurfaceApplication1
                     if (lyricResults.Count == 0)
                     {
                         TextBlock noResults = new TextBlock();
-                        noResults.Text = "Sorry, your search returned no music lyric results.\r\n\r\nNB: Lyrics only exist in original text or Modern French - no English.";
+                        noResults.Text = "Sorry, your search returned no music lyric results.\r\n\r\nNB: Lyrics don't exist in English yet!";
                         lyricsTab.Content = noResults;
                     }
                     else
                         lyricsTab.Content = lyricsCanvas;
 
                     lyricsScroll.Background = Brushes.LightGray;
-
+                    lyricsBorder.BorderBrush = Brushes.DarkGray;
                     returnAResult();
                 };
                 worker.RunWorkerAsync();
@@ -633,7 +669,7 @@ namespace SurfaceApplication1
                         imagesTab.Content = imagesCanvas;
 
                     imagesScroll.Background = Brushes.LightGray;
-                    
+                    imagesBorder.BorderBrush = Brushes.DarkGray;
                     returnAResult();
                 };
                 worker.RunWorkerAsync();
@@ -642,6 +678,10 @@ namespace SurfaceApplication1
             
         }
 
+        /**
+         * Checks whether the search has been completed.
+         * Flips to a tab with results if the current one has none.
+         * */
         private void returnAResult()
         {
             unreturnedResults--;
@@ -676,19 +716,19 @@ namespace SurfaceApplication1
             }
         }
 
+        /**
+         * Runs a new search.
+         * */
         private void newSearch(object sender, RoutedEventArgs e)
         {
             String searchQuery = searchQueryBox.Text;
-
-            if (searchQuery == "Enter text" || searchQuery == "")
-                MessageBox.Show(string.Format("Please enter words to search for!"),
-                    "Search", MessageBoxButton.OK);
-
-            else
-                runSearch();
+            runSearch();
 
         }
 
+        /**
+         * Transfers information about a search result into a ResultBoxItem for ListBox display.
+         * */
         private void convertSearchResultToResultBoxItem(SearchResult sr, ResultBoxItem rbi)
         {
             rbi.folioInfo.Text = sr.folio;
@@ -703,12 +743,23 @@ namespace SurfaceApplication1
             rbi.HorizontalAlignment = System.Windows.HorizontalAlignment.Left;
             rbi.Width = 430;
             rbi.Style = sideBar.tabBar.FindResource("SearchResultSurfaceListBoxItem") as Style; // Not sure if this works..
-            rbi.resultText.Text = sr.text1 + "\r\n" + sr.text2;
+
+            if (rbi.resultType == 2 || rbi.resultType == 3) // For lyrics or images
+                rbi.resultText.Text = sr.text1 + "\r\n" + sr.text2;
+            else // For poetry
+            {
+                rbi.resultText.Inlines.Add(new Run { FontFamily = new FontFamily("Cambria"), Text = sr.text1 + "\r\n", FontStyle = FontStyles.Normal });
+                rbi.resultText.Inlines.Add(new Run { FontFamily = new FontFamily("Cambria"), Text = sr.text2, FontStyle = FontStyles.Italic });
+            }
+
             rbi.BorderBrush = Brushes.LightGray;
             rbi.BorderThickness = new Thickness(1.0);
             rbi.Selected += new RoutedEventHandler(Result_Closeup);
         }
 
+        /**
+         * Compresses the results section if extended search options are shown.
+         * */
         private void compressResults()
         {
             searchResults.Height = 537;
@@ -724,6 +775,9 @@ namespace SurfaceApplication1
             imagesScroll.Height = 230;
         }
 
+        /**
+         * Expands the results section if extended search options are now hidden.
+         * */
         private void expandResults()
         {
             searchResults.Height = 677;
@@ -739,6 +793,9 @@ namespace SurfaceApplication1
             imagesScroll.Height = 325;
         }
 
+        /**
+         * Launches a new search if the "Enter" or "Return" key is hit on the virtual keyboard.
+         * */
         private void Enter_Clicked(object sender, KeyEventArgs e)
         {
             if (e.Key == Key.Return)
@@ -748,6 +805,10 @@ namespace SurfaceApplication1
             }
         }
 
+        /**
+         * Selects a search result for closeup (bottom rectangle of search panel).
+         * Shows a thumbnail (image) and a text excerpt.
+         * */
         private void Result_Closeup(object sender, RoutedEventArgs e)
         {
             ResultBoxItem selectedResult = e.Source as ResultBoxItem;
@@ -790,8 +851,9 @@ namespace SurfaceApplication1
                 imagesPanel.TouchDown += new EventHandler<TouchEventArgs>(goToFolio);
             }
 
-            pageToFind = selectedResult.folioInfo.Text;
+            newPageToOpen = selectedResult.folioInfo.Text;
 
+            // Bolds all search terms
             foreach (SpecialString ss in selectedResult.excerpts)
             {
                 if (ss.isStyled == 1)
@@ -802,10 +864,13 @@ namespace SurfaceApplication1
         }
 
 
-        public static String getImageName(String folio, XmlDocument layoutXml)
+        /**
+         * Fetches the name of the image corresponding to a page of the folio.
+         * */
+        public static String getImageName(String folio)
         {
             String imageName = "";
-            XmlNode node = layoutXml.DocumentElement.SelectSingleNode("//surface[@id='" + folio + "']");
+            XmlNode node = SurfaceWindow1.layoutXml.DocumentElement.SelectSingleNode("//surface[@id='" + folio + "']");
             imageName = node.FirstChild.SelectSingleNode("graphic").Attributes["url"].Value;
 
             return imageName;
@@ -818,24 +883,29 @@ namespace SurfaceApplication1
          * */
         private void goToFolio(object sender, TouchEventArgs e)
         {
-            String folioStr = lastCloseupRBI.folioInfo.Text;
-            if (folioStr.StartsWith("Fo"))
-                folioStr = folioStr.Substring(2);
-            String imageName = getImageName(folioStr, SurfaceWindow1.layoutXml);
-            int pageNum = Convert.ToInt32(imageName.Substring(0, imageName.IndexOf(".jpg")));
-            if (pageNum % 2 == 1) // If odd, meaning it's a Fo_r, we want to aim for the previous page.
-                pageNum--;
-            editCoordinates(lastCloseupRBI); // Adds width of a page to coordinates from a recto (right side) of an opening
+            if(newPageToOpen != lastPageToOpen) 
+            {
+                String folioStr = lastCloseupRBI.folioInfo.Text;
+                if (folioStr.StartsWith("Fo"))
+                    folioStr = folioStr.Substring(2);
+                String imageName = getImageName(folioStr);
+                int pageNum = Convert.ToInt32(imageName.Substring(0, imageName.IndexOf(".jpg")));
+                if (pageNum % 2 == 1) // If odd, meaning it's a Fo_r, we want to aim for the previous page.
+                    pageNum--;
+                editCoordinates(lastCloseupRBI); // Adds width of a page to coordinates from a recto (right side) of an opening
 
-            // Get coordinates from lastCloseupRBI.topL and lastCloseupRBI.bottomR
 
-            surfaceWindow.createTab(pageNum - 10);
-            double x, y, w, h;
-            x = lastCloseupRBI.topL.X;
-            y = lastCloseupRBI.topL.Y;
-            w = lastCloseupRBI.bottomR.X - lastCloseupRBI.topL.X;
-            h = lastCloseupRBI.bottomR.Y - lastCloseupRBI.topL.Y;
-            surfaceWindow.resizePageToRect(new Rect(x, y, w, h));
+                // Get coordinates from lastCloseupRBI.topL and lastCloseupRBI.bottomR
+                surfaceWindow.createTab(pageNum - 10);
+                double x, y, w, h;
+                x = lastCloseupRBI.topL.X;
+                y = lastCloseupRBI.topL.Y;
+                w = lastCloseupRBI.bottomR.X - lastCloseupRBI.topL.X;
+                h = lastCloseupRBI.bottomR.Y - lastCloseupRBI.topL.Y;
+                surfaceWindow.resizePageToRect(new Rect(x, y, w, h));
+
+                lastPageToOpen = newPageToOpen;
+            }
         }
         
 
@@ -869,8 +939,13 @@ namespace SurfaceApplication1
             return defaultOptionsChanged;
         }
 
-        private void Clear_SearchBox(object sender, RoutedEventArgs e)
+        /**
+         * Puts the searchQueryBox into focus. 
+         * Displays virtual keyboard and selects all text in the box.
+         * */
+        private void Focus_SearchBox(object sender, RoutedEventArgs e)
         {
+            SurfaceKeyboard.IsVisible = true;
             if (searchQueryBox.Text == "Enter text")
             {
                 searchQueryBox.Foreground = Brushes.Black;

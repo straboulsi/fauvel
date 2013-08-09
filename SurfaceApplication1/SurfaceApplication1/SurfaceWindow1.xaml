@@ -92,6 +92,13 @@
                     </Style.Resources>
                     
                 </Style>
+                
+                <Style x:Key="ResultBorder" TargetType="Border">
+                    <Setter Property="BorderBrush" Value="White"/>
+                    <Setter Property="BorderThickness" Value="1"/>
+                    <Setter Property="Width" Value="472"/>
+                    <Setter Property="Height" Value="294"/>
+                </Style>
 
                 <Style x:Key="RoundSurfaceListBoxTemplate" TargetType="ListBox">
 

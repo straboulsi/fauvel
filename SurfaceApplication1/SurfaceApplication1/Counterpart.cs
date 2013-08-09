@@ -15,9 +15,11 @@ namespace SurfaceApplication1
      **/
     class Counterpart
     {
-        public String name;
-        public List<String> otherNames;
         public static List<Counterpart> counterpartList;
+        public List<String> otherNames;
+        public String name;
+
+
 
         public Counterpart(String aName, List<String> someOtherNames)
         {

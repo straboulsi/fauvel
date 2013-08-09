@@ -14,9 +14,11 @@ namespace SurfaceApplication1
      **/
     public class BoundingBox
     {
-        public readonly String tag;
-        public readonly Point topL, bottomR;
+
         public readonly double X, Y, Width, Height;
+        public readonly Point topL, bottomR;
+        public readonly String tag;
+
 
         public BoundingBox(String aTag, Point aTopL, Point aBottomR)
         {

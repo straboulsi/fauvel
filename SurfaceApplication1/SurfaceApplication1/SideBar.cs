@@ -7,6 +7,9 @@ using System.Windows.Media;
 using System.Windows;
 using System.Windows.Media.Imaging;
 using System.Windows.Input;
+using Microsoft.Surface;
+using Microsoft.Surface.Presentation;
+using Microsoft.Surface.Presentation.Controls;
 using Microsoft.Surface.Presentation.Controls;
 using System.Xml;
 using System.Windows.Documents;
@@ -20,11 +23,13 @@ namespace SurfaceApplication1
      * */
     public class SideBar
     {
-        public TabControl tabBar;
+
+        public List<SavedPage> savedPages;
         private List<SideBarTab> tabItems;
         private SideBarTab tabAdd;
         public SurfaceWindow1 surfaceWindow;
-        public List<SavedPage> savedPages;
+        public TabControl tabBar;
+
 
         // This constructor defines the look of the "new tab", which displays all apps for a user to choose from.
         public SideBar(SurfaceWindow1 surfaceWindow, TabControl tabBar)
@@ -163,6 +168,7 @@ namespace SurfaceApplication1
             tabItems.Insert(count - 1, newTab);
             tabBar.DataContext = tabItems;
             tabBar.SelectedItem = newTab;
+            SurfaceKeyboard.IsVisible = true;
         }
 
         private void AnnotateButton_Selected(object sender, RoutedEventArgs e)

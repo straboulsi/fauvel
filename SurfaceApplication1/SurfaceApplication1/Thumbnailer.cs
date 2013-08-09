@@ -21,8 +21,6 @@ namespace SurfaceApplication1
     static class Thumbnailer
     {
 
-        //static List<Counterpart> counterpartList;
-
         /**
          * Returns the image when given the tag of a chunk of poetry, music object, or image.
          * For music lyric results, starts by removing the _t at end of tag (which meant text).
