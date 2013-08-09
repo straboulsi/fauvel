@@ -59,9 +59,9 @@ namespace SurfaceApplication1
             _twoPage = true;
             _SV = SV;
             _headerTB = headerText;
-            _worker = new Workers(this);
             _currentLanguage = language;
             _previousLanguage = _currentLanguage;
+            _worker = new Workers(this);
         }
 
     }

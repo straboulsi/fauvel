@@ -33,6 +33,8 @@ namespace SurfaceApplication1
             button.Height = 119;
             button.Content = image;
             button.Click += new RoutedEventHandler(buttonPress);
+
+            button.Content = pageNum.ToString();
         }
 
         private void buttonPress(object sender, RoutedEventArgs e)
