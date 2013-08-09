@@ -7,6 +7,9 @@ using System.Windows.Media;
 using System.Windows;
 using System.Windows.Media.Imaging;
 using System.Windows.Input;
+using Microsoft.Surface;
+using Microsoft.Surface.Presentation;
+using Microsoft.Surface.Presentation.Controls;
 using Microsoft.Surface.Presentation.Controls;
 using System.Xml;
 using System.Windows.Documents;
@@ -165,6 +168,7 @@ namespace SurfaceApplication1
             tabItems.Insert(count - 1, newTab);
             tabBar.DataContext = tabItems;
             tabBar.SelectedItem = newTab;
+            SurfaceKeyboard.IsVisible = true;
         }
 
         private void AnnotateButton_Selected(object sender, RoutedEventArgs e)

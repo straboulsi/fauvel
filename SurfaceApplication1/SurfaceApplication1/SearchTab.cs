@@ -360,8 +360,8 @@ namespace SurfaceApplication1
             moreOptions.TouchDown += new EventHandler<TouchEventArgs>(Show_Options);
             fewerOptions.Click += new RoutedEventHandler(Hide_Options);
             fewerOptions.TouchDown += new EventHandler<TouchEventArgs>(Hide_Options);
-            searchQueryBox.GotFocus += new RoutedEventHandler(Clear_SearchBox);
-            searchQueryBox.TouchDown += new EventHandler<TouchEventArgs>(Clear_SearchBox);
+            searchQueryBox.GotFocus += new RoutedEventHandler(Focus_SearchBox);
+            searchQueryBox.TouchDown += new EventHandler<TouchEventArgs>(Focus_SearchBox);
             goSearch.Click += new RoutedEventHandler(newSearch);
             goSearch.TouchDown += new EventHandler<TouchEventArgs>(newSearch);
             searchQueryBox.PreviewKeyDown += new KeyEventHandler(Enter_Clicked);
@@ -466,9 +466,13 @@ namespace SurfaceApplication1
         private void runSearch()
         {
             String searchQuery = searchQueryBox.Text;
+            SurfaceKeyboard.IsVisible = false;
 
             searchTabHeader.Text = searchQueryBox.Text;
             searchResults.Visibility = Visibility.Visible;
+
+            selectLanguage.Visibility = Visibility.Hidden;
+            selectLanguageButton.Visibility = Visibility.Visible;
 
             int caseType = 0;
             int wordType = 0;
@@ -887,8 +891,9 @@ namespace SurfaceApplication1
             return defaultOptionsChanged;
         }
 
-        private void Clear_SearchBox(object sender, RoutedEventArgs e)
+        private void Focus_SearchBox(object sender, RoutedEventArgs e)
         {
+            SurfaceKeyboard.IsVisible = true;
             if (searchQueryBox.Text == "Enter text")
             {
                 searchQueryBox.Foreground = Brushes.Black;
