@@ -6,7 +6,7 @@
     <ProductVersion>8.0.30703</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{F66E2D8E-243A-4A44-A2BE-2C1912E26A17}</ProjectGuid>
-    <OutputType>WinExe</OutputType>
+    <OutputType>Exe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>SurfaceApplication1</RootNamespace>
     <AssemblyName>SurfaceApplication1</AssemblyName>
@@ -400,6 +400,17 @@
     <SplashScreen Include="Resources\splashImage.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </SplashScreen>
+    <Resource Include="musicz\2rCo1.png" />
+    <Content Include="musicz\2rCo1.wma" />
+    <Resource Include="musicz\2vMo2-1.png" />
+    <Resource Include="musicz\2vMo2-2.png" />
+    <Resource Include="musicz\2vMo2-3.png" />
+    <Content Include="musicz\2vMo2.wma" />
+    <Content Include="musicz\2vMo2_live.wma" />
+    <Resource Include="musicz\2vMo2_tenor.png" />
+    <Content Include="musicz\2vMo2_tenor.wma" />
+    <Resource Include="musicz\2vMo2_v1.png" />
+    <Content Include="musicz\2vMo2_v1.wma" />
     <Content Include="thumbnails\10rAl1.jpg">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
