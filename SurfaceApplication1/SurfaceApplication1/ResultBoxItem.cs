@@ -62,12 +62,12 @@ namespace SurfaceApplication1
             miniThumbnail.Margin = new Thickness(5);
 
             resultText = new TextBlock();
-            resultText.Width = 350;
+            resultText.Width = 300; // Originally 350 - was that why some languages wouldn't truncate?
             resultText.TextTrimming = TextTrimming.WordEllipsis;
-            resultText.VerticalAlignment = System.Windows.VerticalAlignment.Center;
+            resultText.VerticalAlignment = VerticalAlignment.Center;
 
             infoStack.Margin = new Thickness(0, 0, 15, 0);
-            infoStack.VerticalAlignment = System.Windows.VerticalAlignment.Center;
+            infoStack.VerticalAlignment = VerticalAlignment.Center;
 
             resultStack.Children.Add(infoStack);
             resultStack.Children.Add(miniThumbnail); // for image results

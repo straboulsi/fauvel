@@ -380,6 +380,10 @@ namespace SurfaceApplication1
             English.Selected += new RoutedEventHandler(searchLanguageChanged);
         }
 
+
+        /**
+         * Displays the language choices for search.
+         * */
         private void displaySearchLanguages(object sender, RoutedEventArgs e)
         {
             if (selectLanguage.Visibility == Visibility.Collapsed | selectLanguage.Visibility == Visibility.Hidden)
@@ -392,6 +396,10 @@ namespace SurfaceApplication1
 
         }
 
+        /**
+         * Sets a new current search language.
+         * Hides the search language options.
+         * */
         private void searchLanguageChanged(object sender, RoutedEventArgs e)
         {
             SurfaceListBoxItem box = (SurfaceListBoxItem)sender;
@@ -410,7 +418,10 @@ namespace SurfaceApplication1
 
             lastSearchLanguage = currentSearchLanguage;
         }
-
+        
+        /**
+         * Shows extended search options.
+         * */
         private void Show_Options(object sender, RoutedEventArgs e)
         {
             optionsShown = true;
@@ -427,6 +438,9 @@ namespace SurfaceApplication1
 
         }
 
+        /**
+         * Hides advanced search settings.
+         * */
         private void Hide_Options(object sender, RoutedEventArgs e)
         {
             topLine.Visibility = Visibility.Visible;
@@ -453,6 +467,9 @@ namespace SurfaceApplication1
             optionsShown = false;
         }
 
+        /**
+         * Changes a check box from checked to unchecked and vice versa.
+         * */
         private void changeCheck(object sender, TouchEventArgs e)
         {
             CheckBox thisbox = sender as CheckBox;
@@ -463,6 +480,10 @@ namespace SurfaceApplication1
                 thisbox.IsChecked = true;
         }
 
+        /**
+         * Runs a text search in Fauvel, using all specified search settings.
+         * Each type of search (poetry, music lyrics, and images) is in its own thread.
+         * */
         private void runSearch()
         {
             String searchQuery = searchQueryBox.Text;
@@ -657,6 +678,10 @@ namespace SurfaceApplication1
             
         }
 
+        /**
+         * Checks whether the search has been completed.
+         * Flips to a tab with results if the current one has none.
+         * */
         private void returnAResult()
         {
             unreturnedResults--;
@@ -691,6 +716,9 @@ namespace SurfaceApplication1
             }
         }
 
+        /**
+         * Runs a new search.
+         * */
         private void newSearch(object sender, RoutedEventArgs e)
         {
             String searchQuery = searchQueryBox.Text;
@@ -698,6 +726,9 @@ namespace SurfaceApplication1
 
         }
 
+        /**
+         * Transfers information about a search result into a ResultBoxItem for ListBox display.
+         * */
         private void convertSearchResultToResultBoxItem(SearchResult sr, ResultBoxItem rbi)
         {
             rbi.folioInfo.Text = sr.folio;
@@ -726,6 +757,9 @@ namespace SurfaceApplication1
             rbi.Selected += new RoutedEventHandler(Result_Closeup);
         }
 
+        /**
+         * Compresses the results section if extended search options are shown.
+         * */
         private void compressResults()
         {
             searchResults.Height = 537;
@@ -741,6 +775,9 @@ namespace SurfaceApplication1
             imagesScroll.Height = 230;
         }
 
+        /**
+         * Expands the results section if extended search options are now hidden.
+         * */
         private void expandResults()
         {
             searchResults.Height = 677;
@@ -756,6 +793,9 @@ namespace SurfaceApplication1
             imagesScroll.Height = 325;
         }
 
+        /**
+         * Launches a new search if the "Enter" or "Return" key is hit on the virtual keyboard.
+         * */
         private void Enter_Clicked(object sender, KeyEventArgs e)
         {
             if (e.Key == Key.Return)
@@ -765,6 +805,10 @@ namespace SurfaceApplication1
             }
         }
 
+        /**
+         * Selects a search result for closeup (bottom rectangle of search panel).
+         * Shows a thumbnail (image) and a text excerpt.
+         * */
         private void Result_Closeup(object sender, RoutedEventArgs e)
         {
             ResultBoxItem selectedResult = e.Source as ResultBoxItem;
@@ -809,6 +853,7 @@ namespace SurfaceApplication1
 
             newPageToOpen = selectedResult.folioInfo.Text;
 
+            // Bolds all search terms
             foreach (SpecialString ss in selectedResult.excerpts)
             {
                 if (ss.isStyled == 1)
@@ -819,10 +864,13 @@ namespace SurfaceApplication1
         }
 
 
-        public static String getImageName(String folio, XmlDocument layoutXml)
+        /**
+         * Fetches the name of the image corresponding to a page of the folio.
+         * */
+        public static String getImageName(String folio)
         {
             String imageName = "";
-            XmlNode node = layoutXml.DocumentElement.SelectSingleNode("//surface[@id='" + folio + "']");
+            XmlNode node = SurfaceWindow1.layoutXml.DocumentElement.SelectSingleNode("//surface[@id='" + folio + "']");
             imageName = node.FirstChild.SelectSingleNode("graphic").Attributes["url"].Value;
 
             return imageName;
@@ -840,7 +888,7 @@ namespace SurfaceApplication1
                 String folioStr = lastCloseupRBI.folioInfo.Text;
                 if (folioStr.StartsWith("Fo"))
                     folioStr = folioStr.Substring(2);
-                String imageName = getImageName(folioStr, SurfaceWindow1.layoutXml);
+                String imageName = getImageName(folioStr);
                 int pageNum = Convert.ToInt32(imageName.Substring(0, imageName.IndexOf(".jpg")));
                 if (pageNum % 2 == 1) // If odd, meaning it's a Fo_r, we want to aim for the previous page.
                     pageNum--;
@@ -891,6 +939,10 @@ namespace SurfaceApplication1
             return defaultOptionsChanged;
         }
 
+        /**
+         * Puts the searchQueryBox into focus. 
+         * Displays virtual keyboard and selects all text in the box.
+         * */
         private void Focus_SearchBox(object sender, RoutedEventArgs e)
         {
             SurfaceKeyboard.IsVisible = true;
