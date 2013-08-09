@@ -24,9 +24,10 @@ namespace SurfaceApplication1
      * ResultBoxItem is a specialized SurfaceListBoxItem. 
      * It takes many elements from SearchResult objects created in Translate.cs.
      * Each ResultBoxItem is then displayed in a ListBox in the search result tabs.
+     * The class implements IComparable so results may be sorted from most to least relevant, if search becomes more lenient.
      * Primary Coder: Alison Y. Chang
      **/
-    public class ResultBoxItem : SurfaceListBoxItem
+    public class ResultBoxItem : SurfaceListBoxItem, IComparable
     {
         public StackPanel resultStack, infoStack;
         public List<SpecialString> excerpts;
@@ -34,6 +35,7 @@ namespace SurfaceApplication1
         public Image resultThumbnail, miniThumbnail;
         public int resultType; // 1 = poetry, 2 = music, 3 = image
         public Point topL, bottomR;
+        public double matchStrength; // Used to indicate how strongly the result matches the search specifications
 
 
         public ResultBoxItem()
@@ -72,7 +74,17 @@ namespace SurfaceApplication1
 
         }
 
+        public int CompareTo(object other)
+        {
+            ResultBoxItem otherRBI = other as ResultBoxItem;
 
+            if (this.matchStrength < otherRBI.matchStrength)
+                return -1;
+            else if (this.matchStrength > otherRBI.matchStrength)
+                return 1;
+            else
+                return 0;
+        }
 
     }
 }

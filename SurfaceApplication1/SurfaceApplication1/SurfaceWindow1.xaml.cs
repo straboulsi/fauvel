@@ -97,7 +97,8 @@ namespace SurfaceApplication1
             newTabButton.FontSize = 25;
             newTabButton.FontFamily = new FontFamily("Cambria");
             tabBar.Items.Add(newTabButton);
-            Thumbnailer.makeCounterpartList();
+
+            Counterpart.makeCounterpartList();
             createTab(2);
         }
 
