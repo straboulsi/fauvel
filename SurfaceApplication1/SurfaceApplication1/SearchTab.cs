@@ -31,32 +31,36 @@ namespace SurfaceApplication1
      * */
     public class SearchTab : SideBarTab
     {
-        public Canvas poetryCanvas, lyricsCanvas, imagesCanvas;
+
+        private bool optionsShown = false;
+        public bool? exactPhr;
+        private Boolean defaultOptionsChanged;
+        public Border poetryBorder, imagesBorder, lyricsBorder;
         public Button moreOptions, fewerOptions, goSearch, selectLanguageButton;
-        public TextBlock searchPrompt, searchTabHeader;
-        public TextBox searchQueryBox;
-        public Line topLine, bottomLine;
+        public Canvas poetryCanvas, lyricsCanvas, imagesCanvas;
         public CheckBox caseSensitive, wholeWordOnly, exactPhraseOnly;
-        public ScaleTransform st;
-        public SurfaceListBox selectLanguage;
-        public SurfaceListBoxItem pickLanguage, oldFrench, modernFrench, English;
-        public TabControl searchResults;
-        public TabItem poetryTab, lyricsTab, imagesTab;
-        public StackPanel poetryPanel, lyricsPanel, imagesPanel;
+        public Grid fewerOptGrid, optionsGrid;
         public Image downArrow, upArrow;
-        public SurfaceScrollViewer poetryScroll, lyricsScroll, imagesScroll;
+        private int unreturnedResults;
+        public Line topLine, bottomLine;
+        private List<SearchResult> poetryResults, lyricResults, imageResults;
+        public ResultBoxItem lastCloseupRBI;
+        public ScaleTransform st;
         public enum searchLanguage { oldFrench = 0, modernFrench = 1, English = 2 };
         public searchLanguage currentSearchLanguage = searchLanguage.oldFrench;
-        public Border poetryBorder, imagesBorder, lyricsBorder;
-        private bool optionsShown = false;
-        public String pageToFind;
-        private SurfaceWindow1 surfaceWindow;
-        private Boolean defaultOptionsChanged;
         private SideBar sideBar;
-        private List<SearchResult> poetryResults, lyricResults, imageResults;
-        private int unreturnedResults;
-        public bool? exactPhr;
-        public ResultBoxItem lastCloseupRBI;
+        public StackPanel poetryPanel, lyricsPanel, imagesPanel;
+        public String pageToFind;
+        public SurfaceListBox selectLanguage;
+        public SurfaceListBoxItem pickLanguage, oldFrench, modernFrench, English;
+        public SurfaceScrollViewer poetryScroll, lyricsScroll, imagesScroll;
+        private SurfaceWindow1 surfaceWindow;
+        public TabControl searchResults;
+        public TabItem poetryTab, lyricsTab, imagesTab;
+        public TextBlock searchPrompt, searchTabHeader, moreOptText, fewerOptText;
+        public TextBox searchQueryBox;
+
+
 
         public SearchTab(SideBar mySideBar, SurfaceWindow1 surfaceWindow) : base(mySideBar)
         {
@@ -90,7 +94,7 @@ namespace SurfaceApplication1
             lyricsTab = new TabItem();
             imagesTab = new TabItem();
             poetryCanvas = new Canvas();
-            poetryScroll = new SurfaceScrollViewer(); //
+            poetryScroll = new SurfaceScrollViewer(); 
             poetryPanel = new StackPanel();
             lyricsCanvas = new Canvas();
             lyricsScroll = new SurfaceScrollViewer(); 
@@ -129,9 +133,10 @@ namespace SurfaceApplication1
             downArrow.Source = new BitmapImage(new Uri(@"/downArrow.png", UriKind.Relative));
             downArrow.Opacity = 0.3;
             downArrow.HorizontalAlignment = HorizontalAlignment.Center;
-            TextBlock moreOptText = new TextBlock();
+            moreOptText = new TextBlock();
             moreOptText.Text = "More Options";
-            Grid optionsGrid = new Grid();
+            moreOptText.FontSize = 15; /// Might need to adjust height 
+            optionsGrid = new Grid();
             moreOptions.Content = optionsGrid;
             moreOptions.Width = 100;
             moreOptions.Height = 20;
@@ -223,14 +228,15 @@ namespace SurfaceApplication1
             upArrow.Source = new BitmapImage(new Uri(@"/upArrow.png", UriKind.Relative));
             upArrow.Opacity = 0.3;
             upArrow.HorizontalAlignment = HorizontalAlignment.Center;
-            TextBlock lessOptText = new TextBlock();
-            lessOptText.Text = "Fewer Options";
-            Grid lessOptGrid = new Grid();
-            fewerOptions.Content = lessOptGrid;
+            fewerOptText = new TextBlock();
+            fewerOptText.Text = "Fewer Options";
+            fewerOptText.FontSize = 15; /// Might need to adjust height 
+            fewerOptGrid = new Grid();
+            fewerOptions.Content = fewerOptGrid;
             fewerOptions.Width = 100;
             fewerOptions.Height = 20;
-            lessOptGrid.Children.Add(upArrow);
-            lessOptGrid.Children.Add(lessOptText);
+            fewerOptGrid.Children.Add(upArrow);
+            fewerOptGrid.Children.Add(fewerOptText);
             Canvas.SetLeft(fewerOptions, 225);
             Canvas.SetTop(fewerOptions, 285);
 
@@ -430,7 +436,7 @@ namespace SurfaceApplication1
             checkForChanges();
 
             if (defaultOptionsChanged == true)
-                moreOptions.Background = Brushes.MediumTurquoise;
+                moreOptions.Background = SurfaceWindow1.glowColor; // A color used to draw attention to change
 
             else
                 moreOptions.ClearValue(Control.BackgroundProperty);

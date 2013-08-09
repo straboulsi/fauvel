@@ -14,10 +14,11 @@ namespace SurfaceApplication1
      * */
     public class SpecialString : IComparable
     {
-        public String str;
         public Boolean isFound;
         public int isStyled; // 0 for no and 1 for yes
         public int spotInResult; // Used when searching for multiple words to figure out order in which search words appear in the results
+        public String str;
+
 
         public SpecialString(String aStr)
         {

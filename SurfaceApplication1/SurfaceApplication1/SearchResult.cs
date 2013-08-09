@@ -22,14 +22,15 @@ namespace SurfaceApplication1
      * */
     public class SearchResult
     {
-        public String folio, text1, text2, tag, lineRange;
-        public List<SpecialString> excerpts = new List<SpecialString>();
-        public int lineNum;
-        public Image thumbnail, minithumbnail;
-        public int resultType; // 1 = poetry, 2 = music, 3 = image
-        public Point topL, bottomR;
         public double matchStrength; // Used to indicate how strongly the result matches the search specifications
+        public Image thumbnail, minithumbnail;
+        public int lineNum, resultType; // 1 = poetry, 2 = music, 3 = image
+        public List<SpecialString> excerpts = new List<SpecialString>();
+        public Point topL, bottomR;
+        public String folio, text1, text2, tag, lineRange;
 
+
+        
         public SearchResult()
         {
 

@@ -16,24 +16,24 @@ namespace SurfaceApplication1
      * */
     class Tab
     {
-        public int _page;
-        public TabItem _tab;
-        public Image _verso, _recto;
-        public Grid _canvas;
-        public ScatterViewItem _SVI;
-        public int numFingersVerso, numFingersRecto;
-        public List<Point> fingerPos;
-        public Point avgTouchPoint;
-        public Button _delButton;
-        public List<TranslationBox> _translationBoxesV, _translationBoxesR;
-        public List<TextBlock> _textBlocksV, _textBlocksR;
-        public Grid _vGrid, _rGrid, _vSwipeGrid, _rSwipeGrid, _vTranslationGrid, _rTranslationGrid, _vBoxesGrid, _rBoxesGrid;
         public bool _twoPage;
+        public Button _delButton;
+        public Grid _canvas, _vGrid, _rGrid, _vSwipeGrid, _rSwipeGrid, _vTranslationGrid, _rTranslationGrid, _vBoxesGrid, _rBoxesGrid;
+        public Image _verso, _recto;
+        public int _page, numFingersVerso, numFingersRecto;
+        public List<BoundingBox> _rGhostBoxes, _vGhostBoxes;
+        public List<Point> fingerPos;
+        public List<TextBlock> _textBlocksV, _textBlocksR;
+        public List<TranslationBox> _translationBoxesV, _translationBoxesR;
+        public Point avgTouchPoint;
         public ScatterView _SV;
+        public ScatterViewItem _SVI;
+        public SurfaceWindow1.language _currentLanguage, _previousLanguage;
+        public TabItem _tab;
         public TextBlock _headerTB;
         public Workers _worker;
-        public List<BoundingBox> _rGhostBoxes, _vGhostBoxes;
-        public SurfaceWindow1.language _currentLanguage, _previousLanguage;
+
+
 
         public Tab(int page, TabItem newTab, Image newVerso, Image newRecto, Grid canvas, Grid vGrid, Grid rGrid, Button delBtn, ScatterView SV, ScatterViewItem si, Grid vSwipeGrid, Grid rSwipeGrid, Grid vTranslationGrid, Grid rTranslationGrid, Grid vBoxesGrid, Grid rBoxesGrid, TextBlock headerText, SurfaceWindow1.language language)
         {

@@ -29,18 +29,16 @@ namespace SurfaceApplication1
      * */
     class StudyTab : SideBarTab
     {
-        public TextBlock studyTabHeader;
-        public TextBlock studyPrompt;
-        public Button mono, poly;
-        public TextBlock musicTitle;
-        public Button playpause_1, stop_1, playpause_2, stop_2;
-        public TabControl display;
-        public TabItem notesTab, mod_frenchTab, engTab;
+        public Button mono, poly, playpause_1, stop_1, playpause_2, stop_2;
         public Canvas notesCanvas, notesTabCanvas;
         public Image musicImg, musicImg1, musicImg2, musicImg3;
-        public TextBlock mod_frenchText, engText;
-        public SurfaceScrollViewer noteScroll;
         public MediaPlayer play_2rCon1, play_2vMo2_v1, play_2vMo2_tenor;
+        public TabControl display;
+        public TabItem notesTab, mod_frenchTab, engTab;
+        public TextBlock studyTabHeader, studyPrompt, musicTitle, mod_frenchText, engText;
+        public SurfaceScrollViewer noteScroll;
+
+
 
         public StudyTab(SideBar mySideBar, SurfaceWindow1 surfaceWindow) : base(mySideBar)
         {
@@ -152,8 +150,6 @@ namespace SurfaceApplication1
             noteScroll.Content = notesCanvas;
             notesCanvas.Children.Add(musicImg);
 
-            musicImg = new Image();
-            musicImg.Source = new BitmapImage(new Uri(@"..\..\musicz\2rCo1.png", UriKind.Relative));
 
             mod_frenchTab = new TabItem();
             mod_frenchTab.Header = "Modern French";

@@ -55,8 +55,10 @@ namespace SurfaceApplication1
         List<Tab> tabArray = new List<Tab>();
         public enum language { None = 0, OldFrench = 1, French = 2, English = 3};
         bool dtOut = false; // double tap to zoom out
-
+        public static System.Windows.Media.Brush glowColor = Brushes.MediumTurquoise; // Used in SearchTab to draw attention to changed search settings
         public static XmlDocument xml, engXml, layoutXml, modFrXml;
+
+
         
         public SurfaceWindow1()
         {

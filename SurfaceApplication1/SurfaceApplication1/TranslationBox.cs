@@ -13,15 +13,15 @@ namespace SurfaceApplication1
      * */
     public class TranslationBox
     {
+        public double width, height, lineHeight;
         public static double minFontSize = 10;
-        public String tag = "";
-        String oldFr = "";
-        String modFr = "";
-        String eng = "";
+        public int lines;
         public Point topL = new Point(0, 0);
         public Point bottomR = new Point(0, 0);
-        public double width, height, lineHeight;
-        public int lines;
+        public String tag = "", oldFr = "", modFr = "", eng = "";
+
+
+
 
         // Has string (contents) and coordinates
         // Takes in page number and output array of translation boxes

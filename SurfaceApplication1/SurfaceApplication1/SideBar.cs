@@ -20,11 +20,13 @@ namespace SurfaceApplication1
      * */
     public class SideBar
     {
-        public TabControl tabBar;
+
+        public List<SavedPage> savedPages;
         private List<SideBarTab> tabItems;
         private SideBarTab tabAdd;
         public SurfaceWindow1 surfaceWindow;
-        public List<SavedPage> savedPages;
+        public TabControl tabBar;
+
 
         // This constructor defines the look of the "new tab", which displays all apps for a user to choose from.
         public SideBar(SurfaceWindow1 surfaceWindow, TabControl tabBar)

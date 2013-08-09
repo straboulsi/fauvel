@@ -17,11 +17,13 @@ namespace SurfaceApplication1
      * */
     public class SideBarTab : TabItem
     {
-        public Grid headerGrid;
         public Button deleteTabButton;
-        public Image headerImage;
         public Canvas canvas;
+        public Grid headerGrid;
+        public Image headerImage;
         private SideBar mySideBar;
+
+
 
         public SideBarTab(SideBar mySideBar) : base()
         {
