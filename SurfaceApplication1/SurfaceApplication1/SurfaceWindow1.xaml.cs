@@ -33,29 +33,18 @@ namespace SurfaceApplication1
     /// </summary>
     public partial class SurfaceWindow1 : SurfaceWindow
     {
-        private bool rightSwipe = false;
-        private bool leftSwipe = false;
+        private bool rightSwipe = false, leftSwipe = false, dtOut = false; // dtOut is double tap to zoom out
+        public static System.Windows.Media.Brush glowColor = Brushes.MediumTurquoise; // Used in SearchTab to draw attention to changed search settings
+        public enum language { None = 0, OldFrench = 1, French = 2, English = 3 }; 
+        List<Tab> tabArray = new List<Tab>();
+        SideBar sideBar;
         private Stopwatch rightSwipeWatch, leftSwipeWatch;
         private readonly Stopwatch doubleTapSW = new Stopwatch();
-        private Point lastTapLocation;
-        private Point leftSwipeStart, rightSwipeStart;
-        public static int maxPageWidth = 5250;
-        public static int maxPageHeight = 7350;
-        public static int minPageWidth = 650;
-        public static int minPageHeight = 910;
-        public static int minPageLong = 1274;
-        public static int tabNumber = 0;
-        public static int minPage = 0;
-        public static int maxPage = 95;
+        private Point lastTapLocation, leftSwipeStart, rightSwipeStart;
         public static Image slideImage1, slideImage2;
-        int scatterBuffer = 5000;
-        int swipeLength = 25;
-        int swipeHeight = 6;
-        SideBar sideBar;
-        List<Tab> tabArray = new List<Tab>();
-        public enum language { None = 0, OldFrench = 1, French = 2, English = 3};
-        bool dtOut = false; // double tap to zoom out
-        public static System.Windows.Media.Brush glowColor = Brushes.MediumTurquoise; // Used in SearchTab to draw attention to changed search settings
+        public int scatterBuffer = 5000, swipeLength = 25, swipeHeight = 6;
+        public static int maxPageWidth = 5250, maxPageHeight = 7350, minPageWidth = 650, minPageHeight = 910, minPageLong = 1274, 
+            tabNumber = 0, minPage = 0, maxPage = 95;
         public static XmlDocument xml, engXml, layoutXml, modFrXml;
 
 
