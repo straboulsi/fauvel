@@ -204,6 +204,7 @@ namespace SurfaceApplication1
 
             currentTab._vTranslationGrid.Children.Clear();
             currentTab._rTranslationGrid.Children.Clear();
+
             currentTab._vBoxesGrid.Children.Clear();
             currentTab._rBoxesGrid.Children.Clear();
 
@@ -583,7 +584,7 @@ namespace SurfaceApplication1
                 Rect rect = getRectFromPoint(true, p);
                 if(!rect.Equals(Rect.Empty))
                 {
-                    resizePageToRect(s, rect);
+                    resizePageToRect(rect);
                     dtOut = true;
                 }
             }
@@ -654,8 +655,9 @@ namespace SurfaceApplication1
             stb.Begin(this);
         }
 
-        private void resizePageToRect(ScatterViewItem s, Rect r)
+        public void resizePageToRect(Rect r)
         {
+            ScatterViewItem s = currentTab()._SVI;
             bool sizeToHeight = 2 * r.Height > r.Width * 1.4;
             double h = r.Height;
             double w = r.Width;
@@ -684,11 +686,11 @@ namespace SurfaceApplication1
             DoubleAnimation moveWidth = new DoubleAnimation();
             DoubleAnimation moveHeight = new DoubleAnimation();
             PointAnimation moveCenter = new PointAnimation();
-            moveCenter.From = s.ActualCenter;
+            moveCenter.From = s.Center;
             moveCenter.To = endPoint;
-            moveWidth.From = s.ActualWidth;
+            moveWidth.From = s.Width;
             moveWidth.To = endWidth;
-            moveHeight.From = s.ActualHeight;
+            moveHeight.From = s.Height;
             moveHeight.To = endHeight;
             int milliseconds = 150;
             moveCenter.Duration = new Duration(TimeSpan.FromMilliseconds(milliseconds));
@@ -780,7 +782,7 @@ namespace SurfaceApplication1
         public void rightSwipeDetectionStart(object sender, TouchEventArgs e)
         {
             ScatterViewItem item = (ScatterViewItem)sender;
-            if (item.Width == minPageWidth && item.TouchesOver.Count<TouchDevice>() == 1 && item.TouchesOver.ElementAt<TouchDevice>(0).GetPosition(item).X > swipeLength)
+            if (item.Width < minPageWidth * 2 + 2 && item.TouchesOver.Count<TouchDevice>() == 1 && item.TouchesOver.ElementAt<TouchDevice>(0).GetPosition(item).X > minPageWidth + swipeLength)
             {
                 rightSwipe = true;
                 rightSwipeStart = item.TouchesOver.ElementAt<TouchDevice>(0).GetPosition(item);
@@ -798,7 +800,7 @@ namespace SurfaceApplication1
             ScatterViewItem item = (ScatterViewItem)sender;
             if (rightSwipe)
             {
-                double x = rightSwipeStart.X - swipeLength;
+                double x = rightSwipeStart.X - swipeLength - minPageWidth;
                 double y = rightSwipeStart.Y - swipeHeight / 2;
                 if (x < 0)
                     x = 0;
@@ -836,7 +838,7 @@ namespace SurfaceApplication1
             Point second = item.TouchesOver.ElementAt<TouchDevice>(0).GetPosition(item);
             if (rightSwipe)
             {
-                if (((Canvas)currentTab()._rSwipeGrid.Children[0]).Background == Brushes.Green /*(second.X < rightSwipeStart.X - swipeLength && rightSwipeWatch.ElapsedMilliseconds < 1000)*/ || (Math.Abs(second.X - rightSwipeStart.X) < 10 && Math.Abs(second.Y - rightSwipeStart.Y) < 10 && rightSwipeWatch.ElapsedMilliseconds < 400 && rightSwipeStart.X > minPageWidth - 100))
+                if (((Canvas)currentTab()._rSwipeGrid.Children[0]).Background == Brushes.Green || (Math.Abs(second.X - rightSwipeStart.X) < 10 && Math.Abs(second.Y - rightSwipeStart.Y) < 10 && rightSwipeWatch.ElapsedMilliseconds < 400 && rightSwipeStart.X > 2 * minPageWidth - 150))
                     next_Click(null, null);
             }
             rightSwipe = false;
@@ -845,7 +847,7 @@ namespace SurfaceApplication1
         public void leftSwipeDetectionStart(object sender, TouchEventArgs e)
         {
             ScatterViewItem item = (ScatterViewItem)sender;
-            if (item.Width == minPageWidth && item.TouchesOver.Count<TouchDevice>() == 1 && item.TouchesOver.ElementAt<TouchDevice>(0).GetPosition(item).X < minPageWidth - swipeLength)
+            if (item.Width < minPageWidth * 2 + 2 && item.TouchesOver.Count<TouchDevice>() == 1 && item.TouchesOver.ElementAt<TouchDevice>(0).GetPosition(item).X < minPageWidth - swipeLength)
             {
                 leftSwipe = true;
                 leftSwipeStart = item.TouchesOver.ElementAt<TouchDevice>(0).GetPosition(item);
@@ -901,7 +903,7 @@ namespace SurfaceApplication1
             Point second = item.TouchesOver.ElementAt<TouchDevice>(0).GetPosition(item);
             if (leftSwipe)
             {
-                if (((Canvas)currentTab()._vSwipeGrid.Children[0]).Background == Brushes.Green /*(second.X < rightSwipeStart.X - 100 && rightSwipeWatch.ElapsedMilliseconds < 1000)*/ || (Math.Abs(second.X - leftSwipeStart.X) < 10 && Math.Abs(second.Y - leftSwipeStart.Y) < 10 && leftSwipeWatch.ElapsedMilliseconds < 400 && leftSwipeStart.X > 100))
+                if (((Canvas)currentTab()._vSwipeGrid.Children[0]).Background == Brushes.Green || (Math.Abs(second.X - leftSwipeStart.X) < 10 && Math.Abs(second.Y - leftSwipeStart.Y) < 10 && leftSwipeWatch.ElapsedMilliseconds < 400 && leftSwipeStart.X < 150))
                     prev_Click(null, null);
             }
             leftSwipe = false;

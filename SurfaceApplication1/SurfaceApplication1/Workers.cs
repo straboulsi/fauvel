@@ -54,6 +54,7 @@ namespace SurfaceApplication1
             };
         }
 
+
         public void updateGhostBoxes()
         {
             var ghostBoxDispatcher = tab._canvas.Dispatcher.BeginInvoke(new Action(() =>

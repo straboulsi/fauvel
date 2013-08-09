@@ -53,7 +53,6 @@ namespace SurfaceApplication1
         private Boolean defaultOptionsChanged;
         private SideBar sideBar;
         private List<SearchResult> poetryResults, lyricResults, imageResults;
-        public delegate void UpdateTextCallback(string message);
         private int unreturnedResults;
         public bool? exactPhr;
         public ResultBoxItem lastCloseupRBI;
@@ -508,14 +507,11 @@ namespace SurfaceApplication1
                     else
                         poetryResults = Translate.searchExactPoetry(searchQuery, caseType, wordType, (int)currentSearchLanguage);
                 };
-
                 worker.RunWorkerCompleted += delegate
                 {
-                    
                     SurfaceListBox poetryLB = new SurfaceListBox();
                     poetryLB.Style = sideBar.tabBar.FindResource("SearchResultSurfaceListBox") as Style;
                     poetryScroll.Content = poetryLB; // NB: the scroll bar comes from the poetryScroll, not poetryLB
-
                     
                     foreach (SearchResult result in poetryResults)
                     {
@@ -542,7 +538,7 @@ namespace SurfaceApplication1
                 };
                 worker.RunWorkerAsync();
             };
-            this.Dispatcher.BeginInvoke(DispatcherPriority.Background, poetryResultAction);
+            this.Dispatcher.BeginInvoke(DispatcherPriority.Normal, poetryResultAction);
 
 
             // Lyric results //
@@ -592,7 +588,7 @@ namespace SurfaceApplication1
                 };
                 worker.RunWorkerAsync();
             };
-            this.Dispatcher.BeginInvoke(DispatcherPriority.Background, lyricResultAction);
+            this.Dispatcher.BeginInvoke(DispatcherPriority.Normal, lyricResultAction);
             
 
             // Image results //
@@ -638,7 +634,7 @@ namespace SurfaceApplication1
                 };
                 worker.RunWorkerAsync();
             };
-            this.Dispatcher.BeginInvoke(DispatcherPriority.Background, imageResultAction);
+            this.Dispatcher.BeginInvoke(DispatcherPriority.Normal, imageResultAction);
             
         }
 
@@ -819,10 +815,15 @@ namespace SurfaceApplication1
             int pageNum = Convert.ToInt32(imageName.Substring(0, imageName.IndexOf(".jpg")));
             if (pageNum % 2 == 1) // If odd, meaning it's a Fo_r, we want to aim for the previous page.
                 pageNum--;
-
             // Get coordinates from lastCloseupRBI.topL and lastCloseupRBI.bottomR
 
             surfaceWindow.createTab(pageNum - 10);
+            double x, y, w, h;
+            x = lastCloseupRBI.topL.X;
+            y = lastCloseupRBI.topL.Y;
+            w = lastCloseupRBI.bottomR.X - lastCloseupRBI.topL.X;
+            h = lastCloseupRBI.bottomR.Y - lastCloseupRBI.topL.Y;
+            surfaceWindow.resizePageToRect(new Rect(x, y, w, h));
         }
 
 
