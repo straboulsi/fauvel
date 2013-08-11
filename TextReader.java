@@ -8,7 +8,8 @@ import java.util.*;
  * The program adds appropriate XML tags to each line.
  * Output is saved to a new file that has transformed the original text into an XML file.
  *    NB: The new file does not display accented characters in Eclipse, so open it in TextEdit!
- * Also see the "Copy and Paste Instructions" document.
+ * NOTE: Many further edits were made to the OriginalTextXML after creating it using this file.
+ * Also see the "XML Guide" and "Copy and Paste Instructions" documents.
  * @author alisonychang
  */
 
@@ -33,11 +34,11 @@ public class TextReader {
 	private int pageLineNum = 1; // The line number, starting over at 1 for each new page
 
 	private String pageString = ""; // i.e. "1r" or "3v"; this will be reset as we enter a new page
-	private String ID = ""; // i.e. 1rMo1
+	private String ID = ""; // ID for an object in Fauvel, i.e. 1rMo1 = First motet on Fo1r
 
-	private ArrayList<String> poemQueue; // Used to count/print lines of poetry
+	private ArrayList<String> poemQueue; // Used to count/print lines of poetry, since the tag at the start of the section ("Te_XXXX-XXXX") needs to know what the last line will be
 	File editedF = new File("FauvelEdited.txt"); // The XML-tagged transformed version of the text; program output
-	private ArrayList<Music> musicGenres;
+	private ArrayList<Music> musicGenres; // Used to identify all types of music in Fauvel
 
 
 
@@ -64,30 +65,30 @@ public class TextReader {
 			poemQueue = new ArrayList<String>();
 			p.print("<xml>\n<text>\n<body>"); // Starting XML code at top of document
 
-			while(in.hasNext()){	
+			while(in.hasNext()){ // Reads from original .txt file (copied + pasted from PDF)
 
-				String thisLine = lineNumChopper(in.nextLine()); // Deals with any starting numbers
+				String thisLine = lineNumChopper(in.nextLine()); // Removes any starting numbers
 
 
 				if(!thisLine.equals("")){ // Skip blank lines
 
 					// If the line indicates a page break but is not a poem line starting w "Fo"
 					if(thisLine.startsWith("Fo")&&dataType!=poem&&dataType!=music&&dataType!=motet){
-						pageString = thisLine.substring(2); 
-						if(Character.isDigit(thisLine.charAt(thisLine.length()-1))) // No r or v
-							pageString += "r"; // Adds the default "r" to end
+						pageString = thisLine.substring(2);  // Removes "Fo"
+						if(Character.isDigit(thisLine.charAt(thisLine.length()-1))) // No r or v at end
+							pageString += "r"; // Adds the default "r" to end, since "Fo3" means "Fo3r", etc.
 
 						newPage(); // Resets all motet/image/etc counts to 0
 						p.print("\n\n\n\n\n<pb facs=\"#"+pageString+"\" />\n\n");
 						dataType = 0;
 					}
 					
-					else if(thisLine.startsWith("#"))
+					else if(thisLine.startsWith("#")) // # indicates a comment
 						p.print(thisLine+"\n");
 					
 					
 
-					// First (ONLY) line of miniature
+					// First (ONLY) line of miniature (image)
 					else if(thisLine.startsWith("Miniature")||thisLine.contains("miniature")){
 						numOfImages++;
 						p.print("\n<figure xml:id=\""+pageString+"Im"+numOfImages+"\">\n<figDesc>\n"
@@ -119,7 +120,8 @@ public class TextReader {
 								s = s.substring(3);
 							}
 
-							// Imagine « M- Mais combien...
+							// Imagine "« M- Mais combien..."
+                            // "¬´" is the non-UTF form of "«" for when special characters are not displayed properly
 							else if((s.startsWith("«")||s.startsWith("¬´")||s.startsWith(" «"))&&s.contains("-")){
 								int index1 = s.indexOf("¬´");
 								int index2 = s.indexOf("-");
@@ -150,14 +152,15 @@ public class TextReader {
 
 					}
 
-
+                    // Non-motet types of music
 					else if(isMusicGenre(thisLine, musicGenres)&&dataType==0&&!thisLine.startsWith("Motet")){
-						Music thisMusic = whichGenre(thisLine,musicGenres); // IDs music genre
-						ID = pageString + thisMusic.nickname + thisMusic.numOnPage;
+						Music thisMusic = whichGenre(thisLine,musicGenres); // Identifies which music genre
+						ID = pageString + thisMusic.nickname + thisMusic.numOnPage; 
 						p.print("\n<notatedMusic xml:id=\""+ID+"\">\n<ptr\ntarget=\"\"" +
 								"\nmimeType=\"\" />\n</notatedMusic>\n");
 						dataType = music;
-						// Refrain 3: T- Tout le cuer... (434)
+                        
+						// i.e. "Refrain 3: T- Tout le cuer..." (434)
 						if(thisMusic.name.equals("Refrain")&&thisLine.contains(":")&&thisLine.contains("-")){
 							int index1 = thisLine.indexOf(":");
 							int index2 = thisLine.indexOf("-");
@@ -179,7 +182,7 @@ public class TextReader {
 					}
 
 
-
+                    // Rubrique is a special type of text separate from poetry
 					else if(thisLine.startsWith("Rubrique")){
 						numOfRubriques++;
 						p.print("\n<text xml:id=\""+pageString+"Rub"+numOfRubriques+"\">\n<rubrique>\n"
@@ -193,8 +196,7 @@ public class TextReader {
 						dataType=0;
 					}
 
-					// This is specifically for the first of the last two lines... 
-					// Do we need a way to deal with it in the code, or should it be manual fix?
+					// This is specifically for the last two lines - the scribal explicit 
 					else if(thisLine.startsWith("Explicit, expliceat")){
 						dataType = explicit;
 						p.print("\n<text xml:id=\""+pageString+"Ex\">\n<explicit>\n"
@@ -236,7 +238,8 @@ public class TextReader {
 										p.print(thisLine+"\n");
 
 								}
-
+                                
+                                // i.e. "D- De torcher Fauvel..."
 								else if(thisLine.substring(1,2).equals("-")){ 
 									dropCap = tagDropCap(thisLine.substring(0,1));
 									if(thisLine.length()>=3){
@@ -296,8 +299,10 @@ public class TextReader {
 		return tagged;
 	}
 
+    
 	/**
-	 * 	Creating a MusicGenre object for each type we find in this manuscript
+	 * 	Creating a MusicGenre object for each type we find in this manuscript.
+     *  See Music.java for more info about the object.
 	 */
 	private void makeMusicGenres(){
 
