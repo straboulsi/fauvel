@@ -1,6 +1,9 @@
 import java.util.*;
 import java.io.*;
 
+/**
+ * Creates a hash map of the name of each page and its contents
+ */
 public class TableOfContents {
 
 	public String folioContents = "";

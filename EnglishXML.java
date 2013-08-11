@@ -1,7 +1,10 @@
 import java.io.*;
 import java.util.*;
 
-
+/**
+ * This class is used to encode the English translation of Fauvel into an XML.
+ * @author Alison Y. Chang
+ */
 public class EnglishXML {
 
 	File file1 = new File("EnglishXML.txt");
@@ -16,6 +19,7 @@ public class EnglishXML {
 			PrintWriter p = new PrintWriter(file1);
 			int i = 1;
 
+            // Since the English only has poetry (no other objects), all 5986 lines are in the same group 
 			p.print("<xml>\n<text>\n<body>\n<lg id=\"Te_0001-5986\">\n");
 
 			while(in.hasNext()){
