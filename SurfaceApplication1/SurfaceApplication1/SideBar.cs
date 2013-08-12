@@ -10,7 +10,6 @@ using System.Windows.Input;
 using Microsoft.Surface;
 using Microsoft.Surface.Presentation;
 using Microsoft.Surface.Presentation.Controls;
-using Microsoft.Surface.Presentation.Controls;
 using System.Xml;
 using System.Windows.Documents;
 
@@ -47,7 +46,7 @@ namespace SurfaceApplication1
             tabAdd.FontFamily = new FontFamily("Cambria");
 
             Canvas newTabCanvas = new Canvas();
-            newTabCanvas.Height = 899;
+            newTabCanvas.Height = 900; // 899
             newTabCanvas.Width = 550;
             tabAdd.Content = newTabCanvas;
 

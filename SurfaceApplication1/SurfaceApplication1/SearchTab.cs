@@ -35,7 +35,7 @@ namespace SurfaceApplication1
         public bool? exactPhr;
         public Boolean defaultOptionsChanged, optionsShown;
         public Border poetryBorder, imagesBorder, lyricsBorder;
-        public Button moreOptions, fewerOptions, goSearch, selectLanguageButton;
+        public Button moreOptions, fewerOptions, goSearch, selectLanguageButton, closeLanguageList;
         public Canvas poetryCanvas, lyricsCanvas, imagesCanvas;
         public CheckBox caseSensitive, wholeWordOnly, exactPhraseOnly;
         public Grid fewerOptGrid, optionsGrid;
@@ -73,6 +73,7 @@ namespace SurfaceApplication1
             moreOptions = new Button();
             topLine = new Line();
 
+            closeLanguageList = new Button();
             fewerOptions = new Button();
             upArrow = new Image();
             caseSensitive = new CheckBox();
@@ -124,6 +125,7 @@ namespace SurfaceApplication1
             goSearch.Width = 95;
             goSearch.FontSize = 21;
             goSearch.Content = "Go!";
+            goSearch.IsEnabled = false;
             Canvas.SetLeft(goSearch, 378);
             Canvas.SetTop(goSearch, 90);
 
@@ -134,14 +136,15 @@ namespace SurfaceApplication1
             downArrow.HorizontalAlignment = HorizontalAlignment.Center;
             moreOptText = new TextBlock();
             moreOptText.Text = "More Options";
-            moreOptText.FontSize = 15; /// Might need to adjust height 
+            moreOptText.FontSize = 18; /// Might need to adjust height 
             optionsGrid = new Grid();
             moreOptions.Content = optionsGrid;
-            moreOptions.Width = 100;
-            moreOptions.Height = 20;
+            moreOptions.Width = 135; // 100
+            moreOptions.Height = 28; // 20
+            moreOptions.HorizontalContentAlignment = HorizontalAlignment.Center;
             optionsGrid.Children.Add(downArrow);
             optionsGrid.Children.Add(moreOptText);
-            Canvas.SetLeft(moreOptions, 225);
+            Canvas.SetLeft(moreOptions, 210);
             Canvas.SetTop(moreOptions, 153);
             
             
@@ -151,7 +154,11 @@ namespace SurfaceApplication1
             topLine.Y2 = 163;
             topLine.Stroke = Brushes.Black;
             topLine.StrokeThickness = 2;
-            
+
+            closeLanguageList.Width = 600; // 550
+            closeLanguageList.Height = 1000; //900 
+            closeLanguageList.Style = sideBar.tabBar.FindResource("InvisibleButton") as Style;
+
 
 
             /// The objects for extended search options
@@ -229,15 +236,16 @@ namespace SurfaceApplication1
             upArrow.HorizontalAlignment = HorizontalAlignment.Center;
             fewerOptText = new TextBlock();
             fewerOptText.Text = "Fewer Options";
-            fewerOptText.FontSize = 15; /// Might need to adjust height 
+            fewerOptText.FontSize = 18; /// Might need to adjust height 
             fewerOptGrid = new Grid();
             fewerOptions.Content = fewerOptGrid;
-            fewerOptions.Width = 100;
-            fewerOptions.Height = 20;
+            fewerOptions.Width = 135;
+            fewerOptions.Height = 28;
+            fewerOptions.HorizontalContentAlignment = HorizontalAlignment.Center;
             fewerOptGrid.Children.Add(upArrow);
             fewerOptGrid.Children.Add(fewerOptText);
-            Canvas.SetLeft(fewerOptions, 225);
-            Canvas.SetTop(fewerOptions, 285);
+            Canvas.SetLeft(fewerOptions, 210); // 225
+            Canvas.SetTop(fewerOptions, 280); // 285
 
 
 
@@ -331,10 +339,13 @@ namespace SurfaceApplication1
 
             Canvas.SetTop(imagesBorder, 331);
 
+
+
             /// Adding everything
 
             headerGrid.Children.Add(searchTabHeader);
 
+            canvas.Children.Add(closeLanguageList); // Should add to the very back...
             canvas.Children.Add(searchPrompt);
             canvas.Children.Add(searchQueryBox);
             canvas.Children.Add(goSearch);
@@ -356,6 +367,9 @@ namespace SurfaceApplication1
             wholeWordOnly.Visibility = Visibility.Hidden;
             exactPhraseOnly.Visibility = Visibility.Hidden;
 
+            closeLanguageList.TouchEnter += new EventHandler<TouchEventArgs>(closeLanguageList_TouchEnter);
+            closeLanguageList.MouseLeave += new MouseEventHandler(closeLanguageList_MouseLeave);
+            closeLanguageList.Click += new RoutedEventHandler(closeLanguageList_Click);
             moreOptions.Click += new RoutedEventHandler(Show_Options);
             moreOptions.TouchDown += new EventHandler<TouchEventArgs>(Show_Options);
             fewerOptions.Click += new RoutedEventHandler(Hide_Options);
@@ -380,6 +394,11 @@ namespace SurfaceApplication1
             English.Selected += new RoutedEventHandler(searchLanguageChanged);
         }
 
+
+        private void closeLanguageList_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
 
         /**
          * Displays the language choices for search.
@@ -467,6 +486,18 @@ namespace SurfaceApplication1
             optionsShown = false;
         }
 
+
+        private void closeLanguageList_TouchEnter(object sender, EventArgs e)
+        {
+            closeLanguageList.Background = Brushes.GhostWhite;
+        }
+        private void closeLanguageList_MouseLeave(object sender, EventArgs e)
+        {
+            closeLanguageList.Background = Brushes.GhostWhite;
+        }
+
+
+
         /**
          * Changes a check box from checked to unchecked and vice versa.
          * */
@@ -492,8 +523,11 @@ namespace SurfaceApplication1
             searchTabHeader.Text = searchQueryBox.Text;
             searchResults.Visibility = Visibility.Visible;
 
-            selectLanguage.Visibility = Visibility.Hidden;
-            selectLanguageButton.Visibility = Visibility.Visible;
+            if (optionsShown)
+            {
+                selectLanguage.Visibility = Visibility.Hidden;
+                selectLanguageButton.Visibility = Visibility.Visible;
+            }
 
             int caseType = 0;
             int wordType = 0;
@@ -722,7 +756,8 @@ namespace SurfaceApplication1
         private void newSearch(object sender, RoutedEventArgs e)
         {
             String searchQuery = searchQueryBox.Text;
-            runSearch();
+            if(searchQuery.Trim()!="")
+                runSearch();
 
         }
 
@@ -954,6 +989,8 @@ namespace SurfaceApplication1
             else
                 searchQueryBox.SelectAll();
 
+
+            goSearch.IsEnabled = true;
             searchQueryBox.Focus();
         }
 

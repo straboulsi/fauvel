@@ -103,6 +103,9 @@ namespace SurfaceApplication1
                 }
                 else // Music or image
                 {
+                    if (tag.EndsWith("_t"))
+                        tag = tag.Substring(0, tag.Length - 2);
+
                     xn = SurfaceWindow1.layoutXml.DocumentElement.SelectSingleNode("//surface/zone[@id='" + tag + "']");
 
                     if (whichPt == 1) //  Top left
