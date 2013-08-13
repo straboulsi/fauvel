@@ -163,6 +163,11 @@
     <Resource Include="icons\magnifyingglass.png" />
     <Resource Include="XML\LayoutXML.xml" />
     <Resource Include="icons\translationsBar.png" />
+    <Resource Include="icons\ex.png" />
+    <Resource Include="icons\exLarge.png" />
+    <Resource Include="icons\music.png" />
+    <Resource Include="icons\pencil.png" />
+    <Resource Include="icons\search.png" />
     <Content Include="minithumbnails\10rIm1.jpg">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>

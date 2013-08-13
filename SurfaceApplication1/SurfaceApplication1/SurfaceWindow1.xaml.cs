@@ -231,17 +231,22 @@ namespace SurfaceApplication1
             DockPanel heda = new DockPanel();
             tab.Header = heda;
             Button delBtn = new Button();
-            delBtn.Height = 30;
-            delBtn.Width = 30;
+            delBtn.Height = 24;
+            delBtn.Width = 24;
             delBtn.Margin = new Thickness(10, 0, 0, 0);
             delBtn.PreviewTouchDown += new EventHandler<TouchEventArgs>(btnDelete_Touch);
             delBtn.Click += new RoutedEventHandler(btnDelete_Click);
             TextBlock hedatext = new TextBlock();
             hedatext.Text = "yo";
-            TextBlock ex = new TextBlock();
-            ex.Text = "x";
-            ex.FontSize = 16;
-            delBtn.Content = ex;
+            Image img = new Image();
+            BitmapImage ex = new BitmapImage();
+            ex.BeginInit();
+            ex.UriSource = new Uri("icons/ex.png", UriKind.Relative);
+            ex.EndInit();
+            img.Source = ex;
+            img.Width = 16;
+            img.Height = 16;
+            delBtn.Content = img;
 
             heda.Children.Add(hedatext);
             heda.Children.Add(delBtn);
@@ -726,7 +731,10 @@ namespace SurfaceApplication1
             doubleTapSW.Restart();
             bool tapsAreCloseInTime = (elapsed != TimeSpan.Zero && elapsed < TimeSpan.FromSeconds(0.7));
 
-            return tapsAreCloseInDistance && tapsAreCloseInTime;
+            bool isDoubleTap = tapsAreCloseInDistance && tapsAreCloseInTime;
+            if (isDoubleTap)
+                e.Handled = true;
+            return isDoubleTap;
         }
 
         private void OnPreviewTouchDown(object sender, TouchEventArgs e)
@@ -753,6 +761,8 @@ namespace SurfaceApplication1
             prevlanguageButton.IsEnabled = true;
             tab._previousLanguage = tab._currentLanguage;
             ListBox box = (ListBox)sender;
+            if (box.SelectedItem == null)
+                return;
             if (box.SelectedIndex == 0)
                 tab._currentLanguage = language.None;
             if (box.SelectedIndex == 1)
@@ -835,6 +845,8 @@ namespace SurfaceApplication1
         }
         public void rightSwipeDetectionStop(object sender, TouchEventArgs e)
         {
+            rightSwipe = false;
+            currentTab()._rSwipeGrid.Visibility = System.Windows.Visibility.Hidden;
             ScatterViewItem item = (ScatterViewItem)sender;
             Point second = item.TouchesOver.ElementAt<TouchDevice>(0).GetPosition(item);
             if (rightSwipe)
@@ -842,8 +854,6 @@ namespace SurfaceApplication1
                 if (((Canvas)currentTab()._rSwipeGrid.Children[0]).Background == Brushes.Green || (Math.Abs(second.X - rightSwipeStart.X) < 10 && Math.Abs(second.Y - rightSwipeStart.Y) < 10 && rightSwipeWatch.ElapsedMilliseconds < 400 && rightSwipeStart.X > 2 * minPageWidth - 150))
                     next_Click(null, null);
             }
-            rightSwipe = false;
-            currentTab()._rSwipeGrid.Visibility = System.Windows.Visibility.Hidden;
         }
         public void leftSwipeDetectionStart(object sender, TouchEventArgs e)
         {
@@ -900,6 +910,8 @@ namespace SurfaceApplication1
         }
         public void leftSwipeDetectionStop(object sender, TouchEventArgs e)
         {
+            leftSwipe = false;
+            currentTab()._vSwipeGrid.Visibility = System.Windows.Visibility.Hidden;
             ScatterViewItem item = (ScatterViewItem)sender;
             Point second = item.TouchesOver.ElementAt<TouchDevice>(0).GetPosition(item);
             if (leftSwipe)
@@ -907,8 +919,6 @@ namespace SurfaceApplication1
                 if (((Canvas)currentTab()._vSwipeGrid.Children[0]).Background == Brushes.Green || (Math.Abs(second.X - leftSwipeStart.X) < 10 && Math.Abs(second.Y - leftSwipeStart.Y) < 10 && leftSwipeWatch.ElapsedMilliseconds < 400 && leftSwipeStart.X < 150))
                     prev_Click(null, null);
             }
-            leftSwipe = false;
-            currentTab()._vSwipeGrid.Visibility = System.Windows.Visibility.Hidden;
         }
 
 
@@ -934,6 +944,7 @@ namespace SurfaceApplication1
 
         private void languageVisibility(object sender, TouchEventArgs e)
         {
+            languageBox.SelectedItem = null;
             if (languageBox.Visibility == System.Windows.Visibility.Collapsed)
                 languageBox.Visibility = System.Windows.Visibility.Visible;
             else
