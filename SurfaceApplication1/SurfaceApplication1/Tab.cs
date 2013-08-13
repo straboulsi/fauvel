@@ -8,7 +8,7 @@ using Microsoft.Surface.Presentation;
 using Microsoft.Surface;
 using Microsoft.Surface.Presentation.Controls;
 
-namespace SurfaceApplication1
+namespace DigitalFauvel
 {
     /**
      * This class defines a new main tab that displays an opening of Fauvel.

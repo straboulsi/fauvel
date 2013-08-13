@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Windows;
 
-namespace SurfaceApplication1
+namespace DigitalFauvel
 {
     /** 
      * This Box represents a bounding box drawn for a piece of music, an image, etc.

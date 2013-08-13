@@ -2,7 +2,7 @@
 using System.Windows;
 using System.Text.RegularExpressions;
 
-namespace SurfaceApplication1
+namespace DigitalFauvel
 {
 
     /**

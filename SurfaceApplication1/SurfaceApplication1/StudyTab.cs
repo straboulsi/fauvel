@@ -20,7 +20,7 @@ using System.Windows.Threading;
 using System.ComponentModel;
 using System.Windows.Controls.Primitives;
 
-namespace SurfaceApplication1
+namespace DigitalFauvel
 {
 
     /**

@@ -20,7 +20,7 @@ using System.Windows.Threading;
 using System.ComponentModel;
 using System.Diagnostics;
 
-namespace SurfaceApplication1
+namespace DigitalFauvel
 {
     /**
      * This class defines a Search Tab, opened from the side bar using the "Search" app button. 

@@ -5,7 +5,7 @@ using System.Text;
 using System.Windows;
 using System.Windows.Controls;
 
-namespace SurfaceApplication1
+namespace DigitalFauvel
 {
     /**
      * Primary Coder: Brendan Chou

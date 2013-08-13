@@ -8,7 +8,7 @@ using System.Windows.Media;
 using System.Windows;
 using System.Windows.Input;
 
-namespace SurfaceApplication1
+namespace DigitalFauvel
 {
     /**
      * This class defines the basic format of a SideBarTab.

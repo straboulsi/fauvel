@@ -26,7 +26,7 @@ using System.Xml.Schema;
 using System.Xml.XPath;
 using System.Windows.Threading;
 
-namespace SurfaceApplication1
+namespace DigitalFauvel
 {
     /// <summary>
     /// Interaction logic for SurfaceWindow1.xaml
@@ -86,6 +86,7 @@ namespace SurfaceApplication1
             TabItem newTabButton = new TabItem();
             newTabButton.Header = "+";
             newTabButton.Width = 50;
+            newTabButton.Height = 40;
             newTabButton.FontSize = 25;
             newTabButton.FontFamily = new FontFamily("Cambria");
             tabBar.Items.Add(newTabButton);
@@ -963,7 +964,6 @@ namespace SurfaceApplication1
             Point center = tab._SVI.Center;
             language lang = tab._currentLanguage;
             sideBar.savePage(pageNum, width, center, lang);
-            pageNumberText.Text = sideBar.savedPages.Count.ToString();
         }
         private void savePage(object sender, RoutedEventArgs e)
         {

@@ -8,7 +8,7 @@ using System.Windows.Controls;
 using System.Windows;
 using System.Windows.Threading;
 
-namespace SurfaceApplication1
+namespace DigitalFauvel
 {
     /**
      * This class sets up the background workers for the application.
