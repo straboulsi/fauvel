@@ -16,13 +16,15 @@ namespace SurfaceApplication1
      * */
     class Workers
     {
-        private Tab tab;
-        public bool largeRectoLoaded, largeVersoLoaded;
-        public int slideInt;
 
         public BackgroundWorker slideImageChange;
         public BackgroundWorker versoImageChange;
         public BackgroundWorker rectoImageChange;
+        public bool largeRectoLoaded, largeVersoLoaded;
+        public int slideInt;
+        private Tab tab;
+
+
 
         public void updateTranslations()
         {

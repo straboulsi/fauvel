@@ -22,45 +22,66 @@ namespace SurfaceApplication1
 
         /**
          * The beginning of music search that allows searching for a motet by number of voice.
-         * This method is not fully developed, nor has it been called.
-         * 
          * */
         public static void filterByVoice(int voiceNum)
         {
-            XmlNodeList musics = SurfaceWindow1.xml.DocumentElement.SelectNodes("//p[(nv)]");
-            String temp = "";
-
-            foreach (XmlNode xn in musics)
+            try
             {
-                if (Convert.ToInt32(xn.SelectSingleNode("nv").InnerText) == voiceNum)
-                    temp = Search.lyricsOnly(xn).InnerText+"\r\n\r\n";
+                XmlNodeList musics = SurfaceWindow1.xml.DocumentElement.SelectNodes("//p[(nv)]");
+                String temp = "";
+
+                foreach (XmlNode xn in musics)
+                {
+                    if (Convert.ToInt32(xn.SelectSingleNode("nv").InnerText) == voiceNum)
+                        temp = Search.lyricsOnly(xn).InnerText + "\r\n\r\n";
+                }
+            }
+            catch (Exception e)
+            {
+                Console.Write(e.StackTrace);
+                Console.Read();
             }
 
         }
 
-        // Temporary method to check if I got all the titles
-        public static void checkTitles()
+        /**
+         * Takes in the tag of a music object and returns number of voices. If > 1 voice, it is a motet. 
+         * */
+        public static int voiceCount(String tag)
         {
-            XmlNodeList xnl = SurfaceWindow1.xml.DocumentElement.SelectNodes("//p[not(title)]");
-
-            foreach (XmlNode xn in xnl)
+            int voiceCount = 0;
+            try
             {
-                XmlNode titleNode = xn.FirstChild;
-                Console.Write(titleNode.InnerText);
+                // Bc the number of voices tag is within the music object with lyrics - the p tag, not the notatedMusic tag
+                if (!tag.EndsWith("_t"))
+                    tag += "_t";
+
+                XmlNode foundNode = SurfaceWindow1.xml.DocumentElement.SelectSingleNode("//p[@id='" + tag + "']");
+                if (foundNode.SelectSingleNode("nv") != null)
+                    voiceCount = Convert.ToInt32(foundNode.SelectSingleNode("nv").InnerText);
+                else
+                    voiceCount = 1;
+            }
+            catch (Exception e)
+            {
+                Console.Write(e.StackTrace);
+                Console.Read();
             }
 
-            XmlNodeList xnl2 = SurfaceWindow1.xml.DocumentElement.SelectNodes("//p[(title)]");
-
-            foreach (XmlNode xn in xnl2)
-            {
-                XmlNode titleNode = xn.FirstChild;
-                String[] allLyrics = Search.lyricsOnly(xn).InnerText.Trim().Split(new String[] { "\r\n", "\n" }, StringSplitOptions.None); // Splits lyrics line by line
-
-
-                Console.Write("\r\n\r\n" + titleNode.InnerText + "\r\n" + allLyrics[0]);
-            }
+            return voiceCount;
         }
 
+
+        /**
+         * Takes in the tag of a music object and checks whether it has multiple voices (motet) or not (other music type).
+         * */
+        public static Boolean hasMultipleVoices(String tag)
+        {
+            if(voiceCount(tag) > 1)
+                return true;
+            else
+                return false;
+        }
 
     }
 }

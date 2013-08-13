@@ -33,11 +33,11 @@ namespace SurfaceApplication1
      **/
     public static class Overlay
     {
-        public static Brush textBrush = (Brush)(new BrushConverter().ConvertFrom("#663311"));
+
         public static Brush backBrush = (Brush)(new BrushConverter().ConvertFrom("#CCE0D0B0"));
         public static Brush blockBrush = (Brush)(new BrushConverter().ConvertFrom("#ccffffff"));
         public static Brush blockFillerBrush = (Brush)(new BrushConverter().ConvertFrom("#33000000"));
-
+        public static Brush textBrush = (Brush)(new BrushConverter().ConvertFrom("#663311"));
 
 
         public static Grid getGrid(TranslationBox tb, TextBlock t)

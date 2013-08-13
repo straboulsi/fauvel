@@ -29,14 +29,16 @@ namespace SurfaceApplication1
      **/
     public class ResultBoxItem : SurfaceListBoxItem, IComparable
     {
-        public StackPanel resultStack, infoStack;
-        public List<SpecialString> excerpts;
-        public TextBlock folioInfo, lineInfo, resultText;
+        public double matchStrength; // Used to indicate how strongly the result matches the search specifications
         public Image resultThumbnail, miniThumbnail;
         public int resultType; // 1 = poetry, 2 = music, 3 = image
+        public List<SpecialString> excerpts;
         public Point topL, bottomR;
-        public double matchStrength; // Used to indicate how strongly the result matches the search specifications
+        public StackPanel resultStack, infoStack;
+        public TextBlock folioInfo, lineInfo, resultText;
 
+
+       
 
         public ResultBoxItem()
         {
@@ -60,12 +62,12 @@ namespace SurfaceApplication1
             miniThumbnail.Margin = new Thickness(5);
 
             resultText = new TextBlock();
-            resultText.Width = 350;
+            resultText.Width = 300; // Originally 350 - was that why some languages wouldn't truncate?
             resultText.TextTrimming = TextTrimming.WordEllipsis;
+            resultText.VerticalAlignment = VerticalAlignment.Center;
 
             infoStack.Margin = new Thickness(0, 0, 15, 0);
-            infoStack.VerticalAlignment = System.Windows.VerticalAlignment.Center;
-            resultText.VerticalAlignment = System.Windows.VerticalAlignment.Center;
+            infoStack.VerticalAlignment = VerticalAlignment.Center;
 
             resultStack.Children.Add(infoStack);
             resultStack.Children.Add(miniThumbnail); // for image results

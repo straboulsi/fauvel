@@ -8,12 +8,11 @@ import java.util.*;
  * The program adds appropriate XML tags to each line.
  * Output is saved to a new file that has transformed the original text into an XML file.
  *    NB: The new file does not display accented characters in Eclipse, so open it in TextEdit!
- * NOTE: Many further edits were made to the OriginalTextXML after creating it using this file.
- * Also see the "XML Guide" and "Copy and Paste Instructions" documents.
+ * Also see the "Copy and Paste Instructions" document.
  * @author alisonychang
  */
 
-public class TextReader {
+public class ModFrEncoder {
 
 	private int numOfImages = 0; // Counts # of images on a folio page
 	private int numOfLines = 0; // Counts number of textual lines 
@@ -30,15 +29,15 @@ public class TextReader {
 
 	// These ints are used to count line numbers for the poem
 	private int endLine = 0;
-	private int linePlace = 1;
+	private int linePlace = 1; // 2741 for 2nd (my) half of ModFr
 	private int pageLineNum = 1; // The line number, starting over at 1 for each new page
 
 	private String pageString = ""; // i.e. "1r" or "3v"; this will be reset as we enter a new page
-	private String ID = ""; // ID for an object in Fauvel, i.e. 1rMo1 = First motet on Fo1r
+	private String ID = ""; // i.e. 1rMo1
 
-	private ArrayList<String> poemQueue; // Used to count/print lines of poetry, since the tag at the start of the section ("Te_XXXX-XXXX") needs to know what the last line will be
-	File editedF = new File("FauvelEdited.txt"); // The XML-tagged transformed version of the text; program output
-	private ArrayList<Music> musicGenres; // Used to identify all types of music in Fauvel
+	private ArrayList<String> poemQueue; // Used to count/print lines of poetry
+	File editedF = new File("ModFrXML.txt"); // The XML-tagged transformed version of the text; program output
+	private ArrayList<Music> musicGenres;
 
 
 
@@ -48,7 +47,7 @@ public class TextReader {
 	 * Constructs a new text reader for Fauvel text.
 	 * @param file The file to be read.
 	 */
-	public TextReader(File file){
+	public ModFrEncoder(File file){
 		makeMusicGenres();
 		readFile(file);
 	}
@@ -65,38 +64,41 @@ public class TextReader {
 			poemQueue = new ArrayList<String>();
 			p.print("<xml>\n<text>\n<body>"); // Starting XML code at top of document
 
-			while(in.hasNext()){ // Reads from original .txt file (copied + pasted from PDF)
+			while(in.hasNext()){	
 
-				String thisLine = lineNumChopper(in.nextLine()); // Removes any starting numbers
+				String thisLine = lineNumChopper(in.nextLine()); // Deals with any starting numbers
 
 
 				if(!thisLine.equals("")){ // Skip blank lines
 
 					// If the line indicates a page break but is not a poem line starting w "Fo"
 					if(thisLine.startsWith("Fo")&&dataType!=poem&&dataType!=music&&dataType!=motet){
-						pageString = thisLine.substring(2);  // Removes "Fo"
-						if(Character.isDigit(thisLine.charAt(thisLine.length()-1))) // No r or v at end
-							pageString += "r"; // Adds the default "r" to end, since "Fo3" means "Fo3r", etc.
+						pageString = thisLine.substring(2); 
+						if(Character.isDigit(thisLine.charAt(thisLine.length()-1))) // No r or v
+							pageString += "r"; // Adds the default "r" to end
 
 						newPage(); // Resets all motet/image/etc counts to 0
-						p.print("\n\n\n\n\n<pb facs=\"#"+pageString+"\" />\n\n");
+						p.print("\n\n\n\n\n<pb facs=\"#"+pageString+"\">\n\n");
 						dataType = 0;
 					}
 					
-					else if(thisLine.startsWith("#")) // # indicates a comment
+					else if(thisLine.startsWith("#"))
 						p.print(thisLine+"\n");
 					
 					
 
-					// First (ONLY) line of miniature (image)
+					// First (ONLY) line of miniature
 					else if(thisLine.startsWith("Miniature")||thisLine.contains("miniature")){
 						numOfImages++;
-						p.print("\n<figure xml:id=\""+pageString+"Im"+numOfImages+"\">\n<figDesc>\n"
+						p.print("\n<figure id=\""+pageString+"Im"+numOfImages+"\">\n<figDesc>\n"
 								+thisLine+"\n</figDesc>\n</figure>\n\n");
 						dataType=0;
 					}
-
-
+					
+					else if(thisLine.startsWith("ENDFOLIO"))
+						p.print("\n</pb>\n");
+					
+					
 					// First line of poem
 					// We do not print to file immediately bc we need to wait to count lines
 					else if(thisLine.startsWith("STARTPOEM"))
@@ -107,7 +109,7 @@ public class TextReader {
 					else if(thisLine.startsWith("ENDPOEM")){
 						numOfLines = poemQueue.size();
 						endLine = linePlace + numOfLines - 1;
-						p.print("\n<lg xml:id=\"Te_"+String.format("%04d", linePlace)+"-"
+						p.print("\n<lg id=\"Te_"+String.format("%04d", linePlace)+"-"
 								+String.format("%04d", endLine)+"\">\n"); // Forces format to 4 digits
 
 
@@ -120,8 +122,7 @@ public class TextReader {
 								s = s.substring(3);
 							}
 
-							// Imagine "« M- Mais combien..."
-                            // "¬´" is the non-UTF form of "«" for when special characters are not displayed properly
+							// Imagine « M- Mais combien...
 							else if((s.startsWith("«")||s.startsWith("¬´")||s.startsWith(" «"))&&s.contains("-")){
 								int index1 = s.indexOf("¬´");
 								int index2 = s.indexOf("-");
@@ -145,32 +146,31 @@ public class TextReader {
 						numOfMotets++;
 						dataType = motet;
 						ID = pageString + "Mo" + numOfMotets;
-						p.print("\n<notatedMusic xml:id=\""+ID+"\">\n<ptr\ntarget=\"\"" +
+						p.print("\n<notatedMusic id=\""+ID+"\">\n<ptr\ntarget=\"\"" +
 								"\nmimeType=\"\" />\n</notatedMusic>\n");
 
-						p.print("\n\n<p xml:id=\""+ ID +"_t\">" + thisLine + "\n<nv>  </nv>\n");
+						p.print("\n\n<p id=\""+ ID +"_t\">" + thisLine + "\n<nv>  </nv>\n");
 
 					}
 
-                    // Non-motet types of music
+
 					else if(isMusicGenre(thisLine, musicGenres)&&dataType==0&&!thisLine.startsWith("Motet")){
-						Music thisMusic = whichGenre(thisLine,musicGenres); // Identifies which music genre
-						ID = pageString + thisMusic.nickname + thisMusic.numOnPage; 
-						p.print("\n<notatedMusic xml:id=\""+ID+"\">\n<ptr\ntarget=\"\"" +
+						Music thisMusic = whichGenre(thisLine,musicGenres); // IDs music genre
+						ID = pageString + thisMusic.nickname + thisMusic.numOnPage;
+						p.print("\n<notatedMusic id=\""+ID+"\">\n<ptr\ntarget=\"\"" +
 								"\nmimeType=\"\" />\n</notatedMusic>\n");
 						dataType = music;
-                        
-						// i.e. "Refrain 3: T- Tout le cuer..." (434)
+						// Refrain 3: T- Tout le cuer... (434)
 						if(thisMusic.name.equals("Refrain")&&thisLine.contains(":")&&thisLine.contains("-")){
 							int index1 = thisLine.indexOf(":");
 							int index2 = thisLine.indexOf("-");
 							String start = thisLine.substring(0, index1+1);
 							String dropCap = tagDropCap(thisLine.substring(index2-1,index2));
 							thisLine = thisLine.substring(index2+1);
-							p.print("\n<p xml:id=\""+ ID +"_t\">"+dropCap+start+thisLine+"\n");
+							p.print("\n<p id=\""+ ID +"_t\">"+dropCap+start+thisLine+"\n");
 						}
 						else
-							p.print("\n<p xml:id=\""+ ID +"_t\">" + thisLine + "\n");
+							p.print("\n<p id=\""+ ID +"_t\">" + thisLine + "\n");
 
 					}
 
@@ -182,24 +182,25 @@ public class TextReader {
 					}
 
 
-                    // Rubrique is a special type of text separate from poetry
+
 					else if(thisLine.startsWith("Rubrique")){
 						numOfRubriques++;
-						p.print("\n<text xml:id=\""+pageString+"Rub"+numOfRubriques+"\">\n<rubrique>\n"
+						p.print("\n<text id=\""+pageString+"Rub"+numOfRubriques+"\">\n<rubrique>\n"
 								+thisLine+"\n</rubrique>\n</text>\n\n");
 						dataType=0;
 					}
 
 					// Single case on Strubel (574)
 					else if(thisLine.startsWith("Prière")||thisLine.startsWith("PrieÃÄre")){
-						p.print("\n<text xml:id=\""+pageString+"Pri\">\n<priere>\n"+thisLine+"\n</priere>\n</text>\n\n");
+						p.print("\n<text id=\""+pageString+"Pri\">\n<priere>\n"+thisLine+"\n</priere>\n</text>\n\n");
 						dataType=0;
 					}
 
-					// This is specifically for the last two lines - the scribal explicit 
-					else if(thisLine.startsWith("Explicit, expliceat")){
+					// This is specifically for the first of the last two lines... 
+					// Do we need a way to deal with it in the code, or should it be manual fix?
+					else if(thisLine.startsWith("C'est fini, bien fini.")){
 						dataType = explicit;
-						p.print("\n<text xml:id=\""+pageString+"Ex\">\n<explicit>\n"
+						p.print("\n<text id=\""+pageString+"Ex\">\n<explicit>\n"
 								+thisLine+"\n");
 					}
 
@@ -238,8 +239,7 @@ public class TextReader {
 										p.print(thisLine+"\n");
 
 								}
-                                
-                                // i.e. "D- De torcher Fauvel..."
+
 								else if(thisLine.substring(1,2).equals("-")){ 
 									dropCap = tagDropCap(thisLine.substring(0,1));
 									if(thisLine.length()>=3){
@@ -299,10 +299,8 @@ public class TextReader {
 		return tagged;
 	}
 
-    
 	/**
-	 * 	Creating a MusicGenre object for each type we find in this manuscript.
-     *  See Music.java for more info about the object.
+	 * 	Creating a MusicGenre object for each type we find in this manuscript
 	 */
 	private void makeMusicGenres(){
 
@@ -315,15 +313,15 @@ public class TextReader {
 		musicGenres.add(new Music("Chanson", "Chs"));
 		musicGenres.add(new Music("Chant", "Chn"));
 		musicGenres.add(new Music("Composition", "Com"));
-		musicGenres.add(new Music("Conductus", "Con"));
+		musicGenres.add(new Music("Conduit", "Con"));
 		musicGenres.add(new Music("Fatras", "Fa"));
 		musicGenres.add(new Music("Lay", "Lai", "La"));
-		musicGenres.add(new Music("PieÃÄce finale", "Mo")); 	
+		musicGenres.add(new Music("Pièce finale", "Mo")); 	
 		musicGenres.add(new Music("Prosa", "Prose", "Pr"));
 		musicGenres.add(new Music("Refrain", "Sotte chanson", "Ref"));
-		musicGenres.add(new Music("Repons", "Respons", "Rep"));
+		musicGenres.add(new Music("Répons", "Respons", "Rep"));
 		musicGenres.add(new Music("Rondeau", "Ro"));
-		musicGenres.add(new Music("Sequence", "Se"));
+		musicGenres.add(new Music("Séquence", "Se"));
 		musicGenres.add(new Music("Verset", "Ve"));
 
 	}
@@ -414,12 +412,10 @@ public class TextReader {
 		}
 		return fixedLine;
 	}
-    
-    
-    
-    public static void main(String[] args) {
-		TextReader TR = new TextReader(new File("Fauvel.txt"));
-		
+	
+	public static void main(String[] args)
+	{
+		ModFrEncoder mfe = new ModFrEncoder(new File ("ModFrFauvel.txt"));
+	
 	}
-
 }

@@ -12,13 +12,16 @@ namespace SurfaceApplication1
      * */
     public class SavedPage
     {
-        public Point center;
-        public double width;
-        public int pageNum;
-        public SurfaceWindow1.language language;
         public Button button;
+        public double width;
         public Image image;
+        public int pageNum;
+        public Point center;
         private SurfaceWindow1 SurfaceWindow;
+        public SurfaceWindow1.language language;
+
+
+
 
         public SavedPage(int p, double w, Point c, SurfaceWindow1.language l, SurfaceWindow1 SurfaceWindow)
         {
