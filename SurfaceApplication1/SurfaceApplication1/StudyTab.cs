@@ -30,24 +30,25 @@ namespace DigitalFauvel
      * */
     class StudyTab : SideBarTab
     {
-        public TextBlock studyTabHeader;
-        public TextBlock studyPrompt;
-        public Button mono, poly;
-        public ToggleButton v1_mute, v1_solo, tenor_mute, tenor_solo;
-        public TextBlock musicTitle;
-        public Button playpause_1, stop_1, playpause_2, stop_2;
+
+        public Button mono, poly, playpause, stop, selectAudioButton; 
+        public Canvas notesCanvas, notesTabCanvas;
+        public Expander fullExp, v1Exp, tenorExp;
+        public Grid mo_lb1, mo_lb2, mo_lb3;
+        public Image musicImg, musicImg1, musicImg2, musicImg3, v1_Img, tenor_Img;
+        public List<ListBoxItem> audioOptions;
+        public ListBox selectAudioListBox;
+        public ListBoxItem v1_name_lb, v1_mute_lb, v1_solo_lb, tenor_name_lb, tenor_mute_lb, tenor_solo_lb, space1, space2, 
+            selectAudio, MIDI, liveRecording, lastAudioChoice;
+        public MediaPlayer play_2rCon1, play_2vMo2_v1, play_2vMo2_tenor;
+        public StackPanel motetParts, motetScore, v1_buttons, tenor_buttons;
+        public SurfaceScrollViewer noteScroll;
         public TabControl display;
         public TabItem notesTab, mod_frenchTab, engTab;
-        public Canvas notesCanvas, notesTabCanvas;
-        public Image musicImg, musicImg1, musicImg2, musicImg3, v1_Img, tenor_Img;
-        public StackPanel motetParts, motetScore, v1_buttons, tenor_buttons;
-        public Grid mo_lb1, mo_lb2, mo_lb3;
-        public ListBoxItem v1_name_lb, v1_mute_lb, v1_solo_lb, tenor_name_lb, tenor_mute_lb, tenor_solo_lb;
-        public ListBoxItem space1, space2;
-        public Expander fullExp, v1Exp, tenorExp;
-        public TextBlock mod_frenchText, engText;
-        public SurfaceScrollViewer noteScroll;
-        public MediaPlayer play_2rCon1, play_2vMo2_v1, play_2vMo2_tenor;
+        public TextBlock studyTabHeader, studyPrompt, mod_frenchText, engText, musicTitle;
+        public ToggleButton v1_mute, v1_solo, tenor_mute, tenor_solo;
+
+
 
         public StudyTab(SideBar mySideBar, SurfaceWindow1 surfaceWindow) : base(mySideBar)
         {
@@ -97,202 +98,188 @@ namespace DigitalFauvel
             poly.Click += new RoutedEventHandler(study_Poly);
         }
 
-        // Monophonic music study page (other monophonic pieces should follow this format).
-        private void study_Mono(object sender, RoutedEventArgs e)
+
+        private void musicControls(String musicName, String musicAbbrv)
         {
             canvas.Children.Remove(studyPrompt);
             canvas.Children.Remove(mono);
             canvas.Children.Remove(poly);
 
+
             // Title of the piece.
             musicTitle = new TextBlock();
             Canvas.SetLeft(musicTitle, 15);
             Canvas.SetTop(musicTitle, 45);
-            musicTitle.Text = "Conductus : Heu ! Quo progreditur (PM 6)";
+            musicTitle.Text = musicName; //
             musicTitle.FontSize = 30;
-            studyTabHeader.Text = "2rCon1";
+            studyTabHeader.Text = musicAbbrv; //
 
             // Play/Pause and Stop buttons.
-            playpause_1 = new Button();
-            stop_1 = new Button();
-            Canvas.SetLeft(playpause_1, 15);
-            Canvas.SetTop(playpause_1, 90);
-            Canvas.SetLeft(stop_1, 65);
-            Canvas.SetTop(stop_1, 90);
-            playpause_1.Height = 50;
-            playpause_1.Width = 50;
-            stop_1.Height = 50;
-            stop_1.Width = 50;
-            playpause_1.Content = "►";
-            stop_1.Content = "■";
-            playpause_1.FontSize = 35;
-            stop_1.FontSize = 30;
+            playpause = new Button();
+            stop = new Button();
+            Canvas.SetLeft(playpause, 15);
+            Canvas.SetTop(playpause, 90);
+            Canvas.SetLeft(stop, 65);
+            Canvas.SetTop(stop, 90);
+            playpause.Height = 50;
+            playpause.Width = 50;
+            stop.Height = 50;
+            stop.Width = 50;
+            playpause.Content = "►";
+            stop.Content = "■";
+            playpause.FontSize = 35;
+            stop.FontSize = 30;
 
-            // Tab display for the modern notation, modern french lyrics and english lyrics.
+            // ListBox for audio options
+            selectAudioButton = new Button();
+            selectAudioListBox = new ListBox();
+            selectAudio = new ListBoxItem();
+            MIDI = new ListBoxItem();
+            liveRecording = new ListBoxItem();
+            audioOptions = new List<ListBoxItem>();
+
+            selectAudio.Content = (String)"Select audio:";
+            MIDI.Content = (String)"MIDI";
+            liveRecording.Content = (String)"Live recording";
+
+            audioOptions.Add(selectAudio);
+            audioOptions.Add(MIDI);
+            audioOptions.Add(liveRecording);
+
+            foreach (ListBoxItem lbi in audioOptions)
+            {
+                lbi.Height = 50;
+                lbi.FontSize = 25;
+                selectAudioListBox.Items.Add(lbi);
+                lbi.HorizontalAlignment = HorizontalAlignment.Center;
+                lbi.Selected += new RoutedEventHandler(audioOptionSelected);
+                lbi.TouchDown += new EventHandler<TouchEventArgs>(audioOptionSelected);
+            }
+
+            selectAudioButton.Width = 180;
+            selectAudioButton.Height = 50;
+            selectAudioButton.Content = (String)"Select audio:";
+            selectAudioButton.FontSize = 25;
+            selectAudioListBox.Width = 180;
+            Canvas.SetTop(selectAudioListBox, 90);
+            Canvas.SetLeft(selectAudioListBox, 140);
+            Canvas.SetTop(selectAudioButton, 90);
+            Canvas.SetLeft(selectAudioButton, 140);
+
+            selectAudioButton.Visibility = Visibility.Visible;
+            selectAudioListBox.Visibility = Visibility.Hidden;
+            selectAudioButton.Click += new RoutedEventHandler(showAudioOptions);
+            selectAudioButton.TouchDown += new EventHandler<TouchEventArgs>(showAudioOptions);
+
+            
+
             display = new TabControl();
-            notesTab = new TabItem();
-            mod_frenchTab = new TabItem();
-            engTab = new TabItem();
-            notesTabCanvas = new Canvas();
-            noteScroll = new SurfaceScrollViewer();
-            notesCanvas = new Canvas();
-            musicImg = new Image();
-            mod_frenchText = new TextBlock();
-            engText = new TextBlock();
-
             Canvas.SetLeft(display, 15);
             Canvas.SetTop(display, 150);
             display.Height = 860;
             display.Width = 580;
 
+
+            notesTab = new TabItem();
             notesTab.Header = "Modern Notation";
             notesTab.Height = 50;
             notesTab.Width = 200;
             notesTab.FontSize = 20;
 
+
+
+            mod_frenchTab = new TabItem(); 
+            mod_frenchText = new TextBlock();
             mod_frenchTab.Header = "Modern French";
             mod_frenchTab.Height = 50;
             mod_frenchTab.Width = 175;
             mod_frenchTab.FontSize = 20;
+            mod_frenchTab.Content = mod_frenchText;
 
+            engTab = new TabItem();
+            engText = new TextBlock();
             engTab.Header = "English";
             engTab.Height = 50;
             engTab.Width = 175;
             engTab.FontSize = 20;
-            
+            engTab.Content = engText;
+
+            noteScroll = new SurfaceScrollViewer();
+            notesTabCanvas = new Canvas();
+            notesCanvas = new Canvas();
+
+            noteScroll.Height = 860;
+            noteScroll.Width = 580;
             noteScroll.VerticalScrollBarVisibility = ScrollBarVisibility.Auto;
             noteScroll.HorizontalScrollBarVisibility = ScrollBarVisibility.Auto;
             noteScroll.PanningMode = PanningMode.VerticalOnly;
-
-            notesCanvas.Width = 580;
-            notesCanvas.Height = 860;
-
-            // modern music notation image file
-            musicImg.Source = new BitmapImage(new Uri(@"..\..\musicz\2rCo1.png", UriKind.Relative));
-            musicImg.Width = 580;
-            musicImg.Height = 860;
-
-            // Fetch the modern french lyrics from Alison's handy method.
-            mod_frenchTab.Content = mod_frenchText;
-            mod_frenchText.Text = Search.getByTag("2rCon1_t", SurfaceWindow1.modFrXml);
-
-            // This one is hardcoded in because we don't have any English lyrics in an XML file yet.
-            engTab.Content = engText;
-            engText.Text = "Oh, how far transgression\nis spreading!\nVirtue is dislodged\nfrom the sanctuary.\nNow Christ is dragged\nto a new tribunal,\nwith Peter using\nthe sword of Pilate.\nRelying on the counsel\nof Fauvel,\none comes to grief;\nthe celestial legion\njustly complains.\nTherefore it begs\nthe Father and the Son\nthat for a remedy\nfor all this\nimmediately\nthe fostering Spirit provide.";
-
-            notesCanvas.Children.Add(musicImg);
             noteScroll.Content = notesCanvas;
-            notesTabCanvas.Children.Add(noteScroll);
+
+
+
             notesTab.Content = notesTabCanvas;
+            notesTabCanvas.Children.Add(noteScroll);
+
+            canvas.Children.Add(selectAudioButton);
+            canvas.Children.Add(selectAudioListBox);
+            canvas.Children.Add(musicTitle);
+            canvas.Children.Add(playpause);
+            canvas.Children.Add(stop);
+            canvas.Children.Add(display);
 
             display.Items.Add(notesTab);
             display.Items.Add(mod_frenchTab);
             display.Items.Add(engTab);
+        }
+
+
+        // Monophonic music study page (other monophonic pieces should follow this format).
+        private void study_Mono(object sender, RoutedEventArgs e)
+        {
+            musicControls("Conductus : Heu ! Quo progreditur (PM 6)", "2rCon1");
+
+            playpause.Click += new RoutedEventHandler(playpause_1_Click);
+            stop.Click += new RoutedEventHandler(stop_1_Click);
+            mod_frenchText.Text = Search.getByTag("2rCon1_t", SurfaceWindow1.modFrXml);
+            // This one is hardcoded in because we don't have any English lyrics in an XML file yet.
+            engText.Text = "Oh, how far transgression\nis spreading!\nVirtue is dislodged\nfrom the sanctuary.\nNow Christ is dragged\nto a new tribunal,\nwith Peter using\nthe sword of Pilate.\nRelying on the counsel\nof Fauvel,\none comes to grief;\nthe celestial legion\njustly complains.\nTherefore it begs\nthe Father and the Son\nthat for a remedy\nfor all this\nimmediately\nthe fostering Spirit provide.";
+
+
+            notesCanvas.Width = 580;
+            notesCanvas.Height = 860;
+
+
+            // modern music notation image file
+            musicImg = new Image();
+            musicImg.Source = new BitmapImage(new Uri(@"..\..\musicz\2rCo1.png", UriKind.Relative));
+            musicImg.Width = 580;
+            musicImg.Height = 860;
+
+            
+            notesCanvas.Children.Add(musicImg);
+
 
             // Create mediaplayer for audio playback.
             play_2rCon1 = new MediaPlayer();
             play_2rCon1.Open(new Uri(@"..\..\musicz\2rCo1.wma", UriKind.Relative));
             play_2rCon1.MediaEnded += new EventHandler(play_2rCon1_MediaEnded);
 
-            // Add to this canvas.
-            canvas.Children.Add(musicTitle);
-            canvas.Children.Add(playpause_1);
-            canvas.Children.Add(stop_1);
-            canvas.Children.Add(display);
-
-            // Add listeners.
-            playpause_1.Click += new RoutedEventHandler(playpause_1_Click);
-            stop_1.Click += new RoutedEventHandler(stop_1_Click);
+            
         }
 
-        
-        void playpause_1_Click(object sender, RoutedEventArgs e)
-        {
-            if ((string)playpause_1.Content == "||")
-            {
-                playpause_1.Content = "►";
-                playpause_1.FontSize = 35;
-                if (play_2rCon1.CanPause)
-                    play_2rCon1.Pause();
-            }
-            else if ((string)playpause_1.Content == "►")
-            {
-                playpause_1.Content = "||";
-                playpause_1.FontSize = 25;
-                play_2rCon1.Play();
-            }
-        }
 
-        void stop_1_Click(object sender, RoutedEventArgs e)
-        {
-            playpause_1.Content = "►";
-            playpause_1.FontSize = 35;
-            play_2rCon1.Stop();
-        }
-
-        void play_2rCon1_MediaEnded(object sender, EventArgs e)
-        {
-            playpause_1.Content = "►";
-            playpause_1.FontSize = 35;
-            play_2rCon1.Stop();
-        }
 
         // Polyphonic music study page (other polyphonic pieces should follow this format).
         void study_Poly(object sender, RoutedEventArgs e)
         {
-            canvas.Children.Remove(studyPrompt);
-            canvas.Children.Remove(mono);
-            canvas.Children.Remove(poly);
+            musicControls("Ad solitum vomitum", "2vMo2");
 
-            // Piece title
-            musicTitle = new TextBlock();
-            Canvas.SetLeft(musicTitle, 15);
-            Canvas.SetTop(musicTitle, 45);
-            //musicTitle.Height = 40;
-            //musicTitle.Width = 500;
-            musicTitle.Text = "Ad solitum vomitum";
-            musicTitle.FontSize = 30;
-            studyTabHeader.Text = "2vMo2";
+            playpause.Click += new RoutedEventHandler(playpause_2_Click);
+            stop.Click += new RoutedEventHandler(stop_2_Click);
+            mod_frenchText.Text = Search.getByTag("2vMo2_t", SurfaceWindow1.modFrXml);
+            engText.Text = "No English translated lyrics for this piece YET!";
 
-            // Play/Pause and Stop buttons
-            playpause_2 = new Button();
-            stop_2 = new Button();
-            Canvas.SetLeft(playpause_2, 15);
-            Canvas.SetTop(playpause_2, 90);
-            Canvas.SetLeft(stop_2, 65);
-            Canvas.SetTop(stop_2, 90);
-            playpause_2.Height = 50;
-            playpause_2.Width = 50;
-            stop_2.Height = 50;
-            stop_2.Width = 50;
-            playpause_2.Content = "►";
-            stop_2.Content = "■";
-            playpause_2.FontSize = 35;
-            stop_2.FontSize = 30;
-
-            // Tab control display for modern notation, modern french and english
-            display = new TabControl();
-            Canvas.SetLeft(display, 15);
-            Canvas.SetTop(display, 150);
-            display.Height = 860;
-            display.Width = 580;
-
-            notesTab = new TabItem();
-            notesTab.Header = "Modern Notation";
-            notesTab.Height = 50;
-            notesTab.Width = 200;
-            notesTab.FontSize = 20;
-
-            notesTabCanvas = new Canvas();
-            notesTab.Content = notesTabCanvas;
-            noteScroll = new SurfaceScrollViewer();
-            notesTabCanvas.Children.Add(noteScroll);
-            noteScroll.Height = 860;
-            noteScroll.Width = 580;
-            noteScroll.VerticalScrollBarVisibility = ScrollBarVisibility.Auto;
-            noteScroll.HorizontalScrollBarVisibility = ScrollBarVisibility.Auto;
-            noteScroll.PanningMode = PanningMode.VerticalOnly;
-
+            
             // StackPanel for the expandable parts to stack on top of eachother.
             motetParts = new StackPanel();
             motetParts.Orientation = Orientation.Vertical;
@@ -436,36 +423,11 @@ namespace DigitalFauvel
             motetParts.Children.Add(v1Exp);
             motetParts.Children.Add(tenorExp);
 
-            notesCanvas = new Canvas();
             notesCanvas.Width = 560;
             notesCanvas.Height = 4000;
-            noteScroll.Content = notesCanvas;
             notesCanvas.Children.Add(motetParts);
 
-            mod_frenchTab = new TabItem();
-            mod_frenchTab.Header = "Modern French";
-            mod_frenchTab.Height = 50;
-            mod_frenchTab.Width = 175;
-            mod_frenchTab.FontSize = 20;
 
-            // Fetch the modern french lyrics from Alison's handy method.
-            mod_frenchText = new TextBlock();
-            mod_frenchTab.Content = mod_frenchText;
-            mod_frenchText.Text = Search.getByTag("2vMo2_t", SurfaceWindow1.modFrXml);
-
-            engTab = new TabItem();
-            engTab.Header = "English";
-            engTab.Height = 50;
-            engTab.Width = 175;
-            engTab.FontSize = 20;
-
-            // We don't yet have the English lyrics for any polyphonic pieces.
-            engText = new TextBlock();
-            engTab.Content = engText;
-            engText.Text = "No English translated lyrics for this piece YET!";
-            display.Items.Add(notesTab);
-            display.Items.Add(mod_frenchTab);
-            display.Items.Add(engTab);
 
             // Create mediaplayers for each voice for audio playback.
             play_2vMo2_v1 = new MediaPlayer();
@@ -474,15 +436,9 @@ namespace DigitalFauvel
             play_2vMo2_tenor.Open(new Uri(@"..\..\musicz\2vMo2_tenor.wma", UriKind.Relative));
             play_2vMo2_tenor.MediaEnded += new EventHandler(play_2vMo2_tenor_MediaEnded);
 
-            // Add to this canvas.
-            canvas.Children.Add(musicTitle);
-            canvas.Children.Add(playpause_2);
-            canvas.Children.Add(stop_2);
-            canvas.Children.Add(display);
+
 
             // Add listeners.
-            playpause_2.Click += new RoutedEventHandler(playpause_2_Click);
-            stop_2.Click += new RoutedEventHandler(stop_2_Click);
 
             v1_mute.Checked += new RoutedEventHandler(v1_mute_Checked);
             v1_solo.Checked += new RoutedEventHandler(v1_solo_Checked);
@@ -495,6 +451,75 @@ namespace DigitalFauvel
             tenor_solo.Unchecked += new RoutedEventHandler(tenor_solo_Unchecked);
         }
 
+
+        void showAudioOptions(object sender, RoutedEventArgs e)
+        {
+            selectAudioButton.Visibility = System.Windows.Visibility.Hidden;
+            selectAudioListBox.Visibility = System.Windows.Visibility.Visible;
+        }
+
+        // Note: This gets weird if you select "Select audio:" twice in a row
+        void audioOptionSelected(object sender, RoutedEventArgs e)
+        {
+            ListBoxItem lbi = sender as ListBoxItem;
+
+            if (lbi != selectAudio)
+            {
+                lastAudioChoice = lbi;
+                selectAudioButton.Content = lbi.Content;
+            }
+            else 
+                selectAudioListBox.SelectedItem = lastAudioChoice;
+
+            selectAudioButton.Visibility = System.Windows.Visibility.Visible;
+            selectAudioListBox.Visibility = System.Windows.Visibility.Hidden;
+        }
+
+        
+        void playpause_1_Click(object sender, RoutedEventArgs e)
+        {
+            if ((string)playpause.Content == "||")
+            {
+                playpause.Content = "►";
+                playpause.FontSize = 35;
+                if (play_2rCon1.CanPause)
+                    play_2rCon1.Pause();
+            }
+            else if ((string)playpause.Content == "►")
+            {
+                playpause.Content = "||";
+                playpause.FontSize = 25;
+                play_2rCon1.Play();
+            }
+        }
+
+        void playpause_2_Click(object sender, RoutedEventArgs e)
+        {
+            if ((string)playpause.Content == "||")
+            {
+                playpause.Content = "►";
+                playpause.FontSize = 35;
+                play_2vMo2_v1.Pause();
+                play_2vMo2_tenor.Pause();
+            }
+            else if ((string)playpause.Content == "►")
+            {
+                playpause.Content = "||";
+                playpause.FontSize = 25;
+                play_2vMo2_v1.Play();
+                play_2vMo2_tenor.Play();
+            }
+        }
+
+
+        void play_2rCon1_MediaEnded(object sender, EventArgs e)
+        {
+            playpause.Content = "►";
+            playpause.FontSize = 35;
+            play_2rCon1.Stop();
+        }
+
+
         void v1_mute_Checked(object sender, RoutedEventArgs e)
         {
             v1Exp.Opacity = 0.7;
@@ -505,10 +530,10 @@ namespace DigitalFauvel
             {
                 play_2vMo2_tenor.Stop();
                 play_2vMo2_v1.Stop();
-                playpause_2.IsEnabled = false;
-                stop_2.IsEnabled = false;
-                playpause_2.FontSize = 35;
-                playpause_2.Content = "►";
+                playpause.IsEnabled = false;
+                stop.IsEnabled = false;
+                playpause.FontSize = 35;
+                playpause.Content = "►";
             }
 
             play_2vMo2_v1.IsMuted = true;
@@ -531,10 +556,10 @@ namespace DigitalFauvel
             {
                 play_2vMo2_tenor.Stop();
                 play_2vMo2_v1.Stop();
-                playpause_2.IsEnabled = false;
-                stop_2.IsEnabled = false;
-                playpause_2.FontSize = 35;
-                playpause_2.Content = "►";
+                playpause.IsEnabled = false;
+                stop.IsEnabled = false;
+                playpause.FontSize = 35;
+                playpause.Content = "►";
             }
             play_2vMo2_tenor.IsMuted = true;
         }
@@ -553,8 +578,8 @@ namespace DigitalFauvel
             if (!(bool)tenor_solo.IsChecked)
                 v1_solo.IsEnabled = true;
 
-            playpause_2.IsEnabled = true;
-            stop_2.IsEnabled = true;
+            playpause.IsEnabled = true;
+            stop.IsEnabled = true;
             play_2vMo2_v1.IsMuted = false;
         }
 
@@ -572,8 +597,8 @@ namespace DigitalFauvel
             if (!(bool)v1_solo.IsChecked)
                 tenor_solo.IsEnabled = true;
 
-            playpause_2.IsEnabled = true;
-            stop_2.IsEnabled = true;
+            playpause.IsEnabled = true;
+            stop.IsEnabled = true;
             play_2vMo2_tenor.IsMuted = false;
         }
 
@@ -585,36 +610,25 @@ namespace DigitalFauvel
             play_2vMo2_v1.IsMuted = false;
         }
 
-        void playpause_2_Click(object sender, RoutedEventArgs e)
-        {
-            if ((string)playpause_2.Content == "||")
-            {
-                playpause_2.Content = "►";
-                playpause_2.FontSize = 35;
-                play_2vMo2_v1.Pause();
-                play_2vMo2_tenor.Pause();
-            }
-            else if ((string)playpause_2.Content == "►")
-            {
-                playpause_2.Content = "||";
-                playpause_2.FontSize = 25;
-                play_2vMo2_v1.Play();
-                play_2vMo2_tenor.Play();
-            }
-        }
 
+        void stop_1_Click(object sender, RoutedEventArgs e)
+        {
+            playpause.Content = "►";
+            playpause.FontSize = 35;
+            play_2rCon1.Stop();
+        }
         void stop_2_Click(object sender, RoutedEventArgs e)
         {
-            playpause_2.Content = "►";
-            playpause_2.FontSize = 35;
+            playpause.Content = "►";
+            playpause.FontSize = 35;
             play_2vMo2_v1.Stop();
             play_2vMo2_tenor.Stop();
         }
 
         void play_2vMo2_tenor_MediaEnded(object sender, EventArgs e)
         {
-            playpause_2.Content = "►";
-            playpause_2.FontSize = 35;
+            playpause.Content = "►";
+            playpause.FontSize = 35;
             play_2vMo2_v1.Stop();
             play_2vMo2_tenor.Stop();
         }

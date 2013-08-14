@@ -30,7 +30,18 @@
                     <DockPanel>
 
                         <Grid>
-                            <Image Width="100" Height="40" Source="icons/pencil.jpg" Opacity="0.3"/>
+                            <Image Width="100" Height="40" Source="icons/pencil.png" Opacity="0.2"/>
+                            <TextBlock Text="" VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="21"/>
+                        </Grid>
+
+                    </DockPanel>
+                </DataTemplate>
+
+                <DataTemplate x:Key="NewSavedPagesTab" DataType="TabItem">
+                    <DockPanel>
+
+                        <Grid>
+                            <Image Width="100" Height="40" Source="icons/save.png" Opacity="0.2"/>
                             <TextBlock Text="" VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="21"/>
                         </Grid>
 
@@ -41,7 +52,7 @@
                     <DockPanel>
 
                         <Grid>
-                            <Image Width="100" Height="40" Source="icons/musicnote.png" Opacity="0.3"/>
+                            <Image Width="100" Height="40" Source="icons/music.png" Opacity="0.2"/>
                             <TextBlock Text="" VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="21"/>
                         </Grid>
 
@@ -123,8 +134,9 @@
                 <Style x:Key="ResultBorder" TargetType="Border">
                     <Setter Property="BorderBrush" Value="White"/> 
                     <Setter Property="BorderThickness" Value="1"/> 
-                    <Setter Property="Width" Value="472"/>
-                    <Setter Property="Height" Value="294"/>
+                    <Setter Property="Width" Value="515"/>
+                    <Setter Property="Height" Value="330"/>
+                    <Setter Property="Canvas.Top" Value="415"/>
                 </Style>
 
                 <Style x:Key="RoundSurfaceListBoxTemplate" TargetType="ListBox">

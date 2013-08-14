@@ -77,6 +77,7 @@ namespace DigitalFauvel
 
             Image img = new Image();
             img.Source = new BitmapImage(new Uri(@"..\..\icons\" + image, UriKind.Relative));
+            img.Opacity = 0.7;
             button.Content = img;
 
             TextBlock text = new TextBlock();
@@ -136,7 +137,7 @@ namespace DigitalFauvel
             int count = tabItems.Count;
             tabBar.DataContext = null;
             SavedPagesTab newTab = new SavedPagesTab(this);
-            newTab.Header = "Saved Pages";
+            newTab.HeaderTemplate = tabBar.FindResource("NewSavedPagesTab") as DataTemplate;
             newTab.Width = 100;
             tabItems.Insert(count - 1, newTab);
             tabBar.DataContext = tabItems;

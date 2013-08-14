@@ -164,7 +164,9 @@
     <Resource Include="icons\translationsBar.png" />
     <Resource Include="icons\ex.png" />
     <Resource Include="icons\exLarge.png" />
-    <Resource Include="icons\music.png" />
+    <Resource Include="icons\music.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
     <Resource Include="icons\pencil.png" />
     <Resource Include="icons\search.png" />
     <Content Include="minithumbnails\10rIm1.jpg">

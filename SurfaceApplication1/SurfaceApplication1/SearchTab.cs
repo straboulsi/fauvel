@@ -103,7 +103,7 @@ namespace DigitalFauvel
             imagesScroll = new SurfaceScrollViewer(); 
             imagesPanel = new StackPanel();
 
-            headerImage.Source = new BitmapImage(new Uri(@"..\..\icons\magnifyingglass.png", UriKind.Relative));
+            headerImage.Source = new BitmapImage(new Uri(@"..\..\icons\search.png", UriKind.Relative));
             searchTabHeader.HorizontalAlignment = HorizontalAlignment.Center;
             searchTabHeader.VerticalAlignment = VerticalAlignment.Center;
             searchTabHeader.FontSize = 21;
@@ -114,7 +114,7 @@ namespace DigitalFauvel
             Canvas.SetTop(searchPrompt, 26);
 
             searchQueryBox.Height = 40;
-            searchQueryBox.Width = 315;
+            searchQueryBox.Width = 380; //315
             searchQueryBox.Foreground = Brushes.Gray;
             searchQueryBox.FontSize = 21;
             searchQueryBox.Text = "Enter text";
@@ -126,7 +126,7 @@ namespace DigitalFauvel
             goSearch.FontSize = 21;
             goSearch.Content = "Go!";
             goSearch.IsEnabled = false;
-            Canvas.SetLeft(goSearch, 378);
+            Canvas.SetLeft(goSearch, 450); // 378
             Canvas.SetTop(goSearch, 90);
 
            
@@ -144,14 +144,14 @@ namespace DigitalFauvel
             moreOptions.HorizontalContentAlignment = HorizontalAlignment.Center;
             optionsGrid.Children.Add(downArrow);
             optionsGrid.Children.Add(moreOptText);
-            Canvas.SetLeft(moreOptions, 210);
-            Canvas.SetTop(moreOptions, 153);
+            Canvas.SetLeft(moreOptions, 230); //210
+            Canvas.SetTop(moreOptions, 145);
             
             
             topLine.X1 = 40;
-            topLine.Y1 = 163;
-            topLine.X2 = 500;
-            topLine.Y2 = 163;
+            topLine.Y1 = 160;
+            topLine.X2 = 540; // 500
+            topLine.Y2 = 160;
             topLine.Stroke = Brushes.Black;
             topLine.StrokeThickness = 2;
 
@@ -168,20 +168,20 @@ namespace DigitalFauvel
             caseSensitive.FontSize = 10;
             caseSensitive.LayoutTransform = st;
             caseSensitive.Content = (string)"Case sensitive";
-            Canvas.SetLeft(caseSensitive, 40);
+            Canvas.SetLeft(caseSensitive, 55); //40
             Canvas.SetTop(caseSensitive, 170);
             
 
             wholeWordOnly.FontSize = 10;
             wholeWordOnly.LayoutTransform = st;
             wholeWordOnly.Content = (string)"Match whole word only";
-            Canvas.SetLeft(wholeWordOnly, 243);
+            Canvas.SetLeft(wholeWordOnly, 300); //243
             Canvas.SetTop(wholeWordOnly, 170);
 
             exactPhraseOnly.FontSize = 10;
             exactPhraseOnly.LayoutTransform = st;
             exactPhraseOnly.Content = (string)"Match exact phrase only";
-            Canvas.SetLeft(exactPhraseOnly, 243);
+            Canvas.SetLeft(exactPhraseOnly, 300); // 243
             Canvas.SetTop(exactPhraseOnly, 227);
 
             selectLanguage.Background = Brushes.LightGray;
@@ -194,10 +194,9 @@ namespace DigitalFauvel
 
           
 
-            Canvas.SetLeft(selectLanguage, 34);
+            Canvas.SetLeft(selectLanguage, 50); //34
             Canvas.SetTop(selectLanguage, 220); 
-
-            Canvas.SetLeft(selectLanguageButton, 34);
+            Canvas.SetLeft(selectLanguageButton, 50); //34
             Canvas.SetTop(selectLanguageButton, 220);
             selectLanguageButton.Width = 175;
             selectLanguageButton.Height = 40;
@@ -225,7 +224,7 @@ namespace DigitalFauvel
 
             bottomLine.X1 = 40;
             bottomLine.Y1 = 183;
-            bottomLine.X2 = 500;
+            bottomLine.X2 = 540; //500
             bottomLine.Y2 = 183;
             bottomLine.Stroke = Brushes.Black;
             bottomLine.StrokeThickness = 2;
@@ -244,100 +243,80 @@ namespace DigitalFauvel
             fewerOptions.HorizontalContentAlignment = HorizontalAlignment.Center;
             fewerOptGrid.Children.Add(upArrow);
             fewerOptGrid.Children.Add(fewerOptText);
-            Canvas.SetLeft(fewerOptions, 210); // 225
+            Canvas.SetLeft(fewerOptions, 230); // 210
             Canvas.SetTop(fewerOptions, 280); // 285
 
 
 
             /// The objects on the search results section
             searchResults.Visibility = Visibility.Hidden;
-            searchResults.Height = 677;
-            searchResults.Width = 482;
+            searchResults.Height = 800; //677
+            searchResults.Width = 525; //482
             searchResults.FontSize = 21;
-            Canvas.SetLeft(searchResults, 30);
+            Canvas.SetLeft(searchResults, 35); //30
             Canvas.SetTop(searchResults, 180);
             searchResults.Items.Add(poetryTab);
             searchResults.Items.Add(lyricsTab);
             searchResults.Items.Add(imagesTab);
 
             poetryBorder = new Border();
-            //poetryBorder.BorderBrush = Brushes.White; // changed to darkgray after search is run
-            //poetryBorder.BorderThickness = new Thickness(1);
             poetryBorder.Child = poetryPanel;
             poetryBorder.Style = sideBar.tabBar.FindResource("ResultBorder") as Style;
-            //poetryBorder.Height = 294;
-            //poetryBorder.Width = 472;
 
             poetryTab.Header = "Poetry";
             poetryTab.Height = 40;
-            poetryTab.Width = 159;
+            poetryTab.Width = 170; 
             poetryTab.Content = poetryCanvas;
 
-            poetryCanvas.Height = 629;
+            poetryCanvas.Height = 750; 
             poetryCanvas.Children.Add(poetryScroll);
             poetryCanvas.Children.Add(poetryBorder);
 
-            poetryScroll.Height = 325;
-            poetryScroll.Width = 470;
-            //poetryScroll.Background = Brushes.LightGray;
-            //poetryScroll.VerticalScrollBarVisibility = ScrollBarVisibility.Visible;
+            poetryScroll.Height = 410; 
+            poetryScroll.Width = 513; 
             poetryScroll.VerticalScrollBarVisibility = ScrollBarVisibility.Auto;
             poetryScroll.HorizontalScrollBarVisibility = ScrollBarVisibility.Disabled;
             poetryScroll.PanningMode = PanningMode.VerticalOnly;
             poetryPanel.Orientation = Orientation.Horizontal;
 
-            Canvas.SetTop(poetryBorder, 331);
-
             lyricsBorder = new Border();
-            //lyricsBorder.BorderBrush = Brushes.White;
-            //lyricsBorder.BorderThickness = new Thickness(1);
             lyricsBorder.Child = lyricsPanel;
             lyricsBorder.Style = sideBar.tabBar.FindResource("ResultBorder") as Style;
-            //lyricsBorder.Height = 294;
-            //lyricsBorder.Width = 472;
 
 
             lyricsTab.Header = "Lyrics";
             lyricsTab.Height = 40;
-            lyricsTab.Width = 159;
+            lyricsTab.Width = 170;
             lyricsTab.Content = lyricsCanvas;
-            lyricsCanvas.Height = 629;
+            lyricsCanvas.Height = 750; 
             lyricsCanvas.Children.Add(lyricsScroll);
             lyricsCanvas.Children.Add(lyricsBorder);
-            lyricsScroll.Height = 325;
-            lyricsScroll.Width = 470;
-            //lyricsScroll.Background = Brushes.LightGray;
-            //lyricsScroll.VerticalScrollBarVisibility = ScrollBarVisibility.Visible;
+            lyricsScroll.Height = 410; 
+            lyricsScroll.Width = 513;
             lyricsScroll.HorizontalScrollBarVisibility = ScrollBarVisibility.Disabled;
             lyricsScroll.PanningMode = PanningMode.VerticalOnly;
             lyricsPanel.Orientation = Orientation.Horizontal;
 
-            Canvas.SetTop(lyricsBorder, 331);
-
+            
             imagesBorder = new Border();
-            //imagesBorder.BorderBrush = Brushes.White;
-            //imagesBorder.BorderThickness = new Thickness(1);
             imagesBorder.Child = imagesPanel;
             imagesBorder.Style = sideBar.tabBar.FindResource("ResultBorder") as Style;
-            //imagesBorder.Height = 294;
-            //imagesBorder.Width = 472;
+
 
             imagesTab.Header = "Images";
             imagesTab.Height = 40;
-            imagesTab.Width = 159;
+            imagesTab.Width = 170; 
             imagesTab.Content = imagesCanvas;
-            imagesCanvas.Height = 629;
+            imagesCanvas.Height = 750; 
             imagesCanvas.Children.Add(imagesScroll);
-            imagesCanvas.Children.Add(imagesBorder); 
-            imagesScroll.Height = 325;
-            imagesScroll.Width = 470;
-            //imagesScroll.Background = Brushes.LightGray;
+            imagesCanvas.Children.Add(imagesBorder);
+            imagesScroll.Height = 410; 
+            imagesScroll.Width = 513;
+
             imagesScroll.HorizontalScrollBarVisibility = ScrollBarVisibility.Disabled;
-            //imagesScroll.VerticalScrollBarVisibility = ScrollBarVisibility.Visible;
             imagesScroll.PanningMode = PanningMode.VerticalOnly;
             imagesPanel.Orientation = Orientation.Horizontal;
 
-            Canvas.SetTop(imagesBorder, 331);
 
 
 
@@ -776,7 +755,7 @@ namespace DigitalFauvel
             rbi.excerpts = sr.excerpts;
             rbi.Height = 80; // temp taller than desired, so scrollbar shows
             rbi.HorizontalAlignment = System.Windows.HorizontalAlignment.Left;
-            rbi.Width = 430;
+            rbi.Width = 475; //430
             rbi.Style = sideBar.tabBar.FindResource("SearchResultSurfaceListBoxItem") as Style; // Not sure if this works..
 
             if (rbi.resultType == 2 || rbi.resultType == 3) // For lyrics or images
@@ -797,17 +776,15 @@ namespace DigitalFauvel
          * */
         private void compressResults()
         {
-            searchResults.Height = 537;
+            // height 800, set at 180
+            searchResults.Height = 660; //537
             Canvas.SetTop(searchResults, 320);
-            poetryBorder.Height = 245;
-            Canvas.SetTop(poetryBorder, 240);
-            poetryScroll.Height = 230;
-            lyricsBorder.Height = 245;
-            Canvas.SetTop(lyricsBorder, 240);
-            lyricsScroll.Height = 230;
-            imagesBorder.Height = 245;
-            Canvas.SetTop(imagesBorder, 240);
-            imagesScroll.Height = 230;
+            Canvas.SetTop(poetryBorder, 275);
+            poetryScroll.Height = 270; //230
+            Canvas.SetTop(lyricsBorder, 275);
+            lyricsScroll.Height = 270;
+            Canvas.SetTop(imagesBorder, 275);
+            imagesScroll.Height = 270;
         }
 
         /**
@@ -815,17 +792,14 @@ namespace DigitalFauvel
          * */
         private void expandResults()
         {
-            searchResults.Height = 677;
+            searchResults.Height = 800; //677
             Canvas.SetTop(searchResults, 180);
-            poetryBorder.Height = 294;
-            Canvas.SetTop(poetryBorder, 331);
-            poetryScroll.Height = 325;
-            lyricsBorder.Height = 294;
-            Canvas.SetTop(lyricsBorder, 331);
-            lyricsScroll.Height = 325;
-            imagesBorder.Height = 294;
-            Canvas.SetTop(imagesBorder, 331);
-            imagesScroll.Height = 325;
+            Canvas.SetTop(poetryBorder, 415);
+            poetryScroll.Height = 410;
+            Canvas.SetTop(lyricsBorder, 415);
+            lyricsScroll.Height = 410;
+            Canvas.SetTop(imagesBorder, 415);
+            imagesScroll.Height = 410;
         }
 
         /**
