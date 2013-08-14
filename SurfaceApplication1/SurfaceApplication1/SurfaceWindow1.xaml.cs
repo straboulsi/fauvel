@@ -25,6 +25,8 @@ using System.Xml;
 using System.Xml.Schema;
 using System.Xml.XPath;
 using System.Windows.Threading;
+using System.Text;
+using System.Text.RegularExpressions;
 
 namespace DigitalFauvel
 {
@@ -74,7 +76,35 @@ namespace DigitalFauvel
             }
 
 
+            //String one = "oh God! my face";
+            //String two = "God! my face";
+            //String three = "my face God!";
+            //String four = "my face";
+            //List<String> stringz = new List<String>();
+            //stringz.Add(one);
+            //stringz.Add(two);
+            //stringz.Add(three);
+            //stringz.Add(four);
 
+
+            //String toFind = "God!";
+
+
+            //foreach (String toSearchIn in stringz)
+            //{
+
+            //    Console.Write("\r\n\r\nLooking for " + toFind + " in " + toSearchIn + "\r\n");
+            //    Console.Write("Both: " + Regex.IsMatch(Regex.Escape(toSearchIn), string.Format(@"\b{0}\b", Regex.Escape(toFind))));
+            //    Console.Write("\r\n\\b before: " + Regex.IsMatch(Regex.Escape(toSearchIn), string.Format(@"\b{0}", Regex.Escape(toFind)))); // It's at the end!
+            //    Console.Write("\r\n\\b after: " + Regex.IsMatch(Regex.Escape(toSearchIn), string.Format(@"{0}\b", Regex.Escape(toFind)))); // It's at the start!? );
+
+
+            //}
+
+            //Console.Write("\r\n\r\n[" + (string.Format(@"\b{0}\b", (" lulz "))) + "]");
+            //Console.Write("\r\n[" + Regex.Escape("God!") + "]");
+
+            //Console.Read();
 
             // slider actions
             pageSlider.AddHandler(UIElement.ManipulationDeltaEvent, new EventHandler<ManipulationDeltaEventArgs>(slider_ManipulationDelta), true);
