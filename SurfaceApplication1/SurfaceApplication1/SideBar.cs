@@ -49,17 +49,17 @@ namespace DigitalFauvel
             newTabCanvas.Width = 550;
             tabAdd.Content = newTabCanvas;
 
-            newTabCanvas.Children.Add(addApplication1("Search", "search.png", SearchButton_Selected, 115, 290)); // 0, 0
-            newTabCanvas.Children.Add(addApplication1("Annotate", "pencil.png", AnnotateButton_Selected, 330, 290));
-            newTabCanvas.Children.Add(addApplication1("Saved Pages", "save.png", SavedPagesButton_Selected, 330, 450));
-            newTabCanvas.Children.Add(addApplication1("Music", "music.png", StudyButton_Selected, 115, 450));
+            newTabCanvas.Children.Add(addApplication("Search", "search.png", SearchButton_Selected, 115, 290)); // 0, 0
+            newTabCanvas.Children.Add(addApplication("Annotate", "pencil.png", AnnotateButton_Selected, 330, 290));
+            newTabCanvas.Children.Add(addApplication("Saved Pages", "save.png", SavedPagesButton_Selected, 330, 450));
+            newTabCanvas.Children.Add(addApplication("Music", "music.png", StudyButton_Selected, 115, 450));
             
             tabItems.Add(tabAdd);
             tabBar.DataContext = tabItems;
             tabBar.SelectedIndex = 0;
         }
 
-        private StackPanel addApplication1(String name, String image, RoutedEventHandler method, int x, int y)
+        private StackPanel addApplication(String name, String image, RoutedEventHandler method, int x, int y)
         {
             StackPanel appPanel = new StackPanel();
             appPanel.Width = 130;
@@ -95,46 +95,7 @@ namespace DigitalFauvel
             return appPanel;
         }
 
-        private Canvas addApplication(String name, String image, RoutedEventHandler method, int x, int y)
-        {
-            Canvas canvas = new Canvas();
-            canvas.Width = 100;
-            canvas.Height = 120;
-            StackPanel appPanel = new StackPanel();
-            appPanel.Orientation = Orientation.Vertical;
 
-            Button button = new Button();
-            button.Width = 100;
-            button.Height = 100;
-            button.Click += new RoutedEventHandler(method);
-            button.TouchDown += new EventHandler<TouchEventArgs>(method);
-
-            Image img = new Image();
-            img.Source = new BitmapImage(new Uri(@"..\..\icons\" + image, UriKind.Relative));
-
-            TextBlock text = new TextBlock();
-            text.Text = name;
-            text.FontSize = 30; // 14
-
-            double temp = 50 - (text.ActualWidth / 2);
-            double temp2 = 50 - (text.Width / 2);
-
-            button.Content = img;
-            Canvas.SetLeft(button, 0);
-            Canvas.SetTop(button, 0);
-            Canvas.SetLeft(canvas, x);
-            Canvas.SetTop(canvas, y);
-            Canvas.SetLeft(text, 50 - (text.ActualWidth / 2));
-            Canvas.SetTop(text, 103);
-            canvas.Children.Add(button);
-            canvas.Children.Add(text);
-
-            appPanel.Children.Add(button);
-            appPanel.Children.Add(text);
-            
-
-            return canvas;
-        }
 
         private void SearchButton_Selected(object sender, RoutedEventArgs e)
         {
