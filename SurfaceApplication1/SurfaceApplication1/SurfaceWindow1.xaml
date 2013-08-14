@@ -147,16 +147,12 @@
                 </Style>
 
                 <Style x:Key="RoundButtonTemplate" TargetType="Button">
-                    <Setter Property="Background" Value="White"/>
-                    <Setter Property="Foreground" Value="Black" />
-                    <Setter Property="Height" Value="120"/>
-                    <Setter Property="Width" Value="120"/>
 
                     <Setter Property="Template">
                         <Setter.Value>
                             <ControlTemplate TargetType="Button">
                                 <Border BorderBrush="Black" CornerRadius="15" Background="{TemplateBinding Background}"
-                                BorderThickness="5">
+                                BorderThickness="2">
                                     <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center">
 
                                     </ContentPresenter>

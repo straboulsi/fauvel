@@ -1754,9 +1754,11 @@
     <Resource Include="icons\upArrow.png" />
     <Content Include="XML\OriginalTextXML.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <SubType>Designer</SubType>
     </Content>
     <Content Include="XML\EnglishXML.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <SubType>Designer</SubType>
     </Content>
     <Resource Include="icons\pageTurn.png" />
     <Content Include="pages\100.jpg">
