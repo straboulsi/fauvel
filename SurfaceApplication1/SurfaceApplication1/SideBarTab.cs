@@ -41,13 +41,13 @@ namespace DigitalFauvel
             headerImage.Opacity = 0.3;
             headerGrid.Children.Add(headerImage);
 
-            deleteTabButton.Content = (string)"X";
-            deleteTabButton.FontFamily = new FontFamily("Arial");
-            deleteTabButton.FontSize = 35;
-            deleteTabButton.Width = 70;
+            Image ex = new Image();
+            ex.Source = new BitmapImage(new Uri(@"..\..\icons\exLarge.png", UriKind.Relative));
+
+            deleteTabButton.Content = ex;
+            deleteTabButton.Width = 40;
             deleteTabButton.Height = 40;
-            deleteTabButton.Opacity = 0.7;
-            Canvas.SetLeft(deleteTabButton, 476);
+            Canvas.SetLeft(deleteTabButton, 560);
             Canvas.SetTop(deleteTabButton, 1);
             canvas.Children.Add(deleteTabButton);
             deleteTabButton.Click += new RoutedEventHandler(mySideBar.deleteTab);

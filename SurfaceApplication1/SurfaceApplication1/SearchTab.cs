@@ -19,6 +19,7 @@ using System.Xml;
 using System.Windows.Threading;
 using System.ComponentModel;
 using System.Diagnostics;
+using System.Windows.Media.Animation;
 
 namespace DigitalFauvel
 {
@@ -58,6 +59,7 @@ namespace DigitalFauvel
         public TabItem poetryTab, lyricsTab, imagesTab;
         public TextBlock searchPrompt, searchTabHeader, moreOptText, fewerOptText;
         public TextBox searchQueryBox;
+        private Image loadImage;
 
 
 
@@ -102,6 +104,10 @@ namespace DigitalFauvel
             imagesCanvas = new Canvas();
             imagesScroll = new SurfaceScrollViewer(); 
             imagesPanel = new StackPanel();
+
+            loadImage = new Image();
+            loadImage.Source = new BitmapImage(new Uri(@"..\..\icons\magnifyingglass.png", UriKind.Relative));
+            canvas.Children.Add(loadImage);
 
             headerImage.Source = new BitmapImage(new Uri(@"..\..\icons\magnifyingglass.png", UriKind.Relative));
             searchTabHeader.HorizontalAlignment = HorizontalAlignment.Center;
@@ -511,6 +517,34 @@ namespace DigitalFauvel
                 thisbox.IsChecked = true;
         }
 
+        private Grid getLoadingImage()
+        {
+            Grid grid = new Grid();
+            Image image = new Image();
+            image.Source = new BitmapImage(new Uri(@"..\..\icons\loading.png", UriKind.Relative));
+            grid.Children.Add(image);
+
+            DoubleAnimationUsingKeyFrames dakf = new DoubleAnimationUsingKeyFrames();
+            dakf.KeyFrames = new DoubleKeyFrameCollection();
+            dakf.KeyFrames.Add(new DiscreteDoubleKeyFrame(0, KeyTime.FromTimeSpan(TimeSpan.FromMilliseconds(1))));
+            dakf.KeyFrames.Add(new DiscreteDoubleKeyFrame(45, KeyTime.FromTimeSpan(TimeSpan.FromMilliseconds(50))));
+            dakf.KeyFrames.Add(new DiscreteDoubleKeyFrame(90, KeyTime.FromTimeSpan(TimeSpan.FromMilliseconds(100))));
+            dakf.KeyFrames.Add(new DiscreteDoubleKeyFrame(135, KeyTime.FromTimeSpan(TimeSpan.FromMilliseconds(150))));
+            dakf.KeyFrames.Add(new DiscreteDoubleKeyFrame(180, KeyTime.FromTimeSpan(TimeSpan.FromMilliseconds(200))));
+            dakf.KeyFrames.Add(new DiscreteDoubleKeyFrame(225, KeyTime.FromTimeSpan(TimeSpan.FromMilliseconds(250))));
+            dakf.KeyFrames.Add(new DiscreteDoubleKeyFrame(270, KeyTime.FromTimeSpan(TimeSpan.FromMilliseconds(300))));
+            dakf.KeyFrames.Add(new DiscreteDoubleKeyFrame(315, KeyTime.FromTimeSpan(TimeSpan.FromMilliseconds(350))));
+
+            dakf.Duration = new Duration(TimeSpan.FromMilliseconds(400));
+            dakf.RepeatBehavior = RepeatBehavior.Forever;
+            RotateTransform rt = new RotateTransform();
+            image.RenderTransform = rt;
+            image.RenderTransformOrigin = new Point(0.5, 0.5);
+            rt.BeginAnimation(RotateTransform.AngleProperty, dakf);
+
+            return grid;
+        }
+
         /**
          * Runs a text search in Fauvel, using all specified search settings.
          * Each type of search (poetry, music lyrics, and images) is in its own thread.
@@ -541,11 +575,20 @@ namespace DigitalFauvel
             if (optionsShown == true)
                 compressResults();
 
+            poetryTab.Content = getLoadingImage();
+            lyricsTab.Content = getLoadingImage();
+            imagesTab.Content = getLoadingImage();
             poetryTab.Header = "Poetry (...)";
             lyricsTab.Header = "Lyrics (...)";
             imagesTab.Header = "Images (...)";
             searchQueryBox.IsEnabled = false;
-            goSearch.Content = "...";
+            caseSensitive.IsEnabled = false;
+            wholeWordOnly.IsEnabled = false;
+            exactPhraseOnly.IsEnabled = false;
+            moreOptions.IsEnabled = false;
+            fewerOptions.IsEnabled = false;
+            selectLanguageButton.IsEnabled = false;
+            goSearch.Content = "searching";
             goSearch.IsEnabled = false;
             unreturnedResults = 3;
 
@@ -724,6 +767,12 @@ namespace DigitalFauvel
                 searchQueryBox.IsEnabled = true;
                 goSearch.Content = "Go!";
                 goSearch.IsEnabled = true;
+                caseSensitive.IsEnabled = true;
+                wholeWordOnly.IsEnabled = true;
+                exactPhraseOnly.IsEnabled = true;
+                moreOptions.IsEnabled = true;
+                fewerOptions.IsEnabled = true;
+                selectLanguageButton.IsEnabled = true;
 
                 //Auto flip to a tab with results if the current one has none
                 if (searchResults.SelectedItem == poetryTab && poetryResults.Count == 0)
@@ -868,6 +917,7 @@ namespace DigitalFauvel
                 poetryPanel.Children.Add(closeupImage);
                 poetryPanel.Children.Add(closeupText);
                 poetryPanel.TouchDown += new EventHandler<TouchEventArgs>(goToFolio);
+                poetryPanel.MouseLeftButtonDown += new MouseButtonEventHandler(goToFolio);
             }
 
             else if (selectedResult.resultType == 2)
@@ -876,6 +926,7 @@ namespace DigitalFauvel
                 lyricsPanel.Children.Add(closeupImage);
                 lyricsPanel.Children.Add(closeupText);
                 lyricsPanel.TouchDown += new EventHandler<TouchEventArgs>(goToFolio);
+                lyricsPanel.MouseLeftButtonDown += new MouseButtonEventHandler(goToFolio);
             }
 
             else if (selectedResult.resultType == 3)
@@ -884,6 +935,7 @@ namespace DigitalFauvel
                 imagesPanel.Children.Add(closeupImage);
                 imagesPanel.Children.Add(closeupText);
                 imagesPanel.TouchDown += new EventHandler<TouchEventArgs>(goToFolio);
+                imagesPanel.MouseLeftButtonDown += new MouseButtonEventHandler(goToFolio);
             }
 
             newPageToOpen = selectedResult.folioInfo.Text;
@@ -916,7 +968,7 @@ namespace DigitalFauvel
          * Navigates from a search result closeup to a new tab open to that result's page.
          * Refers to the last ResultBoxItem selected for closeup.
          * */
-        private void goToFolio(object sender, TouchEventArgs e)
+        private void goToFolio(object sender, RoutedEventArgs e)
         {
             if(newPageToOpen != lastPageToOpen) 
             {
@@ -938,6 +990,8 @@ namespace DigitalFauvel
                 w = lastCloseupRBI.bottomR.X - lastCloseupRBI.topL.X;
                 h = lastCloseupRBI.bottomR.Y - lastCloseupRBI.topL.Y;
                 surfaceWindow.resizePageToRect(new Rect(x, y, w, h));
+                surfaceWindow.changeLanguage((int)currentSearchLanguage + 1);
+                surfaceWindow.testText.Text = x.ToString() + " " + y.ToString();// +" " + w.ToString() + " " + h.ToString();
 
                 lastPageToOpen = newPageToOpen;
             }

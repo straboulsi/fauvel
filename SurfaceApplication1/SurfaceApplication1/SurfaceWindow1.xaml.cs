@@ -34,7 +34,7 @@ namespace DigitalFauvel
     public partial class SurfaceWindow1 : SurfaceWindow
     {
         private bool rightSwipe = false, leftSwipe = false, dtOut = false; // dtOut is double tap to zoom out
-        public static System.Windows.Media.Brush glowColor = Brushes.MediumTurquoise; // Used in SearchTab to draw attention to changed search settings
+        public static System.Windows.Media.Brush glowColor = Brushes.Orange; // Used in SearchTab to draw attention to changed search settings
         public enum language { None = 0, OldFrench = 1, French = 2, English = 3 }; 
         List<Tab> tabArray = new List<Tab>();
         SideBar sideBar;
@@ -46,6 +46,7 @@ namespace DigitalFauvel
         public static int maxPageWidth = 5250, maxPageHeight = 7350, minPageWidth = 650, minPageHeight = 910, minPageLong = 1274, 
             tabNumber = 0, minPage = 0, maxPage = 95;
         public static XmlDocument xml, engXml, layoutXml, modFrXml;
+        public TextBlock testText;
 
 
         
@@ -54,7 +55,7 @@ namespace DigitalFauvel
             InitializeComponent();
 
             sideBar = new SideBar(this, tabDynamic);
-
+            testText = pageNumberText;
 
             try
             {
@@ -116,46 +117,28 @@ namespace DigitalFauvel
         private void prev_Click(object sender, RoutedEventArgs e)
         {
             Tab tab = currentTab();
-            int newPage = tab._page - 2;
-            newPage -= newPage % 2;
-            goToPage(newPage);
+            if (tab._page != 0)
+            {
+                int newPage = tab._page - 2;
+                newPage -= newPage % 2;
+                goToPage(newPage);
+            }
         }
 
         private void next_Click(object sender, RoutedEventArgs e)
         {
             Tab tab = currentTab();
-            int newPage = tab._page + 2;
-            newPage -= newPage % 2;
-            goToPage(newPage);
+            if (tab._page != 94)
+            {
+                int newPage = tab._page + 2;
+                newPage -= newPage % 2;
+                goToPage(newPage);
+            }
         }
 
         private void goToPage(int page)
         {
             Tab tab = currentTab();
-            /*tab._rGrid
-
-            Storyboard stb = new Storyboard();
-            DoubleAnimation moveWidth = new DoubleAnimation();
-            DoubleAnimation moveMargin = new DoubleAnimation();
-
-            moveWidth.From = s.ActualWidth;
-            moveWidth.To = endWidth;
-            moveWidth.Duration = new Duration(TimeSpan.FromMilliseconds(150));
-            moveMargin.Duration = new Duration(TimeSpan.FromMilliseconds(150));
-            moveWidth.FillBehavior = FillBehavior.Stop;
-            moveMargin.FillBehavior = FillBehavior.Stop;
-            stb.Children.Add(moveMargin);
-            stb.Children.Add(moveWidth);
-            Storyboard.SetTarget(moveCenter, s);
-            Storyboard.SetTarget(moveWidth, s);
-            Storyboard.SetTarget(moveHeight, s);
-            Storyboard.SetTargetProperty(moveCenter, new PropertyPath(ScatterViewItem.CenterProperty));
-            Storyboard.SetTargetProperty(moveWidth, new PropertyPath(ScatterViewItem.WidthProperty));
-            Storyboard.SetTargetProperty(moveHeight, new PropertyPath(ScatterViewItem.HeightProperty));
-            s.Width = endWidth;
-            s.Height = endHeight;
-            s.Center = endPoint;
-            stb.Begin(this);*/
 
             tab._page = page;
             if (page > maxPage)
@@ -382,15 +365,15 @@ namespace DigitalFauvel
             return tab;
         }
 
-
         private void wheelIt(object sender, MouseWheelEventArgs e)
         {
             ScatterViewItem svi = (ScatterViewItem)sender;
             Point mPos = e.MouseDevice.GetPosition(svi);
             int d = e.Delta;
             ScatterViewItem item = (ScatterViewItem)sender;
-            double width = item.Width + 2 * d;
-            double height = item.Height + d * 1.4;
+            double pcent = item.Width / item.MinWidth;
+            double width = item.Width + 2 * d * pcent;
+            double height = item.Height + d * 1.4 * pcent;
             if (height > item.MaxHeight)
                 height = item.MaxHeight;
             if (height < item.MinHeight)
@@ -471,10 +454,9 @@ namespace DigitalFauvel
             SliderText.Margin = new Thickness(SliderDisplay.Width / 2 - SliderText.ActualWidth / 2, -swipeHeight, 0, 0);
             double middle = 1160 + (slider.Width - 30) * onVal / slider.Maximum;
             SliderDisplay.Margin = new Thickness(middle, height, 0, 0);
-            SliderDisplay.Opacity = 1;
+            SliderDisplay.Visibility = System.Windows.Visibility.Visible;
 
             SliderImage1.Margin = new Thickness(0, 0, 0, 0);
-            SliderImage2.Opacity = 100;
 
             currentTab()._worker.updateSlideImage(onVal);
         }
@@ -484,9 +466,9 @@ namespace DigitalFauvel
          */
         private void slider_ManipulationCompleted(object sender, ManipulationCompletedEventArgs e)
         {
-            SliderDisplay.Opacity = 0;
+            SliderDisplay.Visibility = System.Windows.Visibility.Hidden;
             SurfaceSlider slider = (SurfaceSlider)sender;
-            goToPage((int)Math.Round(2 * slider.Value));
+            goToPage((int)(2 * Math.Round(slider.Value)));
         }
 
         /*
@@ -709,6 +691,8 @@ namespace DigitalFauvel
             s.Height = endHeight;
             s.Center = endPoint;
             stb.Begin(this);
+
+            scatter_ManipulationDelta(s, null);
         }
 
         private bool IsDoubleTap(TouchEventArgs e)
@@ -745,6 +729,29 @@ namespace DigitalFauvel
         {
         }
 
+        public void changeLanguage(language l)
+        {
+            Tab tab = currentTab();
+            tab._currentLanguage = l;
+            updateLanguageButton();
+            tab._worker.setTranslateText(tab._currentLanguage);
+        }
+
+        public void changeLanguage(int l)
+        {
+            Tab tab = currentTab();
+            if (l == 1)
+                tab._currentLanguage = language.OldFrench;
+            else if (l == 2)
+                tab._currentLanguage = language.French;
+            else if (l == 3)
+                tab._currentLanguage = language.English;
+            else
+                tab._currentLanguage = language.None;
+            updateLanguageButton();
+            tab._worker.setTranslateText(tab._currentLanguage);
+        }
+
         private void languageChanged(object sender, SelectionChangedEventArgs e)
         {
             Tab tab = currentTab();
@@ -762,7 +769,7 @@ namespace DigitalFauvel
             if (box.SelectedIndex == 3)
                 tab._currentLanguage = language.English;
             updateLanguageButton();
-            currentTab()._worker.setTranslateText(tab._currentLanguage);
+            tab._worker.setTranslateText(tab._currentLanguage);
 
             languageBox.Visibility = Visibility.Collapsed;
         }

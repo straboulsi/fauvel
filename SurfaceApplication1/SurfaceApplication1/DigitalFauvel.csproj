@@ -167,6 +167,7 @@
     <Resource Include="icons\music.png" />
     <Resource Include="icons\pencil.png" />
     <Resource Include="icons\search.png" />
+    <Resource Include="icons\loading.png" />
     <Content Include="minithumbnails\10rIm1.jpg">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
