@@ -48,8 +48,8 @@ namespace DigitalFauvel
             deleteTabButton.Width = 40;
             deleteTabButton.Height = 40;
             deleteTabButton.Opacity = 0.7;
-            Canvas.SetLeft(deleteTabButton, 523); // 476
-            Canvas.SetTop(deleteTabButton, 3); // 1
+            Canvas.SetLeft(deleteTabButton, 560);
+            Canvas.SetTop(deleteTabButton, 3);
             canvas.Children.Add(deleteTabButton);
             deleteTabButton.Click += new RoutedEventHandler(mySideBar.deleteTab);
             deleteTabButton.TouchDown += new EventHandler<TouchEventArgs>(mySideBar.deleteTab);
