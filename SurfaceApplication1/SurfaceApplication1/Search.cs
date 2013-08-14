@@ -72,8 +72,22 @@ namespace DigitalFauvel
          * */
         public static Boolean foundBySpecifiedWord(String toFind, String toSearchIn, int wordSensitive)
         {
-            if (wordSensitive == 1) // Whole word must match  
-                return Regex.IsMatch(toSearchIn, string.Format(@"\b{0}\b", Regex.Escape(toFind)));
+            if (wordSensitive == 1) 
+            {
+                bool isMatch = Regex.IsMatch(toSearchIn, string.Format(@"\b{0}\b", Regex.Escape(toFind))); 
+                // Issue: Does not work when string includes punctuation, bc \b marks boundary between word character and non word character. Hence the below...
+
+                bool contains = toSearchIn.Contains(" " + toFind + " ");
+                bool atEnd = (toSearchIn.Trim().EndsWith(" " + toFind));
+                bool atStart = toSearchIn.Trim().StartsWith(toFind + " ");
+
+                // These two are for multi word search, when several lines are combined for toSearchIn
+                bool b1 = toSearchIn.Trim().Contains("\r\n" + toFind + " ");
+                bool b2 = toSearchIn.Trim().Contains(" " + toFind + "\r\n");
+
+                return (isMatch || contains || atEnd || atStart || b1 || b2);
+
+            }
             else
                 return true;
         }
@@ -358,88 +372,92 @@ namespace DigitalFauvel
             try
             {
                 XmlNodeList xnl = thisXml.DocumentElement.SelectNodes("//lg/l"); // Poetry lines only
-                
+
 
                 foreach (XmlNode xn in xnl)
                 {
-                    // Start by finding the first word
-                    if (foundBySpecifiedCase(searchStrings[0].str, xn.InnerText, caseSensitive) && foundBySpecifiedWord(searchStrings[0].str, xn.InnerText, wordSensitive))
+                    if (xn.InnerText.Contains(searchStr)) /// temp!!
                     {
-                        // Get five lines to search in
-                        int lineNum = Convert.ToInt32(xn.Attributes["n"].Value); 
-                        int startLine = lineNum - 2;
-                        if (startLine < 1)
-                            startLine = 1;
-                        int endLine = lineNum + 2;
-                        if (endLine > veryLastLine)
-                            endLine = veryLastLine;
-                        String resultText = getPoetry(startLine, endLine, thisXml);
 
-
-                        // Makes sure every word shows up in this excerpt
-                        // This criteria can be tweaked if we decide to be more lenient - i.e. include half or more
-                        foreach (SpecialString ss in searchStrings)
+                        // Start by finding the first word
+                        if (foundBySpecifiedCase(searchStrings[0].str, xn.InnerText, caseSensitive) && foundBySpecifiedWord(searchStrings[0].str, xn.InnerText, wordSensitive))
                         {
-                            if (foundBySpecifiedCase(ss.str, resultText, caseSensitive) && foundBySpecifiedWord(ss.str, resultText, wordSensitive))
-                            {
-                                ss.isFound = true; // Keep in mind that this will stay true until set again otherwise!
-                                ss.spotInResult = myComp.IndexOf(resultText, ss.str, CompareOptions.IgnoreCase);
-                            }
-                            else
-                                ss.isFound = false; // Make sure to set this for each new result
-                        }
-
-                        Boolean foundAll = true;
-                        foreach (SpecialString ss in searchStrings)
-                        {
-                            if (ss.isFound == false)
-                                foundAll = false;
-                        }
+                            // Get five lines to search in
+                            int lineNum = Convert.ToInt32(xn.Attributes["n"].Value);
+                            int startLine = lineNum - 2;
+                            if (startLine < 1)
+                                startLine = 1;
+                            int endLine = lineNum + 2;
+                            if (endLine > veryLastLine)
+                                endLine = veryLastLine;
+                            String resultText = getPoetry(startLine, endLine, thisXml);
 
 
-                        // If all criteria met, create a new SearchResult
-                        if (foundAll == true)
-                        {
-                            SearchResult newResult = new SearchResult();
-                            newResult.lineNum = startLine;
-                            if(startLine != endLine)
-                                newResult.lineRange = "-" + endLine;
-                            newResult.resultType = 1;
-                            newResult.text1 = getPoetry(lineNum, lineNum, thisXml);
-                            newResult.tag = getTagByLineNum(startLine);
-                            newResult.topL = getLinePoint(newResult.lineNum, 1);
-                            newResult.bottomR = getLinePoint(newResult.lineNum, 2);
-
-                            if (language == 2) // For English, the secondary text is original text
-                                newResult.text2 = getPoetry(lineNum, lineNum, SurfaceWindow1.xml);
-                            else // For all other languages, the secondary text is the English
-                                newResult.text2 = getPoetry(lineNum, lineNum, SurfaceWindow1.engXml); 
-
-                            newResult.folio = getPageByLineNum(lineNum);
-
-
-                            searchStrings.Sort(); // Sorts the search words by the order they show up in these few lines
-
-                            // Now, check format of each piece of the text - search words bold.
-                            // See SpecialString class for more info.
-                            // resultText is substringed on each pass bc otherwise it will reenter all of the text from the very beginning.
+                            // Makes sure every word shows up in this excerpt
+                            // This criteria can be tweaked if we decide to be more lenient - i.e. include half or more
                             foreach (SpecialString ss in searchStrings)
                             {
-                                newResult.excerpts.Add(new SpecialString(resultText.Substring(0, myComp.IndexOf(resultText, ss.str, CompareOptions.IgnoreCase)), 0));
-                                newResult.excerpts.Add(new SpecialString(resultText.Substring(myComp.IndexOf(resultText, ss.str, CompareOptions.IgnoreCase), ss.str.Length), 1));
-                                resultText = resultText.Substring(myComp.IndexOf(resultText, ss.str, CompareOptions.IgnoreCase) + ss.str.Length);
+                                if (foundBySpecifiedCase(ss.str, resultText, caseSensitive) && foundBySpecifiedWord(ss.str, resultText, wordSensitive))
+                                {
+                                    ss.isFound = true; // Keep in mind that this will stay true until set again otherwise!
+                                    ss.spotInResult = myComp.IndexOf(resultText, ss.str, CompareOptions.IgnoreCase);
+                                }
+                                else
+                                    ss.isFound = false; // Make sure to set this for each new result
+                            }
+
+                            Boolean foundAll = true;
+                            foreach (SpecialString ss in searchStrings)
+                            {
+                                if (ss.isFound == false)
+                                    foundAll = false;
                             }
 
 
-                            newResult.excerpts.Add(new SpecialString(resultText, 0)); // Adding the rest of the resultText, from after the end of the last search word
-                            newResult.excerpts.Add(new SpecialString("\r\n\r\nLines " + startLine + " to " + endLine, 0));
+                            // If all criteria met, create a new SearchResult
+                            if (foundAll == true)
+                            {
+                                SearchResult newResult = new SearchResult();
+                                newResult.lineNum = startLine;
+                                if (startLine != endLine)
+                                    newResult.lineRange = "-" + endLine;
+                                newResult.resultType = 1;
+                                newResult.text1 = getPoetry(lineNum, lineNum, thisXml);
+                                newResult.tag = getTagByLineNum(startLine);
+                                newResult.topL = getLinePoint(newResult.lineNum, 1);
+                                newResult.bottomR = getLinePoint(newResult.lineNum, 2);
 
-                            results.Add(newResult);
+                                if (language == 2) // For English, the secondary text is original text
+                                    newResult.text2 = getPoetry(lineNum, lineNum, SurfaceWindow1.xml);
+                                else // For all other languages, the secondary text is the English
+                                    newResult.text2 = getPoetry(lineNum, lineNum, SurfaceWindow1.engXml);
+
+                                newResult.folio = getPageByLineNum(lineNum);
+
+
+                                searchStrings.Sort(); // Sorts the search words by the order they show up in these few lines
+
+                                // Now, check format of each piece of the text - search words bold.
+                                // See SpecialString class for more info.
+                                // resultText is substringed on each pass bc otherwise it will reenter all of the text from the very beginning.
+                                foreach (SpecialString ss in searchStrings)
+                                {
+                                    newResult.excerpts.Add(new SpecialString(resultText.Substring(0, myComp.IndexOf(resultText, ss.str, CompareOptions.IgnoreCase)), 0));
+                                    newResult.excerpts.Add(new SpecialString(resultText.Substring(myComp.IndexOf(resultText, ss.str, CompareOptions.IgnoreCase), ss.str.Length), 1));
+                                    resultText = resultText.Substring(myComp.IndexOf(resultText, ss.str, CompareOptions.IgnoreCase) + ss.str.Length);
+                                }
+
+
+                                newResult.excerpts.Add(new SpecialString(resultText, 0)); // Adding the rest of the resultText, from after the end of the last search word
+                                newResult.excerpts.Add(new SpecialString("\r\n\r\nLines " + startLine + " to " + endLine, 0));
+
+                                results.Add(newResult);
+                            }
+
                         }
-
                     }
-                }
 
+                }/// temp
             }
             catch (Exception e)
             {

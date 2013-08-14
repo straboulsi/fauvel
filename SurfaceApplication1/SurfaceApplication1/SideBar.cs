@@ -40,54 +40,62 @@ namespace DigitalFauvel
 
             tabAdd = new SideBarTab(this);
             tabAdd.Header = "+";
+            tabAdd.Width = 50;
             tabAdd.FontSize = 25;
             tabAdd.FontFamily = new FontFamily("Cambria");
 
             Canvas newTabCanvas = new Canvas();
-            newTabCanvas.Height = 900; // 899
+            newTabCanvas.Height = 900; 
             newTabCanvas.Width = 550;
             tabAdd.Content = newTabCanvas;
 
-            newTabCanvas.Children.Add(addApplication("Search", "search.png", SearchButton_Selected, 0, 0));
-            newTabCanvas.Children.Add(addApplication("Annotate", "pencil.png", AnnotateButton_Selected, 110, 0));
-            newTabCanvas.Children.Add(addApplication("Saved Pages", "save.png", SavedPagesButton_Selected, 220, 0));
-            newTabCanvas.Children.Add(addApplication("Music", "music.png", StudyButton_Selected, 330, 0));
+            newTabCanvas.Children.Add(addApplication("Search", "search.png", SearchButton_Selected, 115, 290)); // 0, 0
+            newTabCanvas.Children.Add(addApplication("Annotate", "pencil.png", AnnotateButton_Selected, 330, 290));
+            newTabCanvas.Children.Add(addApplication("Saved Pages", "save.png", SavedPagesButton_Selected, 330, 450));
+            newTabCanvas.Children.Add(addApplication("Music", "music.png", StudyButton_Selected, 115, 450));
             
             tabItems.Add(tabAdd);
             tabBar.DataContext = tabItems;
             tabBar.SelectedIndex = 0;
         }
 
-        private Canvas addApplication(String name, String image, RoutedEventHandler method, int x, int y)
+        private StackPanel addApplication(String name, String image, RoutedEventHandler method, int x, int y)
         {
-            Canvas canvas = new Canvas();
-            canvas.Width = 100;
-            canvas.Height = 120;
+            StackPanel appPanel = new StackPanel();
+            appPanel.Width = 130;
+            appPanel.Orientation = Orientation.Vertical;
+            appPanel.HorizontalAlignment = HorizontalAlignment.Center;
+            Canvas.SetLeft(appPanel, x);
+            Canvas.SetTop(appPanel, y);
+
             Button button = new Button();
             button.Width = 100;
             button.Height = 100;
             button.Click += new RoutedEventHandler(method);
             button.TouchDown += new EventHandler<TouchEventArgs>(method);
+            button.Style = tabBar.FindResource("RoundButtonTemplate") as Style;
 
             Image img = new Image();
             img.Source = new BitmapImage(new Uri(@"..\..\icons\" + image, UriKind.Relative));
+            button.Content = img;
 
             TextBlock text = new TextBlock();
             text.Text = name;
-            text.FontSize = 14;
+            text.TextWrapping = TextWrapping.NoWrap;
+            text.FontSize = 25; 
+            text.HorizontalAlignment = HorizontalAlignment.Center;
+            text.Margin = new Thickness(0, 5, 0, 0);
 
-            button.Content = img;
-            Canvas.SetLeft(button, 0);
-            Canvas.SetTop(button, 0);
-            Canvas.SetLeft(canvas, x);
-            Canvas.SetTop(canvas, y);
-            Canvas.SetLeft(text, 50 - text.Width / 2);
-            Canvas.SetTop(text, 103);
-            canvas.Children.Add(button);
-            canvas.Children.Add(text);
+     
 
-            return canvas;
+            appPanel.Children.Add(button);
+            appPanel.Children.Add(text);
+
+
+            return appPanel;
         }
+
+
 
         private void SearchButton_Selected(object sender, RoutedEventArgs e)
         {
