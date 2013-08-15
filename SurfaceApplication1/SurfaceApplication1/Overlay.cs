@@ -74,6 +74,7 @@ namespace DigitalFauvel
             t.FontSize = TranslationBox.minFontSize;
             t.TextWrapping = TextWrapping.NoWrap;
             t.LineStackingStrategy = LineStackingStrategy.BlockLineHeight;
+            t.FontFamily = new FontFamily("Tw Cen MT Condensed");
             Grid.SetRow(t, 1);
             Grid.SetColumn(t, 1);
             g.Children.Add(t);
