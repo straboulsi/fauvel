@@ -918,6 +918,48 @@ namespace DigitalFauvel
             }
         }
 
+        public void changeTranslationGrids(Point p)
+        {
+            Tab tab = currentTab();
+            List<TranslationBox> translationBoxes;
+            Grid translationGrid;
+            if (p.X < maxPageWidth)
+            {
+                translationBoxes = tab._translationBoxesV;
+                translationGrid = tab._vTranslationGrid;
+            }
+            else
+            {
+                translationBoxes = tab._translationBoxesR;
+                translationGrid = tab._rTranslationGrid;
+                p.X -= maxPageWidth;
+            }
+
+            double width, x, y, height;
+            TranslationBox tb;
+            Grid g;
+
+            for (int i = 0; i < translationBoxes.Count; i++)
+            {
+                tb = translationBoxes[i];
+                g = (Grid)translationGrid.Children[i];
+                x = tb.getTopLeft().X;
+                y = tb.getTopLeft().Y;
+                width = (tb.getBottomRight().X - tb.getTopLeft().X);
+                height = (tb.getBottomRight().Y - tb.getTopLeft().Y);
+
+                if (p.X > x && p.X < x + width && p.Y > y && p.Y < y + height) // tap on it
+                {
+                    g.ColumnDefinitions[1].Width = new GridLength(maxPageWidth - x, GridUnitType.Star);
+                    g.ColumnDefinitions[2].Width = new GridLength(0, GridUnitType.Star);
+                }
+                else
+                {
+                    g.ColumnDefinitions[1].Width = new GridLength(width, GridUnitType.Star);
+                    g.ColumnDefinitions[2].Width = new GridLength(maxPageWidth - x - width, GridUnitType.Star);
+                }
+            }
+        }
 
         private void TextBox_GotFocus(object sender, RoutedEventArgs e)
         {
