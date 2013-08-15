@@ -6,7 +6,7 @@
     <ProductVersion>8.0.30703</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{F66E2D8E-243A-4A44-A2BE-2C1912E26A17}</ProjectGuid>
-    <OutputType>WinExe</OutputType>
+    <OutputType>Exe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>DigitalFauvel</RootNamespace>
     <AssemblyName>DigitalFauvel</AssemblyName>
@@ -106,12 +106,15 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="BoundingBox.cs" />
+    <Compile Include="MusicExpander.cs" />
+    <Compile Include="MusicPartExpander.cs" />
     <Compile Include="Overlay.cs" />
     <Compile Include="SavedPagesTab.cs" />
     <Compile Include="Counterpart.cs" />
     <Compile Include="PageNamer.cs" />
     <Compile Include="ResultBoxItem.cs" />
     <Compile Include="SavedPage.cs" />
+    <Compile Include="ScorePage.cs" />
     <Compile Include="Search.cs" />
     <Compile Include="SearchResult.cs" />
     <Compile Include="SearchTab.cs" />

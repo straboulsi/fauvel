@@ -26,14 +26,21 @@ namespace DigitalFauvel
     /**
      * This class defines the methods used in the "Study" (Music) app from the SideBar.
      * It focuses on the front-end visual aspects, while the back-end code is in Study.cs.
-     * Primary Coder: Jamie Chong
+     * 
+     * NB: This class is a work in progress. 
+     * We do not yet have score or audio files for all music objects in Fauvel.
+     * Eventually, we plan to implement selecting the piece directly from the folio.
+     * Tapping a piece of music will set the selectedTag method and call open_Music.
+     * The two openDefault____ methods will be removed.
+     * However, for now, we provide two default options.
+     * 
+     * Primary Coders: Jamie Chong & Alison Y. Chang
      * */
     class StudyTab : SideBarTab
     {
 
         public Button mono, poly, playpause, stop, selectAudioButton; 
         public Canvas notesCanvas, notesTabCanvas;
-        public Expander fullExp, v1Exp, tenorExp;
         public Grid mo_lb1, mo_lb2, mo_lb3;
         public Image musicImg, musicImg1, musicImg2, musicImg3, v1_Img, tenor_Img;
         public List<ListBoxItem> audioOptions;
@@ -41,7 +48,10 @@ namespace DigitalFauvel
         public ListBoxItem v1_name_lb, v1_mute_lb, v1_solo_lb, tenor_name_lb, tenor_mute_lb, tenor_solo_lb, space1, space2, 
             selectAudio, MIDI, liveRecording, lastAudioChoice;
         public MediaPlayer play_2rCon1, play_2vMo2_v1, play_2vMo2_tenor;
+        public MusicExpander fullExp;
+        public MusicPartExpander v1Exp, tenorExp;
         public StackPanel motetParts, motetScore, v1_buttons, tenor_buttons;
+        public String selectedTag;
         public SurfaceScrollViewer noteScroll;
         public TabControl display;
         public TabItem notesTab, mod_frenchTab, engTab;
@@ -63,12 +73,15 @@ namespace DigitalFauvel
 
             studyPrompt.FontSize = 30;
             studyPrompt.Text = "Please select a piece of music.";
-            //studyPrompt.Height = 40;
-            //studyPrompt.Width = 500;
             Canvas.SetLeft(studyPrompt, 32);
             Canvas.SetTop(studyPrompt, 45);
 
-            // For now, until we implement selecting the piece directly on the folio.
+
+
+            // Eventually, we plan to implement selecting the piece directly from the folio.
+            // Tapping a piece of music will set the selectedTag method and call open_Music.
+            // The two openDefault____ methods will be removed.
+            // However, for now, we provide two default options.
             mono = new Button();
             poly = new Button();
 
@@ -93,13 +106,41 @@ namespace DigitalFauvel
             canvas.Children.Add(poly);
 
             // Add click handlers.
-            mono.Click += new RoutedEventHandler(study_Mono);
-            mono.TouchDown += new EventHandler<TouchEventArgs>(study_Mono);
-            poly.Click += new RoutedEventHandler(study_Poly);
+            mono.Click += new RoutedEventHandler(openDefaultMono);
+            mono.TouchDown += new EventHandler<TouchEventArgs>(openDefaultMono);
+            poly.Click += new RoutedEventHandler(openDefaultPoly);
+            poly.TouchDown += new EventHandler<TouchEventArgs>(openDefaultPoly);
+        }
+
+        // Temporary method - replace w actual selection of music from folios
+        private void openDefaultMono(object sender, RoutedEventArgs e)
+        {
+            selectedTag = "2rCon1";
+            open_Music(sender, e);
+        }
+
+        // Temporary method - replace w actual selection of music from folios
+        private void openDefaultPoly(object sender, RoutedEventArgs e)
+        {
+            selectedTag = "2vMo2";
+            open_Music(sender, e);
         }
 
 
-        private void musicControls(String musicName, String musicAbbrv)
+        // Determines whether a piece of music is monophonic or polyphonic
+        // Opens a new music tab for mono or poly studying
+        private void open_Music(object sender, RoutedEventArgs e)
+        {
+            //selectedTag = ""; // Set this by tapping on a piece of music
+
+            if (Study.hasMultipleVoices(selectedTag) == false)
+                study_Mono(sender, e);
+            else if(Study.hasMultipleVoices(selectedTag) == true)
+                study_Poly(sender, e);
+        }
+
+
+        private void musicControls(String tag)
         {
             canvas.Children.Remove(studyPrompt);
             canvas.Children.Remove(mono);
@@ -110,9 +151,9 @@ namespace DigitalFauvel
             musicTitle = new TextBlock();
             Canvas.SetLeft(musicTitle, 15);
             Canvas.SetTop(musicTitle, 45);
-            musicTitle.Text = musicName; //
+            musicTitle.Text = Study.getTitle(tag); //
             musicTitle.FontSize = 30;
-            studyTabHeader.Text = musicAbbrv; //
+            studyTabHeader.Text = tag; //
 
             // Play/Pause and Stop buttons.
             playpause = new Button();
@@ -236,7 +277,7 @@ namespace DigitalFauvel
         // Monophonic music study page (other monophonic pieces should follow this format).
         private void study_Mono(object sender, RoutedEventArgs e)
         {
-            musicControls("Conductus : Heu ! Quo progreditur (PM 6)", "2rCon1");
+            musicControls("2rCon1");
 
             playpause.Click += new RoutedEventHandler(playpause_1_Click);
             stop.Click += new RoutedEventHandler(stop_1_Click);
@@ -270,158 +311,81 @@ namespace DigitalFauvel
 
 
         // Polyphonic music study page (other polyphonic pieces should follow this format).
+        // One big challenge for polyphonic music will be to create display of voices programmatically, bc of varying # of voices in motets
+        
         void study_Poly(object sender, RoutedEventArgs e)
         {
-            musicControls("Ad solitum vomitum", "2vMo2");
+            String tag = "2vMo2";
+            musicControls(tag);
 
             playpause.Click += new RoutedEventHandler(playpause_2_Click);
             stop.Click += new RoutedEventHandler(stop_2_Click);
-            mod_frenchText.Text = Search.getByTag("2vMo2_t", SurfaceWindow1.modFrXml);
+            mod_frenchText.Text = Search.getByTag(tag, SurfaceWindow1.modFrXml);
             engText.Text = "No English translated lyrics for this piece YET!";
 
             
-            // StackPanel for the expandable parts to stack on top of eachother.
-            motetParts = new StackPanel();
+
+
+
+
+
+            motetParts = new StackPanel(); // StackPanel for the expandable parts to stack on top of eachother.
             motetParts.Orientation = Orientation.Vertical;
 
-            fullExp = new Expander();
-            v1Exp = new Expander();
-            tenorExp = new Expander();
+            MusicExpander fullExp = new MusicExpander("Full Score");
 
-            fullExp.IsExpanded = false;
-            v1Exp.IsExpanded = false;
-            tenorExp.IsExpanded = false;
 
-            fullExp.ExpandDirection = ExpandDirection.Down;
-            v1Exp.ExpandDirection = ExpandDirection.Down;
-            tenorExp.ExpandDirection = ExpandDirection.Down;
-
-            fullExp.Width = 560;
-            v1Exp.Width = 560;
-            tenorExp.Width = 560;
-
-            fullExp.MinHeight = 30;
-            v1Exp.MinHeight = 20;
-            tenorExp.MinHeight = 20;
-
-            fullExp.MaxHeight = 2400;
-            v1Exp.MaxHeight = 860;
-            tenorExp.MaxHeight = 860;
-
-            fullExp.BorderBrush = Brushes.Black;
-            v1Exp.BorderBrush = Brushes.Black;
-            tenorExp.BorderBrush = Brushes.Black;
-
-            // Score has several pages.
-            musicImg1 = new Image();
-            musicImg1.Source = new BitmapImage(new Uri(@"..\..\musicz\2vMo2-1.png", UriKind.Relative));
-            musicImg1.Width = 560;
-
-            musicImg2 = new Image();
-            musicImg2.Source = new BitmapImage(new Uri(@"..\..\musicz\2vMo2-2.png", UriKind.Relative));
-            musicImg2.Width = 560;
-
-            musicImg3 = new Image();
-            musicImg3.Source = new BitmapImage(new Uri(@"..\..\musicz\2vMo2-3.png", UriKind.Relative));
-            musicImg3.Width = 560;
-
+            // Motet score
             motetScore = new StackPanel();
             motetScore.Orientation = Orientation.Vertical;
-
-            mo_lb1 = new Grid();
-            mo_lb2 = new Grid();
-            mo_lb3 = new Grid();
-            mo_lb1.Height = 860;
-            mo_lb2.Height = 860;
-            mo_lb3.Height = 860;
-
-            mo_lb1.Children.Add(musicImg1);
-            mo_lb2.Children.Add(musicImg2);
-            mo_lb3.Children.Add(musicImg3);
-
-            motetScore.Children.Add(mo_lb1);
-            motetScore.Children.Add(mo_lb2);
-            motetScore.Children.Add(mo_lb3);
-
             fullExp.Content = motetScore;
             fullExp.Header = "Full Score";
 
-            // For the individual voices, we have mute and solo buttons as well.
-            v1_Img = new Image();
-            v1_Img.Source = new BitmapImage(new Uri(@"..\..\musicz\2vMo2_v1.png", UriKind.Relative));
-            v1_Img.Width = 560;
+            // Score has several pages.
+            // Create an object here called MotetPage and make one of these for each
 
-            tenor_Img = new Image();
-            tenor_Img.Source = new BitmapImage(new Uri(@"..\..\musicz\2vMo2_tenor.png", UriKind.Relative));
-            tenor_Img.Width = 560;
+            /**
+             * GOAL FOR THIS SECTION:
+             * 1. Get names of each .png file (page) for this piece of music
+             * 2. Create a ScorePage object for each page - ScorePage implements Grid.
+             * 3. Add each ScorePage to motetScore.
+             * */
 
-            v1Exp.Content = v1_Img;
-            tenorExp.Content = tenor_Img;
 
-            v1_buttons = new StackPanel();
-            tenor_buttons = new StackPanel();
-            v1_buttons.Orientation = Orientation.Horizontal;
-            tenor_buttons.Orientation = Orientation.Horizontal;
+            String one = "2vMo2-1";
+            String two = "2vMo2-2";
+            String three = "2vMo2-3";
 
-            v1_name_lb = new ListBoxItem();
-            v1_mute_lb = new ListBoxItem();
-            v1_solo_lb = new ListBoxItem();
-            tenor_name_lb = new ListBoxItem();
-            tenor_mute_lb = new ListBoxItem();
-            tenor_solo_lb = new ListBoxItem();
-            space1 = new ListBoxItem();
-            space2 = new ListBoxItem();
+            List<String> pages = new List<String>(); // This List should be populated programmatically, i.e. by getting all file names in a folder
+            pages.Add(one);
+            pages.Add(two);
+            pages.Add(three);
 
-            v1_mute = new ToggleButton();
-            v1_solo = new ToggleButton();
-            tenor_mute = new ToggleButton();
-            tenor_solo = new ToggleButton();
+            foreach (String s in pages)
+            {
+                ScorePage newPage = new ScorePage(s);
+                motetScore.Children.Add(newPage);
+            }
 
-            v1_mute.Content = "M";
-            v1_solo.Content = "S";
-            tenor_mute.Content = "M";
-            tenor_solo.Content = "S";
 
-            v1_mute.FontSize = 14;
-            v1_solo.FontSize = 14;
-            tenor_mute.FontSize = 14;
-            tenor_solo.FontSize = 14;
+            /**
+             * GOAL FOR THIS SECTION:
+             * 1. Get names of each voice for this piece of music.
+             *    Audio files should be named .duplum, .triplum, etc so that same word can be displayed as title (perhaps w case adjustment).
+             * 2. Create an expander for each voice.
+             * 3. Add each expander to the motetParts StackPanel.
+             * */
 
-            v1_mute.Height = 20;
-            v1_solo.Height = 20;
-            tenor_solo.Height = 20;
-            tenor_mute.Height = 20;
-            v1_mute.Width = 20;
-            v1_solo.Width = 20;
-            tenor_mute.Width = 20;
-            tenor_solo.Width = 20;
-
-            v1_name_lb.Content = "Voice  ";
-            v1_mute_lb.Content = v1_mute;
-            v1_solo_lb.Content = v1_solo;
-            space1.Content = "  ";
-
-            tenor_name_lb.Content = "Tenor  ";
-            tenor_mute_lb.Content = tenor_mute;
-            tenor_solo_lb.Content = tenor_solo;
-            space2.Content = "  ";
-
-            v1_buttons.Children.Add(v1_name_lb);
-            v1_buttons.Children.Add(v1_mute_lb);
-            v1_buttons.Children.Add(space1);
-            v1_buttons.Children.Add(v1_solo_lb);
-
-            tenor_buttons.Children.Add(tenor_name_lb);
-            tenor_buttons.Children.Add(tenor_mute_lb);
-            tenor_buttons.Children.Add(space2);
-            tenor_buttons.Children.Add(tenor_solo_lb);
-
-            v1Exp.Header = v1_buttons;
-            tenorExp.Header = tenor_buttons;
+            MusicPartExpander v1Exp = new MusicPartExpander("v1", tag);
+            MusicPartExpander tenorExp = new MusicPartExpander("tenor", tag);
 
             motetParts.Children.Add(fullExp);
             motetParts.Children.Add(v1Exp);
             motetParts.Children.Add(tenorExp);
+
+
+            
+
 
             notesCanvas.Width = 560;
             notesCanvas.Height = 4000;
@@ -439,7 +403,6 @@ namespace DigitalFauvel
 
 
             // Add listeners.
-
             v1_mute.Checked += new RoutedEventHandler(v1_mute_Checked);
             v1_solo.Checked += new RoutedEventHandler(v1_solo_Checked);
             tenor_mute.Checked += new RoutedEventHandler(tenor_mute_Checked);
@@ -450,6 +413,7 @@ namespace DigitalFauvel
             tenor_mute.Unchecked += new RoutedEventHandler(tenor_mute_Unchecked);
             tenor_solo.Unchecked += new RoutedEventHandler(tenor_solo_Unchecked);
         }
+
 
 
         void showAudioOptions(object sender, RoutedEventArgs e)

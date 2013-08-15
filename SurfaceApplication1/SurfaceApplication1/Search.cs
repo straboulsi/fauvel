@@ -250,6 +250,9 @@ namespace DigitalFauvel
                 }
                 else // Music
                 {
+                    if (!str.EndsWith("_t"))
+                        str += "_t";
+
                     // Note: To select voices that don't have <dc>, add second level and select ("//v[not(dc)]")
                     foundNode = whichXml.DocumentElement.SelectSingleNode("//p[@id='" + str + "']");
 

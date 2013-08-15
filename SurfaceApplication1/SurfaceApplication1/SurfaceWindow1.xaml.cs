@@ -76,6 +76,10 @@ namespace DigitalFauvel
 
 
 
+            Study.getTitle("2rCon1");
+            Study.getTitle("2vMo2");
+            Console.Read();
+
 
             // slider actions
             pageSlider.AddHandler(UIElement.ManipulationDeltaEvent, new EventHandler<ManipulationDeltaEventArgs>(slider_ManipulationDelta), true);

@@ -105,13 +105,12 @@ namespace DigitalFauvel
             imagesScroll = new SurfaceScrollViewer(); 
             imagesPanel = new StackPanel();
 
-            headerImage.Source = new BitmapImage(new Uri(@"..\..\icons\search.png", UriKind.Relative));
-
+            
             loadImage = new Image();
             loadImage.Source = new BitmapImage(new Uri(@"..\..\icons\magnifyingglass.png", UriKind.Relative));
             canvas.Children.Add(loadImage);
 
-            headerImage.Source = new BitmapImage(new Uri(@"..\..\icons\magnifyingglass.png", UriKind.Relative));
+            headerImage.Source = new BitmapImage(new Uri(@"..\..\icons\search.png", UriKind.Relative));
 
             searchTabHeader.HorizontalAlignment = HorizontalAlignment.Center;
             searchTabHeader.VerticalAlignment = VerticalAlignment.Center;

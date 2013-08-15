@@ -83,5 +83,32 @@ namespace DigitalFauvel
                 return false;
         }
 
+        /**
+         * Takes in tag of a music object and returns its title.
+         * */
+        public static String getTitle(String tag)
+        {
+            String title = "";
+            try
+            {
+                // Bc the title tag is within the music object with lyrics - the p tag, not the notatedMusic tag
+                if (!tag.EndsWith("_t"))
+                    tag += "_t";
+
+                XmlNode foundNode = SurfaceWindow1.xml.DocumentElement.SelectSingleNode("//p[@id='" + tag + "']");
+                XmlNode titleNode = foundNode.SelectSingleNode("title");
+                title = titleNode.InnerText.Trim();
+
+                Console.Write(tag + "\r\n" + title + "\r\n\r\n");
+            }
+            catch (Exception e)
+            {
+                Console.Write(e.StackTrace);
+                Console.Read();
+            }
+
+            return title;
+        }
+
     }
 }
