@@ -22,7 +22,7 @@ using Microsoft.Surface.Presentation.Input;
 using System.IO;
 using System.Globalization;
 
-namespace SurfaceApplication1
+namespace DigitalFauvel
 {
 
     /**

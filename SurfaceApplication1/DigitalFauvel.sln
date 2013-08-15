@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 11.00
-# Visual C# Express 2010
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SurfaceApplication1", "SurfaceApplication1\SurfaceApplication1.csproj", "{F66E2D8E-243A-4A44-A2BE-2C1912E26A17}"
+# Visual Studio 2010
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DigitalFauvel", "SurfaceApplication1\DigitalFauvel.csproj", "{F66E2D8E-243A-4A44-A2BE-2C1912E26A17}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

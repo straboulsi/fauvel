@@ -6,10 +6,10 @@
     <ProductVersion>8.0.30703</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{F66E2D8E-243A-4A44-A2BE-2C1912E26A17}</ProjectGuid>
-    <OutputType>Exe</OutputType>
+    <OutputType>WinExe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>SurfaceApplication1</RootNamespace>
-    <AssemblyName>SurfaceApplication1</AssemblyName>
+    <RootNamespace>DigitalFauvel</RootNamespace>
+    <AssemblyName>DigitalFauvel</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <TargetFrameworkProfile>Client</TargetFrameworkProfile>
     <FileAlignment>512</FileAlignment>
@@ -160,9 +160,16 @@
     <Resource Include="icons\prev.png" />
     <Resource Include="icons\save.png" />
     <Resource Include="icons\zoom.png" />
-    <Resource Include="icons\magnifyingglass.png" />
     <Resource Include="XML\LayoutXML.xml" />
     <Resource Include="icons\translationsBar.png" />
+    <Resource Include="icons\ex.png" />
+    <Resource Include="icons\exLarge.png" />
+    <Resource Include="icons\music.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="icons\pencil.png" />
+    <Resource Include="icons\search.png" />
+    <Resource Include="icons\loading.png" />
     <Content Include="minithumbnails\10rIm1.jpg">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -405,11 +412,15 @@
     <Resource Include="musicz\2vMo2-1.png" />
     <Resource Include="musicz\2vMo2-2.png" />
     <Resource Include="musicz\2vMo2-3.png" />
+    <Content Include="musicz\2vMo2.mp3" />
+    <Content Include="musicz\2vMo2.wav" />
     <Content Include="musicz\2vMo2.wma" />
     <Content Include="musicz\2vMo2_live.wma" />
     <Resource Include="musicz\2vMo2_tenor.png" />
+    <Content Include="musicz\2vMo2_tenor.wav" />
     <Content Include="musicz\2vMo2_tenor.wma" />
     <Resource Include="musicz\2vMo2_v1.png" />
+    <Content Include="musicz\2vMo2_v1.wav" />
     <Content Include="musicz\2vMo2_v1.wma" />
     <Content Include="thumbnails\10rAl1.jpg">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
@@ -1746,12 +1757,13 @@
     <Resource Include="icons\upArrow.png" />
     <Content Include="XML\OriginalTextXML.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <SubType>Designer</SubType>
     </Content>
     <Content Include="XML\EnglishXML.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <SubType>Designer</SubType>
     </Content>
     <Resource Include="icons\pageTurn.png" />
-    <Resource Include="icons\musicnote.png" />
     <Content Include="pages\100.jpg">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -2041,7 +2053,6 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Resource Include="icons\leftArrow.png" />
-    <Resource Include="icons\pencil.jpg" />
     <Content Include="Resources\icon.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>

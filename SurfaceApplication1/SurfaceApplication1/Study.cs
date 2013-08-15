@@ -7,7 +7,7 @@ using System.Xml.Schema;
 using System.Xml.XPath;
 
 
-namespace SurfaceApplication1
+namespace DigitalFauvel
 {
 
     /**

@@ -18,7 +18,7 @@ using Microsoft.Surface.Presentation.Controls;
 using Microsoft.Surface.Presentation.Input;
 
 
-namespace SurfaceApplication1
+namespace DigitalFauvel
 {
     /**
      * ResultBoxItem is a specialized SurfaceListBoxItem. 

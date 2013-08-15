@@ -8,7 +8,7 @@ using System.Windows.Media;
 using System.Windows;
 using System.Windows.Input;
 
-namespace SurfaceApplication1
+namespace DigitalFauvel
 {
     /**
      * This class defines the basic format of a SideBarTab.
@@ -38,17 +38,18 @@ namespace SurfaceApplication1
             headerGrid.Width = 100;
             headerGrid.Height = 40;
             headerImage = new Image();
-            headerImage.Opacity = 0.3;
+            headerImage.Opacity = 0.2;
             headerGrid.Children.Add(headerImage);
 
-            deleteTabButton.Content = (string)"X";
-            deleteTabButton.FontFamily = new FontFamily("Arial");
-            deleteTabButton.FontSize = 35;
-            deleteTabButton.Width = 70;
+            Image ex = new Image();
+            ex.Source = new BitmapImage(new Uri(@"..\..\icons\exLarge.png", UriKind.Relative));
+
+            deleteTabButton.Content = ex;
+            deleteTabButton.Width = 40;
             deleteTabButton.Height = 40;
             deleteTabButton.Opacity = 0.7;
-            Canvas.SetLeft(deleteTabButton, 476);
-            Canvas.SetTop(deleteTabButton, 1);
+            Canvas.SetLeft(deleteTabButton, 560);
+            Canvas.SetTop(deleteTabButton, 3);
             canvas.Children.Add(deleteTabButton);
             deleteTabButton.Click += new RoutedEventHandler(mySideBar.deleteTab);
             deleteTabButton.TouchDown += new EventHandler<TouchEventArgs>(mySideBar.deleteTab);

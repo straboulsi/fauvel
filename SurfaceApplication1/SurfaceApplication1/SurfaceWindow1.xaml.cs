@@ -26,7 +26,7 @@ using System.Xml.Schema;
 using System.Xml.XPath;
 using System.Windows.Threading;
 
-namespace SurfaceApplication1
+namespace DigitalFauvel
 {
     /// <summary>
     /// Interaction logic for SurfaceWindow1.xaml
@@ -34,7 +34,7 @@ namespace SurfaceApplication1
     public partial class SurfaceWindow1 : SurfaceWindow
     {
         private bool rightSwipe = false, leftSwipe = false, dtOut = false; // dtOut is double tap to zoom out
-        public static System.Windows.Media.Brush glowColor = Brushes.MediumTurquoise; // Used in SearchTab to draw attention to changed search settings
+        public static System.Windows.Media.Brush glowColor = Brushes.Orange; // Used in SearchTab to draw attention to changed search settings
         public enum language { None = 0, OldFrench = 1, French = 2, English = 3 }; 
         List<Tab> tabArray = new List<Tab>();
         SideBar sideBar;
@@ -46,6 +46,7 @@ namespace SurfaceApplication1
         public static int maxPageWidth = 5250, maxPageHeight = 7350, minPageWidth = 650, minPageHeight = 910, minPageLong = 1274, 
             tabNumber = 0, minPage = 0, maxPage = 95;
         public static XmlDocument xml, engXml, layoutXml, modFrXml;
+        public TextBlock testText;
 
 
         
@@ -54,7 +55,7 @@ namespace SurfaceApplication1
             InitializeComponent();
 
             sideBar = new SideBar(this, tabDynamic);
-
+            testText = pageNumberText;
 
             try
             {
@@ -86,6 +87,7 @@ namespace SurfaceApplication1
             TabItem newTabButton = new TabItem();
             newTabButton.Header = "+";
             newTabButton.Width = 50;
+            newTabButton.Height = 40;
             newTabButton.FontSize = 25;
             newTabButton.FontFamily = new FontFamily("Cambria");
             tabBar.Items.Add(newTabButton);
@@ -115,46 +117,28 @@ namespace SurfaceApplication1
         private void prev_Click(object sender, RoutedEventArgs e)
         {
             Tab tab = currentTab();
-            int newPage = tab._page - 2;
-            newPage -= newPage % 2;
-            goToPage(newPage);
+            if (tab._page != 0)
+            {
+                int newPage = tab._page - 2;
+                newPage -= newPage % 2;
+                goToPage(newPage);
+            }
         }
 
         private void next_Click(object sender, RoutedEventArgs e)
         {
             Tab tab = currentTab();
-            int newPage = tab._page + 2;
-            newPage -= newPage % 2;
-            goToPage(newPage);
+            if (tab._page != 94)
+            {
+                int newPage = tab._page + 2;
+                newPage -= newPage % 2;
+                goToPage(newPage);
+            }
         }
 
         private void goToPage(int page)
         {
             Tab tab = currentTab();
-            /*tab._rGrid
-
-            Storyboard stb = new Storyboard();
-            DoubleAnimation moveWidth = new DoubleAnimation();
-            DoubleAnimation moveMargin = new DoubleAnimation();
-
-            moveWidth.From = s.ActualWidth;
-            moveWidth.To = endWidth;
-            moveWidth.Duration = new Duration(TimeSpan.FromMilliseconds(150));
-            moveMargin.Duration = new Duration(TimeSpan.FromMilliseconds(150));
-            moveWidth.FillBehavior = FillBehavior.Stop;
-            moveMargin.FillBehavior = FillBehavior.Stop;
-            stb.Children.Add(moveMargin);
-            stb.Children.Add(moveWidth);
-            Storyboard.SetTarget(moveCenter, s);
-            Storyboard.SetTarget(moveWidth, s);
-            Storyboard.SetTarget(moveHeight, s);
-            Storyboard.SetTargetProperty(moveCenter, new PropertyPath(ScatterViewItem.CenterProperty));
-            Storyboard.SetTargetProperty(moveWidth, new PropertyPath(ScatterViewItem.WidthProperty));
-            Storyboard.SetTargetProperty(moveHeight, new PropertyPath(ScatterViewItem.HeightProperty));
-            s.Width = endWidth;
-            s.Height = endHeight;
-            s.Center = endPoint;
-            stb.Begin(this);*/
 
             tab._page = page;
             if (page > maxPage)
@@ -221,17 +205,22 @@ namespace SurfaceApplication1
             DockPanel heda = new DockPanel();
             tab.Header = heda;
             Button delBtn = new Button();
-            delBtn.Height = 30;
-            delBtn.Width = 30;
+            delBtn.Height = 24;
+            delBtn.Width = 24;
             delBtn.Margin = new Thickness(10, 0, 0, 0);
             delBtn.PreviewTouchDown += new EventHandler<TouchEventArgs>(btnDelete_Touch);
             delBtn.Click += new RoutedEventHandler(btnDelete_Click);
             TextBlock hedatext = new TextBlock();
             hedatext.Text = "yo";
-            TextBlock ex = new TextBlock();
-            ex.Text = "x";
-            ex.FontSize = 16;
-            delBtn.Content = ex;
+            Image img = new Image();
+            BitmapImage ex = new BitmapImage();
+            ex.BeginInit();
+            ex.UriSource = new Uri("icons/ex.png", UriKind.Relative);
+            ex.EndInit();
+            img.Source = ex;
+            img.Width = 16;
+            img.Height = 16;
+            delBtn.Content = img;
 
             heda.Children.Add(hedatext);
             heda.Children.Add(delBtn);
@@ -376,15 +365,15 @@ namespace SurfaceApplication1
             return tab;
         }
 
-
         private void wheelIt(object sender, MouseWheelEventArgs e)
         {
             ScatterViewItem svi = (ScatterViewItem)sender;
             Point mPos = e.MouseDevice.GetPosition(svi);
             int d = e.Delta;
             ScatterViewItem item = (ScatterViewItem)sender;
-            double width = item.Width + 2 * d;
-            double height = item.Height + d * 1.4;
+            double pcent = item.Width / item.MinWidth;
+            double width = item.Width + 2 * d * pcent;
+            double height = item.Height + d * 1.4 * pcent;
             if (height > item.MaxHeight)
                 height = item.MaxHeight;
             if (height < item.MinHeight)
@@ -465,10 +454,9 @@ namespace SurfaceApplication1
             SliderText.Margin = new Thickness(SliderDisplay.Width / 2 - SliderText.ActualWidth / 2, -swipeHeight, 0, 0);
             double middle = 1160 + (slider.Width - 30) * onVal / slider.Maximum;
             SliderDisplay.Margin = new Thickness(middle, height, 0, 0);
-            SliderDisplay.Opacity = 1;
+            SliderDisplay.Visibility = System.Windows.Visibility.Visible;
 
             SliderImage1.Margin = new Thickness(0, 0, 0, 0);
-            SliderImage2.Opacity = 100;
 
             currentTab()._worker.updateSlideImage(onVal);
         }
@@ -478,9 +466,9 @@ namespace SurfaceApplication1
          */
         private void slider_ManipulationCompleted(object sender, ManipulationCompletedEventArgs e)
         {
-            SliderDisplay.Opacity = 0;
+            SliderDisplay.Visibility = System.Windows.Visibility.Hidden;
             SurfaceSlider slider = (SurfaceSlider)sender;
-            goToPage((int)Math.Round(2 * slider.Value));
+            goToPage((int)(2 * Math.Round(slider.Value)));
         }
 
         /*
@@ -703,6 +691,8 @@ namespace SurfaceApplication1
             s.Height = endHeight;
             s.Center = endPoint;
             stb.Begin(this);
+
+            scatter_ManipulationDelta(s, null);
         }
 
         private bool IsDoubleTap(TouchEventArgs e)
@@ -715,7 +705,10 @@ namespace SurfaceApplication1
             doubleTapSW.Restart();
             bool tapsAreCloseInTime = (elapsed != TimeSpan.Zero && elapsed < TimeSpan.FromSeconds(0.7));
 
-            return tapsAreCloseInDistance && tapsAreCloseInTime;
+            bool isDoubleTap = tapsAreCloseInDistance && tapsAreCloseInTime;
+            if (isDoubleTap)
+                e.Handled = true;
+            return isDoubleTap;
         }
 
         private void OnPreviewTouchDown(object sender, TouchEventArgs e)
@@ -736,12 +729,37 @@ namespace SurfaceApplication1
         {
         }
 
+        public void changeLanguage(language l)
+        {
+            Tab tab = currentTab();
+            tab._currentLanguage = l;
+            updateLanguageButton();
+            tab._worker.setTranslateText(tab._currentLanguage);
+        }
+
+        public void changeLanguage(int l)
+        {
+            Tab tab = currentTab();
+            if (l == 1)
+                tab._currentLanguage = language.OldFrench;
+            else if (l == 2)
+                tab._currentLanguage = language.French;
+            else if (l == 3)
+                tab._currentLanguage = language.English;
+            else
+                tab._currentLanguage = language.None;
+            updateLanguageButton();
+            tab._worker.setTranslateText(tab._currentLanguage);
+        }
+
         private void languageChanged(object sender, SelectionChangedEventArgs e)
         {
             Tab tab = currentTab();
             prevlanguageButton.IsEnabled = true;
             tab._previousLanguage = tab._currentLanguage;
             ListBox box = (ListBox)sender;
+            if (box.SelectedItem == null)
+                return;
             if (box.SelectedIndex == 0)
                 tab._currentLanguage = language.None;
             if (box.SelectedIndex == 1)
@@ -751,7 +769,7 @@ namespace SurfaceApplication1
             if (box.SelectedIndex == 3)
                 tab._currentLanguage = language.English;
             updateLanguageButton();
-            currentTab()._worker.setTranslateText(tab._currentLanguage);
+            tab._worker.setTranslateText(tab._currentLanguage);
 
             languageBox.Visibility = Visibility.Collapsed;
         }
@@ -824,6 +842,8 @@ namespace SurfaceApplication1
         }
         public void rightSwipeDetectionStop(object sender, TouchEventArgs e)
         {
+            rightSwipe = false;
+            currentTab()._rSwipeGrid.Visibility = System.Windows.Visibility.Hidden;
             ScatterViewItem item = (ScatterViewItem)sender;
             Point second = item.TouchesOver.ElementAt<TouchDevice>(0).GetPosition(item);
             if (rightSwipe)
@@ -831,8 +851,6 @@ namespace SurfaceApplication1
                 if (((Canvas)currentTab()._rSwipeGrid.Children[0]).Background == Brushes.Green || (Math.Abs(second.X - rightSwipeStart.X) < 10 && Math.Abs(second.Y - rightSwipeStart.Y) < 10 && rightSwipeWatch.ElapsedMilliseconds < 400 && rightSwipeStart.X > 2 * minPageWidth - 150))
                     next_Click(null, null);
             }
-            rightSwipe = false;
-            currentTab()._rSwipeGrid.Visibility = Visibility.Hidden;
         }
         public void leftSwipeDetectionStart(object sender, TouchEventArgs e)
         {
@@ -889,6 +907,8 @@ namespace SurfaceApplication1
         }
         public void leftSwipeDetectionStop(object sender, TouchEventArgs e)
         {
+            leftSwipe = false;
+            currentTab()._vSwipeGrid.Visibility = System.Windows.Visibility.Hidden;
             ScatterViewItem item = (ScatterViewItem)sender;
             Point second = item.TouchesOver.ElementAt<TouchDevice>(0).GetPosition(item);
             if (leftSwipe)
@@ -896,10 +916,50 @@ namespace SurfaceApplication1
                 if (((Canvas)currentTab()._vSwipeGrid.Children[0]).Background == Brushes.Green || (Math.Abs(second.X - leftSwipeStart.X) < 10 && Math.Abs(second.Y - leftSwipeStart.Y) < 10 && leftSwipeWatch.ElapsedMilliseconds < 400 && leftSwipeStart.X < 150))
                     prev_Click(null, null);
             }
-            leftSwipe = false;
-            currentTab()._vSwipeGrid.Visibility = Visibility.Hidden;
         }
 
+        public void changeTranslationGrids(Point p)
+        {
+            Tab tab = currentTab();
+            List<TranslationBox> translationBoxes;
+            Grid translationGrid;
+            if (p.X < maxPageWidth)
+            {
+                translationBoxes = tab._translationBoxesV;
+                translationGrid = tab._vTranslationGrid;
+            }
+            else
+            {
+                translationBoxes = tab._translationBoxesR;
+                translationGrid = tab._rTranslationGrid;
+                p.X -= maxPageWidth;
+            }
+
+            double width, x, y, height;
+            TranslationBox tb;
+            Grid g;
+
+            for (int i = 0; i < translationBoxes.Count; i++)
+            {
+                tb = translationBoxes[i];
+                g = (Grid)translationGrid.Children[i];
+                x = tb.getTopLeft().X;
+                y = tb.getTopLeft().Y;
+                width = (tb.getBottomRight().X - tb.getTopLeft().X);
+                height = (tb.getBottomRight().Y - tb.getTopLeft().Y);
+
+                if (p.X > x && p.X < x + width && p.Y > y && p.Y < y + height) // tap on it
+                {
+                    g.ColumnDefinitions[1].Width = new GridLength(maxPageWidth - x, GridUnitType.Star);
+                    g.ColumnDefinitions[2].Width = new GridLength(0, GridUnitType.Star);
+                }
+                else
+                {
+                    g.ColumnDefinitions[1].Width = new GridLength(width, GridUnitType.Star);
+                    g.ColumnDefinitions[2].Width = new GridLength(maxPageWidth - x - width, GridUnitType.Star);
+                }
+            }
+        }
 
         private void TextBox_GotFocus(object sender, RoutedEventArgs e)
         {
@@ -923,11 +983,13 @@ namespace SurfaceApplication1
 
         private void languageVisibility(object sender, TouchEventArgs e)
         {
-            if (languageBox.Visibility == Visibility.Collapsed)
-                languageBox.Visibility = Visibility.Visible;
+            languageBox.SelectedItem = null;
+            if (languageBox.Visibility == System.Windows.Visibility.Collapsed)
+                languageBox.Visibility = System.Windows.Visibility.Visible;
             else
-                languageBox.Visibility = Visibility.Collapsed;
+                languageBox.Visibility = System.Windows.Visibility.Collapsed;
         }
+
         private void languageVisibility(object sender, RoutedEventArgs e)
         {
             languageVisibility(sender, null);
@@ -951,7 +1013,6 @@ namespace SurfaceApplication1
             Point center = tab._SVI.Center;
             language lang = tab._currentLanguage;
             sideBar.savePage(pageNum, width, center, lang);
-            pageNumberText.Text = sideBar.savedPages.Count.ToString();
         }
         private void savePage(object sender, RoutedEventArgs e)
         {

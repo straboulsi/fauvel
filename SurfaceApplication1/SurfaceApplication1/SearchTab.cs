@@ -19,8 +19,9 @@ using System.Xml;
 using System.Windows.Threading;
 using System.ComponentModel;
 using System.Diagnostics;
+using System.Windows.Media.Animation;
 
-namespace SurfaceApplication1
+namespace DigitalFauvel
 {
     /**
      * This class defines a Search Tab, opened from the side bar using the "Search" app button. 
@@ -35,7 +36,7 @@ namespace SurfaceApplication1
         public bool? exactPhr;
         public Boolean defaultOptionsChanged, optionsShown;
         public Border poetryBorder, imagesBorder, lyricsBorder;
-        public Button moreOptions, fewerOptions, goSearch, selectLanguageButton;
+        public Button moreOptions, fewerOptions, goSearch, selectLanguageButton, closeLanguageList;
         public Canvas poetryCanvas, lyricsCanvas, imagesCanvas;
         public CheckBox caseSensitive, wholeWordOnly, exactPhraseOnly;
         public Grid fewerOptGrid, optionsGrid;
@@ -58,6 +59,7 @@ namespace SurfaceApplication1
         public TabItem poetryTab, lyricsTab, imagesTab;
         public TextBlock searchPrompt, searchTabHeader, moreOptText, fewerOptText;
         public TextBox searchQueryBox;
+        private Image loadImage;
 
 
 
@@ -73,6 +75,7 @@ namespace SurfaceApplication1
             moreOptions = new Button();
             topLine = new Line();
 
+            closeLanguageList = new Button();
             fewerOptions = new Button();
             upArrow = new Image();
             caseSensitive = new CheckBox();
@@ -102,7 +105,14 @@ namespace SurfaceApplication1
             imagesScroll = new SurfaceScrollViewer(); 
             imagesPanel = new StackPanel();
 
+            headerImage.Source = new BitmapImage(new Uri(@"..\..\icons\search.png", UriKind.Relative));
+
+            loadImage = new Image();
+            loadImage.Source = new BitmapImage(new Uri(@"..\..\icons\magnifyingglass.png", UriKind.Relative));
+            canvas.Children.Add(loadImage);
+
             headerImage.Source = new BitmapImage(new Uri(@"..\..\icons\magnifyingglass.png", UriKind.Relative));
+
             searchTabHeader.HorizontalAlignment = HorizontalAlignment.Center;
             searchTabHeader.VerticalAlignment = VerticalAlignment.Center;
             searchTabHeader.FontSize = 21;
@@ -113,7 +123,7 @@ namespace SurfaceApplication1
             Canvas.SetTop(searchPrompt, 26);
 
             searchQueryBox.Height = 40;
-            searchQueryBox.Width = 315;
+            searchQueryBox.Width = 380; //315
             searchQueryBox.Foreground = Brushes.Gray;
             searchQueryBox.FontSize = 21;
             searchQueryBox.Text = "Enter text";
@@ -124,7 +134,8 @@ namespace SurfaceApplication1
             goSearch.Width = 95;
             goSearch.FontSize = 21;
             goSearch.Content = "Go!";
-            Canvas.SetLeft(goSearch, 378);
+            goSearch.IsEnabled = false;
+            Canvas.SetLeft(goSearch, 450); // 378
             Canvas.SetTop(goSearch, 90);
 
            
@@ -134,24 +145,29 @@ namespace SurfaceApplication1
             downArrow.HorizontalAlignment = HorizontalAlignment.Center;
             moreOptText = new TextBlock();
             moreOptText.Text = "More Options";
-            moreOptText.FontSize = 15; /// Might need to adjust height 
+            moreOptText.FontSize = 18; /// Might need to adjust height 
             optionsGrid = new Grid();
             moreOptions.Content = optionsGrid;
-            moreOptions.Width = 100;
-            moreOptions.Height = 20;
+            moreOptions.Width = 135; // 100
+            moreOptions.Height = 28; // 20
+            moreOptions.HorizontalContentAlignment = HorizontalAlignment.Center;
             optionsGrid.Children.Add(downArrow);
             optionsGrid.Children.Add(moreOptText);
-            Canvas.SetLeft(moreOptions, 225);
-            Canvas.SetTop(moreOptions, 153);
+            Canvas.SetLeft(moreOptions, 230); //210
+            Canvas.SetTop(moreOptions, 145);
             
             
             topLine.X1 = 40;
-            topLine.Y1 = 163;
-            topLine.X2 = 500;
-            topLine.Y2 = 163;
+            topLine.Y1 = 160;
+            topLine.X2 = 540; // 500
+            topLine.Y2 = 160;
             topLine.Stroke = Brushes.Black;
             topLine.StrokeThickness = 2;
-            
+
+            closeLanguageList.Width = 600; // 550
+            closeLanguageList.Height = 1000; //900 
+            closeLanguageList.Style = sideBar.tabBar.FindResource("InvisibleButton") as Style;
+
 
 
             /// The objects for extended search options
@@ -161,20 +177,20 @@ namespace SurfaceApplication1
             caseSensitive.FontSize = 10;
             caseSensitive.LayoutTransform = st;
             caseSensitive.Content = (string)"Case sensitive";
-            Canvas.SetLeft(caseSensitive, 40);
+            Canvas.SetLeft(caseSensitive, 55); //40
             Canvas.SetTop(caseSensitive, 170);
             
 
             wholeWordOnly.FontSize = 10;
             wholeWordOnly.LayoutTransform = st;
             wholeWordOnly.Content = (string)"Match whole word only";
-            Canvas.SetLeft(wholeWordOnly, 243);
+            Canvas.SetLeft(wholeWordOnly, 300); //243
             Canvas.SetTop(wholeWordOnly, 170);
 
             exactPhraseOnly.FontSize = 10;
             exactPhraseOnly.LayoutTransform = st;
             exactPhraseOnly.Content = (string)"Match exact phrase only";
-            Canvas.SetLeft(exactPhraseOnly, 243);
+            Canvas.SetLeft(exactPhraseOnly, 300); // 243
             Canvas.SetTop(exactPhraseOnly, 227);
 
             selectLanguage.Background = Brushes.LightGray;
@@ -187,10 +203,9 @@ namespace SurfaceApplication1
 
           
 
-            Canvas.SetLeft(selectLanguage, 34);
+            Canvas.SetLeft(selectLanguage, 50); //34
             Canvas.SetTop(selectLanguage, 220); 
-
-            Canvas.SetLeft(selectLanguageButton, 34);
+            Canvas.SetLeft(selectLanguageButton, 50); //34
             Canvas.SetTop(selectLanguageButton, 220);
             selectLanguageButton.Width = 175;
             selectLanguageButton.Height = 40;
@@ -218,7 +233,7 @@ namespace SurfaceApplication1
 
             bottomLine.X1 = 40;
             bottomLine.Y1 = 183;
-            bottomLine.X2 = 500;
+            bottomLine.X2 = 540; //500
             bottomLine.Y2 = 183;
             bottomLine.Stroke = Brushes.Black;
             bottomLine.StrokeThickness = 2;
@@ -229,112 +244,96 @@ namespace SurfaceApplication1
             upArrow.HorizontalAlignment = HorizontalAlignment.Center;
             fewerOptText = new TextBlock();
             fewerOptText.Text = "Fewer Options";
-            fewerOptText.FontSize = 15; /// Might need to adjust height 
+            fewerOptText.FontSize = 18; /// Might need to adjust height 
             fewerOptGrid = new Grid();
             fewerOptions.Content = fewerOptGrid;
-            fewerOptions.Width = 100;
-            fewerOptions.Height = 20;
+            fewerOptions.Width = 135;
+            fewerOptions.Height = 28;
+            fewerOptions.HorizontalContentAlignment = HorizontalAlignment.Center;
             fewerOptGrid.Children.Add(upArrow);
             fewerOptGrid.Children.Add(fewerOptText);
-            Canvas.SetLeft(fewerOptions, 225);
-            Canvas.SetTop(fewerOptions, 285);
+            Canvas.SetLeft(fewerOptions, 230); // 210
+            Canvas.SetTop(fewerOptions, 280); // 285
 
 
 
             /// The objects on the search results section
             searchResults.Visibility = Visibility.Hidden;
-            searchResults.Height = 677;
-            searchResults.Width = 482;
+            searchResults.Height = 800; //677
+            searchResults.Width = 525; //482
             searchResults.FontSize = 21;
-            Canvas.SetLeft(searchResults, 30);
+            Canvas.SetLeft(searchResults, 35); //30
             Canvas.SetTop(searchResults, 180);
             searchResults.Items.Add(poetryTab);
             searchResults.Items.Add(lyricsTab);
             searchResults.Items.Add(imagesTab);
 
             poetryBorder = new Border();
-            //poetryBorder.BorderBrush = Brushes.White; // changed to darkgray after search is run
-            //poetryBorder.BorderThickness = new Thickness(1);
             poetryBorder.Child = poetryPanel;
             poetryBorder.Style = sideBar.tabBar.FindResource("ResultBorder") as Style;
-            //poetryBorder.Height = 294;
-            //poetryBorder.Width = 472;
 
             poetryTab.Header = "Poetry";
             poetryTab.Height = 40;
-            poetryTab.Width = 159;
+            poetryTab.Width = 170; 
             poetryTab.Content = poetryCanvas;
 
-            poetryCanvas.Height = 629;
+            poetryCanvas.Height = 750; 
             poetryCanvas.Children.Add(poetryScroll);
             poetryCanvas.Children.Add(poetryBorder);
 
-            poetryScroll.Height = 325;
-            poetryScroll.Width = 470;
-            //poetryScroll.Background = Brushes.LightGray;
-            //poetryScroll.VerticalScrollBarVisibility = ScrollBarVisibility.Visible;
+            poetryScroll.Height = 410; 
+            poetryScroll.Width = 513; 
             poetryScroll.VerticalScrollBarVisibility = ScrollBarVisibility.Auto;
             poetryScroll.HorizontalScrollBarVisibility = ScrollBarVisibility.Disabled;
             poetryScroll.PanningMode = PanningMode.VerticalOnly;
             poetryPanel.Orientation = Orientation.Horizontal;
 
-            Canvas.SetTop(poetryBorder, 331);
-
             lyricsBorder = new Border();
-            //lyricsBorder.BorderBrush = Brushes.White;
-            //lyricsBorder.BorderThickness = new Thickness(1);
             lyricsBorder.Child = lyricsPanel;
             lyricsBorder.Style = sideBar.tabBar.FindResource("ResultBorder") as Style;
-            //lyricsBorder.Height = 294;
-            //lyricsBorder.Width = 472;
 
 
             lyricsTab.Header = "Lyrics";
             lyricsTab.Height = 40;
-            lyricsTab.Width = 159;
+            lyricsTab.Width = 170;
             lyricsTab.Content = lyricsCanvas;
-            lyricsCanvas.Height = 629;
+            lyricsCanvas.Height = 750; 
             lyricsCanvas.Children.Add(lyricsScroll);
             lyricsCanvas.Children.Add(lyricsBorder);
-            lyricsScroll.Height = 325;
-            lyricsScroll.Width = 470;
-            //lyricsScroll.Background = Brushes.LightGray;
-            //lyricsScroll.VerticalScrollBarVisibility = ScrollBarVisibility.Visible;
+            lyricsScroll.Height = 410; 
+            lyricsScroll.Width = 513;
             lyricsScroll.HorizontalScrollBarVisibility = ScrollBarVisibility.Disabled;
             lyricsScroll.PanningMode = PanningMode.VerticalOnly;
             lyricsPanel.Orientation = Orientation.Horizontal;
 
-            Canvas.SetTop(lyricsBorder, 331);
-
+            
             imagesBorder = new Border();
-            //imagesBorder.BorderBrush = Brushes.White;
-            //imagesBorder.BorderThickness = new Thickness(1);
             imagesBorder.Child = imagesPanel;
             imagesBorder.Style = sideBar.tabBar.FindResource("ResultBorder") as Style;
-            //imagesBorder.Height = 294;
-            //imagesBorder.Width = 472;
+
 
             imagesTab.Header = "Images";
             imagesTab.Height = 40;
-            imagesTab.Width = 159;
+            imagesTab.Width = 170; 
             imagesTab.Content = imagesCanvas;
-            imagesCanvas.Height = 629;
+            imagesCanvas.Height = 750; 
             imagesCanvas.Children.Add(imagesScroll);
-            imagesCanvas.Children.Add(imagesBorder); 
-            imagesScroll.Height = 325;
-            imagesScroll.Width = 470;
-            //imagesScroll.Background = Brushes.LightGray;
+            imagesCanvas.Children.Add(imagesBorder);
+            imagesScroll.Height = 410; 
+            imagesScroll.Width = 513;
+
             imagesScroll.HorizontalScrollBarVisibility = ScrollBarVisibility.Disabled;
-            //imagesScroll.VerticalScrollBarVisibility = ScrollBarVisibility.Visible;
             imagesScroll.PanningMode = PanningMode.VerticalOnly;
             imagesPanel.Orientation = Orientation.Horizontal;
 
-            Canvas.SetTop(imagesBorder, 331);
+
+
 
             /// Adding everything
 
             headerGrid.Children.Add(searchTabHeader);
 
+            canvas.Children.Add(closeLanguageList); // Should add to the very back...
             canvas.Children.Add(searchPrompt);
             canvas.Children.Add(searchQueryBox);
             canvas.Children.Add(goSearch);
@@ -356,6 +355,9 @@ namespace SurfaceApplication1
             wholeWordOnly.Visibility = Visibility.Hidden;
             exactPhraseOnly.Visibility = Visibility.Hidden;
 
+            closeLanguageList.TouchEnter += new EventHandler<TouchEventArgs>(closeLanguageList_TouchEnter);
+            closeLanguageList.MouseLeave += new MouseEventHandler(closeLanguageList_MouseLeave);
+            closeLanguageList.Click += new RoutedEventHandler(closeLanguageList_Click);
             moreOptions.Click += new RoutedEventHandler(Show_Options);
             moreOptions.TouchDown += new EventHandler<TouchEventArgs>(Show_Options);
             fewerOptions.Click += new RoutedEventHandler(Hide_Options);
@@ -380,6 +382,11 @@ namespace SurfaceApplication1
             English.Selected += new RoutedEventHandler(searchLanguageChanged);
         }
 
+
+        private void closeLanguageList_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
 
         /**
          * Displays the language choices for search.
@@ -467,6 +474,18 @@ namespace SurfaceApplication1
             optionsShown = false;
         }
 
+
+        private void closeLanguageList_TouchEnter(object sender, EventArgs e)
+        {
+            closeLanguageList.Background = Brushes.GhostWhite;
+        }
+        private void closeLanguageList_MouseLeave(object sender, EventArgs e)
+        {
+            closeLanguageList.Background = Brushes.GhostWhite;
+        }
+
+
+
         /**
          * Changes a check box from checked to unchecked and vice versa.
          * */
@@ -478,6 +497,34 @@ namespace SurfaceApplication1
                 thisbox.IsChecked = false;
             else if (thisbox.IsChecked == false)
                 thisbox.IsChecked = true;
+        }
+
+        private Grid getLoadingImage()
+        {
+            Grid grid = new Grid();
+            Image image = new Image();
+            image.Source = new BitmapImage(new Uri(@"..\..\icons\loading.png", UriKind.Relative));
+            grid.Children.Add(image);
+
+            DoubleAnimationUsingKeyFrames dakf = new DoubleAnimationUsingKeyFrames();
+            dakf.KeyFrames = new DoubleKeyFrameCollection();
+            dakf.KeyFrames.Add(new DiscreteDoubleKeyFrame(0, KeyTime.FromTimeSpan(TimeSpan.FromMilliseconds(1))));
+            dakf.KeyFrames.Add(new DiscreteDoubleKeyFrame(45, KeyTime.FromTimeSpan(TimeSpan.FromMilliseconds(50))));
+            dakf.KeyFrames.Add(new DiscreteDoubleKeyFrame(90, KeyTime.FromTimeSpan(TimeSpan.FromMilliseconds(100))));
+            dakf.KeyFrames.Add(new DiscreteDoubleKeyFrame(135, KeyTime.FromTimeSpan(TimeSpan.FromMilliseconds(150))));
+            dakf.KeyFrames.Add(new DiscreteDoubleKeyFrame(180, KeyTime.FromTimeSpan(TimeSpan.FromMilliseconds(200))));
+            dakf.KeyFrames.Add(new DiscreteDoubleKeyFrame(225, KeyTime.FromTimeSpan(TimeSpan.FromMilliseconds(250))));
+            dakf.KeyFrames.Add(new DiscreteDoubleKeyFrame(270, KeyTime.FromTimeSpan(TimeSpan.FromMilliseconds(300))));
+            dakf.KeyFrames.Add(new DiscreteDoubleKeyFrame(315, KeyTime.FromTimeSpan(TimeSpan.FromMilliseconds(350))));
+
+            dakf.Duration = new Duration(TimeSpan.FromMilliseconds(400));
+            dakf.RepeatBehavior = RepeatBehavior.Forever;
+            RotateTransform rt = new RotateTransform();
+            image.RenderTransform = rt;
+            image.RenderTransformOrigin = new Point(0.5, 0.5);
+            rt.BeginAnimation(RotateTransform.AngleProperty, dakf);
+
+            return grid;
         }
 
         /**
@@ -492,8 +539,11 @@ namespace SurfaceApplication1
             searchTabHeader.Text = searchQueryBox.Text;
             searchResults.Visibility = Visibility.Visible;
 
-            selectLanguage.Visibility = Visibility.Hidden;
-            selectLanguageButton.Visibility = Visibility.Visible;
+            if (optionsShown)
+            {
+                selectLanguage.Visibility = Visibility.Hidden;
+                selectLanguageButton.Visibility = Visibility.Visible;
+            }
 
             int caseType = 0;
             int wordType = 0;
@@ -507,11 +557,20 @@ namespace SurfaceApplication1
             if (optionsShown == true)
                 compressResults();
 
+            poetryTab.Content = getLoadingImage();
+            lyricsTab.Content = getLoadingImage();
+            imagesTab.Content = getLoadingImage();
             poetryTab.Header = "Poetry (...)";
             lyricsTab.Header = "Lyrics (...)";
             imagesTab.Header = "Images (...)";
             searchQueryBox.IsEnabled = false;
-            goSearch.Content = "...";
+            caseSensitive.IsEnabled = false;
+            wholeWordOnly.IsEnabled = false;
+            exactPhraseOnly.IsEnabled = false;
+            moreOptions.IsEnabled = false;
+            fewerOptions.IsEnabled = false;
+            selectLanguageButton.IsEnabled = false;
+            goSearch.Content = "searching";
             goSearch.IsEnabled = false;
             unreturnedResults = 3;
 
@@ -690,6 +749,12 @@ namespace SurfaceApplication1
                 searchQueryBox.IsEnabled = true;
                 goSearch.Content = "Go!";
                 goSearch.IsEnabled = true;
+                caseSensitive.IsEnabled = true;
+                wholeWordOnly.IsEnabled = true;
+                exactPhraseOnly.IsEnabled = true;
+                moreOptions.IsEnabled = true;
+                fewerOptions.IsEnabled = true;
+                selectLanguageButton.IsEnabled = true;
 
                 //Auto flip to a tab with results if the current one has none
                 if (searchResults.SelectedItem == poetryTab && poetryResults.Count == 0)
@@ -722,7 +787,8 @@ namespace SurfaceApplication1
         private void newSearch(object sender, RoutedEventArgs e)
         {
             String searchQuery = searchQueryBox.Text;
-            runSearch();
+            if(searchQuery.Trim()!="")
+                runSearch();
 
         }
 
@@ -741,7 +807,7 @@ namespace SurfaceApplication1
             rbi.excerpts = sr.excerpts;
             rbi.Height = 80; // temp taller than desired, so scrollbar shows
             rbi.HorizontalAlignment = System.Windows.HorizontalAlignment.Left;
-            rbi.Width = 430;
+            rbi.Width = 475; //430
             rbi.Style = sideBar.tabBar.FindResource("SearchResultSurfaceListBoxItem") as Style; // Not sure if this works..
 
             if (rbi.resultType == 2 || rbi.resultType == 3) // For lyrics or images
@@ -762,17 +828,15 @@ namespace SurfaceApplication1
          * */
         private void compressResults()
         {
-            searchResults.Height = 537;
+            // height 800, set at 180
+            searchResults.Height = 660; //537
             Canvas.SetTop(searchResults, 320);
-            poetryBorder.Height = 245;
-            Canvas.SetTop(poetryBorder, 240);
-            poetryScroll.Height = 230;
-            lyricsBorder.Height = 245;
-            Canvas.SetTop(lyricsBorder, 240);
-            lyricsScroll.Height = 230;
-            imagesBorder.Height = 245;
-            Canvas.SetTop(imagesBorder, 240);
-            imagesScroll.Height = 230;
+            Canvas.SetTop(poetryBorder, 275);
+            poetryScroll.Height = 270; //230
+            Canvas.SetTop(lyricsBorder, 275);
+            lyricsScroll.Height = 270;
+            Canvas.SetTop(imagesBorder, 275);
+            imagesScroll.Height = 270;
         }
 
         /**
@@ -780,17 +844,14 @@ namespace SurfaceApplication1
          * */
         private void expandResults()
         {
-            searchResults.Height = 677;
+            searchResults.Height = 800; //677
             Canvas.SetTop(searchResults, 180);
-            poetryBorder.Height = 294;
-            Canvas.SetTop(poetryBorder, 331);
-            poetryScroll.Height = 325;
-            lyricsBorder.Height = 294;
-            Canvas.SetTop(lyricsBorder, 331);
-            lyricsScroll.Height = 325;
-            imagesBorder.Height = 294;
-            Canvas.SetTop(imagesBorder, 331);
-            imagesScroll.Height = 325;
+            Canvas.SetTop(poetryBorder, 415);
+            poetryScroll.Height = 410;
+            Canvas.SetTop(lyricsBorder, 415);
+            lyricsScroll.Height = 410;
+            Canvas.SetTop(imagesBorder, 415);
+            imagesScroll.Height = 410;
         }
 
         /**
@@ -833,6 +894,7 @@ namespace SurfaceApplication1
                 poetryPanel.Children.Add(closeupImage);
                 poetryPanel.Children.Add(closeupText);
                 poetryPanel.TouchDown += new EventHandler<TouchEventArgs>(goToFolio);
+                poetryPanel.MouseLeftButtonDown += new MouseButtonEventHandler(goToFolio);
             }
 
             else if (selectedResult.resultType == 2)
@@ -841,6 +903,7 @@ namespace SurfaceApplication1
                 lyricsPanel.Children.Add(closeupImage);
                 lyricsPanel.Children.Add(closeupText);
                 lyricsPanel.TouchDown += new EventHandler<TouchEventArgs>(goToFolio);
+                lyricsPanel.MouseLeftButtonDown += new MouseButtonEventHandler(goToFolio);
             }
 
             else if (selectedResult.resultType == 3)
@@ -849,6 +912,7 @@ namespace SurfaceApplication1
                 imagesPanel.Children.Add(closeupImage);
                 imagesPanel.Children.Add(closeupText);
                 imagesPanel.TouchDown += new EventHandler<TouchEventArgs>(goToFolio);
+                imagesPanel.MouseLeftButtonDown += new MouseButtonEventHandler(goToFolio);
             }
 
             newPageToOpen = selectedResult.folioInfo.Text;
@@ -881,7 +945,7 @@ namespace SurfaceApplication1
          * Navigates from a search result closeup to a new tab open to that result's page.
          * Refers to the last ResultBoxItem selected for closeup.
          * */
-        private void goToFolio(object sender, TouchEventArgs e)
+        private void goToFolio(object sender, RoutedEventArgs e)
         {
             if(newPageToOpen != lastPageToOpen) 
             {
@@ -903,6 +967,8 @@ namespace SurfaceApplication1
                 w = lastCloseupRBI.bottomR.X - lastCloseupRBI.topL.X;
                 h = lastCloseupRBI.bottomR.Y - lastCloseupRBI.topL.Y;
                 surfaceWindow.resizePageToRect(new Rect(x, y, w, h));
+                surfaceWindow.changeLanguage((int)currentSearchLanguage + 1);
+                surfaceWindow.testText.Text = x.ToString() + " " + y.ToString();// +" " + w.ToString() + " " + h.ToString();
 
                 lastPageToOpen = newPageToOpen;
             }
@@ -954,6 +1020,8 @@ namespace SurfaceApplication1
             else
                 searchQueryBox.SelectAll();
 
+
+            goSearch.IsEnabled = true;
             searchQueryBox.Focus();
         }
 

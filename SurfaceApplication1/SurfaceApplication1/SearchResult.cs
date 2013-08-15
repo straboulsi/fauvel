@@ -12,7 +12,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace SurfaceApplication1
+namespace DigitalFauvel
 {
     /**
      * This class represents a SearchResult, which has text, a tag, folio, etc.

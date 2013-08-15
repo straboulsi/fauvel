@@ -10,11 +10,10 @@ using System.Windows.Input;
 using Microsoft.Surface;
 using Microsoft.Surface.Presentation;
 using Microsoft.Surface.Presentation.Controls;
-using Microsoft.Surface.Presentation.Controls;
 using System.Xml;
 using System.Windows.Documents;
 
-namespace SurfaceApplication1
+namespace DigitalFauvel
 {
     /**
      * This class defines the SideBar that is on the right side of the Surface. 
@@ -30,7 +29,6 @@ namespace SurfaceApplication1
         public SurfaceWindow1 surfaceWindow;
         public TabControl tabBar;
 
-
         // This constructor defines the look of the "new tab", which displays all apps for a user to choose from.
         public SideBar(SurfaceWindow1 surfaceWindow, TabControl tabBar)
         {
@@ -40,125 +38,65 @@ namespace SurfaceApplication1
             this.tabBar = tabBar;
             tabItems = new List<SideBarTab>();
 
-
             tabAdd = new SideBarTab(this);
-            tabAdd.Header = "  +  ";
+            tabAdd.Header = "+";
+            tabAdd.Width = 50;
             tabAdd.FontSize = 25;
             tabAdd.FontFamily = new FontFamily("Cambria");
 
             Canvas newTabCanvas = new Canvas();
-            newTabCanvas.Height = 899;
+            newTabCanvas.Height = 900; 
             newTabCanvas.Width = 550;
             tabAdd.Content = newTabCanvas;
 
-
-            // Search button, which triggers new SearchTab
-            Button searchButton = new Button();
-            searchButton.Style = tabBar.FindResource("RoundButtonTemplate") as Style;
-            searchButton.Click += new RoutedEventHandler(SearchButton_Selected);
-            searchButton.TouchDown += new EventHandler<TouchEventArgs>(SearchButton_Selected);
-
-            Grid searchGrid = new Grid();
-
-            Image searchIm = new Image();
-            searchIm.Source = new BitmapImage(new Uri(@"..\..\icons\magnifyingglass.png", UriKind.Relative));
-            searchIm.Style = tabBar.FindResource("ButtonImageTemplate") as Style;
-
-            TextBlock searchText = new TextBlock();
-            searchText.Text = "SEARCH";
-            searchText.Style = tabBar.FindResource("ButtonTextTemplate") as Style;
-
-            searchGrid.Children.Add(searchIm);
-            searchGrid.Children.Add(searchText);
-            searchButton.Content = searchGrid;
-            Canvas.SetLeft(searchButton, 68.0);
-            Canvas.SetTop(searchButton, 350.0);
-            newTabCanvas.Children.Add(searchButton);
-
-
-
-            // Annotate button, which triggers new AnnotateTab 
-            Button annotateButton = new Button();
-            annotateButton.Style = tabBar.FindResource("RoundButtonTemplate") as Style;
-            annotateButton.Click += new RoutedEventHandler(AnnotateButton_Selected);
-            annotateButton.TouchDown += new EventHandler<TouchEventArgs>(AnnotateButton_Selected);
-
-            Grid annotateGrid = new Grid();
-
-            Image annotateIm = new Image();
-            annotateIm.Source = new BitmapImage(new Uri(@"..\..\icons\pencil.jpg", UriKind.Relative));
-            annotateIm.Style = tabBar.FindResource("ButtonImageTemplate") as Style;
-
-            TextBlock annotateText = new TextBlock();
-            annotateText.Style = tabBar.FindResource("ButtonTextTemplate") as Style;
-            annotateText.Text = "ANNOTATE";
-            annotateText.Margin = new Thickness(0, 0, 0, 0);
-            annotateText.RenderTransformOrigin = new Point(0.5, 0.5);
-            annotateText.RenderTransform = new RotateTransform(45);
-            annotateText.FontSize = 22.5;
-
-            annotateGrid.Children.Add(annotateIm);
-            annotateGrid.Children.Add(annotateText);
-            annotateButton.Content = annotateGrid;
-            Canvas.SetLeft(annotateButton, 219.0);
-            Canvas.SetTop(annotateButton, 350.0);
-            newTabCanvas.Children.Add(annotateButton);
-
-
-
-            // Saved pages button, which triggers new SavedPagesTab
-            Button savedPagesButton = new Button();
-            savedPagesButton.Style = tabBar.FindResource("RoundButtonTemplate") as Style;
-            savedPagesButton.Click += new RoutedEventHandler(SavedPagesButton_Selected);
-            savedPagesButton.TouchDown += new EventHandler<TouchEventArgs>(SavedPagesButton_Selected);
-
-            Image savedPagesIm = new Image();
-            savedPagesIm.Source = new BitmapImage(new Uri(@"..\..\icons\save.png", UriKind.Relative));
-            savedPagesIm.Style = tabBar.FindResource("ButtonImageTemplate") as Style;
-
-            TextBlock savedPagesText = new TextBlock();
-            savedPagesText.Style = tabBar.FindResource("ButtonTextTemplate") as Style;
-            savedPagesText.Text = "SAVED";
-
-            Grid savedPagesGrid = new Grid();
-
-            savedPagesGrid.Children.Add(savedPagesIm);
-            savedPagesGrid.Children.Add(savedPagesText);
-            savedPagesButton.Content = savedPagesGrid;
-            Canvas.SetLeft(savedPagesButton, 370.0);
-            Canvas.SetTop(savedPagesButton, 480.0);
-            newTabCanvas.Children.Add(savedPagesButton);
-
-
-
-            // Study button, which triggers a new StudyTab 
-            Button studyButton = new Button();
-            studyButton.Style = tabBar.FindResource("RoundButtonTemplate") as Style;
-            studyButton.Click += new RoutedEventHandler(StudyButton_Selected);
-            studyButton.TouchDown += new EventHandler<TouchEventArgs>(StudyButton_Selected);
-
-            Grid studyGrid = new Grid();
-
-            Image studyIm = new Image();
-            studyIm.Source = new BitmapImage(new Uri(@"..\..\icons\musicnote.png", UriKind.Relative));
-            studyIm.Style = tabBar.FindResource("ButtonImageTemplate") as Style;
-
-            TextBlock studyText = new TextBlock();
-            studyText.Style = tabBar.FindResource("ButtonTextTemplate") as Style;
-            studyText.Text = "STUDY";
-
-            studyGrid.Children.Add(studyIm);
-            studyGrid.Children.Add(studyText);
-            studyButton.Content = studyGrid;
-            Canvas.SetLeft(studyButton, 370.0);
-            Canvas.SetTop(studyButton, 350.0);
-            newTabCanvas.Children.Add(studyButton);
-
-
+            newTabCanvas.Children.Add(addApplication("Search", "search.png", SearchButton_Selected, 115, 290)); // 0, 0
+            newTabCanvas.Children.Add(addApplication("Annotate", "pencil.png", AnnotateButton_Selected, 330, 290));
+            newTabCanvas.Children.Add(addApplication("Saved Pages", "save.png", SavedPagesButton_Selected, 330, 450));
+            newTabCanvas.Children.Add(addApplication("Music", "music.png", StudyButton_Selected, 115, 450));
+            
             tabItems.Add(tabAdd);
             tabBar.DataContext = tabItems;
             tabBar.SelectedIndex = 0;
         }
+
+        private StackPanel addApplication(String name, String image, RoutedEventHandler method, int x, int y)
+        {
+            StackPanel appPanel = new StackPanel();
+            appPanel.Width = 130;
+            appPanel.Orientation = Orientation.Vertical;
+            appPanel.HorizontalAlignment = HorizontalAlignment.Center;
+            Canvas.SetLeft(appPanel, x);
+            Canvas.SetTop(appPanel, y);
+
+            Button button = new Button();
+            button.Width = 100;
+            button.Height = 100;
+            button.Click += new RoutedEventHandler(method);
+            button.TouchDown += new EventHandler<TouchEventArgs>(method);
+            button.Style = tabBar.FindResource("RoundButtonTemplate") as Style;
+
+            Image img = new Image();
+            img.Source = new BitmapImage(new Uri(@"..\..\icons\" + image, UriKind.Relative));
+            img.Opacity = 0.7;
+            button.Content = img;
+
+            TextBlock text = new TextBlock();
+            text.Text = name;
+            text.TextWrapping = TextWrapping.NoWrap;
+            text.FontSize = 25; 
+            text.HorizontalAlignment = HorizontalAlignment.Center;
+            text.Margin = new Thickness(0, 5, 0, 0);
+
+     
+
+            appPanel.Children.Add(button);
+            appPanel.Children.Add(text);
+
+
+            return appPanel;
+        }
+
+
 
         private void SearchButton_Selected(object sender, RoutedEventArgs e)
         {
@@ -182,7 +120,6 @@ namespace SurfaceApplication1
             tabBar.SelectedItem = newTab;
         }
 
-
         private void StudyButton_Selected(object sender, RoutedEventArgs e)
         {
             tabBar.DataContext = null;
@@ -200,7 +137,7 @@ namespace SurfaceApplication1
             int count = tabItems.Count;
             tabBar.DataContext = null;
             SavedPagesTab newTab = new SavedPagesTab(this);
-            newTab.Header = "Saved Pages";
+            newTab.HeaderTemplate = tabBar.FindResource("NewSavedPagesTab") as DataTemplate;
             newTab.Width = 100;
             tabItems.Insert(count - 1, newTab);
             tabBar.DataContext = tabItems;

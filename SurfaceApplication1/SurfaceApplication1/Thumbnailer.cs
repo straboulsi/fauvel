@@ -11,7 +11,7 @@ using System.Xml.XPath;
 using System.Windows.Media.Imaging;
 
 
-namespace SurfaceApplication1
+namespace DigitalFauvel
 {
 
     /**
