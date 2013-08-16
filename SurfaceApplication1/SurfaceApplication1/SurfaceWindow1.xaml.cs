@@ -105,20 +105,27 @@ namespace DigitalFauvel
             base.OnClosed(e);
         }
 
-        private void showBoxes(object sender, RoutedEventArgs e)
+        /**
+         * Shows or hides the bounding boxes.
+         **/
+        private void changeBoxVisibility(object sender, RoutedEventArgs e)
         {
             if (currentTab()._rBoxesGrid.Visibility == System.Windows.Visibility.Visible)
-                currentTab()._rBoxesGrid.Visibility = System.Windows.Visibility.Hidden;
-            else
-                currentTab()._rBoxesGrid.Visibility = System.Windows.Visibility.Visible;
-
-            if (currentTab()._vBoxesGrid.Visibility == System.Windows.Visibility.Visible)
+            {
                 currentTab()._vBoxesGrid.Visibility = System.Windows.Visibility.Hidden;
+                currentTab()._rBoxesGrid.Visibility = System.Windows.Visibility.Hidden;
+            }
             else
+            {
+                currentTab()._rBoxesGrid.Visibility = System.Windows.Visibility.Visible;
                 currentTab()._vBoxesGrid.Visibility = System.Windows.Visibility.Visible;
+            }
         }
 
-        private void prev_Click(object sender, RoutedEventArgs e)
+        /**
+         * Goes to the previous opening
+         **/
+        private void gotoPreviousPage(object sender, RoutedEventArgs e)
         {
             Tab tab = currentTab();
             if (tab._page != 0)
@@ -129,7 +136,10 @@ namespace DigitalFauvel
             }
         }
 
-        private void next_Click(object sender, RoutedEventArgs e)
+        /**
+         * Goes to the next opening
+         **/
+        private void gotoNextPage(object sender, RoutedEventArgs e)
         {
             Tab tab = currentTab();
             if (tab._page != 94)
@@ -140,6 +150,10 @@ namespace DigitalFauvel
             }
         }
 
+        /**
+         * Goes to a specific opening. 0 is the first opening,
+         * 2 is the second, etc.
+         */
         private void goToPage(int page)
         {
             Tab tab = currentTab();
@@ -152,6 +166,10 @@ namespace DigitalFauvel
             loadPage();
         }
 
+        /**
+         * Refreshes the page by loading the images, the translations,
+         * and the bounding boxes.
+         **/
         private void loadPage()
         {
             Tab currentTab = this.currentTab();
@@ -199,6 +217,10 @@ namespace DigitalFauvel
 
         }
 
+        /**
+         * Creates a new tab at a certain page. 0 is the first opening,
+         * 2 is the second opening, etc.
+         **/
         public TabItem createTab(int page)
         {
             int buffer = scatterBuffer;
@@ -212,8 +234,8 @@ namespace DigitalFauvel
             delBtn.Height = 24;
             delBtn.Width = 24;
             delBtn.Margin = new Thickness(10, 0, 0, 0);
-            delBtn.PreviewTouchDown += new EventHandler<TouchEventArgs>(btnDelete_Touch);
-            delBtn.Click += new RoutedEventHandler(btnDelete_Click);
+            delBtn.PreviewTouchDown += new EventHandler<TouchEventArgs>(deleteTabButtonPressed);
+            delBtn.Click += new RoutedEventHandler(deleteTabButtonPressed);
             TextBlock hedatext = new TextBlock();
             hedatext.Text = "yo";
             Image img = new Image();
@@ -369,6 +391,9 @@ namespace DigitalFauvel
             return tab;
         }
 
+        /**
+         * Zoom in and out using the mouse wheel.
+         **/
         private void wheelIt(object sender, MouseWheelEventArgs e)
         {
             ScatterViewItem svi = (ScatterViewItem)sender;
@@ -391,15 +416,17 @@ namespace DigitalFauvel
             limitScatter(svi);
         }
 
-        /*
+        /**
          * returns the tab that the user is currently using
-         */
+         **/
         private Tab currentTab()
         {
             return tabArray[tabNumber];
         }
 
-
+        /**
+         * Called when a tab is changed or the new tab button is pressed.
+         **/
         private void tabBar_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             TabItem tab = tabBar.SelectedItem as TabItem;
@@ -420,12 +447,10 @@ namespace DigitalFauvel
             updateLanguageButton();
         }
 
-        private void btnDelete_Touch(object sender, TouchEventArgs e)
-        {
-            btnDelete_Click(sender, null);
-        }
-
-        private void btnDelete_Click(object sender, RoutedEventArgs e)
+        /**
+         * Called when the delete tab button is pressed.
+         **/
+        private void deleteTabButtonPressed(object sender, RoutedEventArgs e)
         {
             if (tabBar.Items.Count > 2)
             {
@@ -475,9 +500,10 @@ namespace DigitalFauvel
             goToPage((int)(2 * Math.Round(slider.Value)));
         }
 
-        /*
-         * These methods are called when the pages are manipulated. They call limitScatter.
-         */
+        /**
+         * Called when the pages are manipulated. Makes sure the page stays on screen and
+         * loads higher resolution images if needed.
+         **/
         private void scatter_ManipulationDelta(object sender, ManipulationDeltaEventArgs e)
         {
             if (!currentTab()._worker.largeVersoLoaded)
@@ -487,11 +513,19 @@ namespace DigitalFauvel
 
             limitScatter((ScatterViewItem)sender);
         }
+
+        /**
+         * Called when user stops manipulating the page. Makes sure it stays on screen.
+         **/
         private void scatter_ManipulationCompleted(object sender, ManipulationCompletedEventArgs e)
         {
             limitScatter((ScatterViewItem)sender);
         }
 
+        /**
+         * Changes the font size of the text boxes (which contain translations)
+         * when the pages are zoomed in and out.
+         **/
         private void changeTextBoxSize(object sender, SizeChangedEventArgs e)
         {
             ScatterViewItem i = (ScatterViewItem)sender;
@@ -559,6 +593,9 @@ namespace DigitalFauvel
             e.Handled = true;
         }
 
+        /**
+         * Called when the user double-taps on the page.
+         **/
         protected virtual void OnDoubleTouchDown(ScatterViewItem s, Point p)
         {
             if (!dtOut)
@@ -863,7 +900,7 @@ namespace DigitalFauvel
             if (rightSwipe)
             {
                 if (((Canvas)currentTab()._rSwipeGrid.Children[0]).Background == Brushes.Green || (Math.Abs(second.X - rightSwipeStart.X) < 10 && Math.Abs(second.Y - rightSwipeStart.Y) < 10 && rightSwipeWatch.ElapsedMilliseconds < 400 && rightSwipeStart.X > 2 * minPageWidth - 150))
-                    next_Click(null, null);
+                    gotoNextPage(null, null);
             }
         }
         public void leftSwipeDetectionStart(object sender, TouchEventArgs e)
@@ -919,6 +956,10 @@ namespace DigitalFauvel
                 fill.Width = dist;
             }
         }
+
+        /**
+         * Runs when a touch leaves the page to detect for a left swipe or tap
+         **/
         public void leftSwipeDetectionStop(object sender, TouchEventArgs e)
         {
             leftSwipe = false;
@@ -928,10 +969,13 @@ namespace DigitalFauvel
             if (leftSwipe)
             {
                 if (((Canvas)currentTab()._vSwipeGrid.Children[0]).Background == Brushes.Green || (Math.Abs(second.X - leftSwipeStart.X) < 10 && Math.Abs(second.Y - leftSwipeStart.Y) < 10 && leftSwipeWatch.ElapsedMilliseconds < 400 && leftSwipeStart.X < 150))
-                    prev_Click(null, null);
+                    gotoPreviousPage(null, null);
             }
         }
 
+        /**
+         * Expands any translation that is tapped. Shrinks any others.
+         **/
         public void changeTranslationGrids(Point p)
         {
             Tab tab = currentTab();
@@ -1003,6 +1047,10 @@ namespace DigitalFauvel
             makeEnlargedTranslationGridReadable();
         }
 
+        /**
+         * Makes sure that the enlarged traslation box remains on the page and
+         * has a larger z-value than other translation boxes.
+         **/
         private void makeEnlargedTranslationGridReadable()
         {
             Tab tab = currentTab();
@@ -1097,6 +1145,9 @@ namespace DigitalFauvel
             tb.Foreground = Brushes.Black;
         }
 
+        /**
+         * 
+         **/
         private void pageSlider_PreviewTouchDown(object sender, TouchEventArgs e)
         {
             SurfaceSlider slider = (SurfaceSlider)sender;
