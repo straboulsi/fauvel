@@ -1,5 +1,5 @@
-CHALLENGES OF DIGITAL FAUVEL
-Alison Y. Chang, Summer 2013
+﻿CHALLENGES OF DIGITAL FAUVEL
+Alison Y. Chang & Brendan K. Chou, Summer 2013
 
 Encoding
 Columns and objects - A page aggregates columns, and normally columns would then aggregate smaller elements (i.e. poetry, music, images). But how about objects that stretch over multiple columns or even multiple pages? It then makes less sense to have a column contain an object, bc then multi-column objects would belong to multiple columns. Should columns be an element (i.e. <column>a</column>) or an attribute (i.e. <lg id="Te_0035-0048" column="a">)? Should a content XML file even worry about columns? - In this case, we ended up concluding that the layout XML would indicate columns.
@@ -15,3 +15,16 @@ Search Capabilities
 Multi-word search - While it is easy to match or find an exact phrase with more than 1 word, assuming they appear in that exact order, it is much trickier to treat the multiple words independently. One question that arises is how close together the words should appear in the text to qualify as a search result - if a user searches "torcher Fauvel", is it expected that an entire page will be marked as a match if the two words each appear once, 50 lines apart? Should every word - say, in a 5 word search - HAVE to appear in order to return a match, or can a passage that has 4 out of 5 satisfy the user? Many of these answers depend on whether the user is searching for a specific segment - say 5 lines, which is what we are using for now - that uses the specific words "Fortuna" (Fortune) and "Fauvel" versus a segment with the more general topic of Fortuna and Fauvel - in the latter case, the search breadth would perhaps need to be wider than 5 lines. I had to make a lot of choices decisively in order to move forward with the coding, while allowing for later flexibility and adjustment. For example, the multi-word search currently only returns results that match every single search word, no matter how many there are. However, I was careful to mark off an adjustable section of code, for the purposes of easier re-design should someone decide later to allow more lenient search returns. Since multi-word search can include anything from two words to technically any number above that, I had to keep that in mind when designing things like the styling of the text excerpt in the result close up section (where a thumbnail and text excerpt for a selected search result are displayed), since I needed to be able to search for X number of words and bold those only, in any order, and whether some of them appeared adjacent to other search words or not.
 
 
+
+Loading in Background Threads
+I was unable to get the translation boxes and bounding boxes to load in the background. This causes some lag when pages are changed. I was able to get the images to load in a background thread during page changes and also able to get the searches to run on a background thread, so perhaps these can provide some insight on how to transfer this to translation and bounding box loading.
+
+
+
+Saved Pages Functionality
+There is a commented-out save-page button in SurfaceWindow1.xaml. This button has the functionality to greate a SavedPage object. There is also a button on the sidebar that would open up a SideBarTab to display the saved pages. Tapping on a saved page would cause the current tab to jump to that saved page with the exact zoom and language as when the page was saved. The problem with the tab is that no more than one can be created, the tab will not update as more pages are saved, and the saved page buttons do not display auto-generated thumbnails.
+
+
+
+Annotation Functionality
+Does not exist, but some of the framework has been created with the sidebar tab and button.
