@@ -281,7 +281,8 @@ namespace DigitalFauvel
             musicControls(tag); // Sets up the top part of the StudyTab: title, play/stop buttons, audio selection, etc.
 
             playpause.Click += new RoutedEventHandler(playpause_1_Click);
-            stop.Click += new RoutedEventHandler(stop_1_Click);
+            //stop.Click += new RoutedEventHandler(stop_1_Click);
+            stop.Click += delegate(object s, RoutedEventArgs ev) { stop_Music(s, ev, "mono"); };
             mod_frenchText.Text = Search.getByTag(tag, SurfaceWindow1.modFrXml);
             // This one is hardcoded in because we don't have any English lyrics in an XML file yet.
             engText.Text = "Oh, how far transgression\nis spreading!\nVirtue is dislodged\nfrom the sanctuary.\nNow Christ is dragged\nto a new tribunal,\nwith Peter using\nthe sword of Pilate.\nRelying on the counsel\nof Fauvel,\none comes to grief;\nthe celestial legion\njustly complains.\nTherefore it begs\nthe Father and the Son\nthat for a remedy\nfor all this\nimmediately\nthe fostering Spirit provide.";
@@ -315,7 +316,9 @@ namespace DigitalFauvel
             musicControls(tag); // Sets up the top part of the StudyTab: title, play/stop buttons, audio selection, etc.
 
             playpause.Click += new RoutedEventHandler(playpause_2_Click);
-            stop.Click += new RoutedEventHandler(stop_2_Click);
+            //stop.Click += new RoutedEventHandler(stop_2_Click);
+            stop.Click += delegate(object s, RoutedEventArgs ev) { stop_Music(s, ev, "poly"); };
+
             mod_frenchText.Text = Search.getByTag(tag, SurfaceWindow1.modFrXml);
             engText.Text = "No English translated lyrics for this piece YET!";
 
@@ -375,24 +378,26 @@ namespace DigitalFauvel
             tenorExp.player.MediaEnded += new EventHandler(play_2vMo2_tenor_MediaEnded);
             // Why is there no method for v1Exp ending?!?
 
-            v1Exp.muteTB.Checked += new RoutedEventHandler(v1_mute_Checked);
-            v1Exp.soloTB.Checked += new RoutedEventHandler(v1_solo_Checked);
-            tenorExp.muteTB.Checked += new RoutedEventHandler(tenor_mute_Checked);
-            tenorExp.soloTB.Checked += new RoutedEventHandler(tenor_solo_Checked);
+            List<MusicPartExpander> otherExpsForV1 = new List<MusicPartExpander>();
+            otherExpsForV1.Add(tenorExp);
 
-            v1Exp.muteTB.Unchecked += new RoutedEventHandler(v1_mute_Unchecked);
-            v1Exp.soloTB.Unchecked += new RoutedEventHandler(v1_solo_Unchecked);
-            tenorExp.muteTB.Unchecked += new RoutedEventHandler(tenor_mute_Unchecked);
-            tenorExp.soloTB.Unchecked += new RoutedEventHandler(tenor_solo_Unchecked);
+            List<MusicPartExpander> otherExpsForTenor = new List<MusicPartExpander>();
+            otherExpsForTenor.Add(v1Exp);
 
+            v1Exp.muteTB.Checked += delegate(object s, RoutedEventArgs r) { mute_Checked(s, r, v1Exp, otherExpsForV1); };
+            tenorExp.muteTB.Checked += delegate(object s, RoutedEventArgs r) { mute_Checked(s, r, tenorExp, otherExpsForTenor); };
+            v1Exp.muteTB.Unchecked += delegate(object s, RoutedEventArgs r) { mute_Unchecked(s, r, v1Exp, otherExpsForV1); };
+            tenorExp.muteTB.Unchecked += delegate(object s, RoutedEventArgs r) { mute_Unchecked(s, r, tenorExp, otherExpsForTenor); };
+
+            v1Exp.soloTB.Checked += delegate(object s, RoutedEventArgs r) { solo_Checked(s, r, v1Exp, otherExpsForV1); };
+            tenorExp.soloTB.Checked += delegate(object s, RoutedEventArgs r) { solo_Checked(s, r, tenorExp, otherExpsForTenor); };
+            v1Exp.soloTB.Unchecked += delegate(object s, RoutedEventArgs r) { solo_Unchecked(s, r, v1Exp, otherExpsForV1); };
+            tenorExp.soloTB.Unchecked += delegate(object s, RoutedEventArgs r) { solo_Unchecked(s, r, tenorExp, otherExpsForTenor); };
 
 
             motetParts.Children.Add(fullExp);
             motetParts.Children.Add(v1Exp);
             motetParts.Children.Add(tenorExp);
-
-
-            
 
 
             notesCanvas.Width = 560;
@@ -473,128 +478,162 @@ namespace DigitalFauvel
         }
 
 
-        void v1_mute_Checked(object sender, RoutedEventArgs e)
+        void mute_Checked(object sender, RoutedEventArgs e, MusicPartExpander thisExp, List<MusicPartExpander> otherExps)
         {
-            StudyTab selectedTab = mySideBar.tabBar.SelectedItem as StudyTab;
+            thisExp.Opacity = 0.7;
+            thisExp.soloTB.IsEnabled = false;
 
-            selectedTab.v1Exp.Opacity = 0.7;
-            selectedTab.v1Exp.soloTB.IsEnabled = false;
-
-            // would you want to have it playing while all voices are muted???
-            if ((bool)selectedTab.tenorExp.muteTB.IsChecked)
+            Boolean allOtherExpsMuted = true;
+            foreach (MusicPartExpander mpe in otherExps)
             {
-                selectedTab.tenorExp.player.Stop();
-                selectedTab.v1Exp.player.Stop();
+                if (mpe.muteTB.IsChecked == false) // If any other voices are still audible
+                    allOtherExpsMuted = false;
+            }
+
+            if (allOtherExpsMuted == true)
+            {
+                thisExp.player.Stop();
+                foreach (MusicPartExpander mpe in otherExps)
+                {
+                    mpe.player.Stop();
+                }
                 playpause.IsEnabled = false;
                 stop.IsEnabled = false;
                 playpause.FontSize = 35;
                 playpause.Content = "►";
             }
-
-            selectedTab.v1Exp.player.IsMuted = true;
+            
+            thisExp.player.IsMuted = true;
         }
 
-        void v1_solo_Checked(object sender, RoutedEventArgs e)
+        void mute_Unchecked(object sender, RoutedEventArgs e, MusicPartExpander thisExp, List<MusicPartExpander> otherExps)
         {
-            StudyTab selectedTab = mySideBar.tabBar.SelectedItem as StudyTab;
+            thisExp.Opacity = 1.00;
 
-            selectedTab.v1Exp.BorderBrush = Brushes.YellowGreen;
-            selectedTab.tenorExp.soloTB.IsEnabled = false;
-
-            selectedTab.tenorExp.player.IsMuted = true;
-        }
-
-        void tenor_mute_Checked(object sender, RoutedEventArgs e)
-        {
-            StudyTab selectedTab = mySideBar.tabBar.SelectedItem as StudyTab;
-
-            selectedTab.tenorExp.Opacity = 0.7;
-            selectedTab.tenorExp.soloTB.IsEnabled = false;
-
-            if ((bool)selectedTab.v1Exp.muteTB.IsChecked)
+            // If none of the other voices are soloing, then this one can enable soloing
+            Boolean otherVoiceSoloing = false;
+            foreach (MusicPartExpander mpe in otherExps)
             {
-                selectedTab.tenorExp.player.Stop();
-                selectedTab.v1Exp.player.Stop();
-                playpause.IsEnabled = false;
-                stop.IsEnabled = false;
-                playpause.FontSize = 35;
-                playpause.Content = "►";
+                if (mpe.soloTB.IsChecked == true)
+                    otherVoiceSoloing = true;
             }
-            selectedTab.tenorExp.player.IsMuted = true;
-        }
 
-        void tenor_solo_Checked(object sender, RoutedEventArgs e)
-        {
-            StudyTab selectedTab = mySideBar.tabBar.SelectedItem as StudyTab;
-
-            selectedTab.tenorExp.BorderBrush = Brushes.YellowGreen;
-            selectedTab.v1Exp.soloTB.IsEnabled = false;
-
-            selectedTab.v1Exp.player.IsMuted = true;
-        }
-
-        void v1_mute_Unchecked(object sender, RoutedEventArgs e)
-        {
-            StudyTab selectedTab = mySideBar.tabBar.SelectedItem as StudyTab;
-
-            selectedTab.v1Exp.Opacity = 1.00;
-            if (!(bool)selectedTab.tenorExp.soloTB.IsChecked)
-                selectedTab.v1Exp.soloTB.IsEnabled = true;
+            if (otherVoiceSoloing == false)
+            {
+                thisExp.soloTB.IsEnabled = true;
+            }
 
             playpause.IsEnabled = true;
             stop.IsEnabled = true;
-            selectedTab.v1Exp.player.IsMuted = false;
+            thisExp.player.IsMuted = false;
+
         }
 
-        void v1_solo_Unchecked(object sender, RoutedEventArgs e)
+
+        void solo_Checked(object sender, RoutedEventArgs e, MusicPartExpander thisExp, List<MusicPartExpander> otherExps)
+        {
+            thisExp.BorderBrush = Brushes.YellowGreen;
+            foreach (MusicPartExpander mpe in otherExps)
+            {
+                mpe.soloTB.IsEnabled = false;
+                mpe.player.IsMuted = true;
+            }
+
+
+        }
+
+        void solo_Unchecked(object sender, RoutedEventArgs e, MusicPartExpander thisExp, List<MusicPartExpander> otherExps)
+        {
+            thisExp.BorderBrush = Brushes.Black;
+
+            foreach (MusicPartExpander mpe in otherExps)
+            {
+                mpe.soloTB.IsEnabled = true;
+                mpe.player.IsMuted = false;
+            }
+        }
+
+        //void v1_solo_Unchecked(object sender, RoutedEventArgs e)
+        //{
+        //    StudyTab selectedTab = mySideBar.tabBar.SelectedItem as StudyTab;
+
+        //    selectedTab.v1Exp.BorderBrush = Brushes.Black;
+        //    selectedTab.tenorExp.soloTB.IsEnabled = true;
+
+        //    selectedTab.tenorExp.player.IsMuted = false;
+        //}
+
+
+
+        //void tenor_solo_Unchecked(object sender, RoutedEventArgs e)
+        //{
+        //    StudyTab selectedTab = mySideBar.tabBar.SelectedItem as StudyTab;
+
+        //    selectedTab.tenorExp.BorderBrush = Brushes.Black;
+        //    selectedTab.v1Exp.soloTB.IsEnabled = true;
+
+        //    selectedTab.v1Exp.player.IsMuted = false;
+        //}
+
+
+        //void v1_solo_Checked(object sender, RoutedEventArgs e)
+        //{
+        //    StudyTab selectedTab = mySideBar.tabBar.SelectedItem as StudyTab;
+
+        //    selectedTab.v1Exp.BorderBrush = Brushes.YellowGreen;
+        //    selectedTab.tenorExp.soloTB.IsEnabled = false;
+
+        //    selectedTab.tenorExp.player.IsMuted = true;
+        //}
+
+        
+
+        //void tenor_solo_Checked(object sender, RoutedEventArgs e)
+        //{
+        //    StudyTab selectedTab = mySideBar.tabBar.SelectedItem as StudyTab;
+
+        //    selectedTab.tenorExp.BorderBrush = Brushes.YellowGreen;
+        //    selectedTab.v1Exp.soloTB.IsEnabled = false;
+
+        //    selectedTab.v1Exp.player.IsMuted = true;
+        //}
+
+
+
+
+
+        void stop_Music(object sender, RoutedEventArgs e, String musicType)
         {
             StudyTab selectedTab = mySideBar.tabBar.SelectedItem as StudyTab;
 
-            selectedTab.v1Exp.BorderBrush = Brushes.Black;
-            selectedTab.tenorExp.soloTB.IsEnabled = true;
-
-            selectedTab.tenorExp.player.IsMuted = false;
-        }
-
-        void tenor_mute_Unchecked(object sender, RoutedEventArgs e)
-        {
-            StudyTab selectedTab = mySideBar.tabBar.SelectedItem as StudyTab;
-
-            selectedTab.tenorExp.Opacity = 1.00;
-            if (!(bool)selectedTab.v1Exp.soloTB.IsChecked)
-                selectedTab.tenorExp.soloTB.IsEnabled = true;
-
-            playpause.IsEnabled = true;
-            stop.IsEnabled = true;
-            selectedTab.tenorExp.player.IsMuted = false;
-        }
-
-        void tenor_solo_Unchecked(object sender, RoutedEventArgs e)
-        {
-            StudyTab selectedTab = mySideBar.tabBar.SelectedItem as StudyTab;
-
-            selectedTab.tenorExp.BorderBrush = Brushes.Black;
-            selectedTab.v1Exp.soloTB.IsEnabled = true;
-
-            selectedTab.v1Exp.player.IsMuted = false;
-        }
-
-
-        void stop_1_Click(object sender, RoutedEventArgs e)
-        {
             playpause.Content = "►";
             playpause.FontSize = 35;
-            monoPlayer.Stop();
-        }
-        void stop_2_Click(object sender, RoutedEventArgs e)
-        {
-            StudyTab selectedTab = mySideBar.tabBar.SelectedItem as StudyTab;
 
-            playpause.Content = "►";
-            playpause.FontSize = 35;
-            selectedTab.v1Exp.player.Stop();
-            selectedTab.tenorExp.player.Stop();
+            if (musicType == "poly") // polyphonic
+            {
+                selectedTab.v1Exp.player.Stop();
+                selectedTab.tenorExp.player.Stop();
+            }
+            else if (musicType == "mono")
+                selectedTab.monoPlayer.Stop();
         }
+
+
+        //void stop_1_Click(object sender, RoutedEventArgs e)
+        //{
+        //    playpause.Content = "►";
+        //    playpause.FontSize = 35;
+        //    monoPlayer.Stop();
+        //}
+        //void stop_2_Click(object sender, RoutedEventArgs e)
+        //{
+        //    StudyTab selectedTab = mySideBar.tabBar.SelectedItem as StudyTab;
+
+        //    playpause.Content = "►";
+        //    playpause.FontSize = 35;
+        //    selectedTab.v1Exp.player.Stop();
+        //    selectedTab.tenorExp.player.Stop();
+        //}
 
         void play_2vMo2_tenor_MediaEnded(object sender, EventArgs e)
         {
