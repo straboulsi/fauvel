@@ -17,8 +17,9 @@ namespace DigitalFauvel
     /**
      * Used in StudyTab.cs to define a display of just one voice from a polyphonic music object.
      * Takes in the name of the voice, i.e. triplum, duplum, or tenor.
+     * The MusicExpander object is typically used for the full score, while its implementation, MusicPartExpander, is used for each part.
      * 
-     * Primary coder: Alison Y. Chang
+     * Primary coder: Alison Y. Chang (based on Jamie Chong's original StudyTab.cs)
      * */
     class MusicExpander : Expander
     {
