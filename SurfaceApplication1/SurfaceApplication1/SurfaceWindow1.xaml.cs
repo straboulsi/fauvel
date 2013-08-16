@@ -33,29 +33,61 @@ namespace DigitalFauvel
     /// </summary>
     public partial class SurfaceWindow1 : SurfaceWindow
     {
+        /*  */
         private bool rightSwipe = false, leftSwipe = false, dtOut = false; // dtOut is double tap to zoom out
-        public static System.Windows.Media.Brush glowColor = Brushes.Orange; // Used in SearchTab to draw attention to changed search settings
-        public enum language { None = 0, OldFrench = 1, French = 2, English = 3 }; 
+
+        /* Used in SearchTab to draw attention to changed search settings */
+        public static System.Windows.Media.Brush glowColor = Brushes.Orange;
+
+        /*  */
+        public enum language { None = 0, OldFrench = 1, French = 2, English = 3 };
+
+        /*  */
         List<Tab> tabArray = new List<Tab>();
+
+        /*  */
         SideBar sideBar;
+
+        /*  */
         private Stopwatch rightSwipeWatch, leftSwipeWatch;
+
+        /* used to determine if the user double-taps */
         private readonly Stopwatch doubleTapSW = new Stopwatch();
+
+        /*  */
         private Point lastTapLocation, leftSwipeStart, rightSwipeStart;
+
+        /*  */
         public static Image slideImage1, slideImage2;
-        public int scatterBuffer = 5000, swipeLength = 25, swipeHeight = 6;
-        public static int maxPageWidth = 5250, maxPageHeight = 7350, minPageWidth = 650, minPageHeight = 910, minPageLong = 1274, 
-            tabNumber = 0, minPage = 0, maxPage = 95;
-        public static XmlDocument xml, engXml, layoutXml, modFrXml;
-        public TextBlock testText;
 
-
+        /* the extra space given to the ScatterViewItem so that the whole page can be viewed while zoomed in */
+        public int scatterBuffer = 5000;
         
+        /* the dimensions of the swipe bar to change pages */
+        public int swipeLength = 25, swipeHeight = 6;
+
+        /* the minimum and maximum pixel values for displaying a page. */
+        public static int maxPageWidth = 5250, maxPageHeight = 7350, minPageWidth = 650, minPageHeight = 910;
+
+        /* the minimum and maximum page numbers */
+        public static int minPage = 0, maxPage = 95;
+
+        /* the currently selected tab number */
+        public static int tabNumber = 0;
+
+        /* The xml documents: oldFrench text, English text, modernFrench text, and the layout of where things are on the page. */
+        public static XmlDocument xml, engXml, modFrXml, layoutXml;
+
+
+
+        /**
+         * Called when the program starts. Initialization occurs.
+         **/
         public SurfaceWindow1()
         {
             InitializeComponent();
 
             sideBar = new SideBar(this, tabDynamic);
-            testText = pageNumberText;
 
             try
             {
@@ -281,7 +313,6 @@ namespace DigitalFauvel
             ScatterItem.AddHandler(UIElement.ManipulationDeltaEvent, new EventHandler<ManipulationDeltaEventArgs>(scatter_ManipulationDelta), true);
             ScatterItem.AddHandler(UIElement.ManipulationCompletedEvent, new EventHandler<ManipulationCompletedEventArgs>(scatter_ManipulationCompleted), true);
 
-            ScatterItem.Background = Brushes.Aqua;
             ScatterItem.Width = minPageWidth * 2;
             ScatterItem.Height = minPageHeight;
             ScatterItem.MaxWidth = maxPageWidth * 2;
@@ -674,6 +705,9 @@ namespace DigitalFauvel
             stb.Begin(this);
         }
 
+        /**
+         * Zooms the page into a rectangle specified by r.
+         **/
         public void resizePageToRect(Rect r)
         {
             ScatterViewItem s = currentTab()._SVI;

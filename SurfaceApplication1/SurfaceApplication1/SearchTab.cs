@@ -498,10 +498,17 @@ namespace DigitalFauvel
                 thisbox.IsChecked = true;
         }
 
+        /**
+         * gets a grid that displays the rotating loading image while the search tab is conducting a search.
+         **/
         private Grid getLoadingImage()
         {
             Grid grid = new Grid();
             Image image = new Image();
+            image.Width = 80;
+            image.Height = 80;
+            image.HorizontalAlignment = System.Windows.HorizontalAlignment.Center;
+            image.VerticalAlignment = System.Windows.VerticalAlignment.Center;
             image.Source = new BitmapImage(new Uri(@"..\..\icons\loading.png", UriKind.Relative));
             grid.Children.Add(image);
 
@@ -965,9 +972,8 @@ namespace DigitalFauvel
                 y = lastCloseupRBI.topL.Y;
                 w = lastCloseupRBI.bottomR.X - lastCloseupRBI.topL.X;
                 h = lastCloseupRBI.bottomR.Y - lastCloseupRBI.topL.Y;
-                surfaceWindow.resizePageToRect(new Rect(x, y, w, h));
+                surfaceWindow.resizePageToRect(new Rect(x,y,w,h));
                 surfaceWindow.changeLanguage((int)currentSearchLanguage + 1);
-                surfaceWindow.testText.Text = x.ToString() + " " + y.ToString();// +" " + w.ToString() + " " + h.ToString();
 
                 lastPageToOpen = newPageToOpen;
             }
