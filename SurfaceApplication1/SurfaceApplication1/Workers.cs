@@ -56,7 +56,9 @@ namespace DigitalFauvel
             };
         }
 
-
+        /**
+         * Creates the bounding boxes for the current page
+         **/
         public void updateGhostBoxes()
         {
             var ghostBoxDispatcher = tab._canvas.Dispatcher.BeginInvoke(new Action(() =>
@@ -125,6 +127,9 @@ namespace DigitalFauvel
             }
         }
 
+        /**
+         * updates the images on the page slider
+         **/
         public void updateSlideImage(int pageNum)
         {
             slideInt = pageNum;
@@ -146,6 +151,9 @@ namespace DigitalFauvel
                 rectoImageChange.RunWorkerAsync();
         }
 
+        /**
+         * Constructor. The Workers object is owned by newtab and will update the stuff for this tab.
+         **/
         public Workers(Tab newtab)
         {
             slideImageChange = new BackgroundWorker();

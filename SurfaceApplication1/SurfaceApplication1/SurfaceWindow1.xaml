@@ -227,9 +227,9 @@
             <!--<Button x:Name="debugBoxes" Height="100" Canvas.Left="1200" Width="100" Canvas.Top="10" TouchDown="showBoxes" Click="showBoxes">
                 <Image Source="icons/box.jpg" Stretch="Uniform"/>
             </Button>-->
-            <Button x:Name="saveButton" Height="90" Canvas.Left="1205" Width="90" Canvas.Top="15" TouchDown="savePage" Click="savePage">
+            <!--<Button x:Name="saveButton" Height="90" Canvas.Left="1205" Width="90" Canvas.Top="15" TouchDown="savePage" Click="savePage">
                 <Image Source="icons/save.png" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-            </Button>
+            </Button>-->
         </Canvas>
         <Canvas x:Name="SliderDisplay" Canvas.Left="-805" Width="200" Height="100" HorizontalAlignment="Center">
             <Image x:Name="SliderImage1" Width="100" />
