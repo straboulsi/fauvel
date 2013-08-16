@@ -49,10 +49,10 @@ namespace DigitalFauvel
             newTabCanvas.Width = 550;
             tabAdd.Content = newTabCanvas;
 
-            newTabCanvas.Children.Add(addApplication("Search", "search.png", SearchButton_Selected, 100, 290));
-            //newTabCanvas.Children.Add(addApplication("Annotate", "pencil.png", AnnotateButton_Selected, 320, 290));
-            //newTabCanvas.Children.Add(addApplication("Saved Pages", "save.png", SavedPagesButton_Selected, 330, 450));
-            newTabCanvas.Children.Add(addApplication("Music", "music.png", StudyButton_Selected, 320, 290));
+            newTabCanvas.Children.Add(addApplication("Search", "search.png", SearchButton_Selected, 100, 290, true));
+            newTabCanvas.Children.Add(addApplication("Annotate", "pencil.png", AnnotateButton_Selected, 100, 480, false));
+            newTabCanvas.Children.Add(addApplication("Saved Pages", "save.png", SavedPagesButton_Selected, 320, 480, false));
+            newTabCanvas.Children.Add(addApplication("Music", "music.png", StudyButton_Selected, 320, 290, true));
             
             tabItems.Add(tabAdd);
             tabBar.DataContext = tabItems;
@@ -62,7 +62,7 @@ namespace DigitalFauvel
         /**
          * Adds an application icon/etc to the SideBar new tab page.
          * */
-        private StackPanel addApplication(String name, String image, RoutedEventHandler method, int x, int y)
+        private StackPanel addApplication(String name, String image, RoutedEventHandler method, int x, int y, bool enabled)
         {
             StackPanel appPanel = new StackPanel();
             appPanel.Width = 130;
@@ -70,12 +70,22 @@ namespace DigitalFauvel
             appPanel.HorizontalAlignment = HorizontalAlignment.Center;
             Canvas.SetLeft(appPanel, x);
             Canvas.SetTop(appPanel, y);
-
+            
+            TextBlock text = new TextBlock();
             Button button = new Button();
             button.Width = 100;
             button.Height = 100;
-            button.Click += new RoutedEventHandler(method);
-            button.TouchDown += new EventHandler<TouchEventArgs>(method);
+            if (enabled)
+            {
+                button.Click += new RoutedEventHandler(method);
+                button.TouchDown += new EventHandler<TouchEventArgs>(method);
+            }
+            else
+            {
+                button.Opacity = 0.5;
+                text.Opacity = 0.5;
+                button.IsEnabled = false;
+            }
             button.Style = tabBar.FindResource("RoundButtonTemplate") as Style;
 
             Image img = new Image();
@@ -83,7 +93,6 @@ namespace DigitalFauvel
             img.Opacity = 0.7;
             button.Content = img;
 
-            TextBlock text = new TextBlock();
             text.Text = name;
             text.TextWrapping = TextWrapping.NoWrap;
             text.FontSize = 25; 
