@@ -201,10 +201,10 @@
                     </LinearGradientBrush>
                 </Rectangle.Fill>
             </Rectangle>
-            <Button x:Name="prev" Height="50" Canvas.Left="460" Width="50" Canvas.Top="10" VerticalAlignment="Top" TouchDown="prev_Click" Click="prev_Click">
+            <Button x:Name="prev" Height="50" Canvas.Left="460" Width="50" Canvas.Top="10" VerticalAlignment="Top" TouchDown="gotoPreviousPage" Click="gotoPreviousPage">
                 <Image Source="icons/leftArrow.png" Stretch="Uniform"/>
             </Button>
-            <Button x:Name="next" Height="50" Canvas.Left="800" Width="50" Canvas.Top="10" TouchDown="next_Click" Click="next_Click">
+            <Button x:Name="next" Height="50" Canvas.Left="800" Width="50" Canvas.Top="10" TouchDown="gotoNextPage" Click="gotoNextPage">
                 <Image Source="icons/rightArrow.png" Stretch="Uniform"/>
             </Button>
             <TextBlock x:Name="pageNumberText" Height="48" TextWrapping="Wrap" Text="1" Canvas.Left="545" Canvas.Top="10"  Width="220" FontSize="30" HorizontalAlignment="Center" TextAlignment="Center"/>
