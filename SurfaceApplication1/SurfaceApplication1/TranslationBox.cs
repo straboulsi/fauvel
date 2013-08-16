@@ -22,9 +22,10 @@ namespace DigitalFauvel
         public bool expanded = false;
 
 
-
-        // Has string (contents) and coordinates
-        // Takes in page number and output array of translation boxes
+        /**
+         * An object that holds together strings (translations in various languages) and coordinates
+         * Used in Overlay.getTranslationOverlay to return all TranslationBoxes for a given page.
+         * */
         public TranslationBox(String aTag, String someOldFr, String someModFr, String someEng, Point aTopL, Point aBottomR)
         {
             tag = aTag;
@@ -41,6 +42,9 @@ namespace DigitalFauvel
                 lineHeight = 1;
         }
 
+        /**
+         * A simpler constructor that only has the original French text, without additional translations.
+         * */
         public TranslationBox(String aTag, String someOldFr, Point aTopL, Point aBottomR)
         {
             tag = aTag;
@@ -79,6 +83,9 @@ namespace DigitalFauvel
             return bottomR;
         }
 
+        /**
+         * Returns the coordinates in a more print-friendly format.
+         * */
         public String pointsToString()
         {
             return topL.X + " " + topL.Y + "\r\n" + bottomR.X + " " + bottomR.Y;

@@ -27,7 +27,7 @@ namespace DigitalFauvel
         public ScorePage(String pageName)
         {
             musicImage = new Image();
-            musicImage.Source = new BitmapImage(new Uri(@"..\..\musicz\" + pageName + ".png", UriKind.Relative));
+            musicImage.Source = new BitmapImage(new Uri(@"..\..\music\" + pageName + ".png", UriKind.Relative)); 
             musicImage.Width = 560;
 
             Height = 860;

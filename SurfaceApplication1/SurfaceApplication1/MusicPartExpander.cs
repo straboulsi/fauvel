@@ -39,7 +39,7 @@ namespace DigitalFauvel
         public MusicPartExpander(String voiceName, String tag) : base (voiceName)
         {
             img = new Image();
-            img.Source = new BitmapImage(new Uri(@"..\..\musicz\" + tag + "_" + voiceName+ ".png", UriKind.Relative));
+            img.Source = new BitmapImage(new Uri(@"..\..\music\" + tag + "_" + voiceName+ ".png", UriKind.Relative));
             img.Width = 560;
             Content = img;
 
@@ -76,7 +76,7 @@ namespace DigitalFauvel
             Header = buttonSP;
 
             player = new MediaPlayer();
-            player.Open(new Uri(@"..\..\musicz\" + tag + "_" + voiceName + ".wma", UriKind.Relative));
+            player.Open(new Uri(@"..\..\music\" + tag + "_" + voiceName + ".wma", UriKind.Relative));
 
 
 

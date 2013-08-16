@@ -59,6 +59,9 @@ namespace DigitalFauvel
             tabBar.SelectedIndex = 0;
         }
 
+        /**
+         * Adds an application icon/etc to the SideBar new tab page.
+         * */
         private StackPanel addApplication(String name, String image, RoutedEventHandler method, int x, int y)
         {
             StackPanel appPanel = new StackPanel();
@@ -97,7 +100,9 @@ namespace DigitalFauvel
         }
 
 
-
+        /**
+         * Opening a new SearchTab.
+         * */
         private void SearchButton_Selected(object sender, RoutedEventArgs e)
         {
             tabBar.DataContext = null;
@@ -109,6 +114,11 @@ namespace DigitalFauvel
             SurfaceKeyboard.IsVisible = true;
         }
 
+        /**
+         * Opening a new AnnotationTab. 
+         * NOTE: The annotation tab has not been implemented yet.
+         * This method will open a blank tab with the annotation icon in its header.
+         * */
         private void AnnotateButton_Selected(object sender, RoutedEventArgs e)
         {
             tabBar.DataContext = null;
@@ -120,18 +130,23 @@ namespace DigitalFauvel
             tabBar.SelectedItem = newTab;
         }
 
+        /**
+         * Opening a new StudyTab (for music studying).
+         * */
         private void StudyButton_Selected(object sender, RoutedEventArgs e)
         {
             tabBar.DataContext = null;
             int count = tabItems.Count;
             StudyTab newTab = new StudyTab(this, surfaceWindow);
-            newTab.HeaderTemplate = tabBar.FindResource("NewStudyTab") as DataTemplate;
             tabItems.Insert(count - 1, newTab);
             tabBar.DataContext = tabItems;
             tabBar.SelectedItem = newTab;
 
         }
 
+        /**
+         * Opening a new SavedPages Tab, to view the pages/settings that a user has "saved".
+         * */
         private void SavedPagesButton_Selected(object sender, RoutedEventArgs e)
         {
             int count = tabItems.Count;
@@ -145,7 +160,9 @@ namespace DigitalFauvel
         }
 
 
-
+        /**
+         * Deletes a tab from the SideBar.
+         * */
         public void deleteTab(object sender, RoutedEventArgs e)
         {
             SideBarTab selectedTab = tabBar.SelectedItem as SideBarTab;
@@ -161,6 +178,10 @@ namespace DigitalFauvel
         }
 
 
+        /**
+         * Saves a page from the main UI.
+         * Can be reopened from the SavedPages Tab.
+         * */
         public void savePage(int pageNum, double width, Point center, SurfaceWindow1.language lang)
         {
             savedPages.Add(new SavedPage(pageNum, width, center, lang, surfaceWindow));

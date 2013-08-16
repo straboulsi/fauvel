@@ -110,5 +110,48 @@ namespace DigitalFauvel
             return title;
         }
 
+        /**
+         * Takes in a longer string, like the title of a piece of music, and returns the first word only.
+         * */
+        public static String firstWord(String title)
+        {
+            String firstWord = "";
+
+            firstWord = title.Substring(0, title.IndexOf(" "));
+
+            return firstWord;
+        }
+
+
+        /**
+         * Takes in the ID tag for a piece of music.
+         * Returns a list of the voice parts (i.e. duplum, triplum).
+         * The voice part info is coming from the OriginalTextXML.
+         * */
+        public static List<String> getVoiceParts(String tag)
+        {
+            List<String> voiceParts = new List<String>();
+
+            try
+            {
+                if (!tag.EndsWith("_t"))
+                    tag += "_t";
+                XmlNode musicObj = SurfaceWindow1.xml.DocumentElement.SelectSingleNode("//p[@id='" + tag + "']");
+                XmlNodeList voices = musicObj.SelectNodes("v");
+
+                foreach (XmlNode xn in voices)
+                {
+                    String s = xn.Attributes["part"].Value;
+                    voiceParts.Add(s);
+                }
+            }
+            catch (Exception e)
+            {
+                Console.Write(e.StackTrace);
+                Console.Read();
+            }
+
+            return voiceParts;
+        }
     }
 }

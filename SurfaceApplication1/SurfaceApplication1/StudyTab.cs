@@ -41,7 +41,7 @@ namespace DigitalFauvel
      * - Jamie included some .wav files too but they don't seem to be called for in the current code...
      * Add in "part" attribute info to OriginalTextXML
      * 
-     * Primary Coders: Jamie Chong & Alison Y. Chang
+     * Primary Coders: Jamie Chong (original hardcode) & Alison Y. Chang (conversion to programmatic)
      * */
     class StudyTab : SideBarTab
     {
@@ -73,11 +73,10 @@ namespace DigitalFauvel
             studyPrompt = new TextBlock();
             studyTabHeader = new TextBlock();
 
-            headerImage.Source = new BitmapImage(new Uri(@"..\..\icons\musicnote.png", UriKind.Relative));
+            headerImage.Source = new BitmapImage(new Uri(@"..\..\icons\music.png", UriKind.Relative));
             studyTabHeader.HorizontalAlignment = HorizontalAlignment.Center;
             studyTabHeader.VerticalAlignment = VerticalAlignment.Center;
             studyTabHeader.FontSize = 21;
-            
             headerGrid.Children.Add(studyTabHeader);
 
             studyPrompt.FontSize = 30;
@@ -86,11 +85,12 @@ namespace DigitalFauvel
             Canvas.SetTop(studyPrompt, 45);
 
 
-
-            // Eventually, we plan to implement selecting the piece directly from the folio.
-            // Tapping a piece of music will set the selectedTag method and call open_Music.
-            // The two openDefault____ methods will be removed.
-            // However, for now, we provide two default options.
+            /**
+             * Eventually, we plan to implement selecting the piece directly from the folio.
+             * Tapping a piece of music will set the selectedTag method and call open_Music.
+             * The two openDefault____ methods will be removed.
+             * However, for now, we provide two default options.
+             * */
             sampleMono = "2rCon1";
             samplePoly = "2vMo2";
             
@@ -139,7 +139,11 @@ namespace DigitalFauvel
                 study_Poly(sender, e, tag);
         }
 
-
+        /**
+         * Sets up the main controls for music studying at the top of the tab.
+         * These include the music object's title, the play/pause/stop buttons, audio selections, etc.
+         * This method is called by both study_Mono and study_Poly because its actions are needed regardless of the type of music object.
+         * */
         private void musicControls(String tag)
         {
             canvas.Children.Remove(studyPrompt);
@@ -153,7 +157,7 @@ namespace DigitalFauvel
             Canvas.SetTop(musicTitle, 45);
             musicTitle.Text = Study.getTitle(tag); 
             musicTitle.FontSize = 30;
-            studyTabHeader.Text = (String)Study.getTitle(tag); // This isn't fully functioning; not sure why
+            studyTabHeader.Text = Study.firstWord(Study.getTitle(tag)); // Sets tab header to the first word of the title, i.e. the music genre (Motet or Conductus)
 
             // Play/Pause and Stop buttons.
             playpause = new Button();
@@ -258,7 +262,7 @@ namespace DigitalFauvel
 
 
             /**
-             * Organization of containers for notesTab:
+             * Organization of containers for notesTab (just bc these can be confusing)
              * 1. notesTab
              * 2. notesTab.Content = notesTabCanvas;
              * 3. notesTabCanvas.Children.Add(noteScroll);
@@ -267,7 +271,6 @@ namespace DigitalFauvel
 
             notesTab.Content = notesTabCanvas; 
             notesTabCanvas.Children.Add(noteScroll);
-
 
 
             display.Items.Add(notesTab);
@@ -281,12 +284,15 @@ namespace DigitalFauvel
             canvas.Children.Add(selectAudioButton);
             canvas.Children.Add(selectAudioListBox);
 
-
-
         }
 
 
-        // Monophonic music study page (other monophonic pieces should follow this format).
+        /**
+         * Creates a new tab to study a monophonic music object.
+         * Displays the score for that music object and allows playback.
+         * Also calls on musicControls to set up the title, buttons, etc.
+         * For listeners/methods shared with study_Poly, this method calls on them with the added String "mono".
+         * */
         private void study_Mono(object sender, RoutedEventArgs e, String tag)
         {
 
@@ -302,7 +308,7 @@ namespace DigitalFauvel
 
             // modern music notation image file
             monoImg = new Image();
-            monoImg.Source = new BitmapImage(new Uri(@"..\..\musicz\" + tag + ".png", UriKind.Relative)); ///
+            monoImg.Source = new BitmapImage(new Uri(@"..\..\music\" + tag + ".png", UriKind.Relative)); ///
             monoImg.Width = 580;
             monoImg.Height = 860;
 
@@ -312,7 +318,7 @@ namespace DigitalFauvel
 
             // Create mediaplayer for audio playback.
             monoPlayer = new MediaPlayer();
-            monoPlayer.Open(new Uri(@"..\..\musicz\" + tag + ".wma", UriKind.Relative));
+            monoPlayer.Open(new Uri(@"..\..\music\" + tag + ".wma", UriKind.Relative));
             monoPlayer.MediaEnded += delegate(object s, EventArgs r) { MediaEnded(s, r, "mono"); };
 
             
@@ -320,9 +326,13 @@ namespace DigitalFauvel
 
 
 
-        // Polyphonic music study page (other polyphonic pieces should follow this format).
-        // One big challenge for polyphonic music will be to create display of voices programmatically, bc of varying # of voices in motets
-        
+        /**
+         * Creates a new tab to study a polyphonic music object.
+         * Biggest consideration is the variable number of voices (in Fauvel, Motets have 2-4 voices).
+         * Calls on the MusicExpander and MusicPartExpander objects to create expandable displays of the full score and individual voice scores, respectively.
+         * Also calls on the musicControls method to set up the title, play/pause buttons, etc.
+         * For listeners/methods shared with study_Mono, this method calls on them with the added String "poly".
+         * */
         void study_Poly(object sender, RoutedEventArgs e, String tag)
         {
             musicControls(tag); // Sets up the top part of the StudyTab: title, play/stop buttons, audio selection, etc.
@@ -332,8 +342,6 @@ namespace DigitalFauvel
 
             mod_frenchText.Text = Search.getByTag(tag, SurfaceWindow1.modFrXml);
             engText.Text = "No English translated lyrics for this piece YET!";
-
-            Header = Study.getTitle(tag);
 
 
             motetParts = new StackPanel(); // StackPanel for the expandable parts to stack on top of eachother.
@@ -387,7 +395,7 @@ namespace DigitalFauvel
             allVoices = new List<MusicPartExpander>();
             motetParts.Children.Add(fullExp);
 
-            foreach (String voicePartName in getVoiceParts(tag))
+            foreach (String voicePartName in Study.getVoiceParts(tag))
             {
                 MusicPartExpander newMPE = new MusicPartExpander(voicePartName, tag);
                 newMPE.muteTB.Checked += delegate(object s, RoutedEventArgs r) { mute_Checked(s, r, newMPE); };
@@ -411,33 +419,13 @@ namespace DigitalFauvel
         }
 
 
-        public List<String> getVoiceParts(String tag)
-        {
-            List<String> voiceParts = new List<String>();
-
-            try
-            {
-                if(!tag.EndsWith("_t"))
-                    tag += "_t";
-                XmlNode musicObj = SurfaceWindow1.xml.DocumentElement.SelectSingleNode("//p[@id='" + tag + "']");
-                XmlNodeList voices = musicObj.SelectNodes("v");
-
-                foreach (XmlNode xn in voices)
-                {
-                    String s = xn.Attributes["part"].Value;
-                    voiceParts.Add(s);
-                }
-            }
-            catch (Exception e)
-            {
-                Console.Write(e.StackTrace);
-                Console.Read();
-            }
-
-            return voiceParts;
-        }
 
 
+        /**
+         * Creates a list of the other voices for a particular voice in polyphonic music.
+         * Used in many action listeners; i.e., soloing one voice means you have to mute all the other ones.
+         * Sets the List<MusicPartExpander> otherVoices value from the MusicPartExpander object.
+         * */
         private List<MusicPartExpander> findOtherVoices(MusicPartExpander thisVoice, List<MusicPartExpander> allVoices)
         {
             List<MusicPartExpander> otherVoices = new List<MusicPartExpander>();
@@ -451,7 +439,9 @@ namespace DigitalFauvel
         }
 
 
-
+        /**
+         * Displays the audio options list: MIDI, liveRecording.
+         * */
         void showAudioOptions(object sender, RoutedEventArgs e)
         {
             StudyTab selectedTab = mySideBar.tabBar.SelectedItem as StudyTab;
@@ -460,7 +450,11 @@ namespace DigitalFauvel
             selectedTab.selectAudioListBox.Visibility = System.Windows.Visibility.Visible;
         }
 
-        // Note: This gets weird if you select "Select audio:" twice in a row
+
+        /**
+         * Hides the audio options list and sets the current audio-type choice.
+         * Note: This gets weird if you select "Select audio:" twice in a row
+         * */
         void audioOptionSelected(object sender, RoutedEventArgs e)
         {
             StudyTab selectedTab = mySideBar.tabBar.SelectedItem as StudyTab;
@@ -479,7 +473,10 @@ namespace DigitalFauvel
             selectedTab.selectAudioListBox.Visibility = System.Windows.Visibility.Hidden;
         }
 
-
+        /**
+         * Manages the play/pause toggle button by switching between the two states.
+         * Takes into account the differences between mono and polyphonic music (i.e., number of MusicPlayers to play/pause).
+         * */
         void playpause_click(object sender, RoutedEventArgs e, String musicType)
         {
             StudyTab selectedTab = mySideBar.tabBar.SelectedItem as StudyTab;
@@ -514,8 +511,9 @@ namespace DigitalFauvel
 
         }
 
-
-
+        /**
+         * Mutes a particular voice of a polyphonic piece of music.
+         * */
         void mute_Checked(object sender, RoutedEventArgs e, MusicPartExpander thisExp)
         {
             StudyTab selectedTab = mySideBar.tabBar.SelectedItem as StudyTab;
@@ -546,6 +544,9 @@ namespace DigitalFauvel
             thisExp.player.IsMuted = true;
         }
 
+        /**
+         * Unmutes a particular voice of a polyphonic music object.
+         * */
         void mute_Unchecked(object sender, RoutedEventArgs e, MusicPartExpander thisExp)
         {
             StudyTab selectedTab = mySideBar.tabBar.SelectedItem as StudyTab;
@@ -570,7 +571,9 @@ namespace DigitalFauvel
 
         }
 
-
+        /**
+         * Solos a particular voice of a polyphonic music object (i.e., mutes/disables all the other voices).
+         * */
         void solo_Checked(object sender, RoutedEventArgs e, MusicPartExpander thisExp)
         {
             thisExp.BorderBrush = Brushes.YellowGreen;
@@ -583,6 +586,9 @@ namespace DigitalFauvel
 
         }
 
+        /**
+         * Turns off solo mode for a voice in a polyphonic music object (i.e., enables/unmutes the other voices).
+         * */
         void solo_Unchecked(object sender, RoutedEventArgs e, MusicPartExpander thisExp)
         {
             thisExp.BorderBrush = Brushes.Black;
@@ -595,7 +601,9 @@ namespace DigitalFauvel
         }
 
        
-
+        /**
+         * Stops all music players, taking into account mono vs. polyphonic (bc that affects # of MusicPlayers to stop).
+         * */
         void stop_Music(object sender, RoutedEventArgs e, String musicType)
         {
             StudyTab selectedTab = mySideBar.tabBar.SelectedItem as StudyTab;
@@ -614,7 +622,10 @@ namespace DigitalFauvel
 
 
 
-
+        /**
+         * Stops all MusicPlayers based on one of them ending.
+         * Originally called by one voice only in a polyphonic work (Jamie set it to tenor); hopefully calling it with all voices doesn't mess anything up.
+         * */
         void MediaEnded(object sender, EventArgs e, String musicType)
         {
             StudyTab selectedTab = mySideBar.tabBar.SelectedItem as StudyTab;

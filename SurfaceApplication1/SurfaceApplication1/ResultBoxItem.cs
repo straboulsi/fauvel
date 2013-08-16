@@ -62,7 +62,7 @@ namespace DigitalFauvel
             miniThumbnail.Margin = new Thickness(5);
 
             resultText = new TextBlock();
-            resultText.Width = 300; // Originally 350 - was that why some languages wouldn't truncate?
+            resultText.Width = 350; // Originally 350 - was that why some languages wouldn't truncate?
             resultText.TextTrimming = TextTrimming.WordEllipsis;
             resultText.VerticalAlignment = VerticalAlignment.Center;
 

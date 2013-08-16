@@ -29,7 +29,7 @@ namespace DigitalFauvel
      * This class has two purposes:
      * 1) Display translation overlays for poetry in various languages.
      * 2) Returns the bounding box objects for a given page to check layout coordinates.
-     * Primary Coder: Alison Y. Chang
+     * Primary Coders: Brendan Chou & Alison Y. Chang
      **/
     public static class Overlay
     {
@@ -39,7 +39,9 @@ namespace DigitalFauvel
         public static Brush blockFillerBrush = (Brush)(new BrushConverter().ConvertFrom("#33000000"));
         public static Brush textBrush = (Brush)(new BrushConverter().ConvertFrom("#663311"));
 
-
+        /**
+         * Establishes a Grid for the translation overlays on a given page.
+         * */
         public static Grid getGrid(TranslationBox tb, TextBlock t)
         {
             double width, x, y, height;
@@ -83,6 +85,9 @@ namespace DigitalFauvel
             return g;
         }
 
+        /**
+         * Establishes a Grid for the BoundingBox coordinate information on a given page (i.e. location of objects).
+         * */
         public static Grid getGrid(BoundingBox bb)
         {
             double width, x, y, height;
