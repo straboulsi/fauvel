@@ -18,6 +18,9 @@ TO RUN THIS PROJECT, create the following folders at the same level of the bin, 
 6. minithumbnails - Contents: mini versions of all the thumbnails for images (aka miniatures) in Fauvel.
 7. music - Contents: score (.png) and audio (.wma) files for music objects in Fauvel.
 
+Then, open the project solution in Visual Studio and you can either publish it before running it, or just debug, build, and run it in Visual Studio.
+
+
 
 
 
@@ -50,7 +53,7 @@ Coordinate.java – defines a coordinate object for LineFinder.java.
 
 
 
-Challenges.txt – a description of some XML encoding and search capability designs encountered in the creation of Digital Fauvel.
+Challenges.txt – a description of some XML encoding, user interface, and search capability designs encountered in the creation of Digital Fauvel.
 
 NextSteps.txt – some of the important next steps for Digital Fauvel, both general and specific to the search capabilities.
 
