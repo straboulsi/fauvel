@@ -19,7 +19,7 @@ namespace DigitalFauvel
         public Point topL = new Point(0, 0);
         public Point bottomR = new Point(0, 0);
         public String tag = "", oldFr = "", modFr = "", eng = "";
-
+        public bool expanded = false;
 
 
 
