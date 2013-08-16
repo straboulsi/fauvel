@@ -732,8 +732,6 @@ namespace DigitalFauvel
             s.Height = endHeight;
             s.Center = endPoint;
             stb.Begin(this);
-
-            scatter_ManipulationDelta(s, null);
         }
 
         private bool IsDoubleTap(TouchEventArgs e)
@@ -805,19 +803,26 @@ namespace DigitalFauvel
         private void languageChanged(object sender, SelectionChangedEventArgs e)
         {
             Tab tab = currentTab();
-            prevlanguageButton.IsEnabled = true;
-            tab._previousLanguage = tab._currentLanguage;
             ListBox box = (ListBox)sender;
+            language newLanguage = language.None;
             if (box.SelectedItem == null)
                 return;
             if (box.SelectedIndex == 0)
-                tab._currentLanguage = language.None;
+                newLanguage = language.None;
             if (box.SelectedIndex == 1)
-                tab._currentLanguage = language.OldFrench;
+                newLanguage = language.OldFrench;
             if (box.SelectedIndex == 2)
-                tab._currentLanguage = language.French;
+                newLanguage = language.French;
             if (box.SelectedIndex == 3)
-                tab._currentLanguage = language.English;
+                newLanguage = language.English;
+
+            if (newLanguage != tab._currentLanguage)
+            {
+                prevlanguageButton.IsEnabled = true;
+                tab._previousLanguage = tab._currentLanguage;
+                tab._currentLanguage = newLanguage;
+            }
+            
             updateLanguageButton();
             tab._worker.setTranslateText(tab._currentLanguage);
 
@@ -893,7 +898,6 @@ namespace DigitalFauvel
         }
         public void rightSwipeDetectionStop(object sender, TouchEventArgs e)
         {
-            rightSwipe = false;
             currentTab()._rSwipeGrid.Visibility = System.Windows.Visibility.Hidden;
             ScatterViewItem item = (ScatterViewItem)sender;
             Point second = item.TouchesOver.ElementAt<TouchDevice>(0).GetPosition(item);
@@ -902,6 +906,7 @@ namespace DigitalFauvel
                 if (((Canvas)currentTab()._rSwipeGrid.Children[0]).Background == Brushes.Green || (Math.Abs(second.X - rightSwipeStart.X) < 10 && Math.Abs(second.Y - rightSwipeStart.Y) < 10 && rightSwipeWatch.ElapsedMilliseconds < 400 && rightSwipeStart.X > 2 * minPageWidth - 150))
                     gotoNextPage(null, null);
             }
+            rightSwipe = false;
         }
         public void leftSwipeDetectionStart(object sender, TouchEventArgs e)
         {
@@ -962,7 +967,6 @@ namespace DigitalFauvel
          **/
         public void leftSwipeDetectionStop(object sender, TouchEventArgs e)
         {
-            leftSwipe = false;
             currentTab()._vSwipeGrid.Visibility = System.Windows.Visibility.Hidden;
             ScatterViewItem item = (ScatterViewItem)sender;
             Point second = item.TouchesOver.ElementAt<TouchDevice>(0).GetPosition(item);
@@ -971,6 +975,7 @@ namespace DigitalFauvel
                 if (((Canvas)currentTab()._vSwipeGrid.Children[0]).Background == Brushes.Green || (Math.Abs(second.X - leftSwipeStart.X) < 10 && Math.Abs(second.Y - leftSwipeStart.Y) < 10 && leftSwipeWatch.ElapsedMilliseconds < 400 && leftSwipeStart.X < 150))
                     gotoPreviousPage(null, null);
             }
+            leftSwipe = false;
         }
 
         /**
@@ -1067,6 +1072,9 @@ namespace DigitalFauvel
             TextBlock textBlock;
             Grid g;
             int lowIndex = 0;
+
+            if (translationBoxes == null || otherTranslationBoxes == null)
+                return;
 
             for (int i = 0; i < translationBoxes.Count; i++)
             {
