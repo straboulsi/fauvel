@@ -23,6 +23,7 @@ namespace DigitalFauvel
     class MusicPartExpander : MusicExpander
     {
         public Image img;
+        public List<MusicPartExpander> otherVoices;
         public ListBoxItem nameLBI, muteLBI, soloLBI, spaceLBI; // Not sure why Jamie chose to use LBI; could change this
         public MediaPlayer player;
         public StackPanel buttonSP;
@@ -59,7 +60,7 @@ namespace DigitalFauvel
             soloTB.Height = 20;
             soloTB.Width = 20;
 
-            nameLBI.Content = voiceName; // Assuming audio files will also be named .duplum and "Duplum" will be fed into this constructor
+            nameLBI.Content = UppercaseFirst(voiceName); // Assuming audio files will also be named .duplum and "Duplum" will be fed into this constructor
             muteLBI.Content = muteTB;
             soloLBI.Content = soloTB;
             spaceLBI.Content = "  ";
@@ -77,6 +78,17 @@ namespace DigitalFauvel
 
 
           
+        }
+
+        static string UppercaseFirst(string s)
+        {
+            // Check for empty string.
+            if (string.IsNullOrEmpty(s))
+            {
+                return string.Empty;
+            }
+            // Return char and concat substring.
+            return char.ToUpper(s[0]) + s.Substring(1);
         }
 
     }
