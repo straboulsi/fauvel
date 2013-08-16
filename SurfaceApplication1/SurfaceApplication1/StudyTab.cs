@@ -41,23 +41,19 @@ namespace DigitalFauvel
 
         public Button mono, poly, playpause, stop, selectAudioButton; 
         public Canvas notesCanvas, notesTabCanvas;
-        public Grid mo_lb1, mo_lb2, mo_lb3;
-        public Image musicImg, musicImg1, musicImg2, musicImg3, v1_Img, tenor_Img;
+        public Image monoImg;
         public List<ListBoxItem> audioOptions;
         public ListBox selectAudioListBox;
-        public ListBoxItem v1_name_lb, v1_mute_lb, v1_solo_lb, tenor_name_lb, tenor_mute_lb, tenor_solo_lb, space1, space2, 
-            selectAudio, MIDI, liveRecording, lastAudioChoice;
-        public MediaPlayer play_2rCon1, play_2vMo2_v1, play_2vMo2_tenor;
+        public ListBoxItem selectAudio, MIDI, liveRecording, lastAudioChoice;
+        public MediaPlayer monoPlayer;
         public MusicExpander fullExp;
         public MusicPartExpander v1Exp, tenorExp;
         private SideBar mySideBar;
-        public StackPanel motetParts, motetScore, v1_buttons, tenor_buttons;
-        public String selectedTag;
+        public StackPanel motetParts, motetScore;
         public SurfaceScrollViewer noteScroll;
         public TabControl display;
         public TabItem notesTab, mod_frenchTab, engTab;
         public TextBlock studyTabHeader, studyPrompt, mod_frenchText, engText, musicTitle;
-        public ToggleButton v1_mute, v1_solo, tenor_mute, tenor_solo;
 
 
 
@@ -102,44 +98,33 @@ namespace DigitalFauvel
             Canvas.SetLeft(poly, 100);
             Canvas.SetTop(poly, 300);
 
-            // Add stuff.
+            
             headerGrid.Children.Add(studyTabHeader);
             canvas.Children.Add(studyPrompt);
             canvas.Children.Add(mono);
             canvas.Children.Add(poly);
+            
+            /** 
+             * The below listeners are set temporarily to two defaults 
+             * Once we can select a piece of music to study from the manuscript (shown in main UI), get its tag and call open_Music as demonstrated below:
+             * */
+            mono.Click += delegate(object sender, RoutedEventArgs e) { open_Music(sender, e, "2rCon1"); };
+            mono.TouchDown += delegate(object sender, TouchEventArgs e) { open_Music(sender, e, "2rCon1"); };
+            poly.Click += delegate(object sender, RoutedEventArgs e) { open_Music(sender, e, "2vMo2"); };
+            poly.TouchDown += delegate(object sender, TouchEventArgs e) { open_Music(sender, e, "2vMo2"); };
 
-            // Add click handlers.
-            mono.Click += new RoutedEventHandler(openDefaultMono);
-            mono.TouchDown += new EventHandler<TouchEventArgs>(openDefaultMono);
-            poly.Click += new RoutedEventHandler(openDefaultPoly);
-            poly.TouchDown += new EventHandler<TouchEventArgs>(openDefaultPoly);
         }
 
-        // Temporary method - replace w actual selection of music from folios
-        private void openDefaultMono(object sender, RoutedEventArgs e)
-        {
-            selectedTag = "2rCon1";
-            open_Music(sender, e);
-        }
-
-        // Temporary method - replace w actual selection of music from folios
-        private void openDefaultPoly(object sender, RoutedEventArgs e)
-        {
-            selectedTag = "2vMo2";
-            open_Music(sender, e);
-        }
 
 
         // Determines whether a piece of music is monophonic or polyphonic
         // Opens a new music tab for mono or poly studying
-        private void open_Music(object sender, RoutedEventArgs e)
+        private void open_Music(object sender, RoutedEventArgs e, String tag)
         {
-            //selectedTag = ""; // Set this by tapping on a piece of music
-
-            if (Study.hasMultipleVoices(selectedTag) == false)
-                study_Mono(sender, e);
-            else if(Study.hasMultipleVoices(selectedTag) == true)
-                study_Poly(sender, e);
+            if (Study.hasMultipleVoices(tag) == false)
+                study_Mono(sender, e, tag);
+            else if(Study.hasMultipleVoices(tag) == true)
+                study_Poly(sender, e, tag);
         }
 
 
@@ -260,10 +245,22 @@ namespace DigitalFauvel
             noteScroll.Content = notesCanvas;
 
 
+            /**
+             * Organization of containers for notesTab:
+             * 1. notesTab
+             * 2. notesTab.Content = notesTabCanvas;
+             * 3. notesTabCanvas.Children.Add(noteScroll);
+             * 4. noteScroll.Content = notesCanvas;
+             * */
 
-            notesTab.Content = notesTabCanvas;
+            notesTab.Content = notesTabCanvas; 
             notesTabCanvas.Children.Add(noteScroll);
 
+
+
+            display.Items.Add(notesTab);
+            display.Items.Add(mod_frenchTab);
+            display.Items.Add(engTab);
 
             canvas.Children.Add(musicTitle);
             canvas.Children.Add(playpause);
@@ -272,42 +269,38 @@ namespace DigitalFauvel
             canvas.Children.Add(selectAudioButton);
             canvas.Children.Add(selectAudioListBox);
 
-            display.Items.Add(notesTab);
-            display.Items.Add(mod_frenchTab);
-            display.Items.Add(engTab);
+
+
         }
 
 
         // Monophonic music study page (other monophonic pieces should follow this format).
-        private void study_Mono(object sender, RoutedEventArgs e)
+        private void study_Mono(object sender, RoutedEventArgs e, String tag)
         {
-            musicControls("2rCon1");
+
+            musicControls(tag); // Sets up the top part of the StudyTab: title, play/stop buttons, audio selection, etc.
 
             playpause.Click += new RoutedEventHandler(playpause_1_Click);
             stop.Click += new RoutedEventHandler(stop_1_Click);
-            mod_frenchText.Text = Search.getByTag("2rCon1_t", SurfaceWindow1.modFrXml);
+            mod_frenchText.Text = Search.getByTag(tag, SurfaceWindow1.modFrXml);
             // This one is hardcoded in because we don't have any English lyrics in an XML file yet.
             engText.Text = "Oh, how far transgression\nis spreading!\nVirtue is dislodged\nfrom the sanctuary.\nNow Christ is dragged\nto a new tribunal,\nwith Peter using\nthe sword of Pilate.\nRelying on the counsel\nof Fauvel,\none comes to grief;\nthe celestial legion\njustly complains.\nTherefore it begs\nthe Father and the Son\nthat for a remedy\nfor all this\nimmediately\nthe fostering Spirit provide.";
 
 
+            // modern music notation image file
+            monoImg = new Image();
+            monoImg.Source = new BitmapImage(new Uri(@"..\..\musicz\" + tag + ".png", UriKind.Relative)); ///
+            monoImg.Width = 580;
+            monoImg.Height = 860;
+
             notesCanvas.Width = 580;
             notesCanvas.Height = 860;
-
-
-            // modern music notation image file
-            musicImg = new Image();
-            musicImg.Source = new BitmapImage(new Uri(@"..\..\musicz\2rCo1.png", UriKind.Relative));
-            musicImg.Width = 580;
-            musicImg.Height = 860;
-
-            
-            notesCanvas.Children.Add(musicImg);
-
+            notesCanvas.Children.Add(monoImg);
 
             // Create mediaplayer for audio playback.
-            play_2rCon1 = new MediaPlayer();
-            play_2rCon1.Open(new Uri(@"..\..\musicz\2rCo1.wma", UriKind.Relative));
-            play_2rCon1.MediaEnded += new EventHandler(play_2rCon1_MediaEnded);
+            monoPlayer = new MediaPlayer();
+            monoPlayer.Open(new Uri(@"..\..\musicz\" + tag + ".wma", UriKind.Relative));
+            monoPlayer.MediaEnded += new EventHandler(monoPlayer_MediaEnded);
 
             
         }
@@ -317,10 +310,9 @@ namespace DigitalFauvel
         // Polyphonic music study page (other polyphonic pieces should follow this format).
         // One big challenge for polyphonic music will be to create display of voices programmatically, bc of varying # of voices in motets
         
-        void study_Poly(object sender, RoutedEventArgs e)
+        void study_Poly(object sender, RoutedEventArgs e, String tag)
         {
-            String tag = "2vMo2";
-            musicControls(tag);
+            musicControls(tag); // Sets up the top part of the StudyTab: title, play/stop buttons, audio selection, etc.
 
             playpause.Click += new RoutedEventHandler(playpause_2_Click);
             stop.Click += new RoutedEventHandler(stop_2_Click);
@@ -328,9 +320,6 @@ namespace DigitalFauvel
             engText.Text = "No English translated lyrics for this piece YET!";
 
             
-
-
-
 
 
             motetParts = new StackPanel(); // StackPanel for the expandable parts to stack on top of eachother.
@@ -444,14 +433,14 @@ namespace DigitalFauvel
             {
                 playpause.Content = "►";
                 playpause.FontSize = 35;
-                if (play_2rCon1.CanPause)
-                    play_2rCon1.Pause();
+                if (monoPlayer.CanPause)
+                    monoPlayer.Pause();
             }
             else if ((string)playpause.Content == "►")
             {
                 playpause.Content = "||";
                 playpause.FontSize = 25;
-                play_2rCon1.Play();
+                monoPlayer.Play();
             }
         }
 
@@ -476,11 +465,11 @@ namespace DigitalFauvel
         }
 
 
-        void play_2rCon1_MediaEnded(object sender, EventArgs e)
+        void monoPlayer_MediaEnded(object sender, EventArgs e)
         {
             playpause.Content = "►";
             playpause.FontSize = 35;
-            play_2rCon1.Stop();
+            monoPlayer.Stop();
         }
 
 
@@ -595,7 +584,7 @@ namespace DigitalFauvel
         {
             playpause.Content = "►";
             playpause.FontSize = 35;
-            play_2rCon1.Stop();
+            monoPlayer.Stop();
         }
         void stop_2_Click(object sender, RoutedEventArgs e)
         {
