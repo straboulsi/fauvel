@@ -717,15 +717,22 @@ namespace DigitalFauvel
 
         private void OnPreviewTouchDown(object sender, TouchEventArgs e)
         {
-            if (((ScatterViewItem)sender).TouchesOver.Count() > 1)
-                lastTapLocation = new Point(-1000, -1000);
-            ScatterViewItem item = (ScatterViewItem)sender;
-            if (IsDoubleTap(e))
+            int numTouches = ((ScatterViewItem)sender).TouchesOver.Count();
+            if (numTouches > 1)
             {
+                lastTapLocation = new Point(-1000, -1000);
+            }
+            else
+            {
+                ScatterViewItem item = (ScatterViewItem)sender;
                 Point p = e.TouchDevice.GetTouchPoint(item).Position;
                 double x = p.X * item.MaxWidth / item.Width;
                 double y = p.Y * item.MaxWidth / item.Width;
-                OnDoubleTouchDown((ScatterViewItem)sender, new Point(x, y));
+                Point newPoint = new Point(x,y);
+                if (IsDoubleTap(e))
+                    OnDoubleTouchDown((ScatterViewItem)sender, newPoint);
+                else
+                    changeTranslationGrids(newPoint);
             }
         }
 
@@ -739,6 +746,7 @@ namespace DigitalFauvel
             tab._currentLanguage = l;
             updateLanguageButton();
             tab._worker.setTranslateText(tab._currentLanguage);
+            makeEnlargedTranslationGridReadable();
         }
 
         public void changeLanguage(int l)
@@ -754,6 +762,7 @@ namespace DigitalFauvel
                 tab._currentLanguage = language.None;
             updateLanguageButton();
             tab._worker.setTranslateText(tab._currentLanguage);
+            makeEnlargedTranslationGridReadable();
         }
 
         private void languageChanged(object sender, SelectionChangedEventArgs e)
@@ -776,6 +785,7 @@ namespace DigitalFauvel
             tab._worker.setTranslateText(tab._currentLanguage);
 
             languageBox.Visibility = Visibility.Collapsed;
+            makeEnlargedTranslationGridReadable();
         }
 
         public void updateLanguageButton()
@@ -922,6 +932,162 @@ namespace DigitalFauvel
             }
         }
 
+        public void changeTranslationGrids(Point p)
+        {
+            Tab tab = currentTab();
+            List<TranslationBox> translationBoxes, otherTranslationBoxes;
+            Grid translationGrid, otherTranslationGrid;
+            if (p.X < maxPageWidth)
+            {
+                translationBoxes = tab._translationBoxesV;
+                translationGrid = tab._vTranslationGrid;
+                otherTranslationBoxes = tab._translationBoxesR;
+                otherTranslationGrid = tab._rTranslationGrid;
+            }
+            else
+            {
+                translationBoxes = tab._translationBoxesR;
+                translationGrid = tab._rTranslationGrid;
+                otherTranslationBoxes = tab._translationBoxesV;
+                otherTranslationGrid = tab._vTranslationGrid;
+                p.X -= maxPageWidth;
+            }
+
+            double width, x, y, height, truewidth;
+            TranslationBox tb;
+            TextBlock textBlock;
+            Grid g;
+
+            for (int i = 0; i < translationBoxes.Count; i++)
+            {
+                tb = translationBoxes[i];
+                g = (Grid)translationGrid.Children[i];
+                textBlock = (TextBlock)g.Children[0];
+                truewidth = textBlock.ActualWidth * maxPageHeight / tab._SVI.Height;
+                x = tb.getTopLeft().X;
+                y = tb.getTopLeft().Y;
+                width = (tb.getBottomRight().X - tb.getTopLeft().X);
+                height = (tb.getBottomRight().Y - tb.getTopLeft().Y);
+
+                if (p.X > x && p.X < x + width && p.Y > y && p.Y < y + height) // tap on it
+                {
+                    g.ColumnDefinitions[0].Width = new GridLength(x, GridUnitType.Star);
+                    g.ColumnDefinitions[1].Width = new GridLength(maxPageWidth - x, GridUnitType.Star);
+                    g.ColumnDefinitions[2].Width = new GridLength(0, GridUnitType.Star);
+                    tb.expanded = true;
+                }
+                else
+                {
+                    g.ColumnDefinitions[0].Width = new GridLength(x, GridUnitType.Star);
+                    g.ColumnDefinitions[1].Width = new GridLength(width, GridUnitType.Star);
+                    g.ColumnDefinitions[2].Width = new GridLength(maxPageWidth - x - width, GridUnitType.Star);
+                    tb.expanded = false;
+                }
+            }
+
+            for (int i = 0; i < otherTranslationBoxes.Count; i++)
+            {
+                tb = otherTranslationBoxes[i];
+                g = (Grid)otherTranslationGrid.Children[i];
+                x = tb.getTopLeft().X;
+                y = tb.getTopLeft().Y;
+                width = (tb.getBottomRight().X - tb.getTopLeft().X);
+                height = (tb.getBottomRight().Y - tb.getTopLeft().Y);
+
+                g.ColumnDefinitions[0].Width = new GridLength(x, GridUnitType.Star);
+                g.ColumnDefinitions[1].Width = new GridLength(width, GridUnitType.Star);
+                g.ColumnDefinitions[2].Width = new GridLength(maxPageWidth - x - width, GridUnitType.Star);
+                tb.expanded = false;
+            }
+
+            makeEnlargedTranslationGridReadable();
+        }
+
+        private void makeEnlargedTranslationGridReadable()
+        {
+            Tab tab = currentTab();
+            List<TranslationBox> translationBoxes, otherTranslationBoxes;
+            Grid translationGrid, otherTranslationGrid;
+
+            translationBoxes = tab._translationBoxesV;
+            translationGrid = tab._vTranslationGrid;
+            otherTranslationBoxes = tab._translationBoxesR;
+            otherTranslationGrid = tab._rTranslationGrid;
+
+            double width, x, y, height, truewidth;
+            TranslationBox tb;
+            TextBlock textBlock;
+            Grid g;
+            int lowIndex = 0;
+
+            for (int i = 0; i < translationBoxes.Count; i++)
+            {
+                tb = translationBoxes[i];
+
+                if (tb.expanded)
+                {
+                    g = (Grid)translationGrid.Children[i];
+                    textBlock = (TextBlock)g.Children[0];
+                    g.SetValue(Grid.ZIndexProperty, 100);
+                    truewidth = textBlock.ActualWidth * maxPageHeight / tab._SVI.Height;
+                    x = tb.getTopLeft().X;
+                    y = tb.getTopLeft().Y;
+                    width = (tb.getBottomRight().X - tb.getTopLeft().X);
+                    height = (tb.getBottomRight().Y - tb.getTopLeft().Y);
+
+                    if (truewidth + x > maxPageWidth)
+                    {
+                        g.ColumnDefinitions[0].Width = new GridLength(maxPageWidth - truewidth, GridUnitType.Star);
+                        g.ColumnDefinitions[1].Width = new GridLength(truewidth, GridUnitType.Star);
+                    }
+                    else
+                    {
+                        g.ColumnDefinitions[0].Width = new GridLength(x, GridUnitType.Star);
+                        g.ColumnDefinitions[1].Width = new GridLength(maxPageWidth - x, GridUnitType.Star);
+                    }
+                    g.ColumnDefinitions[2].Width = new GridLength(0, GridUnitType.Star);
+                }
+                else
+                {
+                    g = (Grid)translationGrid.Children[i];
+                    g.SetValue(Grid.ZIndexProperty, lowIndex++);
+                }
+            }
+
+            for (int i = 0; i < otherTranslationBoxes.Count; i++)
+            {
+                tb = otherTranslationBoxes[i];
+
+                if (tb.expanded) // tap on it
+                {
+                    g = (Grid)otherTranslationGrid.Children[i];
+                    textBlock = (TextBlock)g.Children[0];
+                    g.SetValue(Grid.ZIndexProperty, 100);
+                    truewidth = textBlock.ActualWidth * maxPageHeight / tab._SVI.Height;
+                    x = tb.getTopLeft().X;
+                    y = tb.getTopLeft().Y;
+                    width = (tb.getBottomRight().X - tb.getTopLeft().X);
+                    height = (tb.getBottomRight().Y - tb.getTopLeft().Y);
+
+                    if (truewidth + x > maxPageWidth)
+                    {
+                        g.ColumnDefinitions[0].Width = new GridLength(maxPageWidth - truewidth, GridUnitType.Star);
+                        g.ColumnDefinitions[1].Width = new GridLength(truewidth, GridUnitType.Star);
+                    }
+                    else
+                    {
+                        g.ColumnDefinitions[0].Width = new GridLength(x, GridUnitType.Star);
+                        g.ColumnDefinitions[1].Width = new GridLength(maxPageWidth - x, GridUnitType.Star);
+                    }
+                    g.ColumnDefinitions[2].Width = new GridLength(0, GridUnitType.Star);
+                }
+                else
+                {
+                    g = (Grid)otherTranslationGrid.Children[i];
+                    g.SetValue(Grid.ZIndexProperty, lowIndex++);
+                }
+            }
+        }
 
         private void TextBox_GotFocus(object sender, RoutedEventArgs e)
         {
