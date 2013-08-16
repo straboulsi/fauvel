@@ -24,6 +24,7 @@ namespace DigitalFauvel
     {
         public Image img;
         public ListBoxItem nameLBI, muteLBI, soloLBI, spaceLBI; // Not sure why Jamie chose to use LBI; could change this
+        public MediaPlayer player;
         public StackPanel buttonSP;
         public ToggleButton muteTB, soloTB;
 
@@ -69,6 +70,13 @@ namespace DigitalFauvel
             buttonSP.Children.Add(spaceLBI);
 
             Header = buttonSP;
+
+            player = new MediaPlayer();
+            player.Open(new Uri(@"..\..\musicz\" + tag + "_" + voiceName + ".wma", UriKind.Relative));
+
+
+
+          
         }
 
     }
