@@ -1,0 +1,19 @@
+NEXT STEPS FOR FAUVEL
+Alison Y. Chang, Aug 2013
+
+General
+- Get English translation of picture captions and music lyrics
+	- Incorporate into current EnglishXML file; use other Content XMLs as example
+		- See “XML Guide” Google Doc
+- Develop Annotation app 
+- Add in Strubel/other established scholars’ annotations
+- Create MuseScore files for all notated music (see Jamie’s instructions)
+
+Search App
+- In multi-word search, consider returning results that don’t match 100% of the words 
+- See “Challenges of Digital Fauvel” Google Doc, “Search Capabilities” section
+- Speed up search processes
+- Color the scrollbar so that listbox backgrounds don't have to be light gray
+- 
+
+
