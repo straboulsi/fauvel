@@ -1,0 +1,535 @@
+The following is an excerpt from our LayoutXML document, our layout XML with full encoding of the coordinates of each object in Fauvel.
+Due to copyright concerns, we cannot include the full XML in this repository; however, here is the XML for the first few pages.
+Please see XMLGuide.txt for further explanation of the encoding process and the tags/attributes in this document.
+
+
+
+
+<?xml version="1.0" encoding="utf-8"?>
+<xml>
+  <facsimile>
+    <surface id="1r">
+      <zone id="1r_p" ulx="0" uly="0" lrx="5250" lry="7350">
+        <graphic url="13.jpg"/>
+      </zone>
+      <zone id="1rMo1">
+        <box ulx="388" uly="798" lrx="1711" lry="6027">
+        </box>
+      </zone>
+      <zone id="1rIm1">
+        <box ulx="1659" uly="325" lrx="2971" lry="1816">
+        </box>
+      </zone>
+      <zone id="Te_0001-0034">
+        <box id="Te_0001-0034" ulx="1690" uly="1827" lrx="2814" lry="5134">
+        </box>
+        <l n="1" pn="1" ulx="1690" uly="1827" lrx="2814" lry="1924"/>
+        <l n="2" pn="2" ulx="1690" uly="1924" lrx="2814" lry="2021"/>
+        <l n="3" pn="3" ulx="1690" uly="2021" lrx="2814" lry="2118"/>
+        <l n="4" pn="4" ulx="1690" uly="2118" lrx="2814" lry="2215"/>
+        <l n="5" pn="5" ulx="1690" uly="2215" lrx="2814" lry="2312"/>
+        <l n="6" pn="6" ulx="1690" uly="2312" lrx="2814" lry="2409"/>
+        <l n="7" pn="7" ulx="1690" uly="2409" lrx="2814" lry="2506"/>
+        <l n="8" pn="8" ulx="1690" uly="2506" lrx="2814" lry="2603"/>
+        <l n="9" pn="9" ulx="1690" uly="2603" lrx="2814" lry="2700"/>
+        <l n="10" pn="10" ulx="1690" uly="2700" lrx="2814" lry="2797"/>
+        <l n="11" pn="11" ulx="1690" uly="2797" lrx="2814" lry="2894"/>
+        <l n="12" pn="12" ulx="1690" uly="2894" lrx="2814" lry="2991"/>
+        <l n="13" pn="13" ulx="1690" uly="2991" lrx="2814" lry="3088"/>
+        <l n="14" pn="14" ulx="1690" uly="3088" lrx="2814" lry="3185"/>
+        <l n="15" pn="15" ulx="1690" uly="3185" lrx="2814" lry="3282"/>
+        <l n="16" pn="16" ulx="1690" uly="3282" lrx="2814" lry="3379"/>
+        <l n="17" pn="17" ulx="1690" uly="3379" lrx="2814" lry="3476"/>
+        <l n="18" pn="18" ulx="1690" uly="3476" lrx="2814" lry="3573"/>
+        <l n="19" pn="19" ulx="1690" uly="3573" lrx="2814" lry="3670"/>
+        <l n="20" pn="20" ulx="1690" uly="3670" lrx="2814" lry="3767"/>
+        <l n="21" pn="21" ulx="1690" uly="3767" lrx="2814" lry="3864"/>
+        <l n="22" pn="22" ulx="1690" uly="3864" lrx="2814" lry="3961"/>
+        <l n="23" pn="23" ulx="1690" uly="3961" lrx="2814" lry="4058"/>
+        <l n="24" pn="24" ulx="1690" uly="4058" lrx="2814" lry="4155"/>
+        <l n="25" pn="25" ulx="1690" uly="4155" lrx="2814" lry="4252"/>
+        <l n="26" pn="26" ulx="1690" uly="4252" lrx="2814" lry="4349"/>
+        <l n="27" pn="27" ulx="1690" uly="4349" lrx="2814" lry="4446"/>
+        <l n="28" pn="28" ulx="1690" uly="4446" lrx="2814" lry="4543"/>
+        <l n="29" pn="29" ulx="1690" uly="4543" lrx="2814" lry="4640"/>
+        <l n="30" pn="30" ulx="1690" uly="4640" lrx="2814" lry="4737"/>
+        <l n="31" pn="31" ulx="1690" uly="4737" lrx="2814" lry="4834"/>
+        <l n="32" pn="32" ulx="1690" uly="4834" lrx="2814" lry="4931"/>
+        <l n="33" pn="33" ulx="1690" uly="4931" lrx="2814" lry="5028"/>
+        <l n="34" pn="34" ulx="1690" uly="5028" lrx="2814" lry="5125"/>
+      </zone>
+      <zone id="1rIm2">
+        <box ulx="1764" uly="5155" lrx="2908" lry="6153">
+        </box>
+      </zone>
+      <zone id="1rMo2">
+        <box ulx="2982" uly="703" lrx="4378" lry="3307">
+        </box>
+      </zone>
+      <zone id="1rMo3">
+        <box ulx="2992" uly="3349" lrx="4305" lry="6373">
+        </box>
+      </zone>
+    </surface>
+    <surface id="1v">
+      <zone id="1v_p" ulx="0" uly="0" lrx="5250" lry="7350">
+        <graphic url="14.jpg"/>
+      </zone>
+      <zone id="Te_0035-0048">
+        <box id="Te_0035-0048" ulx="1081" uly="745" lrx="2215" lry="2047">
+        </box>
+        <l n="35" pn="1" ulx="1081" uly="745" lrx="2215" lry="838"/>
+        <l n="36" pn="2" ulx="1081" uly="838" lrx="2215" lry="931"/>
+        <l n="37" pn="3" ulx="1081" uly="931" lrx="2215" lry="1024"/>
+        <l n="38" pn="4" ulx="1081" uly="1024" lrx="2215" lry="1117"/>
+        <l n="39" pn="5" ulx="1081" uly="1117" lrx="2215" lry="1210"/>
+        <l n="40" pn="6" ulx="1081" uly="1210" lrx="2215" lry="1303"/>
+        <l n="41" pn="7" ulx="1081" uly="1303" lrx="2215" lry="1396"/>
+        <l n="42" pn="8" ulx="1081" uly="1396" lrx="2215" lry="1489"/>
+        <l n="43" pn="9" ulx="1081" uly="1489" lrx="2215" lry="1582"/>
+        <l n="44" pn="10" ulx="1081" uly="1582" lrx="2215" lry="1675"/>
+        <l n="45" pn="11" ulx="1081" uly="1675" lrx="2215" lry="1768"/>
+        <l n="46" pn="12" ulx="1081" uly="1768" lrx="2215" lry="1861"/>
+        <l n="47" pn="13" ulx="1081" uly="1861" lrx="2215" lry="1954"/>
+        <l n="48" pn="14" ulx="1081" uly="1954" lrx="2215" lry="2047"/>
+      </zone>
+      <zone id="1vIm1">
+        <box ulx="1113" uly="2058" lrx="2404" lry="3013">
+        </box>
+      </zone>
+      <zone id="Te_0049-0062">
+        <box id="Te_0049-0062" ulx="1102" uly="2992" lrx="2268" lry="4368">
+        </box>
+        <l n="49" pn="15" ulx="1102" uly="2992" lrx="2268" lry="3090"/>
+        <l n="50" pn="16" ulx="1102" uly="3090" lrx="2268" lry="3188"/>
+        <l n="51" pn="17" ulx="1102" uly="3188" lrx="2268" lry="3286"/>
+        <l n="52" pn="18" ulx="1102" uly="3286" lrx="2268" lry="3384"/>
+        <l n="53" pn="19" ulx="1102" uly="3384" lrx="2268" lry="3482"/>
+        <l n="54" pn="20" ulx="1102" uly="3482" lrx="2268" lry="3580"/>
+        <l n="55" pn="21" ulx="1102" uly="3580" lrx="2268" lry="3678"/>
+        <l n="56" pn="22" ulx="1102" uly="3678" lrx="2268" lry="3776"/>
+        <l n="57" pn="23" ulx="1102" uly="3776" lrx="2268" lry="3874"/>
+        <l n="58" pn="24" ulx="1102" uly="3874" lrx="2268" lry="3972"/>
+        <l n="59" pn="25" ulx="1102" uly="3972" lrx="2268" lry="4070"/>
+        <l n="60" pn="26" ulx="1102" uly="4070" lrx="2268" lry="4168"/>
+        <l n="61" pn="27" ulx="1102" uly="4168" lrx="2268" lry="4266"/>
+        <l n="62" pn="28" ulx="1102" uly="4266" lrx="2268" lry="4364"/>
+      </zone>
+      <zone id="1vMo1">
+        <box ulx="1081" uly="4599" lrx="2404" lry="6142">
+        </box>
+        <box ulx="2457" uly="514" lrx="5008" lry="5449">
+        </box>
+        <box ulx="2467" uly="5460" lrx="3685" lry="6174">
+        </box>
+      </zone>
+      <zone id="Te_0063-0068">
+        <box id="Te_0063-0068" ulx="3696" uly="5470" lrx="4809" lry="6153">
+        </box>
+        <l n="63" pn="29" ulx="3696" uly="5470" lrx="4809" lry="5583"/>
+        <l n="64" pn="30" ulx="3696" uly="5583" lrx="4809" lry="5696"/>
+        <l n="65" pn="31" ulx="3696" uly="5696" lrx="4809" lry="5809"/>
+        <l n="66" pn="32" ulx="3696" uly="5809" lrx="4809" lry="5922"/>
+        <l n="67" pn="33" ulx="3696" uly="5922" lrx="4809" lry="6035"/>
+        <l n="68" pn="34" ulx="3696" uly="6035" lrx="4809" lry="6148"/>
+      </zone>
+    </surface>
+    <surface id="2r">
+      <zone id="2r_p" ulx="0" uly="0" lrx="5250" lry="7350">
+        <graphic url="15.jpg"/>
+      </zone>
+      <zone id="2rIm1">
+        <box ulx="399" uly="756" lrx="1585" lry="1848">
+        </box>
+      </zone>
+      <zone id="Te_0069-0096">
+        <box id="Te_0069-0076" ulx="409" uly="1837" lrx="1638" lry="2677">
+        </box>
+        <box id="Te_0077-0096" ulx="1680" uly="703" lrx="2940" lry="2667">
+        </box>
+        <l n="69" pn="1" ulx="409" uly="1837" lrx="1638" lry="1942"/>
+        <l n="70" pn="2" ulx="409" uly="1942" lrx="1638" lry="2047"/>
+        <l n="71" pn="3" ulx="409" uly="2047" lrx="1638" lry="2152"/>
+        <l n="72" pn="4" ulx="409" uly="2152" lrx="1638" lry="2257"/>
+        <l n="73" pn="5" ulx="409" uly="2257" lrx="1638" lry="2362"/>
+        <l n="74" pn="6" ulx="409" uly="2362" lrx="1638" lry="2467"/>
+        <l n="75" pn="7" ulx="409" uly="2467" lrx="1638" lry="2572"/>
+        <l n="76" pn="8" ulx="409" uly="2572" lrx="1638" lry="2677"/>
+        <l n="77" pn="9" ulx="1680" uly="703" lrx="2940" lry="801"/>
+        <l n="78" pn="10" ulx="1680" uly="801" lrx="2940" lry="899"/>
+        <l n="79" pn="11" ulx="1680" uly="899" lrx="2940" lry="997"/>
+        <l n="80" pn="12" ulx="1680" uly="997" lrx="2940" lry="1095"/>
+        <l n="81" pn="13" ulx="1680" uly="1095" lrx="2940" lry="1193"/>
+        <l n="82" pn="14" ulx="1680" uly="1193" lrx="2940" lry="1291"/>
+        <l n="83" pn="15" ulx="1680" uly="1291" lrx="2940" lry="1389"/>
+        <l n="84" pn="16" ulx="1680" uly="1389" lrx="2940" lry="1487"/>
+        <l n="85" pn="17" ulx="1680" uly="1487" lrx="2940" lry="1585"/>
+        <l n="86" pn="18" ulx="1680" uly="1585" lrx="2940" lry="1683"/>
+        <l n="87" pn="19" ulx="1680" uly="1683" lrx="2940" lry="1781"/>
+        <l n="88" pn="20" ulx="1680" uly="1781" lrx="2940" lry="1879"/>
+        <l n="89" pn="21" ulx="1680" uly="1879" lrx="2940" lry="1977"/>
+        <l n="90" pn="22" ulx="1680" uly="1977" lrx="2940" lry="2075"/>
+        <l n="91" pn="23" ulx="1680" uly="2075" lrx="2940" lry="2173"/>
+        <l n="92" pn="24" ulx="1680" uly="2173" lrx="2940" lry="2271"/>
+        <l n="93" pn="25" ulx="1680" uly="2271" lrx="2940" lry="2369"/>
+        <l n="94" pn="26" ulx="1680" uly="2369" lrx="2940" lry="2467"/>
+        <l n="95" pn="27" ulx="1680" uly="2467" lrx="2940" lry="2565"/>
+        <l n="96" pn="28" ulx="1680" uly="2565" lrx="2940" lry="2663"/>
+      </zone>
+      <zone id="2rMo1">
+        <box ulx="430" uly="2667" lrx="2950" lry="6153">
+        </box>
+      </zone>
+      <zone id="2rIm2">
+        <box ulx="3024" uly="714" lrx="4200" lry="1848">
+        </box>
+      </zone>
+      <zone id="Te_0097-0104">
+        <box id="Te_0097-0104" ulx="2971" uly="1837" lrx="4210" lry="2646">
+        </box>
+        <l n="97" pn="29" ulx="2971" uly="1837" lrx="4210" lry="1938"/>
+        <l n="98" pn="30" ulx="2971" uly="1938" lrx="4210" lry="2039"/>
+        <l n="99" pn="31" ulx="2971" uly="2039" lrx="4210" lry="2140"/>
+        <l n="100" pn="32" ulx="2971" uly="2140" lrx="4210" lry="2241"/>
+        <l n="101" pn="33" ulx="2971" uly="2241" lrx="4210" lry="2342"/>
+        <l n="102" pn="34" ulx="2971" uly="2342" lrx="4210" lry="2443"/>
+        <l n="103" pn="35" ulx="2971" uly="2443" lrx="4210" lry="2544"/>
+        <l n="104" pn="36" ulx="2971" uly="2544" lrx="4210" lry="2645"/>
+      </zone>
+      <zone id="2rCon1">
+        <box ulx="2982" uly="2667" lrx="4294" lry="6142">
+        </box>
+      </zone>
+    </surface>
+    <surface id="2v">
+      <zone id="2v_p" ulx="0" uly="0" lrx="5250" lry="7350">
+        <graphic url="16.jpg"/>
+      </zone>
+      <zone id="Te_0105-0148">
+        <box id="Te_0105-0148" ulx="1102" uly="609" lrx="2341" lry="4966">
+        </box>
+        <l n="105" pn="1" ulx="1102" uly="609" lrx="2341" lry="708"/>
+        <l n="106" pn="2" ulx="1102" uly="708" lrx="2341" lry="807"/>
+        <l n="107" pn="3" ulx="1102" uly="807" lrx="2341" lry="906"/>
+        <l n="108" pn="4" ulx="1102" uly="906" lrx="2341" lry="1005"/>
+        <l n="109" pn="5" ulx="1102" uly="1005" lrx="2341" lry="1104"/>
+        <l n="110" pn="6" ulx="1102" uly="1104" lrx="2341" lry="1203"/>
+        <l n="111" pn="7" ulx="1102" uly="1203" lrx="2341" lry="1302"/>
+        <l n="112" pn="8" ulx="1102" uly="1302" lrx="2341" lry="1401"/>
+        <l n="113" pn="9" ulx="1102" uly="1401" lrx="2341" lry="1500"/>
+        <l n="114" pn="10" ulx="1102" uly="1500" lrx="2341" lry="1599"/>
+        <l n="115" pn="11" ulx="1102" uly="1599" lrx="2341" lry="1698"/>
+        <l n="116" pn="12" ulx="1102" uly="1698" lrx="2341" lry="1797"/>
+        <l n="117" pn="13" ulx="1102" uly="1797" lrx="2341" lry="1896"/>
+        <l n="118" pn="14" ulx="1102" uly="1896" lrx="2341" lry="1995"/>
+        <l n="119" pn="15" ulx="1102" uly="1995" lrx="2341" lry="2094"/>
+        <l n="120" pn="16" ulx="1102" uly="2094" lrx="2341" lry="2193"/>
+        <l n="121" pn="17" ulx="1102" uly="2193" lrx="2341" lry="2292"/>
+        <l n="122" pn="18" ulx="1102" uly="2292" lrx="2341" lry="2391"/>
+        <l n="123" pn="19" ulx="1102" uly="2391" lrx="2341" lry="2490"/>
+        <l n="124" pn="20" ulx="1102" uly="2490" lrx="2341" lry="2589"/>
+        <l n="125" pn="21" ulx="1102" uly="2589" lrx="2341" lry="2688"/>
+        <l n="126" pn="22" ulx="1102" uly="2688" lrx="2341" lry="2787"/>
+        <l n="127" pn="23" ulx="1102" uly="2787" lrx="2341" lry="2886"/>
+        <l n="128" pn="24" ulx="1102" uly="2886" lrx="2341" lry="2985"/>
+        <l n="129" pn="25" ulx="1102" uly="2985" lrx="2341" lry="3084"/>
+        <l n="130" pn="26" ulx="1102" uly="3084" lrx="2341" lry="3183"/>
+        <l n="131" pn="27" ulx="1102" uly="3183" lrx="2341" lry="3282"/>
+        <l n="132" pn="28" ulx="1102" uly="3282" lrx="2341" lry="3381"/>
+        <l n="133" pn="29" ulx="1102" uly="3381" lrx="2341" lry="3480"/>
+        <l n="134" pn="30" ulx="1102" uly="3480" lrx="2341" lry="3579"/>
+        <l n="135" pn="31" ulx="1102" uly="3579" lrx="2341" lry="3678"/>
+        <l n="136" pn="32" ulx="1102" uly="3678" lrx="2341" lry="3777"/>
+        <l n="137" pn="33" ulx="1102" uly="3777" lrx="2341" lry="3876"/>
+        <l n="138" pn="34" ulx="1102" uly="3876" lrx="2341" lry="3975"/>
+        <l n="139" pn="35" ulx="1102" uly="3975" lrx="2341" lry="4074"/>
+        <l n="140" pn="36" ulx="1102" uly="4074" lrx="2341" lry="4173"/>
+        <l n="141" pn="37" ulx="1102" uly="4173" lrx="2341" lry="4272"/>
+        <l n="142" pn="38" ulx="1102" uly="4272" lrx="2341" lry="4371"/>
+        <l n="143" pn="39" ulx="1102" uly="4371" lrx="2341" lry="4470"/>
+        <l n="144" pn="40" ulx="1102" uly="4470" lrx="2341" lry="4569"/>
+        <l n="145" pn="41" ulx="1102" uly="4569" lrx="2341" lry="4668"/>
+        <l n="146" pn="42" ulx="1102" uly="4668" lrx="2341" lry="4767"/>
+        <l n="147" pn="43" ulx="1102" uly="4767" lrx="2341" lry="4866"/>
+        <l n="148" pn="44" ulx="1102" uly="4866" lrx="2341" lry="4965"/>
+      </zone>
+      <zone id="2vIm1">
+        <box ulx="1144" uly="4977" lrx="2341" lry="6163">
+        </box>
+      </zone>
+      <zone id="2vMo1">
+        <box ulx="2383" uly="745" lrx="3738" lry="3087">
+        </box>
+      </zone>
+      <zone id="2vMo2">
+        <box ulx="2446" uly="3045" lrx="3759" lry="6027">
+        </box>
+      </zone>
+      <zone id="Te_0149-0204">
+        <box id="Te_0149-0204" ulx="3727" uly="556" lrx="4998" lry="6142">
+        </box>
+        <l n="149" pn="45" ulx="3727" uly="556" lrx="4998" lry="655"/>
+        <l n="150" pn="46" ulx="3727" uly="655" lrx="4998" lry="754"/>
+        <l n="151" pn="47" ulx="3727" uly="754" lrx="4998" lry="853"/>
+        <l n="152" pn="48" ulx="3727" uly="853" lrx="4998" lry="952"/>
+        <l n="153" pn="49" ulx="3727" uly="952" lrx="4998" lry="1051"/>
+        <l n="154" pn="50" ulx="3727" uly="1051" lrx="4998" lry="1150"/>
+        <l n="155" pn="51" ulx="3727" uly="1150" lrx="4998" lry="1249"/>
+        <l n="156" pn="52" ulx="3727" uly="1249" lrx="4998" lry="1348"/>
+        <l n="157" pn="53" ulx="3727" uly="1348" lrx="4998" lry="1447"/>
+        <l n="158" pn="54" ulx="3727" uly="1447" lrx="4998" lry="1546"/>
+        <l n="159" pn="55" ulx="3727" uly="1546" lrx="4998" lry="1645"/>
+        <l n="160" pn="56" ulx="3727" uly="1645" lrx="4998" lry="1744"/>
+        <l n="161" pn="57" ulx="3727" uly="1744" lrx="4998" lry="1843"/>
+        <l n="162" pn="58" ulx="3727" uly="1843" lrx="4998" lry="1942"/>
+        <l n="163" pn="59" ulx="3727" uly="1942" lrx="4998" lry="2041"/>
+        <l n="164" pn="60" ulx="3727" uly="2041" lrx="4998" lry="2140"/>
+        <l n="165" pn="61" ulx="3727" uly="2140" lrx="4998" lry="2239"/>
+        <l n="166" pn="62" ulx="3727" uly="2239" lrx="4998" lry="2338"/>
+        <l n="167" pn="63" ulx="3727" uly="2338" lrx="4998" lry="2437"/>
+        <l n="168" pn="64" ulx="3727" uly="2437" lrx="4998" lry="2536"/>
+        <l n="169" pn="65" ulx="3727" uly="2536" lrx="4998" lry="2635"/>
+        <l n="170" pn="66" ulx="3727" uly="2635" lrx="4998" lry="2734"/>
+        <l n="171" pn="67" ulx="3727" uly="2734" lrx="4998" lry="2833"/>
+        <l n="172" pn="68" ulx="3727" uly="2833" lrx="4998" lry="2932"/>
+        <l n="173" pn="69" ulx="3727" uly="2932" lrx="4998" lry="3031"/>
+        <l n="174" pn="70" ulx="3727" uly="3031" lrx="4998" lry="3130"/>
+        <l n="175" pn="71" ulx="3727" uly="3130" lrx="4998" lry="3229"/>
+        <l n="176" pn="72" ulx="3727" uly="3229" lrx="4998" lry="3328"/>
+        <l n="177" pn="73" ulx="3727" uly="3328" lrx="4998" lry="3427"/>
+        <l n="178" pn="74" ulx="3727" uly="3427" lrx="4998" lry="3526"/>
+        <l n="179" pn="75" ulx="3727" uly="3526" lrx="4998" lry="3625"/>
+        <l n="180" pn="76" ulx="3727" uly="3625" lrx="4998" lry="3724"/>
+        <l n="181" pn="77" ulx="3727" uly="3724" lrx="4998" lry="3823"/>
+        <l n="182" pn="78" ulx="3727" uly="3823" lrx="4998" lry="3922"/>
+        <l n="183" pn="79" ulx="3727" uly="3922" lrx="4998" lry="4021"/>
+        <l n="184" pn="80" ulx="3727" uly="4021" lrx="4998" lry="4120"/>
+        <l n="185" pn="81" ulx="3727" uly="4120" lrx="4998" lry="4219"/>
+        <l n="186" pn="82" ulx="3727" uly="4219" lrx="4998" lry="4318"/>
+        <l n="187" pn="83" ulx="3727" uly="4318" lrx="4998" lry="4417"/>
+        <l n="188" pn="84" ulx="3727" uly="4417" lrx="4998" lry="4516"/>
+        <l n="189" pn="85" ulx="3727" uly="4516" lrx="4998" lry="4615"/>
+        <l n="190" pn="86" ulx="3727" uly="4615" lrx="4998" lry="4714"/>
+        <l n="191" pn="87" ulx="3727" uly="4714" lrx="4998" lry="4813"/>
+        <l n="192" pn="88" ulx="3727" uly="4813" lrx="4998" lry="4912"/>
+        <l n="193" pn="89" ulx="3727" uly="4912" lrx="4998" lry="5011"/>
+        <l n="194" pn="90" ulx="3727" uly="5011" lrx="4998" lry="5110"/>
+        <l n="195" pn="91" ulx="3727" uly="5110" lrx="4998" lry="5209"/>
+        <l n="196" pn="92" ulx="3727" uly="5209" lrx="4998" lry="5308"/>
+        <l n="197" pn="93" ulx="3727" uly="5308" lrx="4998" lry="5407"/>
+        <l n="198" pn="94" ulx="3727" uly="5407" lrx="4998" lry="5506"/>
+        <l n="199" pn="95" ulx="3727" uly="5506" lrx="4998" lry="5605"/>
+        <l n="200" pn="96" ulx="3727" uly="5605" lrx="4998" lry="5704"/>
+        <l n="201" pn="97" ulx="3727" uly="5704" lrx="4998" lry="5803"/>
+        <l n="202" pn="98" ulx="3727" uly="5803" lrx="4998" lry="5902"/>
+        <l n="203" pn="99" ulx="3727" uly="5902" lrx="4998" lry="6001"/>
+        <l n="204" pn="100" ulx="3727" uly="6001" lrx="4998" lry="6100"/>
+      </zone>
+    </surface>
+    <surface id="3r">
+      <zone id="3r_p" ulx="0" uly="0" lrx="5250" lry="7350">
+        <graphic url="17.jpg"/>
+      </zone>
+      <zone id="Te_0205-0258">
+        <box id="Te_0205-0258" ulx="1669" uly="714" lrx="2866" lry="6237">
+        </box>
+        <l n="205" pn="1" ulx="1669" uly="714" lrx="2866" lry="816"/>
+        <l n="206" pn="2" ulx="1669" uly="816" lrx="2866" lry="918"/>
+        <l n="207" pn="3" ulx="1669" uly="918" lrx="2866" lry="1020"/>
+        <l n="208" pn="4" ulx="1669" uly="1020" lrx="2866" lry="1122"/>
+        <l n="209" pn="5" ulx="1669" uly="1122" lrx="2866" lry="1224"/>
+        <l n="210" pn="6" ulx="1669" uly="1224" lrx="2866" lry="1326"/>
+        <l n="211" pn="7" ulx="1669" uly="1326" lrx="2866" lry="1428"/>
+        <l n="212" pn="8" ulx="1669" uly="1428" lrx="2866" lry="1530"/>
+        <l n="213" pn="9" ulx="1669" uly="1530" lrx="2866" lry="1632"/>
+        <l n="214" pn="10" ulx="1669" uly="1632" lrx="2866" lry="1734"/>
+        <l n="215" pn="11" ulx="1669" uly="1734" lrx="2866" lry="1836"/>
+        <l n="216" pn="12" ulx="1669" uly="1836" lrx="2866" lry="1938"/>
+        <l n="217" pn="13" ulx="1669" uly="1938" lrx="2866" lry="2040"/>
+        <l n="218" pn="14" ulx="1669" uly="2040" lrx="2866" lry="2142"/>
+        <l n="219" pn="15" ulx="1669" uly="2142" lrx="2866" lry="2244"/>
+        <l n="220" pn="16" ulx="1669" uly="2244" lrx="2866" lry="2346"/>
+        <l n="221" pn="17" ulx="1669" uly="2346" lrx="2866" lry="2448"/>
+        <l n="222" pn="18" ulx="1669" uly="2448" lrx="2866" lry="2550"/>
+        <l n="223" pn="19" ulx="1669" uly="2550" lrx="2866" lry="2652"/>
+        <l n="224" pn="20" ulx="1669" uly="2652" lrx="2866" lry="2754"/>
+        <l n="225" pn="21" ulx="1669" uly="2754" lrx="2866" lry="2856"/>
+        <l n="226" pn="22" ulx="1669" uly="2856" lrx="2866" lry="2958"/>
+        <l n="227" pn="23" ulx="1669" uly="2958" lrx="2866" lry="3060"/>
+        <l n="228" pn="24" ulx="1669" uly="3060" lrx="2866" lry="3162"/>
+        <l n="229" pn="25" ulx="1669" uly="3162" lrx="2866" lry="3264"/>
+        <l n="230" pn="26" ulx="1669" uly="3264" lrx="2866" lry="3366"/>
+        <l n="231" pn="27" ulx="1669" uly="3366" lrx="2866" lry="3468"/>
+        <l n="232" pn="28" ulx="1669" uly="3468" lrx="2866" lry="3570"/>
+        <l n="233" pn="29" ulx="1669" uly="3570" lrx="2866" lry="3672"/>
+        <l n="234" pn="30" ulx="1669" uly="3672" lrx="2866" lry="3774"/>
+        <l n="235" pn="31" ulx="1669" uly="3774" lrx="2866" lry="3876"/>
+        <l n="236" pn="32" ulx="1669" uly="3876" lrx="2866" lry="3978"/>
+        <l n="237" pn="33" ulx="1669" uly="3978" lrx="2866" lry="4080"/>
+        <l n="238" pn="34" ulx="1669" uly="4080" lrx="2866" lry="4182"/>
+        <l n="239" pn="35" ulx="1669" uly="4182" lrx="2866" lry="4284"/>
+        <l n="240" pn="36" ulx="1669" uly="4284" lrx="2866" lry="4386"/>
+        <l n="241" pn="37" ulx="1669" uly="4386" lrx="2866" lry="4488"/>
+        <l n="242" pn="38" ulx="1669" uly="4488" lrx="2866" lry="4590"/>
+        <l n="243" pn="39" ulx="1669" uly="4590" lrx="2866" lry="4692"/>
+        <l n="244" pn="40" ulx="1669" uly="4692" lrx="2866" lry="4794"/>
+        <l n="245" pn="41" ulx="1669" uly="4794" lrx="2866" lry="4896"/>
+        <l n="246" pn="42" ulx="1669" uly="4896" lrx="2866" lry="4998"/>
+        <l n="247" pn="43" ulx="1669" uly="4998" lrx="2866" lry="5100"/>
+        <l n="248" pn="44" ulx="1669" uly="5100" lrx="2866" lry="5202"/>
+        <l n="249" pn="45" ulx="1669" uly="5202" lrx="2866" lry="5304"/>
+        <l n="250" pn="46" ulx="1669" uly="5304" lrx="2866" lry="5406"/>
+        <l n="251" pn="47" ulx="1669" uly="5406" lrx="2866" lry="5508"/>
+        <l n="252" pn="48" ulx="1669" uly="5508" lrx="2866" lry="5610"/>
+        <l n="253" pn="49" ulx="1669" uly="5610" lrx="2866" lry="5712"/>
+        <l n="254" pn="50" ulx="1669" uly="5712" lrx="2866" lry="5814"/>
+        <l n="255" pn="51" ulx="1669" uly="5814" lrx="2866" lry="5916"/>
+        <l n="256" pn="52" ulx="1669" uly="5916" lrx="2866" lry="6018"/>
+        <l n="257" pn="53" ulx="1669" uly="6018" lrx="2866" lry="6120"/>
+        <l n="258" pn="54" ulx="1669" uly="6120" lrx="2866" lry="6222"/>
+      </zone>
+      <zone id="3rMo1">
+        <box ulx="420" uly="777" lrx="1659" lry="6216">
+        </box>
+        <box ulx="2950" uly="756" lrx="4273" lry="6132">
+        </box>
+      </zone>
+    </surface>
+    <surface id="3v">
+      <zone id="3v_p" ulx="0" uly="0" lrx="5250" lry="7350">
+        <graphic url="18.jpg"/>
+      </zone>
+      <zone id="Te_0259-0314">
+        <box id="Te_0259-0314" ulx="1102" uly="808" lrx="2362" lry="6247">
+        </box>
+        <l n="259" pn="1" ulx="1102" uly="808" lrx="2362" lry="905"/>
+        <l n="260" pn="2" ulx="1102" uly="905" lrx="2362" lry="1002"/>
+        <l n="261" pn="3" ulx="1102" uly="1002" lrx="2362" lry="1099"/>
+        <l n="262" pn="4" ulx="1102" uly="1099" lrx="2362" lry="1196"/>
+        <l n="263" pn="5" ulx="1102" uly="1196" lrx="2362" lry="1293"/>
+        <l n="264" pn="6" ulx="1102" uly="1293" lrx="2362" lry="1390"/>
+        <l n="265" pn="7" ulx="1102" uly="1390" lrx="2362" lry="1487"/>
+        <l n="266" pn="8" ulx="1102" uly="1487" lrx="2362" lry="1584"/>
+        <l n="267" pn="9" ulx="1102" uly="1584" lrx="2362" lry="1681"/>
+        <l n="268" pn="10" ulx="1102" uly="1681" lrx="2362" lry="1778"/>
+        <l n="269" pn="11" ulx="1102" uly="1778" lrx="2362" lry="1875"/>
+        <l n="270" pn="12" ulx="1102" uly="1875" lrx="2362" lry="1972"/>
+        <l n="271" pn="13" ulx="1102" uly="1972" lrx="2362" lry="2069"/>
+        <l n="272" pn="14" ulx="1102" uly="2069" lrx="2362" lry="2166"/>
+        <l n="273" pn="15" ulx="1102" uly="2166" lrx="2362" lry="2263"/>
+        <l n="274" pn="16" ulx="1102" uly="2263" lrx="2362" lry="2360"/>
+        <l n="275" pn="17" ulx="1102" uly="2360" lrx="2362" lry="2457"/>
+        <l n="276" pn="18" ulx="1102" uly="2457" lrx="2362" lry="2554"/>
+        <l n="277" pn="19" ulx="1102" uly="2554" lrx="2362" lry="2651"/>
+        <l n="278" pn="20" ulx="1102" uly="2651" lrx="2362" lry="2748"/>
+        <l n="279" pn="21" ulx="1102" uly="2748" lrx="2362" lry="2845"/>
+        <l n="280" pn="22" ulx="1102" uly="2845" lrx="2362" lry="2942"/>
+        <l n="281" pn="23" ulx="1102" uly="2942" lrx="2362" lry="3039"/>
+        <l n="282" pn="24" ulx="1102" uly="3039" lrx="2362" lry="3136"/>
+        <l n="283" pn="25" ulx="1102" uly="3136" lrx="2362" lry="3233"/>
+        <l n="284" pn="26" ulx="1102" uly="3233" lrx="2362" lry="3330"/>
+        <l n="285" pn="27" ulx="1102" uly="3330" lrx="2362" lry="3427"/>
+        <l n="286" pn="28" ulx="1102" uly="3427" lrx="2362" lry="3524"/>
+        <l n="287" pn="29" ulx="1102" uly="3524" lrx="2362" lry="3621"/>
+        <l n="288" pn="30" ulx="1102" uly="3621" lrx="2362" lry="3718"/>
+        <l n="289" pn="31" ulx="1102" uly="3718" lrx="2362" lry="3815"/>
+        <l n="290" pn="32" ulx="1102" uly="3815" lrx="2362" lry="3912"/>
+        <l n="291" pn="33" ulx="1102" uly="3912" lrx="2362" lry="4009"/>
+        <l n="292" pn="34" ulx="1102" uly="4009" lrx="2362" lry="4106"/>
+        <l n="293" pn="35" ulx="1102" uly="4106" lrx="2362" lry="4203"/>
+        <l n="294" pn="36" ulx="1102" uly="4203" lrx="2362" lry="4300"/>
+        <l n="295" pn="37" ulx="1102" uly="4300" lrx="2362" lry="4397"/>
+        <l n="296" pn="38" ulx="1102" uly="4397" lrx="2362" lry="4494"/>
+        <l n="297" pn="39" ulx="1102" uly="4494" lrx="2362" lry="4591"/>
+        <l n="298" pn="40" ulx="1102" uly="4591" lrx="2362" lry="4688"/>
+        <l n="299" pn="41" ulx="1102" uly="4688" lrx="2362" lry="4785"/>
+        <l n="300" pn="42" ulx="1102" uly="4785" lrx="2362" lry="4882"/>
+        <l n="301" pn="43" ulx="1102" uly="4882" lrx="2362" lry="4979"/>
+        <l n="302" pn="44" ulx="1102" uly="4979" lrx="2362" lry="5076"/>
+        <l n="303" pn="45" ulx="1102" uly="5076" lrx="2362" lry="5173"/>
+        <l n="304" pn="46" ulx="1102" uly="5173" lrx="2362" lry="5270"/>
+        <l n="305" pn="47" ulx="1102" uly="5270" lrx="2362" lry="5367"/>
+        <l n="306" pn="48" ulx="1102" uly="5367" lrx="2362" lry="5464"/>
+        <l n="307" pn="49" ulx="1102" uly="5464" lrx="2362" lry="5561"/>
+        <l n="308" pn="50" ulx="1102" uly="5561" lrx="2362" lry="5658"/>
+        <l n="309" pn="51" ulx="1102" uly="5658" lrx="2362" lry="5755"/>
+        <l n="310" pn="52" ulx="1102" uly="5755" lrx="2362" lry="5852"/>
+        <l n="311" pn="53" ulx="1102" uly="5852" lrx="2362" lry="5949"/>
+        <l n="312" pn="54" ulx="1102" uly="5949" lrx="2362" lry="6046"/>
+        <l n="313" pn="55" ulx="1102" uly="6046" lrx="2362" lry="6143"/>
+        <l n="314" pn="56" ulx="1102" uly="6143" lrx="2362" lry="6240"/>
+      </zone>
+      <zone id="3vCon1">
+        <box ulx="2436" uly="798" lrx="3727" lry="3853">
+        </box>
+      </zone>
+      <zone id="3vCon2">
+        <box ulx="2488" uly="3864" lrx="3748" lry="5785">
+        </box>
+        <box ulx="2530" uly="5796" lrx="5050" lry="6216">
+        </box>
+      </zone>
+      <zone id="Te_0315-0334">
+        <box id="Te_0315-0334" ulx="3738" uly="756" lrx="4893" lry="2688">
+        </box>
+        <l n="315" pn="57" ulx="3738" uly="756" lrx="4893" lry="852"/>
+        <l n="316" pn="58" ulx="3738" uly="852" lrx="4893" lry="948"/>
+        <l n="317" pn="59" ulx="3738" uly="948" lrx="4893" lry="1044"/>
+        <l n="318" pn="60" ulx="3738" uly="1044" lrx="4893" lry="1140"/>
+        <l n="319" pn="61" ulx="3738" uly="1140" lrx="4893" lry="1236"/>
+        <l n="320" pn="62" ulx="3738" uly="1236" lrx="4893" lry="1332"/>
+        <l n="321" pn="63" ulx="3738" uly="1332" lrx="4893" lry="1428"/>
+        <l n="322" pn="64" ulx="3738" uly="1428" lrx="4893" lry="1524"/>
+        <l n="323" pn="65" ulx="3738" uly="1524" lrx="4893" lry="1620"/>
+        <l n="324" pn="66" ulx="3738" uly="1620" lrx="4893" lry="1716"/>
+        <l n="325" pn="67" ulx="3738" uly="1716" lrx="4893" lry="1812"/>
+        <l n="326" pn="68" ulx="3738" uly="1812" lrx="4893" lry="1908"/>
+        <l n="327" pn="69" ulx="3738" uly="1908" lrx="4893" lry="2004"/>
+        <l n="328" pn="70" ulx="3738" uly="2004" lrx="4893" lry="2100"/>
+        <l n="329" pn="71" ulx="3738" uly="2100" lrx="4893" lry="2196"/>
+        <l n="330" pn="72" ulx="3738" uly="2196" lrx="4893" lry="2292"/>
+        <l n="331" pn="73" ulx="3738" uly="2292" lrx="4893" lry="2388"/>
+        <l n="332" pn="74" ulx="3738" uly="2388" lrx="4893" lry="2484"/>
+        <l n="333" pn="75" ulx="3738" uly="2484" lrx="4893" lry="2580"/>
+        <l n="334" pn="76" ulx="3738" uly="2580" lrx="4893" lry="2676"/>
+      </zone>
+      <zone id="3vIm1">
+        <box ulx="3790" uly="2698" lrx="4945" lry="3832">
+        </box>
+      </zone>
+      <zone id="Te_0335-0354">
+        <box id="Te_0335-0354" ulx="3769" uly="3822" lrx="4935" lry="5785">
+        </box>
+        <l n="335" pn="77" ulx="3769" uly="3822" lrx="4935" lry="3920"/>
+        <l n="336" pn="78" ulx="3769" uly="3920" lrx="4935" lry="4018"/>
+        <l n="337" pn="79" ulx="3769" uly="4018" lrx="4935" lry="4116"/>
+        <l n="338" pn="80" ulx="3769" uly="4116" lrx="4935" lry="4214"/>
+        <l n="339" pn="81" ulx="3769" uly="4214" lrx="4935" lry="4312"/>
+        <l n="340" pn="82" ulx="3769" uly="4312" lrx="4935" lry="4410"/>
+        <l n="341" pn="83" ulx="3769" uly="4410" lrx="4935" lry="4508"/>
+        <l n="342" pn="84" ulx="3769" uly="4508" lrx="4935" lry="4606"/>
+        <l n="343" pn="85" ulx="3769" uly="4606" lrx="4935" lry="4704"/>
+        <l n="344" pn="86" ulx="3769" uly="4704" lrx="4935" lry="4802"/>
+        <l n="345" pn="87" ulx="3769" uly="4802" lrx="4935" lry="4900"/>
+        <l n="346" pn="88" ulx="3769" uly="4900" lrx="4935" lry="4998"/>
+        <l n="347" pn="89" ulx="3769" uly="4998" lrx="4935" lry="5096"/>
+        <l n="348" pn="90" ulx="3769" uly="5096" lrx="4935" lry="5194"/>
+        <l n="349" pn="91" ulx="3769" uly="5194" lrx="4935" lry="5292"/>
+        <l n="350" pn="92" ulx="3769" uly="5292" lrx="4935" lry="5390"/>
+        <l n="351" pn="93" ulx="3769" uly="5390" lrx="4935" lry="5488"/>
+        <l n="352" pn="94" ulx="3769" uly="5488" lrx="4935" lry="5586"/>
+        <l n="353" pn="95" ulx="3769" uly="5586" lrx="4935" lry="5684"/>
+        <l n="354" pn="96" ulx="3769" uly="5684" lrx="4935" lry="5782"/>
+      </zone>
+    </surface>
+
+
+
+
+
+
+
+
+
+
+...etc

@@ -77,6 +77,8 @@ namespace DigitalFauvel
             studyTabHeader.HorizontalAlignment = HorizontalAlignment.Center;
             studyTabHeader.VerticalAlignment = VerticalAlignment.Center;
             studyTabHeader.FontSize = 21;
+            
+            headerGrid.Children.Add(studyTabHeader);
 
             studyPrompt.FontSize = 30;
             studyPrompt.Text = "Please select a piece of music.";
@@ -110,7 +112,6 @@ namespace DigitalFauvel
             Canvas.SetTop(poly, 300);
 
             
-            headerGrid.Children.Add(studyTabHeader);
             canvas.Children.Add(studyPrompt);
             canvas.Children.Add(mono);
             canvas.Children.Add(poly);
@@ -152,7 +153,7 @@ namespace DigitalFauvel
             Canvas.SetTop(musicTitle, 45);
             musicTitle.Text = Study.getTitle(tag); 
             musicTitle.FontSize = 30;
-            studyTabHeader.Text = tag; 
+            studyTabHeader.Text = (String)Study.getTitle(tag); // This isn't fully functioning; not sure why
 
             // Play/Pause and Stop buttons.
             playpause = new Button();
@@ -297,7 +298,7 @@ namespace DigitalFauvel
             // This one is hardcoded in because we don't have any English lyrics in an XML file yet.
             engText.Text = "Oh, how far transgression\nis spreading!\nVirtue is dislodged\nfrom the sanctuary.\nNow Christ is dragged\nto a new tribunal,\nwith Peter using\nthe sword of Pilate.\nRelying on the counsel\nof Fauvel,\none comes to grief;\nthe celestial legion\njustly complains.\nTherefore it begs\nthe Father and the Son\nthat for a remedy\nfor all this\nimmediately\nthe fostering Spirit provide.";
 
-            Header = Study.getTitle(tag);
+            
 
             // modern music notation image file
             monoImg = new Image();
