@@ -6,6 +6,7 @@ using System.Text;
 namespace DigitalFauvel
 {
     /**
+     * Contains the name of each page.
      * Primary Coder: Brendan Chou
      * */
     public static class PageNamer
@@ -22,7 +23,7 @@ namespace DigitalFauvel
                                          "32r","32v","33r","33v","34r","34v","35r","35v",
                                          "36r","36v","37r","37v","38r","38v","39r","39v",
                                          "40r","40v","41r","41v","42r","42v","43r","43v",
-                                         "44r","44v","blank"};
+                                         "44r","44v","45r"};
 
         public static String getPageText(int i)
         {

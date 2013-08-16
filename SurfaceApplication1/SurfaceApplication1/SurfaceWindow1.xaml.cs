@@ -33,31 +33,34 @@ namespace DigitalFauvel
     /// </summary>
     public partial class SurfaceWindow1 : SurfaceWindow
     {
-        /*  */
-        private bool rightSwipe = false, leftSwipe = false, dtOut = false; // dtOut is double tap to zoom out
+        /* if true, double tap to zoom out. if false, doubletap will zoom in on what you doubletap. */
+        private bool dtOut = false;
 
         /* Used in SearchTab to draw attention to changed search settings */
         public static System.Windows.Media.Brush glowColor = Brushes.Orange;
 
-        /*  */
+        /* languages for translations */
         public enum language { None = 0, OldFrench = 1, French = 2, English = 3 };
 
-        /*  */
+        /* keeps track of the tabs */
         List<Tab> tabArray = new List<Tab>();
 
-        /*  */
+        /* The sidebar object (the tabbed window on the right) */
         SideBar sideBar;
 
-        /*  */
+        /* true if a right or left swipe (or tap) is occuring */
+        private bool rightSwipe = false, leftSwipe = false;
+
+        /* stopwatches to detect right and left page turns by tapping or swiping */
         private Stopwatch rightSwipeWatch, leftSwipeWatch;
 
         /* used to determine if the user double-taps */
         private readonly Stopwatch doubleTapSW = new Stopwatch();
 
-        /*  */
+        /* stores all touch locations for detection of double-taps and swipes */
         private Point lastTapLocation, leftSwipeStart, rightSwipeStart;
 
-        /*  */
+        /* little thumbnail images for the page slider selector */
         public static Image slideImage1, slideImage2;
 
         /* the extra space given to the ScatterViewItem so that the whole page can be viewed while zoomed in */
