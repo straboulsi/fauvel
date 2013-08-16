@@ -379,9 +379,7 @@ namespace DigitalFauvel
 
                 foreach (XmlNode xn in xnl)
                 {
-                    if (xn.InnerText.Contains(searchStr)) /// temp!!
-                    {
-
+                    
                         // Start by finding the first word
                         if (foundBySpecifiedCase(searchStrings[0].str, xn.InnerText, caseSensitive) && foundBySpecifiedWord(searchStrings[0].str, xn.InnerText, wordSensitive))
                         {
@@ -458,7 +456,7 @@ namespace DigitalFauvel
                             }
 
                         }
-                    }
+                    
 
                 }/// temp
             }

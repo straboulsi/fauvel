@@ -7,6 +7,8 @@ General
 		- See “XML Guide” Google Doc
 - Develop Annotation app 
 - Add in Strubel/other established scholars’ annotations
+- Create all audio files for music
+- Add in voice names (duplum, triplum) for each motet voice in XML
 - Create MuseScore files for all notated music (see Jamie’s instructions)
 
 Search App

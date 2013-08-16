@@ -41,23 +41,19 @@ namespace DigitalFauvel
 
         public Button mono, poly, playpause, stop, selectAudioButton; 
         public Canvas notesCanvas, notesTabCanvas;
-        public Grid mo_lb1, mo_lb2, mo_lb3;
-        public Image musicImg, musicImg1, musicImg2, musicImg3, v1_Img, tenor_Img;
+        public Image monoImg;
         public List<ListBoxItem> audioOptions;
+        public List<MusicPartExpander> allVoices;
         public ListBox selectAudioListBox;
-        public ListBoxItem v1_name_lb, v1_mute_lb, v1_solo_lb, tenor_name_lb, tenor_mute_lb, tenor_solo_lb, space1, space2, 
-            selectAudio, MIDI, liveRecording, lastAudioChoice;
-        public MediaPlayer play_2rCon1, play_2vMo2_v1, play_2vMo2_tenor;
+        public ListBoxItem selectAudio, MIDI, liveRecording, lastAudioChoice;
+        public MediaPlayer monoPlayer;
         public MusicExpander fullExp;
-        public MusicPartExpander v1Exp, tenorExp;
         private SideBar mySideBar;
-        public StackPanel motetParts, motetScore, v1_buttons, tenor_buttons;
-        public String selectedTag;
+        public StackPanel motetParts, motetScore;
         public SurfaceScrollViewer noteScroll;
         public TabControl display;
         public TabItem notesTab, mod_frenchTab, engTab;
         public TextBlock studyTabHeader, studyPrompt, mod_frenchText, engText, musicTitle;
-        public ToggleButton v1_mute, v1_solo, tenor_mute, tenor_solo;
 
 
 
@@ -90,56 +86,45 @@ namespace DigitalFauvel
 
             mono.Height = 50;
             mono.Width = 200;
-            mono.Content = "study 2rCon1";
+            mono.Content = "Sample monophonic";
             mono.FontSize = 20;
             Canvas.SetLeft(mono, 100);
             Canvas.SetTop(mono, 200);
 
             poly.Height = 50;
             poly.Width = 200;
-            poly.Content = "study 2vMo2";
+            poly.Content = "Sample polyphonic";
             poly.FontSize = 20;
             Canvas.SetLeft(poly, 100);
             Canvas.SetTop(poly, 300);
 
-            // Add stuff.
+            
             headerGrid.Children.Add(studyTabHeader);
             canvas.Children.Add(studyPrompt);
             canvas.Children.Add(mono);
             canvas.Children.Add(poly);
+            
+            /** 
+             * The below listeners are set temporarily to two defaults 
+             * Once we can select a piece of music to study from the manuscript (shown in main UI), get its tag and call open_Music as demonstrated below:
+             * */
+            mono.Click += delegate(object sender, RoutedEventArgs e) { open_Music(sender, e, "2rCon1"); };
+            mono.TouchDown += delegate(object sender, TouchEventArgs e) { open_Music(sender, e, "2rCon1"); };
+            poly.Click += delegate(object sender, RoutedEventArgs e) { open_Music(sender, e, "2vMo2"); };
+            poly.TouchDown += delegate(object sender, TouchEventArgs e) { open_Music(sender, e, "2vMo2"); };
 
-            // Add click handlers.
-            mono.Click += new RoutedEventHandler(openDefaultMono);
-            mono.TouchDown += new EventHandler<TouchEventArgs>(openDefaultMono);
-            poly.Click += new RoutedEventHandler(openDefaultPoly);
-            poly.TouchDown += new EventHandler<TouchEventArgs>(openDefaultPoly);
         }
 
-        // Temporary method - replace w actual selection of music from folios
-        private void openDefaultMono(object sender, RoutedEventArgs e)
-        {
-            selectedTag = "2rCon1";
-            open_Music(sender, e);
-        }
-
-        // Temporary method - replace w actual selection of music from folios
-        private void openDefaultPoly(object sender, RoutedEventArgs e)
-        {
-            selectedTag = "2vMo2";
-            open_Music(sender, e);
-        }
 
 
         // Determines whether a piece of music is monophonic or polyphonic
         // Opens a new music tab for mono or poly studying
-        private void open_Music(object sender, RoutedEventArgs e)
+        private void open_Music(object sender, RoutedEventArgs e, String tag)
         {
-            //selectedTag = ""; // Set this by tapping on a piece of music
-
-            if (Study.hasMultipleVoices(selectedTag) == false)
-                study_Mono(sender, e);
-            else if(Study.hasMultipleVoices(selectedTag) == true)
-                study_Poly(sender, e);
+            if (Study.hasMultipleVoices(tag) == false)
+                study_Mono(sender, e, tag);
+            else if(Study.hasMultipleVoices(tag) == true)
+                study_Poly(sender, e, tag);
         }
 
 
@@ -154,9 +139,9 @@ namespace DigitalFauvel
             musicTitle = new TextBlock();
             Canvas.SetLeft(musicTitle, 15);
             Canvas.SetTop(musicTitle, 45);
-            musicTitle.Text = Study.getTitle(tag); //
+            musicTitle.Text = Study.getTitle(tag); 
             musicTitle.FontSize = 30;
-            studyTabHeader.Text = tag; //
+            studyTabHeader.Text = tag; 
 
             // Play/Pause and Stop buttons.
             playpause = new Button();
@@ -260,10 +245,22 @@ namespace DigitalFauvel
             noteScroll.Content = notesCanvas;
 
 
+            /**
+             * Organization of containers for notesTab:
+             * 1. notesTab
+             * 2. notesTab.Content = notesTabCanvas;
+             * 3. notesTabCanvas.Children.Add(noteScroll);
+             * 4. noteScroll.Content = notesCanvas;
+             * */
 
-            notesTab.Content = notesTabCanvas;
+            notesTab.Content = notesTabCanvas; 
             notesTabCanvas.Children.Add(noteScroll);
 
+
+
+            display.Items.Add(notesTab);
+            display.Items.Add(mod_frenchTab);
+            display.Items.Add(engTab);
 
             canvas.Children.Add(musicTitle);
             canvas.Children.Add(playpause);
@@ -272,42 +269,38 @@ namespace DigitalFauvel
             canvas.Children.Add(selectAudioButton);
             canvas.Children.Add(selectAudioListBox);
 
-            display.Items.Add(notesTab);
-            display.Items.Add(mod_frenchTab);
-            display.Items.Add(engTab);
+
+
         }
 
 
         // Monophonic music study page (other monophonic pieces should follow this format).
-        private void study_Mono(object sender, RoutedEventArgs e)
+        private void study_Mono(object sender, RoutedEventArgs e, String tag)
         {
-            musicControls("2rCon1");
 
-            playpause.Click += new RoutedEventHandler(playpause_1_Click);
-            stop.Click += new RoutedEventHandler(stop_1_Click);
-            mod_frenchText.Text = Search.getByTag("2rCon1_t", SurfaceWindow1.modFrXml);
+            musicControls(tag); // Sets up the top part of the StudyTab: title, play/stop buttons, audio selection, etc.
+
+            playpause.Click += delegate(object s, RoutedEventArgs r) { playpause_click(s, r, "mono"); };
+            stop.Click += delegate(object s, RoutedEventArgs ev) { stop_Music(s, ev, "mono"); };
+            mod_frenchText.Text = Search.getByTag(tag, SurfaceWindow1.modFrXml);
             // This one is hardcoded in because we don't have any English lyrics in an XML file yet.
             engText.Text = "Oh, how far transgression\nis spreading!\nVirtue is dislodged\nfrom the sanctuary.\nNow Christ is dragged\nto a new tribunal,\nwith Peter using\nthe sword of Pilate.\nRelying on the counsel\nof Fauvel,\none comes to grief;\nthe celestial legion\njustly complains.\nTherefore it begs\nthe Father and the Son\nthat for a remedy\nfor all this\nimmediately\nthe fostering Spirit provide.";
 
 
+            // modern music notation image file
+            monoImg = new Image();
+            monoImg.Source = new BitmapImage(new Uri(@"..\..\musicz\" + tag + ".png", UriKind.Relative)); ///
+            monoImg.Width = 580;
+            monoImg.Height = 860;
+
             notesCanvas.Width = 580;
             notesCanvas.Height = 860;
-
-
-            // modern music notation image file
-            musicImg = new Image();
-            musicImg.Source = new BitmapImage(new Uri(@"..\..\musicz\2rCo1.png", UriKind.Relative));
-            musicImg.Width = 580;
-            musicImg.Height = 860;
-
-            
-            notesCanvas.Children.Add(musicImg);
-
+            notesCanvas.Children.Add(monoImg);
 
             // Create mediaplayer for audio playback.
-            play_2rCon1 = new MediaPlayer();
-            play_2rCon1.Open(new Uri(@"..\..\musicz\2rCo1.wma", UriKind.Relative));
-            play_2rCon1.MediaEnded += new EventHandler(play_2rCon1_MediaEnded);
+            monoPlayer = new MediaPlayer();
+            monoPlayer.Open(new Uri(@"..\..\musicz\" + tag + ".wma", UriKind.Relative));
+            monoPlayer.MediaEnded += delegate(object s, EventArgs r) { MediaEnded(s, r, "mono"); };
 
             
         }
@@ -317,20 +310,17 @@ namespace DigitalFauvel
         // Polyphonic music study page (other polyphonic pieces should follow this format).
         // One big challenge for polyphonic music will be to create display of voices programmatically, bc of varying # of voices in motets
         
-        void study_Poly(object sender, RoutedEventArgs e)
+        void study_Poly(object sender, RoutedEventArgs e, String tag)
         {
-            String tag = "2vMo2";
-            musicControls(tag);
+            musicControls(tag); // Sets up the top part of the StudyTab: title, play/stop buttons, audio selection, etc.
 
-            playpause.Click += new RoutedEventHandler(playpause_2_Click);
-            stop.Click += new RoutedEventHandler(stop_2_Click);
+            playpause.Click += delegate(object s, RoutedEventArgs r) { playpause_click(s, r, "poly"); };
+            stop.Click += delegate(object s, RoutedEventArgs ev) { stop_Music(s, ev, "poly"); };
+
             mod_frenchText.Text = Search.getByTag(tag, SurfaceWindow1.modFrXml);
             engText.Text = "No English translated lyrics for this piece YET!";
 
             
-
-
-
 
 
             motetParts = new StackPanel(); // StackPanel for the expandable parts to stack on top of eachother.
@@ -374,36 +364,31 @@ namespace DigitalFauvel
 
             /**
              * GOAL FOR THIS SECTION:
-             * 1. Get names of each voice for this piece of music.
-             *    Audio files should be named .duplum, .triplum, etc so that same word can be displayed as title (perhaps w case adjustment).
+             * 1. Get names of each voice for this piece of music, using the tag.
+             *    Audio files must be named exactly the same way as indicated in OriginalTextXML!
+             *    NOTE: Very few motets have voice parts added in as of now, so "getVoiceParts" will not work!
              * 2. Create an expander for each voice.
              * 3. Add each expander to the motetParts StackPanel.
              * */
 
-            v1Exp = new MusicPartExpander("v1", tag);
-            tenorExp = new MusicPartExpander("tenor", tag);
-
-            tenorExp.player.MediaEnded += new EventHandler(play_2vMo2_tenor_MediaEnded);
-            // Why is there no method for v1Exp ending?!?
-
-            v1Exp.muteTB.Checked += new RoutedEventHandler(v1_mute_Checked);
-            v1Exp.soloTB.Checked += new RoutedEventHandler(v1_solo_Checked);
-            tenorExp.muteTB.Checked += new RoutedEventHandler(tenor_mute_Checked);
-            tenorExp.soloTB.Checked += new RoutedEventHandler(tenor_solo_Checked);
-
-            v1Exp.muteTB.Unchecked += new RoutedEventHandler(v1_mute_Unchecked);
-            v1Exp.soloTB.Unchecked += new RoutedEventHandler(v1_solo_Unchecked);
-            tenorExp.muteTB.Unchecked += new RoutedEventHandler(tenor_mute_Unchecked);
-            tenorExp.soloTB.Unchecked += new RoutedEventHandler(tenor_solo_Unchecked);
-
-
-
+            allVoices = new List<MusicPartExpander>();
             motetParts.Children.Add(fullExp);
-            motetParts.Children.Add(v1Exp);
-            motetParts.Children.Add(tenorExp);
 
+            foreach (String voicePartName in getVoiceParts(tag))
+            {
+                MusicPartExpander newMPE = new MusicPartExpander(voicePartName, tag);
+                newMPE.muteTB.Checked += delegate(object s, RoutedEventArgs r) { mute_Checked(s, r, newMPE); };
+                newMPE.muteTB.Unchecked += delegate(object s, RoutedEventArgs r) { mute_Unchecked(s, r, newMPE); };
+                newMPE.soloTB.Checked += delegate(object s, RoutedEventArgs r) { solo_Checked(s, r, newMPE); };
+                newMPE.soloTB.Unchecked += delegate(object s, RoutedEventArgs r) { solo_Unchecked(s, r, newMPE); };
+                newMPE.player.MediaEnded += delegate(object s, EventArgs r) { MediaEnded(s, r, "poly"); };
+                allVoices.Add(newMPE);
+                motetParts.Children.Add(newMPE);
+            }
 
-            
+            foreach (MusicPartExpander mpe in allVoices)
+                mpe.otherVoices = findOtherVoices(mpe, allVoices);
+
 
 
             notesCanvas.Width = 560;
@@ -413,49 +398,76 @@ namespace DigitalFauvel
         }
 
 
+        public List<String> getVoiceParts(String tag)
+        {
+            List<String> voiceParts = new List<String>();
+
+            try
+            {
+                if(!tag.EndsWith("_t"))
+                    tag += "_t";
+                XmlNode musicObj = SurfaceWindow1.xml.DocumentElement.SelectSingleNode("//p[@id='" + tag + "']");
+                XmlNodeList voices = musicObj.SelectNodes("v");
+
+                foreach (XmlNode xn in voices)
+                {
+                    String s = xn.Attributes["part"].Value;
+                    voiceParts.Add(s);
+                }
+            }
+            catch (Exception e)
+            {
+                Console.Write(e.StackTrace);
+                Console.Read();
+            }
+
+            return voiceParts;
+        }
+
+
+        private List<MusicPartExpander> findOtherVoices(MusicPartExpander thisVoice, List<MusicPartExpander> allVoices)
+        {
+            List<MusicPartExpander> otherVoices = new List<MusicPartExpander>();
+            foreach (MusicPartExpander mpe in allVoices)
+            {
+                if (mpe != thisVoice)
+                    otherVoices.Add(mpe);
+            }
+
+            return otherVoices;
+        }
+
+
 
         void showAudioOptions(object sender, RoutedEventArgs e)
         {
-            selectAudioButton.Visibility = System.Windows.Visibility.Hidden;
-            selectAudioListBox.Visibility = System.Windows.Visibility.Visible;
+            StudyTab selectedTab = mySideBar.tabBar.SelectedItem as StudyTab;
+
+            selectedTab.selectAudioButton.Visibility = System.Windows.Visibility.Hidden;
+            selectedTab.selectAudioListBox.Visibility = System.Windows.Visibility.Visible;
         }
 
         // Note: This gets weird if you select "Select audio:" twice in a row
         void audioOptionSelected(object sender, RoutedEventArgs e)
         {
+            StudyTab selectedTab = mySideBar.tabBar.SelectedItem as StudyTab;
+
             ListBoxItem lbi = sender as ListBoxItem;
 
             if (lbi != selectAudio)
             {
                 lastAudioChoice = lbi;
-                selectAudioButton.Content = lbi.Content;
+                selectedTab.selectAudioButton.Content = lbi.Content;
             }
-            else 
-                selectAudioListBox.SelectedItem = lastAudioChoice;
+            else
+                selectedTab.selectAudioListBox.SelectedItem = lastAudioChoice;
 
-            selectAudioButton.Visibility = System.Windows.Visibility.Visible;
-            selectAudioListBox.Visibility = System.Windows.Visibility.Hidden;
+            selectedTab.selectAudioButton.Visibility = System.Windows.Visibility.Visible;
+            selectedTab.selectAudioListBox.Visibility = System.Windows.Visibility.Hidden;
         }
 
-        // Unedited
-        void playpause_1_Click(object sender, RoutedEventArgs e)
-        {
-            if ((string)playpause.Content == "||")
-            {
-                playpause.Content = "►";
-                playpause.FontSize = 35;
-                if (play_2rCon1.CanPause)
-                    play_2rCon1.Pause();
-            }
-            else if ((string)playpause.Content == "►")
-            {
-                playpause.Content = "||";
-                playpause.FontSize = 25;
-                play_2rCon1.Play();
-            }
-        }
 
-        void playpause_2_Click(object sender, RoutedEventArgs e)
+        void playpause_click(object sender, RoutedEventArgs e, String musicType)
         {
             StudyTab selectedTab = mySideBar.tabBar.SelectedItem as StudyTab;
 
@@ -463,158 +475,146 @@ namespace DigitalFauvel
             {
                 playpause.Content = "►";
                 playpause.FontSize = 35;
-                selectedTab.tenorExp.player.Pause();
-                selectedTab.v1Exp.player.Pause();
+                if (musicType == "mono")
+                {
+                    if (selectedTab.monoPlayer.CanPause)
+                        selectedTab.monoPlayer.Pause();
+                }
+                else if (musicType == "poly")
+                {
+                    foreach (MusicPartExpander mpe in selectedTab.allVoices)
+                        mpe.player.Pause();
+                }
             }
             else if ((string)playpause.Content == "►")
             {
                 playpause.Content = "||";
                 playpause.FontSize = 25;
-                selectedTab.tenorExp.player.Play();
-                selectedTab.v1Exp.player.Play();
+                if(musicType == "mono")
+                    selectedTab.monoPlayer.Play();
+                else if (musicType == "poly")
+                {
+                    foreach (MusicPartExpander mpe in selectedTab.allVoices)
+                        mpe.player.Play();
+                }
             }
+
         }
 
 
-        void play_2rCon1_MediaEnded(object sender, EventArgs e)
-        {
-            playpause.Content = "►";
-            playpause.FontSize = 35;
-            play_2rCon1.Stop();
-        }
 
-
-        void v1_mute_Checked(object sender, RoutedEventArgs e)
+        void mute_Checked(object sender, RoutedEventArgs e, MusicPartExpander thisExp)
         {
             StudyTab selectedTab = mySideBar.tabBar.SelectedItem as StudyTab;
 
-            selectedTab.v1Exp.Opacity = 0.7;
-            selectedTab.v1Exp.soloTB.IsEnabled = false;
+            thisExp.Opacity = 0.7;
+            thisExp.soloTB.IsEnabled = false;
 
-            // would you want to have it playing while all voices are muted???
-            if ((bool)selectedTab.tenorExp.muteTB.IsChecked)
+            Boolean allOtherExpsMuted = true;
+            foreach (MusicPartExpander mpe in thisExp.otherVoices)
             {
-                selectedTab.tenorExp.player.Stop();
-                selectedTab.v1Exp.player.Stop();
-                playpause.IsEnabled = false;
-                stop.IsEnabled = false;
-                playpause.FontSize = 35;
-                playpause.Content = "►";
+                if (mpe.muteTB.IsChecked == false) // If any other voices are still audible
+                    allOtherExpsMuted = false;
             }
 
-            selectedTab.v1Exp.player.IsMuted = true;
-        }
-
-        void v1_solo_Checked(object sender, RoutedEventArgs e)
-        {
-            StudyTab selectedTab = mySideBar.tabBar.SelectedItem as StudyTab;
-
-            selectedTab.v1Exp.BorderBrush = Brushes.YellowGreen;
-            selectedTab.tenorExp.soloTB.IsEnabled = false;
-
-            selectedTab.tenorExp.player.IsMuted = true;
-        }
-
-        void tenor_mute_Checked(object sender, RoutedEventArgs e)
-        {
-            StudyTab selectedTab = mySideBar.tabBar.SelectedItem as StudyTab;
-
-            selectedTab.tenorExp.Opacity = 0.7;
-            selectedTab.tenorExp.soloTB.IsEnabled = false;
-
-            if ((bool)selectedTab.v1Exp.muteTB.IsChecked)
+            if (allOtherExpsMuted == true)
             {
-                selectedTab.tenorExp.player.Stop();
-                selectedTab.v1Exp.player.Stop();
-                playpause.IsEnabled = false;
-                stop.IsEnabled = false;
-                playpause.FontSize = 35;
-                playpause.Content = "►";
+                thisExp.player.Stop();
+                foreach (MusicPartExpander mpe in thisExp.otherVoices)
+                {
+                    mpe.player.Stop();
+                }
+                selectedTab.playpause.IsEnabled = false;
+                selectedTab.stop.IsEnabled = false;
+                selectedTab.playpause.FontSize = 35;
+                selectedTab.playpause.Content = "►";
             }
-            selectedTab.tenorExp.player.IsMuted = true;
+            
+            thisExp.player.IsMuted = true;
         }
 
-        void tenor_solo_Checked(object sender, RoutedEventArgs e)
+        void mute_Unchecked(object sender, RoutedEventArgs e, MusicPartExpander thisExp)
         {
             StudyTab selectedTab = mySideBar.tabBar.SelectedItem as StudyTab;
 
-            selectedTab.tenorExp.BorderBrush = Brushes.YellowGreen;
-            selectedTab.v1Exp.soloTB.IsEnabled = false;
+            thisExp.Opacity = 1.00;
 
-            selectedTab.v1Exp.player.IsMuted = true;
+            // If none of the other voices are soloing, then this one can enable soloing
+            Boolean otherVoiceSoloing = false;
+            foreach (MusicPartExpander mpe in thisExp.otherVoices)
+            {
+                if (mpe.soloTB.IsChecked == true)
+                    otherVoiceSoloing = true;
+            }
+
+            if (otherVoiceSoloing == false)
+                thisExp.soloTB.IsEnabled = true;
+
+
+            selectedTab.playpause.IsEnabled = true;
+            selectedTab.stop.IsEnabled = true;
+            thisExp.player.IsMuted = false;
+
         }
 
-        void v1_mute_Unchecked(object sender, RoutedEventArgs e)
+
+        void solo_Checked(object sender, RoutedEventArgs e, MusicPartExpander thisExp)
+        {
+            thisExp.BorderBrush = Brushes.YellowGreen;
+            foreach (MusicPartExpander mpe in thisExp.otherVoices)
+            {
+                mpe.soloTB.IsEnabled = false;
+                mpe.player.IsMuted = true;
+            }
+
+
+        }
+
+        void solo_Unchecked(object sender, RoutedEventArgs e, MusicPartExpander thisExp)
+        {
+            thisExp.BorderBrush = Brushes.Black;
+
+            foreach (MusicPartExpander mpe in thisExp.otherVoices)
+            {
+                mpe.soloTB.IsEnabled = true;
+                mpe.player.IsMuted = false;
+            }
+        }
+
+       
+
+        void stop_Music(object sender, RoutedEventArgs e, String musicType)
         {
             StudyTab selectedTab = mySideBar.tabBar.SelectedItem as StudyTab;
 
-            selectedTab.v1Exp.Opacity = 1.00;
-            if (!(bool)selectedTab.tenorExp.soloTB.IsChecked)
-                selectedTab.v1Exp.soloTB.IsEnabled = true;
+            selectedTab.playpause.Content = "►";
+            selectedTab.playpause.FontSize = 35;
 
-            playpause.IsEnabled = true;
-            stop.IsEnabled = true;
-            selectedTab.v1Exp.player.IsMuted = false;
+            if (musicType == "poly") // polyphonic
+            {
+                foreach (MusicPartExpander mpe in selectedTab.allVoices)
+                    mpe.player.Stop();
+            }
+            else if (musicType == "mono")
+                selectedTab.monoPlayer.Stop();
         }
 
-        void v1_solo_Unchecked(object sender, RoutedEventArgs e)
+
+
+
+        void MediaEnded(object sender, EventArgs e, String musicType)
         {
             StudyTab selectedTab = mySideBar.tabBar.SelectedItem as StudyTab;
 
-            selectedTab.v1Exp.BorderBrush = Brushes.Black;
-            selectedTab.tenorExp.soloTB.IsEnabled = true;
-
-            selectedTab.tenorExp.player.IsMuted = false;
-        }
-
-        void tenor_mute_Unchecked(object sender, RoutedEventArgs e)
-        {
-            StudyTab selectedTab = mySideBar.tabBar.SelectedItem as StudyTab;
-
-            selectedTab.tenorExp.Opacity = 1.00;
-            if (!(bool)selectedTab.v1Exp.soloTB.IsChecked)
-                selectedTab.tenorExp.soloTB.IsEnabled = true;
-
-            playpause.IsEnabled = true;
-            stop.IsEnabled = true;
-            selectedTab.tenorExp.player.IsMuted = false;
-        }
-
-        void tenor_solo_Unchecked(object sender, RoutedEventArgs e)
-        {
-            StudyTab selectedTab = mySideBar.tabBar.SelectedItem as StudyTab;
-
-            selectedTab.tenorExp.BorderBrush = Brushes.Black;
-            selectedTab.v1Exp.soloTB.IsEnabled = true;
-
-            selectedTab.v1Exp.player.IsMuted = false;
-        }
-
-
-        void stop_1_Click(object sender, RoutedEventArgs e)
-        {
-            playpause.Content = "►";
-            playpause.FontSize = 35;
-            play_2rCon1.Stop();
-        }
-        void stop_2_Click(object sender, RoutedEventArgs e)
-        {
-            StudyTab selectedTab = mySideBar.tabBar.SelectedItem as StudyTab;
-
-            playpause.Content = "►";
-            playpause.FontSize = 35;
-            selectedTab.v1Exp.player.Stop();
-            selectedTab.tenorExp.player.Stop();
-        }
-
-        void play_2vMo2_tenor_MediaEnded(object sender, EventArgs e)
-        {
-            StudyTab selectedTab = mySideBar.tabBar.SelectedItem as StudyTab;
-
-            playpause.Content = "►";
-            playpause.FontSize = 35;
-            selectedTab.v1Exp.player.Stop();
-            selectedTab.tenorExp.player.Stop();
+            selectedTab.playpause.Content = "►";
+            selectedTab.playpause.FontSize = 35;
+            if (musicType == "poly")
+            {
+                foreach (MusicPartExpander mpe in selectedTab.allVoices)
+                    mpe.player.Stop();
+            }
+            else if (musicType == "mono")
+                selectedTab.monoPlayer.Stop();
         }
     }
 }
