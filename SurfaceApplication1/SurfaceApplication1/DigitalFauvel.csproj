@@ -410,7 +410,7 @@
     <SplashScreen Include="Resources\splashImage.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </SplashScreen>
-<<<<<<< HEAD
+
     <Resource Include="music\2rCon1.png" />
     <Content Include="music\2rCon1.wma" />
     <Resource Include="music\2vMo2-1.png" />
@@ -426,26 +426,11 @@
     <Resource Include="music\2vMo2_v1.png" />
     <Content Include="music\2vMo2_v1.wav" />
     <Content Include="music\2vMo2_v1.wma" />
-=======
-    <Resource Include="musicz\2rCon1.png" />
-    <Content Include="musicz\2rCon1.wma" />
-    <Resource Include="musicz\2vMo2-1.png" />
-    <Resource Include="musicz\2vMo2-2.png" />
-    <Resource Include="musicz\2vMo2-3.png" />
-    <Content Include="musicz\2vMo2.mp3" />
-    <Content Include="musicz\2vMo2.wav" />
-    <Content Include="musicz\2vMo2.wma" />
-    <Content Include="musicz\2vMo2_live.wma" />
-    <Resource Include="musicz\2vMo2_tenor.png" />
-    <Content Include="musicz\2vMo2_tenor.wav" />
-    <Content Include="musicz\2vMo2_tenor.wma" />
-    <Resource Include="musicz\2vMo2_v1.png" />
-    <Content Include="musicz\2vMo2_v1.wav" />
-    <Content Include="musicz\2vMo2_v1.wma" />
+
     <Content Include="smallpages\105.jpg">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
->>>>>>> ff251590db1cdd7e872d3ac6928700a6d8a0369a
+
     <Content Include="thumbnails\10rAl1.jpg">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>

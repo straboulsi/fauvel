@@ -49,10 +49,10 @@ namespace DigitalFauvel
             newTabCanvas.Width = 550;
             tabAdd.Content = newTabCanvas;
 
-            newTabCanvas.Children.Add(addApplication("Search", "search.png", SearchButton_Selected, 115, 290)); // 0, 0
-            newTabCanvas.Children.Add(addApplication("Annotate", "pencil.png", AnnotateButton_Selected, 330, 290));
-            newTabCanvas.Children.Add(addApplication("Saved Pages", "save.png", SavedPagesButton_Selected, 330, 450));
-            newTabCanvas.Children.Add(addApplication("Music", "music.png", StudyButton_Selected, 115, 450));
+            newTabCanvas.Children.Add(addApplication("Search", "search.png", SearchButton_Selected, 100, 290));
+            //newTabCanvas.Children.Add(addApplication("Annotate", "pencil.png", AnnotateButton_Selected, 320, 290));
+            //newTabCanvas.Children.Add(addApplication("Saved Pages", "save.png", SavedPagesButton_Selected, 330, 450));
+            newTabCanvas.Children.Add(addApplication("Music", "music.png", StudyButton_Selected, 320, 290));
             
             tabItems.Add(tabAdd);
             tabBar.DataContext = tabItems;
