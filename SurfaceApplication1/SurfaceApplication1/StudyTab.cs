@@ -34,6 +34,13 @@ namespace DigitalFauvel
      * The two openDefault____ methods will be removed.
      * However, for now, we provide two default options.
      * 
+     * TO-DO
+     * For each music object in Fauvel, we need:
+     * - .png images of each page of the scores (for polyphonic, note that we need scores for each voice as well as full score)
+     * - .wma files for each audio (again, for polyponic, one overall and one for each voice too)
+     * - Jamie included some .wav files too but they don't seem to be called for in the current code...
+     * Add in "part" attribute info to OriginalTextXML
+     * 
      * Primary Coders: Jamie Chong & Alison Y. Chang
      * */
     class StudyTab : SideBarTab
@@ -50,6 +57,7 @@ namespace DigitalFauvel
         public MusicExpander fullExp;
         private SideBar mySideBar;
         public StackPanel motetParts, motetScore;
+        public String sampleMono, samplePoly;
         public SurfaceScrollViewer noteScroll;
         public TabControl display;
         public TabItem notesTab, mod_frenchTab, engTab;
@@ -69,6 +77,8 @@ namespace DigitalFauvel
             studyTabHeader.HorizontalAlignment = HorizontalAlignment.Center;
             studyTabHeader.VerticalAlignment = VerticalAlignment.Center;
             studyTabHeader.FontSize = 21;
+            
+            headerGrid.Children.Add(studyTabHeader);
 
             studyPrompt.FontSize = 30;
             studyPrompt.Text = "Please select a piece of music.";
@@ -81,6 +91,9 @@ namespace DigitalFauvel
             // Tapping a piece of music will set the selectedTag method and call open_Music.
             // The two openDefault____ methods will be removed.
             // However, for now, we provide two default options.
+            sampleMono = "2rCon1";
+            samplePoly = "2vMo2";
+            
             mono = new Button();
             poly = new Button();
 
@@ -99,7 +112,6 @@ namespace DigitalFauvel
             Canvas.SetTop(poly, 300);
 
             
-            headerGrid.Children.Add(studyTabHeader);
             canvas.Children.Add(studyPrompt);
             canvas.Children.Add(mono);
             canvas.Children.Add(poly);
@@ -108,10 +120,10 @@ namespace DigitalFauvel
              * The below listeners are set temporarily to two defaults 
              * Once we can select a piece of music to study from the manuscript (shown in main UI), get its tag and call open_Music as demonstrated below:
              * */
-            mono.Click += delegate(object sender, RoutedEventArgs e) { open_Music(sender, e, "2rCon1"); };
-            mono.TouchDown += delegate(object sender, TouchEventArgs e) { open_Music(sender, e, "2rCon1"); };
-            poly.Click += delegate(object sender, RoutedEventArgs e) { open_Music(sender, e, "2vMo2"); };
-            poly.TouchDown += delegate(object sender, TouchEventArgs e) { open_Music(sender, e, "2vMo2"); };
+            mono.Click += delegate(object sender, RoutedEventArgs e) { open_Music(sender, e, sampleMono); };
+            mono.TouchDown += delegate(object sender, TouchEventArgs e) { open_Music(sender, e, sampleMono); };
+            poly.Click += delegate(object sender, RoutedEventArgs e) { open_Music(sender, e, samplePoly); };
+            poly.TouchDown += delegate(object sender, TouchEventArgs e) { open_Music(sender, e, samplePoly); };
 
         }
 
@@ -141,7 +153,7 @@ namespace DigitalFauvel
             Canvas.SetTop(musicTitle, 45);
             musicTitle.Text = Study.getTitle(tag); 
             musicTitle.FontSize = 30;
-            studyTabHeader.Text = tag; 
+            studyTabHeader.Text = (String)Study.getTitle(tag); // This isn't fully functioning; not sure why
 
             // Play/Pause and Stop buttons.
             playpause = new Button();
@@ -286,6 +298,7 @@ namespace DigitalFauvel
             // This one is hardcoded in because we don't have any English lyrics in an XML file yet.
             engText.Text = "Oh, how far transgression\nis spreading!\nVirtue is dislodged\nfrom the sanctuary.\nNow Christ is dragged\nto a new tribunal,\nwith Peter using\nthe sword of Pilate.\nRelying on the counsel\nof Fauvel,\none comes to grief;\nthe celestial legion\njustly complains.\nTherefore it begs\nthe Father and the Son\nthat for a remedy\nfor all this\nimmediately\nthe fostering Spirit provide.";
 
+            
 
             // modern music notation image file
             monoImg = new Image();
@@ -320,7 +333,7 @@ namespace DigitalFauvel
             mod_frenchText.Text = Search.getByTag(tag, SurfaceWindow1.modFrXml);
             engText.Text = "No English translated lyrics for this piece YET!";
 
-            
+            Header = Study.getTitle(tag);
 
 
             motetParts = new StackPanel(); // StackPanel for the expandable parts to stack on top of eachother.

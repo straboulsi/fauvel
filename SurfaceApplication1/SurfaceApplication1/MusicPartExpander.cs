@@ -17,21 +17,24 @@ namespace DigitalFauvel
 {
     /**
      * Expander for a single voice in polyphonic music.
+     * IMPORTANT: The "tag" and "voiceName" parameters MUST match the names of the saved audio and image files!
+     * For example, tag "2vMo2" and voiceName "tenor" will look for "2vMo2_tenor" (.png and .wma)
      * 
-     * Primary coder: Alison Y. Chang - based on Jamie Chong's original StudyTab.cs
+     * Primary coder: Alison Y. Chang (based on Jamie Chong's original StudyTab.cs)
      * */
     class MusicPartExpander : MusicExpander
     {
         public Image img;
         public List<MusicPartExpander> otherVoices;
-        public ListBoxItem nameLBI, muteLBI, soloLBI, spaceLBI; // Not sure why Jamie chose to use LBI; could change this
+        public ListBoxItem nameLBI, muteLBI, soloLBI, spaceLBI; // Not sure why Jamie chose to use LBIs
         public MediaPlayer player;
         public StackPanel buttonSP;
         public ToggleButton muteTB, soloTB;
 
         /**
          * Expects the tag without _t
-         * tag + voice (i.e. 2vMo2_v1) should match image name
+         * IMPORTANT: The "tag" and "voiceName" parameters MUST match the names of the saved audio and image files!
+         * For example, tag "2vMo2" and voiceName "tenor" will look for "2vMo2_tenor" (.png and .wma)
          * */
         public MusicPartExpander(String voiceName, String tag) : base (voiceName)
         {

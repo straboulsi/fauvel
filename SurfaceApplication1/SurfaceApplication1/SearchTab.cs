@@ -50,7 +50,7 @@ namespace DigitalFauvel
         public searchLanguage currentSearchLanguage = searchLanguage.oldFrench, lastSearchLanguage;
         private SideBar sideBar;
         public StackPanel poetryPanel, lyricsPanel, imagesPanel;
-        public String newPageToOpen, lastPageToOpen;
+        public String lastPageToOpen;
         public SurfaceListBox selectLanguage;
         public SurfaceListBoxItem pickLanguage, oldFrench, modernFrench, English;
         public SurfaceScrollViewer poetryScroll, lyricsScroll, imagesScroll;
@@ -899,8 +899,8 @@ namespace DigitalFauvel
                 poetryPanel.Children.Clear();
                 poetryPanel.Children.Add(closeupImage);
                 poetryPanel.Children.Add(closeupText);
-                poetryPanel.TouchDown += new EventHandler<TouchEventArgs>(goToFolio);
-                poetryPanel.MouseLeftButtonDown += new MouseButtonEventHandler(goToFolio);
+                poetryPanel.TouchDown += delegate(object s, TouchEventArgs r) { goToFolio(sender, r, selectedResult.folioInfo.Text); };
+                poetryPanel.MouseLeftButtonDown += delegate(object s, MouseButtonEventArgs r) { goToFolio(sender, r, selectedResult.folioInfo.Text); };
             }
 
             else if (selectedResult.resultType == 2)
@@ -908,8 +908,8 @@ namespace DigitalFauvel
                 lyricsPanel.Children.Clear();
                 lyricsPanel.Children.Add(closeupImage);
                 lyricsPanel.Children.Add(closeupText);
-                lyricsPanel.TouchDown += new EventHandler<TouchEventArgs>(goToFolio);
-                lyricsPanel.MouseLeftButtonDown += new MouseButtonEventHandler(goToFolio);
+                lyricsPanel.TouchDown += delegate(object s, TouchEventArgs r) { goToFolio(sender, r, selectedResult.folioInfo.Text); };
+                lyricsPanel.MouseLeftButtonDown += delegate(object s, MouseButtonEventArgs r) { goToFolio(sender, r, selectedResult.folioInfo.Text); };
             }
 
             else if (selectedResult.resultType == 3)
@@ -917,11 +917,10 @@ namespace DigitalFauvel
                 imagesPanel.Children.Clear();
                 imagesPanel.Children.Add(closeupImage);
                 imagesPanel.Children.Add(closeupText);
-                imagesPanel.TouchDown += new EventHandler<TouchEventArgs>(goToFolio);
-                imagesPanel.MouseLeftButtonDown += new MouseButtonEventHandler(goToFolio);
+                imagesPanel.TouchDown += delegate(object s, TouchEventArgs r) { goToFolio(sender, r, selectedResult.folioInfo.Text); };
+                imagesPanel.MouseLeftButtonDown += delegate(object s, MouseButtonEventArgs r) { goToFolio(sender, r, selectedResult.folioInfo.Text); };
             }
 
-            newPageToOpen = selectedResult.folioInfo.Text;
 
             // Bolds all search terms
             foreach (SpecialString ss in selectedResult.excerpts)
@@ -951,9 +950,9 @@ namespace DigitalFauvel
          * Navigates from a search result closeup to a new tab open to that result's page.
          * Refers to the last ResultBoxItem selected for closeup.
          * */
-        private void goToFolio(object sender, RoutedEventArgs e)
+        private void goToFolio(object sender, RoutedEventArgs e, String pageToOpen)
         {
-            if(newPageToOpen != lastPageToOpen) 
+            if(pageToOpen != lastPageToOpen) 
             {
                 String folioStr = lastCloseupRBI.folioInfo.Text;
                 if (folioStr.StartsWith("Fo"))
@@ -975,7 +974,7 @@ namespace DigitalFauvel
                 surfaceWindow.resizePageToRect(new Rect(x,y,w,h));
                 surfaceWindow.changeLanguage((int)currentSearchLanguage + 1);
 
-                lastPageToOpen = newPageToOpen;
+                lastPageToOpen = pageToOpen;
             }
         }
         

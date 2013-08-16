@@ -1,0 +1,651 @@
+The following is an excerpt from our OriginalTextXML document, our content XML with full encoding of the original text of Fauvel.
+Due to copyright concerns, we cannot include the full XML in this repository; however, here is the XML for the first few pages.
+Please see XMLGuide.txt for further explanation of the encoding process and the tags/attributes in this document.
+
+
+
+
+
+
+<xml>
+<text>
+  <body>
+
+
+
+
+    <pb facs="#1r">
+
+
+      <notatedMusic id="1rMo1">
+        <ptr
+        target=""
+        mimeType="" />
+      </notatedMusic>
+
+
+      <p id="1rMo1_t">
+        Motet : Favellandi vicium (PM 1)
+        <nv> 2 </nv>
+        <v>
+          <dc>F</dc>Favellandi vicium
+          Et fex avaricie
+          Optinent nunc solium
+          Summumque locum curie
+          Munus dat propicium
+          Judicem et pium.
+          Lex subit exilium
+          Et prestat judicium.
+          O quale contagium !
+          Quante pestilencie
+          Lateri potencie
+          Herentes cotidie !
+          Voces adullatorie
+          Scandunt ad dominium.
+          Fraus imperat justicie.
+          Deus misericordie,
+          Adhibe hic consilium
+        </v>
+        <v>
+          (Tenor) : uniquement mélodie
+        </v>
+      </p>
+
+      <figure id="1rIm1">
+        <figDesc>
+          Miniature 1 (Fauvel, en trois vignettes, une grande surmontant deux petites, est conduit par Fortune d'une petite écurie dans une grande en montant les marches)
+        </figDesc>
+      </figure>
+
+
+      <lg id="Te_0001-0034">
+        <l n="1" pn="1">
+          <dc>D</dc>De Fauvel que tant voi torcher
+        </l>
+        <l n="2" pn="2">Doucement, sanz lui escorcher, </l>
+        <l n="3" pn="3">Sui entrez en merencolie,</l>
+        <l n="4" pn="4">Pour ce qu'est beste si polie. </l>
+        <l n="5" pn="5">Souvent le voient en pointure </l>
+        <l n="6" pn="6">Tex qui ne sevent sa figure : </l>
+        <l n="7" pn="7">Moquerie, sens ou folie ?</l>
+        <l n="8" pn="8">Et pour ce, sanz amphibolie, </l>
+        <l n="9" pn="9">Clerement dirai de tel beste</l>
+        <l n="10" pn="10">Ce qu'il m'en puet cheoir en teste.</l>
+        <l n="11" pn="11">
+          <dc>F</dc>Fauvel ne gist mes en l'estable,
+        </l>
+        <l n="12" pn="12">Il a meson plus honorable : </l>
+        <l n="13" pn="13">Haute mengoere demande, </l>
+        <l n="14" pn="14">Rastelier bel et assez vïande.</l>
+        <l n="15" pn="15">Il s'est herbergiez en la sale, </l>
+        <l n="16" pn="16">Pour miex demoustrer sa regale ; </l>
+        <l n="17" pn="17">Et nonpourquant par sa scïence</l>
+        <l n="18" pn="18">Es chambres a grant reverence, </l>
+        <l n="19" pn="19">Et es gardes robes souvent</l>
+        <l n="20" pn="20">Fait toust assembler son couvent, </l>
+        <l n="21" pn="21">Qui si soingneusement le frote </l>
+        <l n="22" pn="22">Qu'en lui ne peut remanoir crote. </l>
+        <l n="23" pn="23">Fortune, contraire a Raison,</l>
+        <l n="24" pn="24">L'a fet seigneur de sa meson :</l>
+        <l n="25" pn="25">En lui essaucer met grant peine, </l>
+        <l n="26" pn="26">Car ou palais roialle mainne ;</l>
+        <l n="27" pn="27">De lui fere honorer ne cesse. </l>
+        <l n="28" pn="28">Entour Fauvel a si grant presse</l>
+        <l n="29" pn="29">De gens de toutes nacïons,</l>
+        <l n="30" pn="30">Et de toutes condicïons</l>
+        <l n="31" pn="31">Que c'est une trop grant meryeille : </l>
+        <l n="32" pn="32">N'i a nul qui ne s'apareille</l>
+        <l n="33" pn="33">De torcher Fauvel doucement ;</l>
+        <l n="34" pn="34">Trop i a grant assemblement !</l>
+      </lg>
+
+      <figure id="1rIm2">
+        <figDesc>
+          Miniature 2 (une foule nombreuse - 10 figures, différents estats -frotte le cheval)
+        </figDesc>
+      </figure>
+
+
+      <notatedMusic id="1rMo2">
+        <ptr
+        target=""
+        mimeType="" />
+      </notatedMusic>
+
+
+      <p id="1rMo2_t">
+        Motet : Mundus a mundicia (PM 2)
+        <nv> 2 </nv>
+        <v>
+          <dc>M</dc>Mundus a mundicia
+          Dictus per contraria !
+          Sordet immundicia
+          Criminum,
+          Crescit in malicia,
+          Culpa nescit terminum.
+          Nam sedutrix hominum
+          Favelli nequicia
+          Non habet hic dominum.
+        </v>
+        <v>
+          (Tenor) : uniquement mélodie
+        </v>
+      </p>
+
+      <notatedMusic id="1rMo3">
+        <ptr
+        target=""
+        mimeType="" />
+      </notatedMusic>
+
+
+      <p id="1rMo3_t">
+        Motet : Quare fremuerunt (PM 3)
+        <nv> 2 </nv>
+        <v>
+          <dc>Q</dc>Quare fremuerunt
+          Gentes et populi ?
+          Quia non viderunt
+          Monstra tot oculi
+          Neque audierunt
+          In orbe seculi
+          Senes et parvuli
+          Prelia que gerunt
+          Et que sibi querunt
+          Reges et reguli.
+          Hec, inquam, inferunt
+          Fauvel et Falvuli.
+        </v>
+        <v>
+          (Tenor) : uniquement mélodie
+        </v>
+      </p>
+
+    </pb>
+
+
+
+    <pb facs="#1v">
+
+
+      <lg id="Te_0035-0048">
+        <l n="35" pn="1">
+          <dc>R</dc>Rois, dus et contes verriez
+        </l>
+        <l n="36" pn="2">Pour torcher Fauvel aliez ;</l>
+        <l n="37" pn="3">Touz seigneurs temporex et princes </l>
+        <l n="38" pn="4">Y viennent de toutes provinces,</l>
+        <l n="39" pn="5">Et chevaliers grans et petiz,</l>
+        <l n="40" pn="6">Qui au torcher sont bien fetiz.</l>
+        <l n="41" pn="7">N'i a, sachiez, ne roy ne conte </l>
+        <l n="42" pn="8">Qui de torcher Fauvel ait honte. </l>
+        <l n="43" pn="9">Vicontes, prevos et baillis</l>
+        <l n="44" pn="10">A bien torcher ne sont faillis ; </l>
+        <l n="45" pn="11">Bourgois de bours et de cités </l>
+        <l n="46" pn="12">Torchent par grans subtilités,</l>
+        <l n="47" pn="13">Et villains de ville champestre </l>
+        <l n="48" pn="14">Sont emprés Fauvel pour li pestre.</l>
+      </lg>
+
+      <figure id="1vIm1">
+        <figDesc>
+          Miniature 3 (10 figures en deux groupes frottent un cheval)
+        </figDesc>
+      </figure>
+
+
+      <lg id="Te_0049-0062">
+        <l n="49" pn="15">
+          <dc>P</dc>Puis en consistoire publique
+        </l>
+        <l n="50" pn="16">S'en va Fauvel, beste autentique,</l>
+        <l n="51" pn="17">Et quant le pape voit tel beste, </l>
+        <l n="52" pn="18">Sachez qu'il li fait moult grant feste </l>
+        <l n="53" pn="19">Et les cardinaus moult l'enneurent : </l>
+        <l n="54" pn="20">Et pour lui torcher [tous] aqueurent. </l>
+        <l n="55" pn="21">Le vichancelier, les notaires,</l>
+        <l n="56" pn="22">Auditeurs et referenderes </l>
+        <l n="57" pn="23">Metent painne d'eus enforcier </l>
+        <l n="58" pn="24">Pour Fauvel bien a point torcher. </l>
+        <l n="59" pn="25">Prelas n'espargnent mont ne val </l>
+        <l n="60" pn="26">Pour torcher ce noble cheval.</l>
+        <l n="61" pn="27">Abbés, gent de religïon</l>
+        <l n="62" pn="28">Y ont trop grant devocïon.</l>
+      </lg>
+
+      <notatedMusic id="1vMo1">
+        <ptr
+        target=""
+        mimeType="" />
+      </notatedMusic>
+
+
+      <p id="1vMo1_t">
+        Motet : Presidentes in thronis seculi (PM 4)
+        <nv> 3 </nv>
+        <v>
+          <dc>S</dc>(Triplum) Super cathedram Moÿsi
+          Laticat sub ypocrisi
+          Grex modernus prelatorum!
+          Quid verior testis nisi
+          Rex eternus paradisi
+          Cujus hec forma verborum :
+          « Quod vobis dicunt facite,
+          Sed quod faciunt nolite ! »
+          Ergo qui nunc presidetis,
+          De vobis erubescite,
+          Quod hec verba regis vite
+          Per vos impleta videtis.
+          Vestra caret antistite
+          Plebs et aulis videbite
+          Regalibus assidetis :
+          Ab hiis ergo recedite !
+          Nam vos rodit in stipite
+          Fraus vestra, sic corruetis !
+          Sed et de regularium
+          Vita impleri alium
+          Dei sermonem videte :
+          « Venient falsi prophete
+          In vestimentis ovium,
+          Lupi autem interius
+          Rapaces » et deterius
+          Hoc verbum certe judico
+          Altero, quod superius
+          Ad pontifiees applico :
+          Nam figmentum dolosius
+          Et delictum atrocius
+          Hoc ultimo demonstratur.
+          Ut tamen loquar sanius :
+          Plures horum operantur:
+          Sanctissima sed est hora.
+          Nisi pravi dirigantur
+          Periculum est in mora !
+        </v>
+        <v>
+          <dc>P</dc>(Duplum) Presidentes in thronis seculi
+          Sunt hodie dolus et rapina.
+          Militantes cesserunt Herculi,
+          Ecclesie perit disciplina,
+          Ymnos, arma, repellunt loculi,
+          Regnat domus rapax et volpina
+          Thesaurizans sanguinem parvuli ;
+          Caret basis lapide anguli.
+          Quis effectus ? Sepius protuli :
+          Prope est ruina!
+        </v>
+        <v>
+          <dc>R</dc>(Tenor) Ruina !
+        </v>
+      </p>
+
+      <lg id="Te_0063-0068">
+        <l n="63" pn="29">
+          <dc>J</dc>Jacobins, Cordeliers, ou estes?
+        </l>
+        <l n="64" pn="30">A ce coup ne soiez pas bestes,</l>
+        <l n="65" pn="31">Mais pensez bien d'estudier </l>
+        <l n="66" pn="32">A Fauvel souef manier :</l>
+        <l n="67" pn="33">Si fetes vous, se Diex m'aït, </l>
+        <l n="68" pn="34">Tant que chascun s'en esbaït.</l>
+      </lg>
+
+
+
+    </pb>
+
+
+
+
+
+    <pb facs="#2r">
+        
+        <figure id="2rIm1">
+            <figDesc>
+                Miniature 4 (8 personnages, surtout ecclésiastiques, frottant le cheval)
+            </figDesc>
+        </figure>
+
+
+      <lg id="Te_0069-0096">
+        <l n="69" pn="1">
+          <dc>A</dc>Augustins et nonnains et moines,
+        </l>
+        <l n="70" pn="2">Arcediacres et chanoines</l>
+        <l n="71" pn="3">Et ciers d'Eglise pourveüz</l>
+        <l n="72" pn="4">Sont au torcher bien esmeüz,,</l>
+        <l n="73" pn="5">Et povres ciers qui sont sanz rente </l>
+        <l n="74" pn="6">Y metent trop bien leur entente,</l>
+        <l n="75" pn="7">Mes ne puent pas si pres estre </l>
+        <l n="76" pn="8">Ne si avant com li grant mestre, </l>
+        <l n="77" pn="9">Si en sont dolens et plain d'ire</l>
+        <l n="78" pn="10">Si que souvent leur ot l'en dire </l>
+        <l n="79" pn="11">Que Fortune, qui n'est pas ferme</l>
+        <l n="80" pn="12">Et qui de tourner ne se terme, </l>
+        <l n="81" pn="13">Le plus avant retornera,</l>
+        <l n="82" pn="14">De haut bas, de loing pres fera. </l>
+        <l n="83" pn="15">Ce que Fortune si toust torne</l>
+        <l n="84" pn="16">Et en son tourner ne met boume</l>
+        <l n="85" pn="17">Fait les pouvres reconforter</l>
+        <l n="86" pn="18">Et de leur maus biau deporter. </l>
+        <l n="87" pn="19">Et quant ne puent venir</l>
+        <l n="88" pn="20">A Fauvel torcher ne tenir,</l>
+        <l n="89" pn="21">Si client il : « Diex gart tel beste,</l>
+        <l n="90" pn="22">Moult a biau cors et bele teste. » </l>
+        <l n="91" pn="23">
+          <dc>O</dc>Or convient savoir la maniere,
+        </l>
+        <l n="92" pn="24">Les contenances et la chiere</l>
+        <l n="93" pn="25">Qui sont a torcher ce Fauvel. </l>
+        <l n="94" pn="26">L'en ne cognoist nounain au vel ;</l>
+        <l n="95" pn="27">Pour c'est il bon que l'en les sache, </l>
+        <l n="96" pn="28">Car maint torchent qui n'i font trache.</l>
+      </lg>
+
+      <notatedMusic id="2rMo1">
+        <ptr
+        target=""
+        mimeType="" />
+      </notatedMusic>
+
+
+      <p id="2rMo1_t">
+        Motet: Jure quod in opere (PM 5)
+        <nv> 3 </nv>
+        <v>
+          <dc>S</dc>(Triplum) Scariotis geniture
+          Vipereo periture
+          Equipollent quippe jure
+          Qui rectorem
+          Mundi, mirem florum florem,
+          Henricum imperatorem,
+          Ob argentum,
+          Ministrando sacramentum
+          Perpere vini cruentum
+          Morti dire
+          Tradiderunt. Heu delire
+          Dies ille, dies ire !
+          Heis avara
+          Secta ! heu lues amara
+          Predicatorum preclara
+          Exterius!
+          Heu audeo nil amplius
+          Enarrare deterius
+          Tot sunt gentes !
+          Senciunt tarnen studentes
+          Lucano : « servat multos fortuna nocentes. »
+        </v>
+        <v>
+          <dc>J</dc>(Duplum) Jure quod in opere
+          Davitico prestcilatur
+          Cesareo funere
+          Jacobitis applicatur :
+          « Etenim homo pacis mee, in quo speravi
+          Qui edebat panes meos, magnificavit
+          Super me supplantacionem »
+          Sacramento protirius dam toxicato potatur
+          Henrieus ; per facinus auro da'to violatur.
+          Sic quod qixit Dominus
+          De hisdem verificatur :
+          « Veniunt falsi prophete in vestimentis ovium
+          Lupi autem interius rapaces » !
+        </v>
+        <v>
+          <dc>S</dc>(Tenor) Superne matris gaudia.
+        </v>
+      </p>
+
+      <figure id="2rIm2">
+        <figDesc>
+          Miniature 5 (7 personnages, ecclésiastiques avec' un roi, frottant le cheval)
+        </figDesc>
+      </figure>
+
+
+      <lg id="Te_0097-0104">
+        <l n="97" pn="29">
+          <dc>P</dc>Premier commencerai au pape ;
+        </l>
+        <l n="98" pn="30">N'est pas raison que il eschape </l>
+        <l n="99" pn="31">Mes je fais protestacïon</l>
+        <l n="100" pn="32">Que ce n'est pas m'entencïon</l>
+        <l n="101" pn="33">D'aler contre l'ouneur de Romme, </l>
+        <l n="102" pn="34">A cui doit obeïr tout homme,</l>
+        <l n="103" pn="35">Mes de Fauvel dirai le voir, </l>
+        <l n="104" pn="36">Si com je le puis concevoir.</l>
+      </lg>
+
+      <notatedMusic id="2rCon1">
+        <ptr
+        target=""
+        mimeType="" />
+      </notatedMusic>
+
+      <p id="2rCon1_t">
+        Conductus : Heu ! Quo progreditur (PM 6)
+        <dc>H</dc>Heu ! quo progreditur
+        Prevaricacio !
+        Virtus substraitur
+        A sanctuario :
+        Jam novo traditur
+        Christus pretorio,
+        Cum Petrus utitur
+        Pilati gladio.
+        Fretus consilio
+        Falvelli leditur.
+        Superna legio
+        Juste conqueritur.
+        Supplicat igitur
+        Patri et Filio .
+        Quod de remedio
+        In hoc media
+        E vestigio
+        Provideat Spiritus Almus.
+      </p>
+    </pb>
+
+
+
+
+
+    <pb facs="#2v">
+
+      # .I. denotes the Roman numeral 1
+
+      <lg id="Te_0105-0148">
+        <l n="105" pn="1">
+          <dc>L</dc>Le pape se siet en son siege,
+        </l>
+        <l n="106" pn="2">Jadis de pierre, or de liege;</l>
+        <l n="107" pn="3">Fauvel regarde en sa presence,</l>
+        <l n="108" pn="4">A cui l'en fet grant reverence,</l>
+        <l n="109" pn="5">Que l'en torche au soir et au main;</l>
+        <l n="110" pn="6">Le pape sili tent la main,</l>
+        <l n="111" pn="7">Par le frain doucement le prent, </l>
+        <l n="112" pn="8">De torcher nului ne reprent,</l>
+        <l n="113" pn="9">Et puis frate a Fauvel la teste </l>
+        <l n="114" pn="10">En disant : « Ci a bele beste ! »</l>
+        <l n="115" pn="11">Li cardinal dient pour plere : </l>
+        <l n="116" pn="12">« Vous dites voir, sire saint Pere! » </l>
+        <l n="117" pn="13">Lors a Fauvel tost les mains metent </l>
+        <l n="118" pn="14">Et de lui torcher s'entremetent;</l>
+        <l n="119" pn="15">Il me semble qu'estrilles tiengnent</l>
+        <l n="120" pn="16">Et qu'antar la teste le piengnent. </l>
+        <l n="121" pn="17">Je ne sai comment ill'entr'oignent, </l>
+        <l n="122" pn="18">Mes sus la teste le roougnent. </l>
+        <l n="123" pn="19">Iluecques rois de tous païs</l>
+        <l n="124" pn="20">De torcher ne sont esbaïs.</l>
+        <l n="125" pn="21">I. en i a qui est greigneur</l>
+        <l n="126" pn="22">Et entre les autres seigneur ; </l>
+        <l n="127" pn="23">Son estat mis en oubliance ; </l>
+        <l n="128" pn="24">De conreer Fauvel s'avance : </l>
+        <l n="129" pn="25">De l'une main touse la erigne</l>
+        <l n="130" pn="26">Et a l'autre main tient le pigne; </l>
+        <l n="131" pn="27">Mes il n'a point de miroer,</l>
+        <l n="132" pn="28">Il en devrait bien un loer : </l>
+        <l n="133" pn="29">Bien devrait miroer avoir,</l>
+        <l n="134" pn="30">Car grant mestier a de savoir.</l>
+        <l n="135" pn="31">Aprés les rois, les comtes torchent</l>
+        <l n="136" pn="32">Si doucement que point n'escorchent; </l>
+        <l n="137" pn="33">Prelat et abbés d'autre part</l>
+        <l n="138" pn="34">A bien torcher chascun se part,</l>
+        <l n="139" pn="35">Sus le dos, entour les costés ;</l>
+        <l n="140" pn="36">Nul n'est d'emprés Fauvel ostés, </l>
+        <l n="141" pn="37">Sous le ventre et devant le pis : </l>
+        <l n="142" pn="38">L'un torche miex, et l'autre pis; </l>
+        <l n="143" pn="39">Prieurs, doiens, arcediacres</l>
+        <l n="144" pn="40">Au torcher ne sont pas poacres ; </l>
+        <l n="145" pn="41">De toutes [les] pars y atrotent</l>
+        <l n="146" pn="42">Et Fauvel es pasturons frotent. </l>
+        <l n="147" pn="43">Chevaliers n'i sont pas en coupe, </l>
+        <l n="148" pn="44">Fauvel torchent dessus la croupe.</l>
+      </lg>
+
+      <figure id="2vIm1">
+        <figDesc>
+          Miniature 6 (9 personnages ecclésiastiques autour du cheval; l'un cure ses pieds)
+        </figDesc>
+      </figure>
+
+
+      <notatedMusic id="2vMo1">
+        <ptr
+        target=""
+        mimeType="" />
+      </notatedMusic>
+
+
+      <p id="2vMo1_t">
+        Motet : In mari miserie (PM 7)
+        <nv> 2 </nv>
+        <v>
+          <dc>I</dc>In mari miserie,
+          Maris stella
+          Errantes cotidie
+          A procella
+          Defende nos et precare
+          Dominum pie,
+          Ut ad portas glorie
+          Nos trahat per hoc mare
+          Nosque Fauvel faciat superare.
+        </v>
+        <v>
+          (Tenor) : mélodie
+        </v>
+      </p>
+
+      <notatedMusic id="2vMo2">
+        <ptr
+        target=""
+        mimeType="" />
+      </notatedMusic>
+
+
+      <p id="2vMo2_t">
+        Motet : Ad solitum vomitum (PM 8)
+        <nv> 2 </nv>
+        <v>
+          <dc>A</dc>Ad solitum vomitum
+          Ne redeas, paveas
+          Interitum meritum !
+          Preteritum doleas.
+          Propositum foveas !
+          Ad ganeas nec eas,
+          Ne pereas per eas !
+          Provideas subitum exitum
+          Et caveas vetitum redditum ;
+          Ad obitum
+          Solicitum
+          Si oculum
+          Converteris,
+          Oderis hoc seculum
+          In quo tenet baculum
+          Fauvellus et anulum.
+        </v>
+        <v>
+          (Tenor) : mélodie
+        </v>
+      </p>
+
+      <lg id="Te_0149-0204">
+        <l n="149" pn="45">
+          <dc>L</dc>Li escuier, qui bien se quident
+        </l>
+        <l n="150" pn="46">Lievent les piez et si les vuident,</l>
+        <l n="151" pn="47">Et si font nouvele litiere,</l>
+        <l n="152" pn="48">Si que Fauvel lor fait grant chiere. </l>
+        <l n="153" pn="49">Chanoinnes, chapelains, persones, </l>
+        <l n="154" pn="50">Moinnes, nonnains de toutes gonnes,</l>
+        <l n="155" pn="51">Par bois, par villes et par mares </l>
+        <l n="156" pn="52">Torchent a Fauvel les garés ; </l>
+        <l n="157" pn="53">Entre les cuisses, pres des annes </l>
+        <l n="158" pn="54">Frotent a Fauvel ners et vaines,</l>
+        <l n="159" pn="55">Et Cordeliers et Jacobins</l>
+        <l n="160" pn="56">Sont au bien torcher droiz robins </l>
+        <l n="161" pn="57">Devant torchent et puis derriere ; </l>
+        <l n="162" pn="58">Trop bien en sevent la maniere !</l>
+        <l n="163" pn="59">Et povres gens au torcher viennent, </l>
+        <l n="164" pn="60">Mes emprés la queue se tiennent </l>
+        <l n="165" pn="61">Et le miex qu'il puent s'adrecent. </l>
+        <l n="166" pn="62">La queue escouent et la trecent.</l>
+        <l n="167" pn="63">Or sont touz au torcher venuz, </l>
+        <l n="168" pn="64">Richez, moinnes gros et menuz.</l>
+        <l n="169" pn="65">
+          <dc>S</dc>Se cest livre voulons entendre,
+        </l>
+        <l n="170" pn="66">Des or mes nous couvient descendre </l>
+        <l n="171" pn="67">A Fauvel proprement descrire</l>
+        <l n="172" pn="68">Et par diffinicion dire</l>
+        <l n="173" pn="69">Ce que Fauvel nos senefie ;</l>
+        <l n="174" pn="70">Mes ançois est bon que je die</l>
+        <l n="175" pn="71">De la couleur premirement.</l>
+        <l n="176" pn="72">Aristote dit vraiement :</l>
+        <l n="177" pn="73">Les accidens grant aidance</l>
+        <l n="178" pn="74">Font a cognoistre la substance. </l>
+        <l n="179" pn="75">Fauvel n'a mie couleur noire,</l>
+        <l n="180" pn="76">Car noire coulour est memoire</l>
+        <l n="181" pn="77">De mort, de painne ou de tristece, </l>
+        <l n="182" pn="78">Et Fauvel est en grant leece,</l>
+        <l n="183" pn="79">Si que de noir habit n'a cure ; </l>
+        <l n="184" pn="80">Il n'est pas propre' a sa nature. </l>
+        <l n="185" pn="81">Ne couleur n'a il pas vermeille. </l>
+        <l n="186" pn="82">A cele point ne s'apareille</l>
+        <l n="187" pn="83">Car rouge couleur senefie</l>
+        <l n="188" pn="84">Charité a chascun amie. </l>
+        <l n="189" pn="85">Fauvel n'a cure de tel cote, </l>
+        <l n="190" pn="86">Car il n'aime fors qui le frate.</l>
+        <l n="191" pn="87">Ne il n'a pas la coulour blance,</l>
+        <l n="192" pn="88">Pour ce qu'el est senefiance </l>
+        <l n="193" pn="89">De chose qui est nete et pure;</l>
+        <l n="194" pn="90">Mes Fauvet est si plain d'ordure</l>
+        <l n="195" pn="91">Qu'il couvient touz jours qu'en le frote ;</l>
+        <l n="196" pn="92">Pour ce n'a il pas blanche cote : </l>
+        <l n="197" pn="93">Se il l'avoit, ce serait perte ! </l>
+        <l n="198" pn="94">Aussi n'a il pas cote verte,</l>
+        <l n="199" pn="95">Car verdure est senefiance</l>
+        <l n="200" pn="96">De foi loial et d'esperance;</l>
+        <l n="201" pn="97">Mais Fauvel a dou tout s'entente </l>
+        <l n="202" pn="98">Mise en la fortune presente</l>
+        <l n="203" pn="99">Sanz esperer cele qui dure,</l>
+        <l n="204" pn="100">Ne de foi garder n'a il cure.</l>
+      </lg>
+
+    </pb>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+...etc. 

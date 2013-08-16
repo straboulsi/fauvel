@@ -1,4 +1,4 @@
-README.TXT
+﻿README.TXT
 digitalfauvel repository
 Written by Alison Y. Chang, August 2013
 
@@ -7,13 +7,18 @@ Contains:
 DigitalFauvel (inside SurfaceApplication1) – the C# code for the Microsoft Surface 2.0. Open in Visual Studio or other C# environment. Main class is SurfaceWindow1.xaml, and its code-behind is SurfaceWindow1.xaml.cs (get to it by clicking into the second SurfaceApplication1 folder, nested in the first).
 
 Note: THIS WILL NOT RUN IN ITS CURRENT STATE. Due to copyright issues, this repository cannot include the XML, audio, or visual files that are specific to Roman de Fauvel and used in DigitalFauvel. The following folders and their contents are missing: pages, smallpages, thumbnails, icons, XML, and musicz. If you are part of the Princeton DigitalFauvel team, you may have access to our Dropbox, where most of these resources can be found.
+Our repository is primarily intended to be an example of a digital humanities project. However:
 
-The current code requires:
--	one page (.jpg image) and one smallpage (a smaller version of the page .jpg) for each page of the manuscript
--	one thumbnail (.jpg) for each object in the manuscript (i.e., poetry chunk, music object, or image)
--	various icons (.png or .jpg) for the buttons on the UI
--	four XML files (original text, modern French translation, English, and layout)
--	numerous audio files for the “musicz” folder: .mscz for score images created in musescore, .png for each image of the scores for UI display, and .wma for each audio (for polyphonic pieces, separate audio for each voice as well as one audio containing all voices)
+TO RUN THIS PROJECT, create the following folders at the same level of the bin, obj, Properties and Resources folders:
+1. XML - Contents: XML files (see XMLGuide.txt for more info). Our project has four: OriginalTextXML, ModernFrenchXML, EnglishXML, and LayoutXML.
+2. icons - Contents: numerous icons (.jpg, .png) used on buttons in our project, such as downArrow, search, exLarge, leftArrow, loading, etc.
+3. pages - Contents: full size image (.jpg) scans of the Fauvel manuscript. We have images numbered from 10 to 105.
+4. smallpages - Contents: small versions of the pages, used for the slider bar/as temporary images until the full pages load.
+5. thumbnails - Contents: one thumbnail per object (poetry, music, image) in Fauvel (.jpg). 
+6. minithumbnails - Contents: mini versions of all the thumbnails for images (aka miniatures) in Fauvel.
+7. music - Contents: score (.png) and audio (.wma) files for music objects in Fauvel.
+
+
 
 
 
@@ -27,6 +32,9 @@ TextReader.java – used to create OriginalTextXML file. This was the first Enco
 Instructions.txt – readme for TextReader.java. 
 
 Each of the three above programs reads a .txt file and prints to another. The latter is valid XML. The actual XML documents cannot be included in this repository due to copyright.
+NOTE: These programs were written for our very specific original files (Strubel edition of Roman de Fauvel with original and Modern French text; Eliza Zingesser's translation of Fauvel). They will not magically transform ANY document into valid XML.
+Use them as an example of how to efficiently encode documents into XML.
+
 
 Music.java – defines a music object for ModFrEncoder and TextReader.
 TableOfContents.java – lists objects found on each folio using the XML file created by the other programs.
