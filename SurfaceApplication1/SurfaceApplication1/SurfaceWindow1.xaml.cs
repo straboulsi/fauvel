@@ -111,8 +111,8 @@ namespace DigitalFauvel
 
 
 
-            Study.getTitle("2rCon1");
-            Study.getTitle("2vMo2");
+            Study.getTitle("2rCon1"); // Pretty sure these two lines were just testing functionality; can remove?
+            Study.getTitle("2vMo2"); // This one too
             Console.Read();
 
 
