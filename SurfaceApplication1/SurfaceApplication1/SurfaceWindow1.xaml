@@ -8,7 +8,7 @@
     WindowStartupLocation="CenterScreen" WindowState="Maximized"
     >
     <Canvas x:Name="mother" Background="White">
-        <TabControl x:Name="tabBar" SelectionChanged="tabBar_SelectionChanged" Height="960" Width="1310" VerticalContentAlignment="Center" VerticalAlignment="Center" HorizontalAlignment="Center" TabStripPlacement="Top">
+        <TabControl x:Name="tabBar" SelectionChanged="tabBar_SelectionChanged" Height="960" Width="859" VerticalContentAlignment="Center" VerticalAlignment="Center" HorizontalAlignment="Center" TabStripPlacement="Top">
             <TabControl.Resources>
                 <DataTemplate x:Key="TabHeader" DataType="TabItem">
                     <DockPanel>
@@ -22,7 +22,7 @@
                 </DataTemplate>
             </TabControl.Resources>
         </TabControl>
-        <TabControl x:Name="tabDynamic" ItemsSource="{Binding}" Canvas.Left="1310" Height="1080" Width="610"
+        <TabControl x:Name="tabDynamic" ItemsSource="{Binding}" Canvas.Left="865" Height="1080" Width="1055"
                     VerticalContentAlignment="Center" VerticalAlignment="Center" HorizontalAlignment="Center" TabStripPlacement="Top" FontFamily="Cambria">
 
             <TabControl.Resources>

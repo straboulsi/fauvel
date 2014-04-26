@@ -24,7 +24,9 @@ using System.Diagnostics;
 using System.Xml;
 using System.Xml.Schema;
 using System.Xml.XPath;
+using System.Xml.Linq;
 using System.Windows.Threading;
+
 
 namespace DigitalFauvel
 {
@@ -43,7 +45,7 @@ namespace DigitalFauvel
         public enum language { None = 0, OldFrench = 1, French = 2, English = 3 };
 
         /* keeps track of the tabs */
-        List<Tab> tabArray = new List<Tab>();
+        List<MainTab> tabArray = new List<MainTab>();
 
         /* The sidebar object (the tabbed window on the right) */
         SideBar sideBar;
@@ -81,7 +83,7 @@ namespace DigitalFauvel
         /* The xml documents: oldFrench text, English text, modernFrench text, and the layout of where things are on the page. */
         public static XmlDocument xml, engXml, modFrXml, layoutXml;
 
-
+        public static XDocument xOldFr;
 
         /**
          * Called when the program starts. Initialization occurs.
@@ -103,12 +105,15 @@ namespace DigitalFauvel
                 layoutXml.Load(@"..\..\XML\LayoutXML.xml");
                 modFrXml = new XmlDocument();
                 modFrXml.Load(@"..\..\XML\ModernFrenchXML.xml");
+
+                xOldFr = XDocument.Load(@"..\..\XML\OriginalTextXML.xml"); // = XDocument.Load(@"..\..\XML\OriginalTextXML.xml");
             }
             catch (Exception e)
             {
                 Console.Write(e.StackTrace);
             }
 
+            
 
 
             Study.getTitle("2rCon1"); // Pretty sure these two lines were just testing functionality; can remove?
@@ -133,6 +138,8 @@ namespace DigitalFauvel
 
             Counterpart.makeCounterpartList();
             createTab(2);
+            sideBar.TabList = tabArray;
+            sideBar.TabNumber = tabNumber;
         }
 
         protected override void OnClosed(EventArgs e)
@@ -162,7 +169,7 @@ namespace DigitalFauvel
          **/
         private void gotoPreviousPage(object sender, RoutedEventArgs e)
         {
-            Tab tab = currentTab();
+            MainTab tab = currentTab();
             if (tab._page != 0)
             {
                 int newPage = tab._page - 2;
@@ -176,7 +183,7 @@ namespace DigitalFauvel
          **/
         private void gotoNextPage(object sender, RoutedEventArgs e)
         {
-            Tab tab = currentTab();
+            MainTab tab = currentTab();
             if (tab._page != 94)
             {
                 int newPage = tab._page + 2;
@@ -191,7 +198,7 @@ namespace DigitalFauvel
          */
         private void goToPage(int page)
         {
-            Tab tab = currentTab();
+            MainTab tab = currentTab();
 
             tab._page = page;
             if (page > maxPage)
@@ -207,7 +214,7 @@ namespace DigitalFauvel
          **/
         private void loadPage()
         {
-            Tab currentTab = this.currentTab();
+            MainTab currentTab = this.currentTab();
             
             currentTab._SVI.Width = currentTab._SVI.MinWidth;
             currentTab._SVI.Height = currentTab._SVI.MinHeight;
@@ -414,7 +421,7 @@ namespace DigitalFauvel
             if(tabArray.Count > tabNumber && currentTab() != null)
                 lang = currentTab()._currentLanguage;
 
-            tabArray.Insert(count, new Tab(page, tab, verso, recto, can, vGrid, rGrid, delBtn, ScatterView, ScatterItem, vSwipeGrid, rSwipeGrid, vTranslationGrid, rTranslationGrid, vBoxesGrid, rBoxesGrid, hedatext, lang));
+            tabArray.Insert(count, new MainTab(page, tab, verso, recto, can, vGrid, rGrid, delBtn, ScatterView, ScatterItem, vSwipeGrid, rSwipeGrid, vTranslationGrid, rTranslationGrid, vBoxesGrid, rBoxesGrid, hedatext, lang));
 
             tab.Content = can;
             tabBar.Items.Insert(tabArray.Count - 1, tab);
@@ -453,7 +460,7 @@ namespace DigitalFauvel
         /**
          * returns the tab that the user is currently using
          **/
-        private Tab currentTab()
+        private MainTab currentTab()
         {
             return tabArray[tabNumber];
         }
@@ -488,7 +495,7 @@ namespace DigitalFauvel
         {
             if (tabBar.Items.Count > 2)
             {
-                Tab ct = currentTab();
+                MainTab ct = currentTab();
                 TabItem ti = ct._tab;
                 if (tabNumber >= tabBar.Items.Count - 2)
                     tabBar.SelectedItem = tabArray[tabNumber - 1]._tab;
@@ -563,7 +570,7 @@ namespace DigitalFauvel
         private void changeTextBoxSize(object sender, SizeChangedEventArgs e)
         {
             ScatterViewItem i = (ScatterViewItem)sender;
-            Tab tab = currentTab();
+            MainTab tab = currentTab();
             int rCount, vCount;
             if (tab._textBlocksR != null && tab._textBlocksV != null)
             {
@@ -814,7 +821,7 @@ namespace DigitalFauvel
 
         public void changeLanguage(language l)
         {
-            Tab tab = currentTab();
+            MainTab tab = currentTab();
             tab._currentLanguage = l;
             updateLanguageButton();
             tab._worker.setTranslateText(tab._currentLanguage);
@@ -823,7 +830,7 @@ namespace DigitalFauvel
 
         public void changeLanguage(int l)
         {
-            Tab tab = currentTab();
+            MainTab tab = currentTab();
             if (l == 1)
                 tab._currentLanguage = language.OldFrench;
             else if (l == 2)
@@ -839,7 +846,7 @@ namespace DigitalFauvel
 
         private void languageChanged(object sender, SelectionChangedEventArgs e)
         {
-            Tab tab = currentTab();
+            MainTab tab = currentTab();
             ListBox box = (ListBox)sender;
             language newLanguage = language.None;
             if (box.SelectedItem == null)
@@ -869,7 +876,7 @@ namespace DigitalFauvel
 
         public void updateLanguageButton()
         {
-            Tab tab = currentTab();
+            MainTab tab = currentTab();
             if (tab._currentLanguage == language.None)
                 languageButton.Content = "None";
             if (tab._currentLanguage == language.OldFrench)
@@ -911,7 +918,7 @@ namespace DigitalFauvel
                     x = minPageWidth;
                 if (y > minPageHeight)
                     y = minPageHeight;
-                Tab tab = currentTab();
+                MainTab tab = currentTab();
                 tab._rSwipeGrid.Visibility = Visibility.Visible;
                 Grid holder = (Grid)tab._rSwipeGrid.Parent;
                 holder.ColumnDefinitions[0].Width = new GridLength(x, GridUnitType.Star);
@@ -976,7 +983,7 @@ namespace DigitalFauvel
                     x = minPageWidth;
                 if (y > minPageHeight)
                     y = minPageHeight;
-                Tab tab = currentTab();
+                MainTab tab = currentTab();
                 tab._vSwipeGrid.Visibility = Visibility.Visible;
                 Grid holder = (Grid)tab._vSwipeGrid.Parent;
                 holder.ColumnDefinitions[0].Width = new GridLength(x, GridUnitType.Star);
@@ -1020,7 +1027,7 @@ namespace DigitalFauvel
          **/
         public void changeTranslationGrids(Point p)
         {
-            Tab tab = currentTab();
+            MainTab tab = currentTab();
             List<TranslationBox> translationBoxes, otherTranslationBoxes;
             Grid translationGrid, otherTranslationGrid;
             if (p.X < maxPageWidth)
@@ -1095,7 +1102,7 @@ namespace DigitalFauvel
          **/
         private void makeEnlargedTranslationGridReadable()
         {
-            Tab tab = currentTab();
+            MainTab tab = currentTab();
             List<TranslationBox> translationBoxes, otherTranslationBoxes;
             Grid translationGrid, otherTranslationGrid;
 
@@ -1231,7 +1238,7 @@ namespace DigitalFauvel
 
         private void savePage(object sender, TouchEventArgs e)
         {
-            Tab tab = currentTab();
+            MainTab tab = currentTab();
             int pageNum = tab._page;
             double width = tab._SVI.Width;
             Point center = tab._SVI.Center;
@@ -1245,7 +1252,7 @@ namespace DigitalFauvel
 
         public void goToSavedPage(SavedPage sp)
         {
-            Tab tab = currentTab();
+            MainTab tab = currentTab();
             goToPage(sp.pageNum);
             tab._SVI.Width = sp.width;
             tab._SVI.Height = tab._SVI.MinHeight * tab._SVI.Width / tab._SVI.MinWidth;

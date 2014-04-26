@@ -77,6 +77,7 @@
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Core" />
@@ -109,6 +110,7 @@
     <Compile Include="MusicExpander.cs" />
     <Compile Include="MusicPartExpander.cs" />
     <Compile Include="Overlay.cs" />
+    <Compile Include="Piece.cs" />
     <Compile Include="SavedPagesTab.cs" />
     <Compile Include="Counterpart.cs" />
     <Compile Include="PageNamer.cs" />
@@ -159,11 +161,13 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="icons\downArrow.png" />
-    <Resource Include="icons\box.jpg" />
     <Resource Include="icons\prev.png" />
     <Resource Include="icons\save.png" />
     <Resource Include="icons\zoom.png" />
-    <Resource Include="XML\LayoutXML.xml" />
+    <Resource Include="musicnote.png" />
+    <Resource Include="XML\LayoutXML.xml">
+      <SubType>Designer</SubType>
+    </Resource>
     <Resource Include="icons\translationsBar.png" />
     <Resource Include="icons\ex.png" />
     <Resource Include="icons\exLarge.png" />
@@ -173,6 +177,7 @@
     <Resource Include="icons\pencil.png" />
     <Resource Include="icons\search.png" />
     <Resource Include="icons\loading.png" />
+    <Resource Include="icons\splashImage.png" />
     <Content Include="minithumbnails\10rIm1.jpg">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -410,8 +415,9 @@
     <SplashScreen Include="Resources\splashImage.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </SplashScreen>
-
     <Resource Include="music\2rCon1.png" />
+    <Resource Include="music\2rCo1.png" />
+    <Content Include="music\2rCo1.wma" />
     <Content Include="music\2rCon1.wma" />
     <Resource Include="music\2vMo2-1.png" />
     <Resource Include="music\2vMo2-2.png" />
@@ -426,11 +432,121 @@
     <Resource Include="music\2vMo2_v1.png" />
     <Content Include="music\2vMo2_v1.wav" />
     <Content Include="music\2vMo2_v1.wma" />
-
+    <Resource Include="pages\1.jpg" />
+    <Resource Include="pages\107.jpg" />
+    <Resource Include="pages\108.jpg" />
+    <Resource Include="pages\109.jpg" />
+    <Resource Include="pages\110.jpg" />
+    <Resource Include="pages\111.jpg" />
+    <Resource Include="pages\112.jpg" />
+    <Resource Include="pages\113.jpg" />
+    <Resource Include="pages\114.jpg" />
+    <Resource Include="pages\115.jpg" />
+    <Resource Include="pages\116.jpg" />
+    <Resource Include="pages\117.jpg" />
+    <Resource Include="pages\118.jpg" />
+    <Resource Include="pages\119.jpg" />
+    <Resource Include="pages\120.jpg" />
+    <Resource Include="pages\121.jpg" />
+    <Resource Include="pages\122.jpg" />
+    <Resource Include="pages\123.jpg" />
+    <Resource Include="pages\124.jpg" />
+    <Resource Include="pages\125.jpg" />
+    <Resource Include="pages\126.jpg" />
+    <Resource Include="pages\127.jpg" />
+    <Resource Include="pages\128.jpg" />
+    <Resource Include="pages\129.jpg" />
+    <Resource Include="pages\130.jpg" />
+    <Resource Include="pages\131.jpg" />
+    <Resource Include="pages\132.jpg" />
+    <Resource Include="pages\133.jpg" />
+    <Resource Include="pages\134.jpg" />
+    <Resource Include="pages\135.jpg" />
+    <Resource Include="pages\136.jpg" />
+    <Resource Include="pages\137.jpg" />
+    <Resource Include="pages\138.jpg" />
+    <Resource Include="pages\139.jpg" />
+    <Resource Include="pages\140.jpg" />
+    <Resource Include="pages\141.jpg" />
+    <Resource Include="pages\142.jpg" />
+    <Resource Include="pages\143.jpg" />
+    <Resource Include="pages\144.jpg" />
+    <Resource Include="pages\145.jpg" />
+    <Resource Include="pages\146.jpg" />
+    <Resource Include="pages\147.jpg" />
+    <Resource Include="pages\148.jpg" />
+    <Resource Include="pages\149.jpg" />
+    <Resource Include="pages\150.jpg" />
+    <Resource Include="pages\151.jpg" />
+    <Resource Include="pages\152.jpg" />
+    <Resource Include="pages\153.jpg" />
+    <Resource Include="pages\154.jpg" />
+    <Resource Include="pages\155.jpg" />
+    <Resource Include="pages\156.jpg" />
+    <Resource Include="pages\157.jpg" />
+    <Resource Include="pages\158.jpg" />
+    <Resource Include="pages\159.jpg" />
+    <Resource Include="pages\160.jpg" />
+    <Resource Include="pages\161.jpg" />
+    <Resource Include="pages\162.jpg" />
+    <Resource Include="pages\163.jpg" />
+    <Resource Include="pages\164.jpg" />
+    <Resource Include="pages\165.jpg" />
+    <Resource Include="pages\166.jpg" />
+    <Resource Include="pages\167.jpg" />
+    <Resource Include="pages\168.jpg" />
+    <Resource Include="pages\169.jpg" />
+    <Resource Include="pages\170.jpg" />
+    <Resource Include="pages\171.jpg" />
+    <Resource Include="pages\172.jpg" />
+    <Resource Include="pages\173.jpg" />
+    <Resource Include="pages\174.jpg" />
+    <Resource Include="pages\175.jpg" />
+    <Resource Include="pages\176.jpg" />
+    <Resource Include="pages\177.jpg" />
+    <Resource Include="pages\178.jpg" />
+    <Resource Include="pages\179.jpg" />
+    <Resource Include="pages\180.jpg" />
+    <Resource Include="pages\181.jpg" />
+    <Resource Include="pages\182.jpg" />
+    <Resource Include="pages\183.jpg" />
+    <Resource Include="pages\184.jpg" />
+    <Resource Include="pages\185.jpg" />
+    <Resource Include="pages\186.jpg" />
+    <Resource Include="pages\187.jpg" />
+    <Resource Include="pages\188.jpg" />
+    <Resource Include="pages\189.jpg" />
+    <Resource Include="pages\190.jpg" />
+    <Resource Include="pages\191.jpg" />
+    <Resource Include="pages\192.jpg" />
+    <Resource Include="pages\193.jpg" />
+    <Resource Include="pages\194.jpg" />
+    <Resource Include="pages\195.jpg" />
+    <Resource Include="pages\196.jpg" />
+    <Resource Include="pages\197.jpg" />
+    <Resource Include="pages\198.jpg" />
+    <Resource Include="pages\199.jpg" />
+    <Resource Include="pages\2.jpg" />
+    <Resource Include="pages\200.jpg" />
+    <Resource Include="pages\201.jpg" />
+    <Resource Include="pages\202.jpg" />
+    <Resource Include="pages\203.jpg" />
+    <Resource Include="pages\204.jpg" />
+    <Resource Include="pages\205.jpg" />
+    <Resource Include="pages\206.jpg" />
+    <Resource Include="pages\207.jpg" />
+    <Resource Include="pages\208.jpg" />
+    <Resource Include="pages\3.jpg" />
+    <Resource Include="pages\4.jpg" />
+    <Resource Include="pages\5.jpg" />
+    <Resource Include="pages\6.jpg" />
+    <Resource Include="pages\7.jpg" />
+    <Resource Include="pages\8.jpg" />
+    <Resource Include="pages\9.jpg" />
+    <Resource Include="pages\XMLFinalContentFile.xml" />
     <Content Include="smallpages\105.jpg">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-
     <Content Include="thumbnails\10rAl1.jpg">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -1762,6 +1878,7 @@
     </Content>
     <Content Include="XML\ModernFrenchXML.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <SubType>Designer</SubType>
     </Content>
     <Resource Include="icons\upArrow.png" />
     <Content Include="XML\OriginalTextXML.xml">
@@ -1772,7 +1889,6 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       <SubType>Designer</SubType>
     </Content>
-    <Resource Include="icons\pageTurn.png" />
     <Content Include="pages\100.jpg">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>

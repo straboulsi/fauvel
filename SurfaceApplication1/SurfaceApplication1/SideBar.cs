@@ -28,7 +28,13 @@ namespace DigitalFauvel
         private SideBarTab tabAdd;
         public SurfaceWindow1 surfaceWindow;
         public TabControl tabBar;
+        public List<MainTab> TabList { get; set; }
+        public int TabNumber { get; set; }
 
+        private MainTab currentTab()
+        {
+            return TabList[TabNumber];
+        }
         // This constructor defines the look of the "new tab", which displays all apps for a user to choose from.
         public SideBar(SurfaceWindow1 surfaceWindow, TabControl tabBar)
         {
@@ -144,9 +150,12 @@ namespace DigitalFauvel
          * */
         private void StudyButton_Selected(object sender, RoutedEventArgs e)
         {
+            MainTab tab = currentTab();
+            int pagenumber = tab._page;
+            var pieceList = Study.GetPieces(pagenumber);
             tabBar.DataContext = null;
             int count = tabItems.Count;
-            StudyTab newTab = new StudyTab(this, surfaceWindow);
+            StudyTab newTab = new StudyTab(this, surfaceWindow, pieceList);
             tabItems.Insert(count - 1, newTab);
             tabBar.DataContext = tabItems;
             tabBar.SelectedItem = newTab;

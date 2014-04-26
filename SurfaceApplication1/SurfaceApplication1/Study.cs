@@ -5,6 +5,8 @@ using System.Text;
 using System.Xml;
 using System.Xml.Schema;
 using System.Xml.XPath;
+using System.Xml.Linq;
+using System.Windows;
 
 
 namespace DigitalFauvel
@@ -18,7 +20,42 @@ namespace DigitalFauvel
      * */
     public class Study
     {
+        //returns a list of pieces on the current opening
+        public static Pieces GetPieces(int pageNumber)
+        {
+            var pieces = new Pieces();
+            try
+            {
+                //gets the xelements representing the two pages of the opening (e.g. 1r, 2v)
+                XElement root = SurfaceWindow1.xOldFr.Root;
+                string verso = "#" + (pageNumber-2).ToString() + "v";
+                string recto = "#" + (pageNumber-1).ToString() + "r";
+                IEnumerable<XElement> pages = 
+                    from el in root.Descendants("pb")
+                    where ((string)el.Attribute("facs") ==  verso || el.Attribute("facs").Value == recto)
+                    select el;
+                //adds the pieces on each page to the pieceList
+                foreach (XElement page in pages)
+                {
+                    //var foo = page.Attribute("facs");
+                    IEnumerable<XElement> pieceElements =
+                    from el in page.Elements("p")
+                    select el; //.Attribute("id").Value;
 
+                    foreach (XElement p in pieceElements)
+                    {
+                        var piece = new Piece(p);
+                        pieces.Add(piece.ID,piece);
+                    }
+                }
+
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show(e.Message);
+            }
+            return pieces;
+        }
 
         /**
          * The beginning of music search that allows searching for a motet by number of voice.

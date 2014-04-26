@@ -14,7 +14,7 @@ namespace DigitalFauvel
      * This class sets up the background workers for the application.
      * Primary Coder: Brendan Chou
      * */
-    class Workers
+    public class Workers
     {
 
         public BackgroundWorker slideImageChange;
@@ -22,7 +22,7 @@ namespace DigitalFauvel
         public BackgroundWorker rectoImageChange;
         public bool largeRectoLoaded, largeVersoLoaded;
         public int slideInt;
-        private Tab tab;
+        private MainTab tab;
 
 
 
@@ -154,7 +154,7 @@ namespace DigitalFauvel
         /**
          * Constructor. The Workers object is owned by newtab and will update the stuff for this tab.
          **/
-        public Workers(Tab newtab)
+        public Workers(MainTab newtab)
         {
             slideImageChange = new BackgroundWorker();
             versoImageChange = new BackgroundWorker();

@@ -14,7 +14,7 @@ namespace DigitalFauvel
      * This class defines a new main tab that displays an opening of Fauvel.
      * Primary Coder: Brendan Chou
      * */
-    class Tab
+    public class MainTab
     {
         public bool _twoPage;
         public Button _delButton;
@@ -35,7 +35,7 @@ namespace DigitalFauvel
 
 
 
-        public Tab(int page, TabItem newTab, Image newVerso, Image newRecto, Grid canvas, Grid vGrid, Grid rGrid, Button delBtn, ScatterView SV, ScatterViewItem si, Grid vSwipeGrid, Grid rSwipeGrid, Grid vTranslationGrid, Grid rTranslationGrid, Grid vBoxesGrid, Grid rBoxesGrid, TextBlock headerText, SurfaceWindow1.language language)
+        public MainTab(int page, TabItem newTab, Image newVerso, Image newRecto, Grid canvas, Grid vGrid, Grid rGrid, Button delBtn, ScatterView SV, ScatterViewItem si, Grid vSwipeGrid, Grid rSwipeGrid, Grid vTranslationGrid, Grid rTranslationGrid, Grid vBoxesGrid, Grid rBoxesGrid, TextBlock headerText, SurfaceWindow1.language language)
         {
             _page = page;
             _tab = newTab;
