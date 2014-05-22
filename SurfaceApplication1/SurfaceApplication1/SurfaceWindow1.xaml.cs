@@ -81,7 +81,7 @@ namespace DigitalFauvel
         public static int tabNumber = 0;
 
         /* The xml documents: oldFrench text, English text, modernFrench text, and the layout of where things are on the page. */
-        public static XmlDocument xml, engXml, modFrXml, layoutXml;
+        public static XmlDocument xmlOldFr, engXml, modFrXml, layoutXml;
 
         public static XDocument xOldFr;
 
@@ -92,13 +92,16 @@ namespace DigitalFauvel
         {
             InitializeComponent();
 
+            double scale = 0.8;
+            mother.LayoutTransform = new ScaleTransform(scale, scale);
+
             sideBar = new SideBar(this, tabDynamic);
 
             try
             {
                 // Loads the Xml documents
-                xml = new XmlDocument();
-                xml.Load(@"..\..\XML\OriginalTextXML.xml");
+                xmlOldFr = new XmlDocument();
+                xmlOldFr.Load(@"..\..\XML\OriginalTextXML.xml");
                 engXml = new XmlDocument();
                 engXml.Load(@"..\..\XML\EnglishXML.xml");
                 layoutXml = new XmlDocument();
@@ -113,11 +116,6 @@ namespace DigitalFauvel
                 Console.Write(e.StackTrace);
             }
 
-            
-
-
-            Study.getTitle("2rCon1"); // Pretty sure these two lines were just testing functionality; can remove?
-            Study.getTitle("2vMo2"); // This one too
             Console.Read();
 
 
@@ -126,6 +124,7 @@ namespace DigitalFauvel
             pageSlider.AddHandler(UIElement.ManipulationCompletedEvent, new EventHandler<ManipulationCompletedEventArgs>(slider_ManipulationCompleted), true);
             slideImage1 = SliderImage1;
             slideImage2 = SliderImage2;
+
 
             //other initialization
             TabItem newTabButton = new TabItem();

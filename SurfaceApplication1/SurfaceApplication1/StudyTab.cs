@@ -45,13 +45,15 @@ namespace DigitalFauvel
      * */
     class StudyTab : SideBarTab
     {
-
-        public Button mono, poly, playpause, stop, selectAudioButton; 
+        public enum TranslationLanguage { oldFrench = 0, modernFrench = 1, English = 2 };
+        public TranslationLanguage _currentTranslationLanguage, _lastTranslationLanguage;
+        public Button playpause, stop, selectAudioButton, SelectLanguageButton;
         public Canvas notesCanvas, notesTabCanvas;
         public Image monoImg;
-        public List<ListBoxItem> audioOptions;
+        public List<ListBoxItem> audioOptions, languageOptions;
         public List<MusicPartExpander> allVoices;
-        public ListBox selectAudioListBox;
+        public ListBox selectAudioListBox, SelectLanguageListBox;
+        public ListBoxItem pickLanguage, modernFrench, English;
         public ListBoxItem selectAudio, MIDI, liveRecording, lastAudioChoice;
         public MediaPlayer monoPlayer;
         public MusicExpander fullExp;
@@ -60,12 +62,16 @@ namespace DigitalFauvel
         public String sampleMono, samplePoly;
         public SurfaceScrollViewer noteScroll;
         public TabControl display;
-        public TabItem notesTab, mod_frenchTab, engTab;
-        public TextBlock studyTabHeader, studyPrompt, mod_frenchText, engText, musicTitle;
+        public TabItem notesTab, tabOriginalText, tabTranslation;
+        public TextBlock studyTabHeader, studyPrompt, OriginalText, TranslationText, musicTitle;
+        private Canvas TranslationBox;
         private Pieces _pieces; //music objects on the current opening
+        private Piece _currentPiece; //piece of music currently being viewed
         private const int ButtonHeight = 50;
         private const int ButtonWidth = 200;
         private const int ButtonFontSize = 20;
+
+
 
         public StudyTab(SideBar mySideBar, SurfaceWindow1 surfaceWindow, Pieces pieces)
             : base(mySideBar)
@@ -84,12 +90,15 @@ namespace DigitalFauvel
             studyTabHeader.FontSize = 21;
             headerGrid.Children.Add(studyTabHeader);
 
+            
             studyPrompt.FontSize = 30;
             studyPrompt.Text = "Please select a piece of music.";
             Canvas.SetLeft(studyPrompt, 32);
             Canvas.SetTop(studyPrompt, 45);
             studyPrompt.Visibility = System.Windows.Visibility.Visible;
             canvas.Children.Add(studyPrompt);
+
+            TranslationBox = new Canvas();
 
             int offsetY = 200; 
             int offsetX = 100;
@@ -111,90 +120,17 @@ namespace DigitalFauvel
 
         }
 
-        public StudyTab(SideBar mySideBar, SurfaceWindow1 surfaceWindow) : base(mySideBar)
-        {
-            this.mySideBar = mySideBar;
-
-            // Opening page.
-            studyPrompt = new TextBlock();
-            studyTabHeader = new TextBlock();
-
-            headerImage.Source = new BitmapImage(new Uri(@"..\..\icons\music.png", UriKind.Relative));
-            studyTabHeader.HorizontalAlignment = HorizontalAlignment.Center;
-            studyTabHeader.VerticalAlignment = VerticalAlignment.Center;
-            studyTabHeader.FontSize = 21;
-            headerGrid.Children.Add(studyTabHeader);
-
-            studyPrompt.FontSize = 30;
-            studyPrompt.Text = "Please select a piece of music.";
-            Canvas.SetLeft(studyPrompt, 32);
-            Canvas.SetTop(studyPrompt, 45);
-
-
-            /**
-             * Eventually, we plan to implement selecting the piece directly from the folio.
-             * Tapping a piece of music will set the selectedTag method and call open_Music.
-             * The two openDefault____ methods will be removed.
-             * However, for now, we provide two default options.
-             * */
-            sampleMono = "2rCon1";
-            samplePoly = "2vMo2";
-       
-            
-            
-            mono = new Button();
-            poly = new Button();
-
-            mono.Height = 50;
-            mono.Width = 200;
-            mono.Content = "Sample monophonic";
-            mono.FontSize = 20;
-            Canvas.SetLeft(mono, 100);
-            Canvas.SetTop(mono, 200);
-
-            poly.Height = 50;
-            poly.Width = 200;
-            poly.Content = "Sample polyphonic";
-            poly.FontSize = 20;
-            Canvas.SetLeft(poly, 100);
-            Canvas.SetTop(poly, 300);
-
-            
-            canvas.Children.Add(studyPrompt);
-            canvas.Children.Add(mono);
-            canvas.Children.Add(poly);
-            
-            /** 
-             * The below listeners are set temporarily to two defaults 
-             * Once we can select a piece of music to study from the manuscript (shown in main UI), get its tag and call open_Music as demonstrated below:
-             * */
-            mono.Click += delegate(object sender, RoutedEventArgs e) { open_Music(sender, e, sampleMono); };
-            mono.TouchDown += delegate(object sender, TouchEventArgs e) { open_Music(sender, e, sampleMono); };
-            poly.Click += delegate(object sender, RoutedEventArgs e) { open_Music(sender, e, samplePoly); };
-            poly.TouchDown += delegate(object sender, TouchEventArgs e) { open_Music(sender, e, samplePoly); };
-
-        }
-
         private void DisplayMusicItem(object sender, RoutedEventArgs e) //, Piece piece)
         {
             Button btn = sender as Button;
             var piece = _pieces.GetPieceById(btn.Name.Replace("_",""));
+            _currentPiece = piece;
             if (piece.Voices > 1)
                 StudyPoly(sender, e, piece);
             else
                 StudyMono(sender, e, piece);
         }
 
-
-        // Determines whether a piece of music is monophonic or polyphonic
-        // Opens a new music tab for mono or poly studying
-        private void open_Music(object sender, RoutedEventArgs e, String tag)
-        {
-            if (Study.hasMultipleVoices(tag) == false)
-                study_Mono(sender, e, tag);
-            else if(Study.hasMultipleVoices(tag) == true)
-                study_Poly(sender, e, tag);
-        }
 
         private void MusicControls(Piece piece)
         {
@@ -265,7 +201,11 @@ namespace DigitalFauvel
             selectAudioListBox.Visibility = Visibility.Hidden;
             selectAudioButton.Click += new RoutedEventHandler(showAudioOptions);
             selectAudioButton.TouchDown += new EventHandler<TouchEventArgs>(showAudioOptions);
+            
+            
+            
 
+            
 
 
             display = new TabControl();
@@ -276,28 +216,89 @@ namespace DigitalFauvel
 
 
             notesTab = new TabItem();
-            notesTab.Header = "Modern Notation";
+            notesTab.Header = "Edition";
             notesTab.Height = 50;
             notesTab.Width = 200;
             notesTab.FontSize = 20;
 
 
 
-            mod_frenchTab = new TabItem();
-            mod_frenchText = new TextBlock();
-            mod_frenchTab.Header = "Modern French";
-            mod_frenchTab.Height = 50;
-            mod_frenchTab.Width = 175;
-            mod_frenchTab.FontSize = 20;
-            mod_frenchTab.Content = mod_frenchText;
+            tabOriginalText = new TabItem();
+            OriginalText = new TextBlock();
+            tabOriginalText.Header = "Original Text";
+            tabOriginalText.Height = 50;
+            tabOriginalText.Width = 175;
+            tabOriginalText.FontSize = 20;
+            tabOriginalText.Content = OriginalText;
 
-            engTab = new TabItem();
-            engText = new TextBlock();
-            engTab.Header = "English";
-            engTab.Height = 50;
-            engTab.Width = 175;
-            engTab.FontSize = 20;
-            engTab.Content = engText;
+            tabTranslation = new TabItem();
+            TranslationText = new TextBlock();
+            TranslationText.Width = canvas.Width;
+            TranslationText.Height = canvas.Width - 50;
+            TranslationText.Text = Search.getByTag(piece.ID, SurfaceWindow1.modFrXml);
+            
+            tabTranslation.Header = "Translation";
+            tabTranslation.Height = 50;
+            tabTranslation.Width = 175;
+            tabTranslation.FontSize = 20;
+
+            SelectLanguageListBox = new ListBox();
+            SelectLanguageListBox.Background = Brushes.White;
+            SelectLanguageListBox.Visibility = Visibility.Hidden;
+            SelectLanguageListBox.Width = 175;
+
+            SelectLanguageButton = new Button();
+            SelectLanguageButton.Visibility = Visibility.Visible;
+
+            SelectLanguageButton.Width = 175;
+            SelectLanguageButton.Height = 50;
+            SelectLanguageButton.Content = (String)"Select Language";
+            SelectLanguageButton.FontSize = 21;
+            SelectLanguageListBox.FontSize = 21;
+            SelectLanguageListBox.HorizontalContentAlignment = HorizontalAlignment.Center;
+            SelectLanguageListBox.SelectedIndex = 0;
+
+            //sets the position of language selection button and translated text relative to sidetab
+            int n = 10;
+            Canvas.SetLeft(SelectLanguageButton, n);
+            Canvas.SetLeft(SelectLanguageListBox, n);
+            Canvas.SetTop(SelectLanguageListBox, n);
+            Canvas.SetTop(SelectLanguageButton, n);
+            Canvas.SetTop(TranslationText, 50 + n + 5);
+
+            pickLanguage = new ListBoxItem();
+            modernFrench = new ListBoxItem();
+            English = new ListBoxItem();
+
+            pickLanguage.Content = "Select Language:";
+
+            modernFrench.Content = "Modern French";
+            English.Content = "English";
+
+            languageOptions = new List<ListBoxItem>();
+            languageOptions.Add(pickLanguage);
+
+            languageOptions.Add(modernFrench);
+            languageOptions.Add(English);
+
+            foreach (ListBoxItem lbi in languageOptions)
+            {
+                lbi.Height = 50;
+                lbi.FontSize = 21;
+                SelectLanguageListBox.Items.Add(lbi);
+                lbi.HorizontalAlignment = HorizontalAlignment.Center;
+            }
+           
+            SelectLanguageButton.TouchDown += new EventHandler<TouchEventArgs>(displaySearchLanguages);
+            SelectLanguageButton.Click += new RoutedEventHandler(displaySearchLanguages);
+            pickLanguage.Selected += new RoutedEventHandler(TranslationLanguageChanged);
+            modernFrench.Selected += new RoutedEventHandler(TranslationLanguageChanged);
+            English.Selected += new RoutedEventHandler(TranslationLanguageChanged);
+
+            tabTranslation.Content = TranslationBox;
+            TranslationBox.Children.Add(TranslationText);
+            TranslationBox.Children.Add(SelectLanguageListBox);
+            TranslationBox.Children.Add(SelectLanguageButton);
 
             noteScroll = new SurfaceScrollViewer();
             notesTabCanvas = new Canvas();
@@ -324,8 +325,8 @@ namespace DigitalFauvel
 
 
             display.Items.Add(notesTab);
-            display.Items.Add(mod_frenchTab);
-            display.Items.Add(engTab);
+            display.Items.Add(tabOriginalText);
+            display.Items.Add(tabTranslation);
 
             canvas.Children.Add(musicTitle);
             canvas.Children.Add(playpause);
@@ -334,6 +335,45 @@ namespace DigitalFauvel
             canvas.Children.Add(selectAudioButton);
             canvas.Children.Add(selectAudioListBox);
 
+
+
+        }
+
+        private void displaySearchLanguages(object sender, RoutedEventArgs e)
+        {
+            if (SelectLanguageListBox.Visibility == Visibility.Collapsed | SelectLanguageListBox.Visibility == Visibility.Hidden)
+            {
+                SelectLanguageListBox.Visibility = Visibility.Visible;
+                SelectLanguageButton.Visibility = Visibility.Collapsed;
+            }
+            else
+                SelectLanguageListBox.Visibility = Visibility.Collapsed;
+
+        }
+
+        private void TranslationLanguageChanged(object sender, RoutedEventArgs e)
+        {
+            ListBoxItem box = (ListBoxItem)sender;
+            SelectLanguageButton.Content = box.Content;
+            SelectLanguageListBox.Visibility = Visibility.Hidden;
+            SelectLanguageButton.Visibility = Visibility.Visible;
+            
+            if (box == modernFrench)
+            {
+                _currentTranslationLanguage = TranslationLanguage.modernFrench;
+                TranslationText.Text = Search.getByTag(_currentPiece.ID, SurfaceWindow1.modFrXml);
+            }
+            else if (box == English)
+            {
+                _currentTranslationLanguage = TranslationLanguage.English;
+                TranslationText.Text = "No translated lyrics for this piece yet";
+            }
+            else if (box == pickLanguage)
+            {
+                _currentTranslationLanguage = _lastTranslationLanguage;
+            }
+
+            _lastTranslationLanguage = _currentTranslationLanguage;
         }
 
         private void StudyMono(object sender, RoutedEventArgs e, Piece piece)
@@ -344,13 +384,13 @@ namespace DigitalFauvel
             MusicControls(piece);
             playpause.Click += delegate(object s, RoutedEventArgs r) { playpause_click(s, r, "mono"); };
             stop.Click += delegate(object s, RoutedEventArgs ev) { stop_Music(s, ev, "mono"); };
-            mod_frenchText.Text = Search.getByTag(tag, SurfaceWindow1.modFrXml);
+            OriginalText.Text = Search.getByTag(tag, SurfaceWindow1.xmlOldFr);
             // This one is hardcoded in because we don't have any English lyrics in an XML file yet.
-            engText.Text = Search.getByTag(tag, SurfaceWindow1.engXml);
+            //TranslationText.Text = Search.getByTag(tag, SurfaceWindow1.engXml);
 
             // modern music notation image file
             monoImg = new Image();
-            monoImg.Source = new BitmapImage(new Uri(@"..\..\music\" + tag + ".png", UriKind.Relative)); ///
+            monoImg.Source = new BitmapImage(new Uri(@"..\..\music\" + "Favellandi vicium" + ".png", UriKind.Relative)); ///
             monoImg.Width = 580;
             monoImg.Height = 860;
 
@@ -374,14 +414,23 @@ namespace DigitalFauvel
             playpause.Click += delegate(object s, RoutedEventArgs r) { playpause_click(s, r, "poly"); };
             stop.Click += delegate(object s, RoutedEventArgs ev) { stop_Music(s, ev, "poly"); };
 
-            mod_frenchText.Text = piece.ModernFrench;
-            engText.Text = "No English translated lyrics for this piece YET!";
+            OriginalText.Text = Search.getByTag(tag, SurfaceWindow1.xmlOldFr);
+            switch (_currentTranslationLanguage)
+            {
+                case TranslationLanguage.English:
+                    TranslationText.Text = "No English translated lyrics for this piece YET!";
+                    break;
+                case TranslationLanguage.modernFrench:
+                    TranslationText.Text = piece.ModernFrench;
+                    break;
+            }
 
 
             motetParts = new StackPanel(); // StackPanel for the expandable parts to stack on top of eachother.
             motetParts.Orientation = Orientation.Vertical;
 
             fullExp = new MusicExpander("Full Score");
+            
 
 
             // Motet score
@@ -389,6 +438,7 @@ namespace DigitalFauvel
             motetScore.Orientation = Orientation.Vertical;
             fullExp.Content = motetScore;
             fullExp.Header = "Full Score";
+            fullExp.IsExpanded = true;
 
             // Score has several pages.
             // Create an object here called MotetPage and make one of these for each
@@ -400,6 +450,10 @@ namespace DigitalFauvel
              * 3. Add each ScorePage to motetScore.
              * */
 
+            ScorePage page = new ScorePage(tag);
+            motetScore.Children.Add(page);
+            
+            /*
             String one = "2vMo2-1";
             String two = "2vMo2-2";
             String three = "2vMo2-3";
@@ -414,7 +468,7 @@ namespace DigitalFauvel
                 ScorePage newPage = new ScorePage(s);
                 motetScore.Children.Add(newPage);
             }
-
+            */
 
             /**
              * GOAL FOR THIS SECTION:
@@ -453,285 +507,7 @@ namespace DigitalFauvel
 
         
         
-        /**
-         * OBSOLETE 4/17/2014, replaced with MusicControls(Piece piece) - Joe
-         * Sets up the main controls for music studying at the top of the tab.
-         * These include the music object's title, the play/pause/stop buttons, audio selections, etc.
-         * This method is called by both study_Mono and study_Poly because its actions are needed regardless of the type of music object.
-         * */
-        private void musicControls(String tag)
-        {
-            canvas.Children.Remove(studyPrompt);
-            canvas.Children.Remove(mono);
-            canvas.Children.Remove(poly);
-
-
-            // Title of the piece.
-            musicTitle = new TextBlock();
-            Canvas.SetLeft(musicTitle, 15);
-            Canvas.SetTop(musicTitle, 45);
-            musicTitle.Text = Study.getTitle(tag); 
-            musicTitle.FontSize = 30;
-            studyTabHeader.Text = Study.firstWord(Study.getTitle(tag)); // Sets tab header to the first word of the title, i.e. the music genre (Motet or Conductus)
-
-            // Play/Pause and Stop buttons.
-            playpause = new Button();
-            stop = new Button();
-            Canvas.SetLeft(playpause, 15);
-            Canvas.SetTop(playpause, 90);
-            Canvas.SetLeft(stop, 65);
-            Canvas.SetTop(stop, 90);
-            playpause.Height = 50;
-            playpause.Width = 50;
-            stop.Height = 50;
-            stop.Width = 50;
-            playpause.Content = "►";
-            stop.Content = "■";
-            playpause.FontSize = 35;
-            stop.FontSize = 30;
-
-            // ListBox for audio options
-            selectAudioButton = new Button();
-            selectAudioListBox = new ListBox();
-            selectAudio = new ListBoxItem();
-            MIDI = new ListBoxItem();
-            liveRecording = new ListBoxItem();
-            audioOptions = new List<ListBoxItem>();
-
-            selectAudio.Content = (String)"Select audio:";
-            MIDI.Content = (String)"MIDI";
-            liveRecording.Content = (String)"Live recording";
-
-            audioOptions.Add(selectAudio);
-            audioOptions.Add(MIDI);
-            audioOptions.Add(liveRecording);
-
-            foreach (ListBoxItem lbi in audioOptions)
-            {
-                lbi.Height = 50;
-                lbi.FontSize = 25;
-                selectAudioListBox.Items.Add(lbi);
-                lbi.HorizontalAlignment = HorizontalAlignment.Center;
-                lbi.Selected += new RoutedEventHandler(audioOptionSelected);
-                lbi.TouchDown += new EventHandler<TouchEventArgs>(audioOptionSelected);
-            }
-
-            selectAudioButton.Width = 180;
-            selectAudioButton.Height = 50;
-            selectAudioButton.Content = (String)"Select audio:";
-            selectAudioButton.FontSize = 25;
-            selectAudioListBox.Width = 180;
-            Canvas.SetTop(selectAudioListBox, 90);
-            Canvas.SetLeft(selectAudioListBox, 140);
-            Canvas.SetTop(selectAudioButton, 90);
-            Canvas.SetLeft(selectAudioButton, 140);
-
-            selectAudioButton.Visibility = Visibility.Visible;
-            selectAudioListBox.Visibility = Visibility.Hidden;
-            selectAudioButton.Click += new RoutedEventHandler(showAudioOptions);
-            selectAudioButton.TouchDown += new EventHandler<TouchEventArgs>(showAudioOptions);
-
-            
-
-            display = new TabControl();
-            Canvas.SetLeft(display, 15);
-            Canvas.SetTop(display, 150);
-            display.Height = 860;
-            display.Width = 580;
-
-
-            notesTab = new TabItem();
-            notesTab.Header = "Modern Notation";
-            notesTab.Height = 50;
-            notesTab.Width = 200;
-            notesTab.FontSize = 20;
-
-
-
-            mod_frenchTab = new TabItem(); 
-            mod_frenchText = new TextBlock();
-            mod_frenchTab.Header = "Modern French";
-            mod_frenchTab.Height = 50;
-            mod_frenchTab.Width = 175;
-            mod_frenchTab.FontSize = 20;
-            mod_frenchTab.Content = mod_frenchText;
-
-            engTab = new TabItem();
-            engText = new TextBlock();
-            engTab.Header = "English";
-            engTab.Height = 50;
-            engTab.Width = 175;
-            engTab.FontSize = 20;
-            engTab.Content = engText;
-
-            noteScroll = new SurfaceScrollViewer();
-            notesTabCanvas = new Canvas();
-            notesCanvas = new Canvas();
-
-            noteScroll.Height = 860;
-            noteScroll.Width = 580;
-            noteScroll.VerticalScrollBarVisibility = ScrollBarVisibility.Auto;
-            noteScroll.HorizontalScrollBarVisibility = ScrollBarVisibility.Auto;
-            noteScroll.PanningMode = PanningMode.VerticalOnly;
-            noteScroll.Content = notesCanvas;
-
-
-            /**
-             * Organization of containers for notesTab (just bc these can be confusing)
-             * 1. notesTab
-             * 2. notesTab.Content = notesTabCanvas;
-             * 3. notesTabCanvas.Children.Add(noteScroll);
-             * 4. noteScroll.Content = notesCanvas;
-             * */
-
-            notesTab.Content = notesTabCanvas; 
-            notesTabCanvas.Children.Add(noteScroll);
-
-
-            display.Items.Add(notesTab);
-            display.Items.Add(mod_frenchTab);
-            display.Items.Add(engTab);
-
-            canvas.Children.Add(musicTitle);
-            canvas.Children.Add(playpause);
-            canvas.Children.Add(stop);
-            canvas.Children.Add(display);
-            canvas.Children.Add(selectAudioButton);
-            canvas.Children.Add(selectAudioListBox);
-
-        }
-
-
-        /**
-         * Creates a new tab to study a monophonic music object.
-         * Displays the score for that music object and allows playback.
-         * Also calls on musicControls to set up the title, buttons, etc.
-         * For listeners/methods shared with study_Poly, this method calls on them with the added String "mono".
-         * */
-        private void study_Mono(object sender, RoutedEventArgs e, String tag)
-        {
-
-            //musicControls(tag); // Sets up the top part of the StudyTab: title, play/stop buttons, audio selection, etc.
-
-            playpause.Click += delegate(object s, RoutedEventArgs r) { playpause_click(s, r, "mono"); };
-            stop.Click += delegate(object s, RoutedEventArgs ev) { stop_Music(s, ev, "mono"); };
-            mod_frenchText.Text = Search.getByTag(tag, SurfaceWindow1.modFrXml);
-            // This one is hardcoded in because we don't have any English lyrics in an XML file yet.
-            engText.Text = "Oh, how far transgression\nis spreading!\nVirtue is dislodged\nfrom the sanctuary.\nNow Christ is dragged\nto a new tribunal,\nwith Peter using\nthe sword of Pilate.\nRelying on the counsel\nof Fauvel,\none comes to grief;\nthe celestial legion\njustly complains.\nTherefore it begs\nthe Father and the Son\nthat for a remedy\nfor all this\nimmediately\nthe fostering Spirit provide.";
-
-            
-
-            // modern music notation image file
-            monoImg = new Image();
-            monoImg.Source = new BitmapImage(new Uri(@"..\..\music\" + tag + ".png", UriKind.Relative)); ///
-            monoImg.Width = 580;
-            monoImg.Height = 860;
-
-            notesCanvas.Width = 580;
-            notesCanvas.Height = 860;
-            notesCanvas.Children.Add(monoImg);
-
-            // Create mediaplayer for audio playback.
-            monoPlayer = new MediaPlayer();
-            monoPlayer.Open(new Uri(@"..\..\music\" + tag + ".wma", UriKind.Relative));
-            monoPlayer.MediaEnded += delegate(object s, EventArgs r) { MediaEnded(s, r, "mono"); };
-
-            
-        }
-
-        
-
-        /**
-         * Creates a new tab to study a polyphonic music object.
-         * Biggest consideration is the variable number of voices (in Fauvel, Motets have 2-4 voices).
-         * Calls on the MusicExpander and MusicPartExpander objects to create expandable displays of the full score and individual voice scores, respectively.
-         * Also calls on the musicControls method to set up the title, play/pause buttons, etc.
-         * For listeners/methods shared with study_Mono, this method calls on them with the added String "poly".
-         * */
-        void study_Poly(object sender, RoutedEventArgs e, String tag)
-        {
-            musicControls(tag); // Sets up the top part of the StudyTab: title, play/stop buttons, audio selection, etc.
-
-            playpause.Click += delegate(object s, RoutedEventArgs r) { playpause_click(s, r, "poly"); };
-            stop.Click += delegate(object s, RoutedEventArgs ev) { stop_Music(s, ev, "poly"); };
-
-            mod_frenchText.Text = Search.getByTag(tag, SurfaceWindow1.modFrXml);
-            engText.Text = "No English translated lyrics for this piece YET!";
-
-
-            motetParts = new StackPanel(); // StackPanel for the expandable parts to stack on top of eachother.
-            motetParts.Orientation = Orientation.Vertical;
-
-            fullExp = new MusicExpander("Full Score");
-
-
-            // Motet score
-            motetScore = new StackPanel();
-            motetScore.Orientation = Orientation.Vertical;
-            fullExp.Content = motetScore;
-            fullExp.Header = "Full Score";
-
-            // Score has several pages.
-            // Create an object here called MotetPage and make one of these for each
-
-            /**
-             * GOAL FOR THIS SECTION:
-             * 1. Get names of each .png file (page) for this piece of music
-             * 2. Create a ScorePage object for each page - ScorePage implements Grid.
-             * 3. Add each ScorePage to motetScore.
-             * */
-
-
-            String one = "2vMo2-1";
-            String two = "2vMo2-2";
-            String three = "2vMo2-3";
-
-            List<String> pages = new List<String>(); // This List should be populated programmatically, i.e. by getting all file names in a folder
-            pages.Add(one);
-            pages.Add(two);
-            pages.Add(three);
-
-            foreach (String s in pages)
-            {
-                ScorePage newPage = new ScorePage(s);
-                motetScore.Children.Add(newPage);
-            }
-
-
-            /**
-             * GOAL FOR THIS SECTION:
-             * 1. Get names of each voice for this piece of music, using the tag.
-             *    Audio files must be named exactly the same way as indicated in OriginalTextXML!
-             *    NOTE: Very few motets have voice parts added in as of now, so "getVoiceParts" will not work!
-             * 2. Create an expander for each voice.
-             * 3. Add each expander to the motetParts StackPanel.
-             * */
-
-            allVoices = new List<MusicPartExpander>();
-            motetParts.Children.Add(fullExp);
-
-            foreach (String voicePartName in Study.getVoiceParts(tag))
-            {
-                MusicPartExpander newMPE = new MusicPartExpander(voicePartName, tag);
-                newMPE.muteTB.Checked += delegate(object s, RoutedEventArgs r) { mute_Checked(s, r, newMPE); };
-                newMPE.muteTB.Unchecked += delegate(object s, RoutedEventArgs r) { mute_Unchecked(s, r, newMPE); };
-                newMPE.soloTB.Checked += delegate(object s, RoutedEventArgs r) { solo_Checked(s, r, newMPE); };
-                newMPE.soloTB.Unchecked += delegate(object s, RoutedEventArgs r) { solo_Unchecked(s, r, newMPE); };
-                newMPE.player.MediaEnded += delegate(object s, EventArgs r) { MediaEnded(s, r, "poly"); };
-                allVoices.Add(newMPE);
-                motetParts.Children.Add(newMPE);
-            }
-
-            foreach (MusicPartExpander mpe in allVoices)
-                mpe.otherVoices = findOtherVoices(mpe, allVoices);
-
-
-
-            notesCanvas.Width = 560;
-            notesCanvas.Height = 4000;
-            notesCanvas.Children.Add(motetParts);
-
-        }
+ 
 
 
 

@@ -326,7 +326,7 @@ namespace DigitalFauvel
                         newResult.bottomR = getLinePoint(newResult.lineNum, 2);
 
                         if(language == 2) // For English, the secondary text is original text
-                            newResult.text2 = getPoetry(newResult.lineNum, newResult.lineNum, SurfaceWindow1.xml);
+                            newResult.text2 = getPoetry(newResult.lineNum, newResult.lineNum, SurfaceWindow1.xmlOldFr);
                         else // For all other languages, the secondary text is the English
                             newResult.text2 = getPoetry(newResult.lineNum, newResult.lineNum, SurfaceWindow1.engXml); 
 
@@ -350,7 +350,7 @@ namespace DigitalFauvel
             else if (language == 2)
                 return SurfaceWindow1.engXml;
             else // i.e. if 0
-                return SurfaceWindow1.xml; // This can be our default
+                return SurfaceWindow1.xmlOldFr; // This can be our default
         }
     
 
@@ -429,7 +429,7 @@ namespace DigitalFauvel
                                 newResult.bottomR = getLinePoint(newResult.lineNum, 2);
 
                                 if (language == 2) // For English, the secondary text is original text
-                                    newResult.text2 = getPoetry(lineNum, lineNum, SurfaceWindow1.xml);
+                                    newResult.text2 = getPoetry(lineNum, lineNum, SurfaceWindow1.xmlOldFr);
                                 else // For all other languages, the secondary text is the English
                                     newResult.text2 = getPoetry(lineNum, lineNum, SurfaceWindow1.engXml);
 
@@ -625,7 +625,7 @@ namespace DigitalFauvel
 
             try
             {
-                XmlNode xnl = SurfaceWindow1.xml.DocumentElement.SelectSingleNode("//lg/l[@n=" + lineNum + "]");
+                XmlNode xnl = SurfaceWindow1.xmlOldFr.DocumentElement.SelectSingleNode("//lg/l[@n=" + lineNum + "]");
                 String folioTemp = xnl.ParentNode.ParentNode.Attributes["facs"].Value;
                 folioTemp = folioTemp.Substring(1);
                 folio += folioTemp;
@@ -657,7 +657,7 @@ namespace DigitalFauvel
 
             try
             {
-                XmlNode xnl = SurfaceWindow1.xml.DocumentElement.SelectSingleNode("//" + tagType + "[@id='" + tag + "']");
+                XmlNode xnl = SurfaceWindow1.xmlOldFr.DocumentElement.SelectSingleNode("//" + tagType + "[@id='" + tag + "']");
                 String folioTemp = xnl.ParentNode.Attributes["facs"].Value;
                 folioTemp = folioTemp.Substring(1); // Removes the #
                 folio += folioTemp;

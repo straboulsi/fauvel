@@ -40,6 +40,7 @@ namespace DigitalFauvel
         {
             img = new Image();
             img.Source = new BitmapImage(new Uri(@"..\..\music\" + tag + "_" + voiceName+ ".png", UriKind.Relative));
+            
             img.Width = 560;
             Content = img;
 

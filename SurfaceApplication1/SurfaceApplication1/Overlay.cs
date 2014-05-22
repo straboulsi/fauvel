@@ -166,7 +166,7 @@ namespace DigitalFauvel
                             int end = Convert.ToInt32(s.Substring(mid + 1)); // Last line number in the range
 
                             // Gets translations in every available language
-                            boxes.Add(new TranslationBox(s, Search.getPoetry(start, end, SurfaceWindow1.xml), Search.getPoetry(start, end, SurfaceWindow1.modFrXml),
+                            boxes.Add(new TranslationBox(s, Search.getPoetry(start, end, SurfaceWindow1.xmlOldFr), Search.getPoetry(start, end, SurfaceWindow1.modFrXml),
                                 Search.getPoetry(start, end, SurfaceWindow1.engXml), Search.getPoint(s, 1), Search.getPoint(s, 2)));
                         }
                     }

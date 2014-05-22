@@ -29,10 +29,10 @@ namespace DigitalFauvel
             musicImage = new Image();
             musicImage.Source = new BitmapImage(new Uri(@"..\..\music\" + pageName + ".png", UriKind.Relative)); 
             musicImage.Width = 560;
-
+            musicImage.Visibility = System.Windows.Visibility.Visible;
             Height = 860;
             Children.Add(musicImage);
-
+            
         }
 
 

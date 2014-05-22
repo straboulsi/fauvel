@@ -4,11 +4,12 @@
     xmlns:s="http://schemas.microsoft.com/surface/2008"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:ed="http://schemas.microsoft.com/expression/2010/drawing" mc:Ignorable="d" x:Class="DigitalFauvel.SurfaceWindow1"
     Title="DigitalFauvel" Width="1920" Height="1080"
-    WindowStyle="None" ResizeMode="NoResize"
+    WindowStyle="None" ResizeMode="NoResize" 
     WindowStartupLocation="CenterScreen" WindowState="Maximized"
     >
     <Canvas x:Name="mother" Background="White">
-        <TabControl x:Name="tabBar" SelectionChanged="tabBar_SelectionChanged" Height="960" Width="859" VerticalContentAlignment="Center" VerticalAlignment="Center" HorizontalAlignment="Center" TabStripPlacement="Top">
+
+        <TabControl x:Name="tabBar" SelectionChanged="tabBar_SelectionChanged" Height="960" Width="1310" VerticalContentAlignment="Center" VerticalAlignment="Center" HorizontalAlignment="Center" TabStripPlacement="Top">
             <TabControl.Resources>
                 <DataTemplate x:Key="TabHeader" DataType="TabItem">
                     <DockPanel>
@@ -22,8 +23,8 @@
                 </DataTemplate>
             </TabControl.Resources>
         </TabControl>
-        <TabControl x:Name="tabDynamic" ItemsSource="{Binding}" Canvas.Left="865" Height="1080" Width="1055"
-                    VerticalContentAlignment="Center" VerticalAlignment="Center" HorizontalAlignment="Center" TabStripPlacement="Top" FontFamily="Cambria">
+        <TabControl x:Name="tabDynamic" ItemsSource="{Binding}" Canvas.Left="1316" Height="1080" Width="610"
+                    VerticalContentAlignment="Center" VerticalAlignment="Center" HorizontalAlignment="Center" TabStripPlacement="Top" FontFamily="Cambria" Canvas.Top="-5">
 
             <TabControl.Resources>
                 <DataTemplate x:Key="NewAnnotateTab" DataType="TabItem">

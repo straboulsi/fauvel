@@ -64,7 +64,7 @@ namespace DigitalFauvel
         {
             try
             {
-                XmlNodeList musics = SurfaceWindow1.xml.DocumentElement.SelectNodes("//p[(nv)]");
+                XmlNodeList musics = SurfaceWindow1.xmlOldFr.DocumentElement.SelectNodes("//p[(nv)]");
                 String temp = "";
 
                 foreach (XmlNode xn in musics)
@@ -93,7 +93,7 @@ namespace DigitalFauvel
                 if (!tag.EndsWith("_t"))
                     tag += "_t";
 
-                XmlNode foundNode = SurfaceWindow1.xml.DocumentElement.SelectSingleNode("//p[@id='" + tag + "']");
+                XmlNode foundNode = SurfaceWindow1.xmlOldFr.DocumentElement.SelectSingleNode("//p[@id='" + tag + "']");
                 if (foundNode.SelectSingleNode("nv") != null)
                     voiceCount = Convert.ToInt32(foundNode.SelectSingleNode("nv").InnerText);
                 else
@@ -132,7 +132,7 @@ namespace DigitalFauvel
                 if (!tag.EndsWith("_t"))
                     tag += "_t";
 
-                XmlNode foundNode = SurfaceWindow1.xml.DocumentElement.SelectSingleNode("//p[@id='" + tag + "']");
+                XmlNode foundNode = SurfaceWindow1.xmlOldFr.DocumentElement.SelectSingleNode("//p[@id='" + tag + "']");
                 XmlNode titleNode = foundNode.SelectSingleNode("title");
                 title = titleNode.InnerText.Trim();
 
@@ -173,7 +173,7 @@ namespace DigitalFauvel
             {
                 if (!tag.EndsWith("_t"))
                     tag += "_t";
-                XmlNode musicObj = SurfaceWindow1.xml.DocumentElement.SelectSingleNode("//p[@id='" + tag + "']");
+                XmlNode musicObj = SurfaceWindow1.xmlOldFr.DocumentElement.SelectSingleNode("//p[@id='" + tag + "']");
                 XmlNodeList voices = musicObj.SelectNodes("v");
 
                 foreach (XmlNode xn in voices)

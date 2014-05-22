@@ -152,6 +152,7 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+    <None Include="music\Favellandi vicium pdf.pdf" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
@@ -544,6 +545,7 @@
     <Resource Include="pages\8.jpg" />
     <Resource Include="pages\9.jpg" />
     <Resource Include="pages\XMLFinalContentFile.xml" />
+    <Resource Include="music\Favellandi vicium.png" />
     <Content Include="smallpages\105.jpg">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
